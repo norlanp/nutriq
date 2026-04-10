@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
-import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
-import 'package:opennutritracker/generated/l10n.dart';
+import 'package:nutriq/core/utils/calc/unit_calc.dart';
+import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
+import 'package:nutriq/generated/l10n.dart';
 
 class MealValueUnitText extends StatelessWidget {
   final double value;

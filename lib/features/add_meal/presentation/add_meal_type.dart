@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
-import 'package:opennutritracker/generated/l10n.dart';
+import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
+import 'package:nutriq/generated/l10n.dart';
 
 enum AddMealType {
   breakfastType,

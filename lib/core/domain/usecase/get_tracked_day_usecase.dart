@@ -1,5 +1,5 @@
-import 'package:opennutritracker/core/data/repository/tracked_day_repository.dart';
-import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
+import 'package:nutriq/core/data/repository/tracked_day_repository.dart';
+import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 
 class GetTrackedDayUsecase {
   final TrackedDayRepository _trackedDayRepository;

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
-import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
-import 'package:opennutritracker/core/presentation/widgets/copy_dialog.dart';
-import 'package:opennutritracker/core/presentation/widgets/delete_all_dialog.dart';
-import 'package:opennutritracker/core/presentation/widgets/intake_card.dart';
-import 'package:opennutritracker/core/presentation/widgets/placeholder_card.dart';
-import 'package:opennutritracker/core/utils/locator.dart';
-import 'package:opennutritracker/core/utils/navigation_options.dart';
-import 'package:opennutritracker/core/utils/vertical_list_popup_menu_selections.dart';
-import 'package:opennutritracker/features/add_meal/presentation/add_meal_screen.dart';
-import 'package:opennutritracker/features/add_meal/presentation/add_meal_type.dart';
-import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
-import 'package:opennutritracker/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
-import 'package:opennutritracker/generated/l10n.dart';
+import 'package:nutriq/core/domain/entity/intake_entity.dart';
+import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
+import 'package:nutriq/core/presentation/widgets/copy_dialog.dart';
+import 'package:nutriq/core/presentation/widgets/delete_all_dialog.dart';
+import 'package:nutriq/core/presentation/widgets/intake_card.dart';
+import 'package:nutriq/core/presentation/widgets/placeholder_card.dart';
+import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/utils/vertical_list_popup_menu_selections.dart';
+import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
+import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
+import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
+import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
+import 'package:nutriq/generated/l10n.dart';
 
 class IntakeVerticalList extends StatefulWidget {
   final DateTime day;

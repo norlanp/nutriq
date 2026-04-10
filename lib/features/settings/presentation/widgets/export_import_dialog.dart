@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opennutritracker/core/utils/locator.dart';
-import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
-import 'package:opennutritracker/features/settings/presentation/bloc/export_import_bloc.dart';
-import 'package:opennutritracker/generated/l10n.dart';
+import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
+import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/features/settings/presentation/bloc/export_import_bloc.dart';
+import 'package:nutriq/generated/l10n.dart';
 
 class ExportImportDialog extends StatelessWidget {
   final exportImportBloc = locator<ExportImportBloc>();

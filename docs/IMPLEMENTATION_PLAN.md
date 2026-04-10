@@ -1,0 +1,297 @@
+# Calorie Tracker Implementation Plan
+
+Fork of Nutriq with MyFitnessPal-inspired feature enhancements.
+
+## Project Overview
+
+Base: Nutriq (GPL-3.0)
+Target: Privacy-first, fully-free calorie tracker with MFP-inspired features
+Location: `/Users/norlan/code/mycal`
+
+## Decisions
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| Data Storage | Privacy-first, local-only | Matches ONT ethos, no cloud dependency |
+| Platforms | All (Android, iOS, Web, Desktop) | Flutter enables multi-platform |
+| License | GPL-3.0 | Required by ONT fork |
+| Monetization | Fully free, open-source | No premium tier, no ads, no subscriptions |
+
+## Feature Gap Analysis
+
+| Feature | ONT | MFP | Target |
+|---------|-----|-----|--------|
+| Food diary | Basic diary | 4-slot diary (B/L/D/S) | 4-slot diary |
+| Barcode scanner | Yes | Yes | Yes (existing) |
+| Food database | 3 sources | 14M+ items | Keep 3 sources, improve UX |
+| Macro/micro tracking | Basic macros | Full macro + micronutrients | Full macro + micronutrients |
+| Saved meals/recipes | Custom meals only | My Meals + full recipes | Full recipes + meal presets |
+| Weight tracking | Not present | Full weight logging + graph | Weight log + trends |
+| Body measurements | Not present | Waist, neck, etc. | Optional measurements |
+| Water tracking | Not present | Hydration tracker | Daily water tracker |
+| Exercise calorie adjustment | Activity log | Net calories | Auto-adjust daily budget |
+| BMR/BMI calculator | Basic kcal goals | Mifflin-St Jeor | Enhanced calculator |
+| Reminders/notifications | Not present | Meal logging reminders | Local notifications |
+| Progress charts | Not present | Weekly/monthly trends | Trend charts |
+| Photo progress | Not present | Before/after photos | Local photo storage |
+| Intermittent fasting | Not present | Fasting timer (premium) | Fasting tracker (free) |
+| AI food recognition | Not present | Meal Scan (premium) | On-device ML (free) |
+| Meal planning | Not present | Weekly meal plans | Weekly planner + shopping list |
+| Health integrations | None | 35+ devices/apps | HealthKit, Health Connect |
+| Social/community | Not present | Forums, friends | Not planned (privacy) |
+
+## Implementation Phases
+
+### Phase 1: Core Tracker Enhancements (Foundation)
+
+**Goal:** Strengthen basic tracking capabilities to match MFP core functionality.
+
+1. **Meal Slot System**
+   - Restructure diary into Breakfast/Lunch/Dinner/Snacks slots
+   - Modify `IntakeEntity` and `IntakeDataSource` to include meal type
+   - Update diary UI to show meal grouping
+
+2. **Saved Meals & Recipe Builder**
+   - Add `RecipeEntity` and `SavedMealEntity` to domain
+   - Create recipe builder UI (combine multiple foods into single recipe)
+   - "My Meals" quick-add feature for frequent combinations
+
+3. **Enhanced Macro/Micro Dashboard**
+   - Extend `MealNutrimentsEntity` to include micronutrients
+   - Add vitamin/mineral tracking with daily % targets
+   - Macro pie charts using `fl_chart`
+   - Daily/weekly nutrition summary view
+
+4. **Weight & Progress Tracking**
+   - New `WeightEntity` and `WeightDataSource` (Hive)
+   - Weight logging screen with date picker
+   - Weight trend graph (line chart)
+   - BMI calculator and display
+   - Goal progress visualization
+
+**New Packages:**
+- `fl_chart: ^0.68.0` - Charts and graphs
+
+**New Hive Boxes:**
+- `weightBox` - Weight entries
+- `recipeBox` - User-created recipes
+- `savedMealBox` - Quick-add meal combinations
+
+### Phase 2: Daily Habits & Engagement
+
+**Goal:** Build habit-forming features and daily tracking completeness.
+
+5. **Local Notifications/Reminders**
+   - `flutter_local_notifications` setup
+   - Configurable reminder times for meals
+   - Daily summary notification
+
+6. **Water Intake Tracker**
+   - New `WaterEntity` and `WaterDataSource`
+   - Quick-add water buttons (250ml, 500ml, custom)
+   - Daily water goal with progress visualization
+
+7. **Progress Charts**
+   - Weekly/monthly calorie averages
+   - Macro trend charts (stacked bar)
+   - Weight trend with moving average
+   - Export charts as images
+
+8. **Exercise Calorie Adjustment**
+   - Connect `UserActivityEntity` to daily calorie budget
+   - Net calories calculation (consumed - burned)
+   - Show remaining budget after exercise
+   - Activity calorie impact on diary view
+
+**New Packages:**
+- `flutter_local_notifications: ^17.2.1+2` - Local notifications
+- `permission_handler: ^11.3.1` - Notification permissions
+- `screenshot: ^3.0.0` - Chart export
+
+**New Hive Boxes:**
+- `waterBox` - Water intake entries
+- `notificationSettingsBox` - Reminder preferences
+
+### Phase 3: Priority Advanced Features
+
+**Goal:** Implement high-priority advanced features (user-selected).
+
+9. **Health Platform Integrations**
+   - Apple HealthKit integration (iOS)
+   - Google Health Connect integration (Android)
+   - Sync steps, workouts, weight
+   - Bidirectional sync where supported
+
+10. **AI Food Recognition (On-Device)**
+    - TensorFlow Lite model for food classification
+    - Camera capture and image preprocessing
+    - Local inference (no cloud)
+    - Fallback to manual search if low confidence
+
+11. **Meal Planning**
+    - Weekly meal planner UI
+    - Drag-and-drop meals to days
+    - Shopping list generation from meal plan
+    - Nutrition preview for planned meals
+
+12. **Intermittent Fasting Tracker**
+    - Fasting window timer
+    - Presets: 16:8, 18:6, 20:4, OMAD, custom
+    - Fasting history and streaks
+    - Notifications for fast start/end
+
+**New Packages:**
+- `health: ^10.2.0` - HealthKit/Health Connect
+- `tflite_flutter: ^0.10.4` - TensorFlow Lite
+- `image_picker: ^1.1.2` - Camera capture
+
+**New Hive Boxes:**
+- `mealPlanBox` - Weekly meal plans
+- `fastingBox` - Fasting session history
+- `aiModelMetadataBox` - Model versioning
+
+### Phase 4: Platform Expansion & Polish
+
+**Goal:** Extend to web/desktop and add finishing touches.
+
+13. **Web + Desktop Support**
+    - Responsive layout adaptations
+    - Platform-specific UI (Material for mobile, adaptive for desktop)
+    - Keyboard shortcuts for desktop
+    - Web-specific optimizations
+
+14. **Food Timestamps**
+    - Add time field to `IntakeEntity`
+    - Time picker in food entry
+    - Chronological meal display
+    - Pattern analysis (meal timing trends)
+
+15. **Data Sync (Optional)**
+    - Local file-based export/import (JSON/CSV)
+    - Optional encrypted backup sync via user's cloud storage (iCloud, Google Drive)
+    - Keeps privacy-first approach
+
+16. **Photo Progress**
+    - Before/after photo storage
+    - Side-by-side comparison view
+    - Progress photo timeline
+
+**New Packages:**
+- `file_selector: ^1.0.3` - Desktop file picking
+- `path_provider: ^2.1.5` - Cross-platform paths (existing, extend usage)
+- `share_plus: ^9.0.0` - Share exports
+
+## Architecture Principles
+
+### Extending ONT Foundation
+
+- **State Management:** Continue `flutter_bloc` + GetIt DI pattern
+- **Clean Architecture:** Feature-first modules under `lib/features/`
+- **Data Layer:** Extend Hive with new boxes, keep encryption
+- **Domain Layer:** Extend entities for new features
+- **Presentation Layer:** BLoCs per feature, reusable widgets
+
+### New Patterns
+
+- **Responsive UI:** Use `LayoutBuilder` and breakpoints for web/desktop
+- **On-Device ML:** TensorFlow Lite models in `assets/models/`
+- **Platform Channels:** Minimal native code for HealthKit/Health Connect
+
+## Package Dependencies Summary
+
+### Phase 1
+```yaml
+fl_chart: ^0.68.0
+```
+
+### Phase 2
+```yaml
+flutter_local_notifications: ^17.2.1+2
+permission_handler: ^11.3.1
+screenshot: ^3.0.0
+```
+
+### Phase 3
+```yaml
+health: ^10.2.0
+tflite_flutter: ^0.10.4
+image_picker: ^1.1.2
+```
+
+### Phase 4
+```yaml
+file_selector: ^1.0.3
+share_plus: ^9.0.0
+```
+
+## File Structure Additions
+
+```
+lib/
+  features/
+    weight_tracking/          # Phase 1
+    recipe_builder/             # Phase 1
+    meal_planning/              # Phase 3
+    fasting_tracker/            # Phase 3
+    ai_food_scanner/            # Phase 3
+    notifications/              # Phase 2
+    water_tracking/             # Phase 2
+    progress_charts/            # Phase 2
+    health_sync/                # Phase 3
+    photo_progress/             # Phase 4
+  core/
+    data/
+      data_source/
+        weight_data_source.dart
+        water_data_source.dart
+        recipe_data_source.dart
+        meal_plan_data_source.dart
+        fasting_data_source.dart
+      dbo/
+        weight_dbo.dart
+        water_dbo.dart
+        recipe_dbo.dart
+        meal_plan_dbo.dart
+        fasting_dbo.dart
+      repository/
+        weight_repository.dart
+        water_repository.dart
+        recipe_repository.dart
+        meal_plan_repository.dart
+        fasting_repository.dart
+    domain/
+      entity/
+        weight_entity.dart
+        water_entity.dart
+        recipe_entity.dart
+        meal_plan_entity.dart
+        fasting_entity.dart
+      usecase/
+        weight/
+        water/
+        recipe/
+        meal_plan/
+        fasting/
+assets/
+  models/
+    food_classifier.tflite      # Phase 3 AI model
+```
+
+## Implementation Order Recommendation
+
+1. Start with Phase 1 features (strongest foundation)
+2. Weight tracking is highest user-requested feature gap
+3. Meal slots system affects core diary - implement early
+4. Phase 3 health integrations and AI recognition are complex - schedule adequate time
+
+## Notes
+
+- Keep all AI inference on-device to maintain privacy
+- All health data stays local unless user explicitly syncs to HealthKit/Health Connect
+- Maintain ONT's clean architecture patterns throughout
+- Test thoroughly on all target platforms
+
+---
+
+Created: 2026-04-09
+Status: Planning

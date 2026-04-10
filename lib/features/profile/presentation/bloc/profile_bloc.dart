@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opennutritracker/core/domain/entity/user_bmi_entity.dart';
-import 'package:opennutritracker/core/domain/entity/user_entity.dart';
-import 'package:opennutritracker/core/domain/usecase/add_tracked_day_usecase.dart';
-import 'package:opennutritracker/core/domain/usecase/add_user_usecase.dart';
-import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
-import 'package:opennutritracker/core/domain/usecase/get_kcal_goal_usecase.dart';
-import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
-import 'package:opennutritracker/core/utils/calc/bmi_calc.dart';
-import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
-import 'package:opennutritracker/core/utils/locator.dart';
-import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/core/domain/entity/user_bmi_entity.dart';
+import 'package:nutriq/core/domain/entity/user_entity.dart';
+import 'package:nutriq/core/domain/usecase/add_tracked_day_usecase.dart';
+import 'package:nutriq/core/domain/usecase/add_user_usecase.dart';
+import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
+import 'package:nutriq/core/domain/usecase/get_kcal_goal_usecase.dart';
+import 'package:nutriq/core/domain/usecase/get_user_usecase.dart';
+import 'package:nutriq/core/utils/calc/bmi_calc.dart';
+import 'package:nutriq/core/utils/calc/unit_calc.dart';
+import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
+import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 
 part 'profile_event.dart';
 

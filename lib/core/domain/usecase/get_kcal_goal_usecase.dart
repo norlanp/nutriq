@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
-import 'package:opennutritracker/core/data/repository/config_repository.dart';
-import 'package:opennutritracker/core/data/repository/user_activity_repository.dart';
-import 'package:opennutritracker/core/data/repository/user_repository.dart';
-import 'package:opennutritracker/core/domain/entity/user_entity.dart';
-import 'package:opennutritracker/core/utils/calc/calorie_goal_calc.dart';
+import 'package:nutriq/core/data/repository/config_repository.dart';
+import 'package:nutriq/core/data/repository/user_activity_repository.dart';
+import 'package:nutriq/core/data/repository/user_repository.dart';
+import 'package:nutriq/core/domain/entity/user_entity.dart';
+import 'package:nutriq/core/utils/calc/calorie_goal_calc.dart';
 
 class GetKcalGoalUsecase {
   final UserRepository _userRepository;

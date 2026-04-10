@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
-import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
-import 'package:opennutritracker/generated/l10n.dart';
+import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
+import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:nutriq/generated/l10n.dart';
 
 class CalculationsDialog extends StatefulWidget {
   final SettingsBloc settingsBloc;

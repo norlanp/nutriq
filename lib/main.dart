@@ -2,27 +2,27 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
-import 'package:opennutritracker/core/data/data_source/user_data_source.dart';
-import 'package:opennutritracker/core/data/repository/config_repository.dart';
-import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
-import 'package:opennutritracker/core/presentation/main_screen.dart';
-import 'package:opennutritracker/core/presentation/widgets/image_full_screen.dart';
-import 'package:opennutritracker/core/styles/color_schemes.dart';
-import 'package:opennutritracker/core/styles/fonts.dart';
-import 'package:opennutritracker/core/utils/env.dart';
-import 'package:opennutritracker/core/utils/locator.dart';
-import 'package:opennutritracker/core/utils/logger_config.dart';
-import 'package:opennutritracker/core/utils/navigation_options.dart';
-import 'package:opennutritracker/core/utils/theme_mode_provider.dart';
-import 'package:opennutritracker/features/activity_detail/activity_detail_screen.dart';
-import 'package:opennutritracker/features/add_meal/presentation/add_meal_screen.dart';
-import 'package:opennutritracker/features/add_activity/presentation/add_activity_screen.dart';
-import 'package:opennutritracker/features/edit_meal/presentation/edit_meal_screen.dart';
-import 'package:opennutritracker/features/onboarding/onboarding_screen.dart';
-import 'package:opennutritracker/features/scanner/scanner_screen.dart';
-import 'package:opennutritracker/features/meal_detail/meal_detail_screen.dart';
-import 'package:opennutritracker/features/settings/settings_screen.dart';
-import 'package:opennutritracker/generated/l10n.dart';
+import 'package:nutriq/core/data/data_source/user_data_source.dart';
+import 'package:nutriq/core/data/repository/config_repository.dart';
+import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
+import 'package:nutriq/core/presentation/main_screen.dart';
+import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
+import 'package:nutriq/core/styles/color_schemes.dart';
+import 'package:nutriq/core/styles/fonts.dart';
+import 'package:nutriq/core/utils/env.dart';
+import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/utils/logger_config.dart';
+import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/utils/theme_mode_provider.dart';
+import 'package:nutriq/features/activity_detail/activity_detail_screen.dart';
+import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
+import 'package:nutriq/features/add_activity/presentation/add_activity_screen.dart';
+import 'package:nutriq/features/edit_meal/presentation/edit_meal_screen.dart';
+import 'package:nutriq/features/onboarding/onboarding_screen.dart';
+import 'package:nutriq/features/scanner/scanner_screen.dart';
+import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
+import 'package:nutriq/features/settings/settings_screen.dart';
+import 'package:nutriq/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -62,12 +62,12 @@ void runAppWithChangeNotifiers(
         bool userInitialized, AppThemeEntity savedAppTheme) =>
     runApp(ChangeNotifierProvider(
         create: (_) => ThemeModeProvider(appTheme: savedAppTheme),
-        child: OpenNutriTrackerApp(userInitialized: userInitialized)));
+        child: NutriqApp(userInitialized: userInitialized)));
 
-class OpenNutriTrackerApp extends StatelessWidget {
+class NutriqApp extends StatelessWidget {
   final bool userInitialized;
 
-  const OpenNutriTrackerApp({super.key, required this.userInitialized});
+  const NutriqApp({super.key, required this.userInitialized});
 
   @override
   Widget build(BuildContext context) {
