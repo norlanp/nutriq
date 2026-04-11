@@ -9,7 +9,13 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
   UserDao(super.db);
 
   Future<void> saveUser(UsersCompanion user) async {
-    await into(users).insertOnConflictUpdate(user);
+    final existing = await hasUser();
+    if (existing) {
+      final current = await getUser();
+      await (update(users)..where((t) => t.id.equals(current.id))).write(user);
+    } else {
+      await into(users).insert(user);
+    }
   }
 
   Future<bool> hasUser() async {

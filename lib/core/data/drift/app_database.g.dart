@@ -2,7 +2,7 @@
 
 part of 'app_database.dart';
 
-// ignore_for_file: type=lint, unqualified_reference_to_non_local_static_member
+// ignore_for_file: type=lint
 class $ConfigEntriesTable extends ConfigEntries
     with TableInfo<$ConfigEntriesTable, ConfigEntry> {
   @override
@@ -15,7 +15,7 @@ class $ConfigEntriesTable extends ConfigEntries
       'id', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultValue: const Constant(defaultId));
+      defaultValue: const Constant(1));
   static const VerificationMeta _hasAcceptedDisclaimerMeta =
       const VerificationMeta('hasAcceptedDisclaimer');
   @override

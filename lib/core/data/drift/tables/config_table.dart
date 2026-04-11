@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 
 class ConfigEntries extends Table {
   static const defaultId = 1;
-  IntColumn get id => integer().withDefault(const Constant(defaultId))();
+  IntColumn get id => integer().withDefault(const Constant(1))();
   BoolColumn get hasAcceptedDisclaimer =>
       boolean().withDefault(const Constant(false))();
   BoolColumn get hasAcceptedPolicy =>

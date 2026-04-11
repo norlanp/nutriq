@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:nutriq/core/data/drift/app_database.dart';
+import 'package:nutriq/core/data/drift/tables/config_table.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
@@ -50,11 +51,16 @@ ConfigEntity mapConfigEntryToEntity(ConfigEntry entry) => ConfigEntity(
 
 ConfigEntriesCompanion mapConfigEntityToCompanion(ConfigEntity entity) =>
     ConfigEntriesCompanion(
+      id: Value(ConfigEntries.defaultId),
       hasAcceptedDisclaimer: Value(entity.hasAcceptedDisclaimer),
       hasAcceptedPolicy: Value(entity.hasAcceptedPolicy),
       hasAcceptedSendAnonymousData: Value(entity.hasAcceptedSendAnonymousData),
       selectedAppTheme: Value(mapAppThemeEntityToString(entity.appTheme)),
       usesImperialUnits: Value(entity.usesImperialUnits),
+      userKcalAdjustment: Value(entity.userKcalAdjustment),
+      userCarbGoalPct: Value(entity.userCarbGoalPct),
+      userProteinGoalPct: Value(entity.userProteinGoalPct),
+      userFatGoalPct: Value(entity.userFatGoalPct),
     );
 
 UserGenderEntity mapUserGenderStringToEntity(String gender) {
