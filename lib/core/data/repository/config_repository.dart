@@ -1,66 +1,78 @@
 import 'package:nutriq/core/data/data_source/config_data_source.dart';
-import 'package:nutriq/core/data/dbo/app_theme_dbo.dart';
-import 'package:nutriq/core/data/dbo/config_dbo.dart';
+import 'package:nutriq/core/data/drift/app_database.dart';
+import 'package:nutriq/core/data/mapper/mappers.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
+import 'package:nutriq/core/domain/repository/config_repository.dart' as domain;
 
-class ConfigRepository {
+class ConfigRepository implements domain.ConfigRepository {
   final ConfigDataSource _configDataSource;
 
   ConfigRepository(this._configDataSource);
 
+  @override
   Future<void> updateConfig(ConfigEntity configEntity) async {
-    final configDBO = ConfigDBO.fromConfigEntity(configEntity);
-    _configDataSource.addConfig(configDBO);
+    final companion = mapConfigEntityToCompanion(configEntity);
+    await _configDataSource.addConfig(companion);
   }
 
+  @override
   Future<void> setConfigDisclaimer(bool hasAcceptedDisclaimer) async {
-    _configDataSource.setConfigDisclaimer(hasAcceptedDisclaimer);
+    await _configDataSource.setDisclaimer(hasAcceptedDisclaimer);
   }
 
+  @override
   Future<void> setConfigHasAcceptedAnonymousData(
-      bool hasAcceptedAnonymousData) async {
-    _configDataSource.setConfigAcceptedAnonymousData(hasAcceptedAnonymousData);
+    bool hasAcceptedAnonymousData,
+  ) async {
+    await _configDataSource.setAcceptedAnonymousData(hasAcceptedAnonymousData);
   }
 
+  @override
   Future<bool> getConfigHasAcceptedAnonymousData() async {
     return await _configDataSource.getHasAcceptedAnonymousData();
   }
 
+  @override
   Future<AppThemeEntity> getConfigAppTheme() async {
-    final appThemeDBO = await _configDataSource.getAppTheme();
-    return AppThemeEntity.fromAppThemeDBO(appThemeDBO);
+    final themeString = await _configDataSource.getAppTheme();
+    return mapAppThemeStringToEntity(themeString);
   }
 
+  @override
   Future<void> setConfigAppTheme(AppThemeEntity appTheme) async {
-    await _configDataSource
-        .setConfigAppTheme(AppThemeDBO.fromAppThemeEntity(appTheme));
+    await _configDataSource.setAppTheme(mapAppThemeEntityToString(appTheme));
   }
 
+  @override
   Future<ConfigEntity> getConfig() async {
-    final configDBO = await _configDataSource.getConfig();
-    return ConfigEntity.fromConfigDBO(configDBO);
+    final configEntry = await _configDataSource.getConfig();
+    return mapConfigEntryToEntity(configEntry);
   }
 
-  Future<ConfigDBO> getConfigDBO() async {
-    final configDBO = await _configDataSource.getConfig();
-    return configDBO;
+  Future<ConfigEntry> getConfigEntry() async {
+    return await _configDataSource.getConfig();
   }
+
+  @override
   Future<void> setConfigUsesImperialUnits(bool usesImperialUnits) async {
-    _configDataSource.setConfigUsesImperialUnits(usesImperialUnits);
+    await _configDataSource.setUsesImperialUnits(usesImperialUnits);
   }
 
+  @override
   Future<double> getConfigKcalAdjustment() async {
     return await _configDataSource.getKcalAdjustment();
   }
 
+  @override
   Future<void> setConfigKcalAdjustment(double kcalAdjustment) async {
-    _configDataSource.setConfigKcalAdjustment(kcalAdjustment);
+    await _configDataSource.setKcalAdjustment(kcalAdjustment);
   }
 
+  @override
   Future<void> setUserMacroPct(double carbs, double protein, double fat) async {
-    _configDataSource.setConfigCarbGoalPct(carbs);
-    _configDataSource.setConfigProteinGoalPct(protein);
-    _configDataSource.setConfigFatGoalPct(fat);
+    await _configDataSource.setCarbGoalPct(carbs);
+    await _configDataSource.setProteinGoalPct(protein);
+    await _configDataSource.setFatGoalPct(fat);
   }
 }

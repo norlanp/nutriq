@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/data/dbo/physical_activity_dbo.dart';
+
 import 'package:nutriq/core/utils/custom_icons.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -20,8 +20,14 @@ class PhysicalActivityEntity extends Equatable {
 
   final PhysicalActivityTypeEntity type;
 
-  const PhysicalActivityEntity(this.code, this.specificActivity,
-      this.description, this.mets, this.tags, this.type);
+  const PhysicalActivityEntity(
+    this.code,
+    this.specificActivity,
+    this.description,
+    this.mets,
+    this.tags,
+    this.type,
+  );
 
   @override
   List<Object?> get props => [code, specificActivity, description, mets];
@@ -119,7 +125,7 @@ class PhysicalActivityEntity extends Equatable {
       "18360": S.of(context).paWaterPolo,
       "19030": S.of(context).paIceSkatingGeneral,
       "19075": S.of(context).paSkiingGeneral,
-      "19252": S.of(context).paSnowShovingModerate
+      "19252": S.of(context).paSnowShovingModerate,
     };
     return physicalActivityMap[code] ?? type.getName(context);
   }
@@ -217,7 +223,7 @@ class PhysicalActivityEntity extends Equatable {
       "18360": S.of(context).paWaterPoloDesc,
       "19030": S.of(context).paIceSkatingGeneralDesc,
       "19075": S.of(context).paSkiingGeneralDesc,
-      "19252": S.of(context).paSnowShovingModerateDesc
+      "19252": S.of(context).paSnowShovingModerateDesc,
     };
     return physicalActivityMap[code] ?? type.getName(context);
   }
@@ -479,17 +485,6 @@ class PhysicalActivityEntity extends Equatable {
     }
     return iconData;
   }
-
-  factory PhysicalActivityEntity.fromPhysicalActivityDBO(
-          PhysicalActivityDBO activityDBO) =>
-      PhysicalActivityEntity(
-          activityDBO.code,
-          activityDBO.specificActivity,
-          activityDBO.description,
-          activityDBO.mets,
-          activityDBO.tags,
-          PhysicalActivityTypeEntity.fromPhysicalActivityTypeDBO(
-              activityDBO.type));
 }
 
 extension ActivityIcon on PhysicalActivityTypeEntity {
@@ -557,36 +552,7 @@ enum PhysicalActivityTypeEntity {
   running,
   sport,
   waterActivities,
-  winterActivities;
-
-  factory PhysicalActivityTypeEntity.fromPhysicalActivityTypeDBO(
-      PhysicalActivityTypeDBO typeDBO) {
-    PhysicalActivityTypeEntity typeEntity;
-    switch (typeDBO) {
-      case PhysicalActivityTypeDBO.bicycling:
-        typeEntity = PhysicalActivityTypeEntity.bicycling;
-        break;
-      case PhysicalActivityTypeDBO.conditioningExercise:
-        typeEntity = PhysicalActivityTypeEntity.conditioningExercise;
-        break;
-      case PhysicalActivityTypeDBO.dancing:
-        typeEntity = PhysicalActivityTypeEntity.dancing;
-        break;
-      case PhysicalActivityTypeDBO.running:
-        typeEntity = PhysicalActivityTypeEntity.running;
-        break;
-      case PhysicalActivityTypeDBO.sport:
-        typeEntity = PhysicalActivityTypeEntity.sport;
-        break;
-      case PhysicalActivityTypeDBO.waterActivities:
-        typeEntity = PhysicalActivityTypeEntity.waterActivities;
-        break;
-      case PhysicalActivityTypeDBO.winterActivities:
-        typeEntity = PhysicalActivityTypeEntity.winterActivities;
-        break;
-    }
-    return typeEntity;
-  }
+  winterActivities,
 }
 
 // TODO GROUP activities in effort categories (light, moderate, vigorous)

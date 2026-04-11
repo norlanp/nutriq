@@ -1,65 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:logging/logging.dart';
-import 'package:nutriq/core/data/data_source/user_activity_dbo.dart';
+import 'package:nutriq/core/data/drift/app_database.dart';
+import 'package:nutriq/core/data/drift/dao/user_activity_dao.dart';
 
 class UserActivityDataSource {
-  final log = Logger('UserActivityDataSource');
-  final Box<UserActivityDBO> _userActivityBox;
+  final UserActivityDao _dao;
 
-  UserActivityDataSource(this._userActivityBox);
+  UserActivityDataSource(this._dao);
 
-  Future<void> addUserActivity(UserActivityDBO userActivityDBO) async {
-    log.fine('Adding new user activity to db');
-    _userActivityBox.add(userActivityDBO);
-  }
+  Future<void> addUserActivity(UserActivitiesCompanion activity) =>
+      _dao.addUserActivity(activity);
 
   Future<void> addAllUserActivities(
-      List<UserActivityDBO> userActivityDBOList) async {
-    log.fine('Adding new user activities to db');
-    _userActivityBox.addAll(userActivityDBOList);
-  }
+    List<UserActivitiesCompanion> activities,
+  ) =>
+      _dao.addAllUserActivities(activities);
 
-  Future<void> deleteIntakeFromId(String activityId) async {
-    log.fine('Deleting activity item from db');
-    _userActivityBox.values
-        .where((dbo) => dbo.id == activityId)
-        .toList()
-        .forEach((element) {
-      element.delete();
-    });
-  }
+  Future<void> deleteUserActivity(String activityId) =>
+      _dao.deleteUserActivity(activityId);
 
-  Future<List<UserActivityDBO>> getAllUserActivities() async {
-    return _userActivityBox.values.toList();
-  }
-  Future<List<UserActivityDBO>> getAllUserActivitiesByDate(
-      DateTime dateTime) async {
-    return _userActivityBox.values
-        .where((activity) => DateUtils.isSameDay(dateTime, activity.date))
-        .toList();
-  }
+  Future<List<UserActivity>> getAllUserActivities() =>
+      _dao.getAllUserActivities();
 
-  Future<List<UserActivityDBO>> getRecentlyAddedUserActivity(
-      {int number = 20}) async {
-    final userActivities = _userActivityBox.values.toList().reversed;
+  Future<List<UserActivity>> getAllUserActivitiesByDate(DateTime dateTime) =>
+      _dao.getUserActivitiesByDate(dateTime);
 
-    //  sort list by date and filter unique activities
-    userActivities
-        .toList()
-        .sort((a, b) => a.date.toString().compareTo(b.date.toString()));
-
-    final filterActivityCodes = <String>{};
-    final uniqueUserActivities = userActivities
-        .where((activity) =>
-            filterActivityCodes.add(activity.physicalActivityDBO.code))
-        .toList();
-
-    // return range or full list
-    try {
-      return uniqueUserActivities.getRange(0, number).toList();
-    } on RangeError catch (_) {
-      return uniqueUserActivities.toList();
-    }
-  }
+  Future<List<UserActivity>> getRecentlyAddedUserActivity({int number = 20}) =>
+      _dao.getRecentlyAdded(limit: number);
 }

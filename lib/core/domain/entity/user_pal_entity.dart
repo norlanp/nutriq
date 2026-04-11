@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/data/dbo/user_pal_dbo.dart';
+
 import 'package:nutriq/generated/l10n.dart';
 
 enum UserPALEntity {
@@ -7,25 +7,6 @@ enum UserPALEntity {
   lowActive,
   active,
   veryActive;
-
-  factory UserPALEntity.fromUserPALDBO(UserPALDBO palDBO) {
-    UserPALEntity palEntity;
-    switch (palDBO) {
-      case UserPALDBO.sedentary:
-        palEntity = UserPALEntity.sedentary;
-        break;
-      case UserPALDBO.lowActive:
-        palEntity = UserPALEntity.lowActive;
-        break;
-      case UserPALDBO.active:
-        palEntity = UserPALEntity.active;
-        break;
-      case UserPALDBO.veryActive:
-        palEntity = UserPALEntity.veryActive;
-        break;
-    }
-    return palEntity;
-  }
 
   String getName(BuildContext context) {
     String name;

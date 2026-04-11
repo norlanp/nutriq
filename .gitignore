@@ -53,5 +53,8 @@ app.*.map.json
 result
 .direnv/
 
+# Database files
+*.db
+
 # FVM Version Cache
 .fvm/

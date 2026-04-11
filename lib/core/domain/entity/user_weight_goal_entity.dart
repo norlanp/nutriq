@@ -1,28 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/data/dbo/user_weight_goal_dbo.dart';
+
 import 'package:nutriq/generated/l10n.dart';
 
 enum UserWeightGoalEntity {
   loseWeight,
   maintainWeight,
   gainWeight;
-
-  factory UserWeightGoalEntity.fromUserWeightGoalDBO(
-      UserWeightGoalDBO weightGoalDBO) {
-    UserWeightGoalEntity weightGoalEntity;
-    switch (weightGoalDBO) {
-      case UserWeightGoalDBO.gainWeight:
-        weightGoalEntity = UserWeightGoalEntity.gainWeight;
-        break;
-      case UserWeightGoalDBO.maintainWeight:
-        weightGoalEntity = UserWeightGoalEntity.maintainWeight;
-        break;
-      case UserWeightGoalDBO.loseWeight:
-        weightGoalEntity = UserWeightGoalEntity.loseWeight;
-        break;
-    }
-    return weightGoalEntity;
-  }
 
   String getName(BuildContext context) {
     String name;

@@ -1,26 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/data/dbo/app_theme_dbo.dart';
 
 enum AppThemeEntity {
   light,
   dark,
   system;
-
-  factory AppThemeEntity.fromAppThemeDBO(AppThemeDBO dbo) {
-    AppThemeEntity entity;
-    switch (dbo) {
-      case AppThemeDBO.light:
-        entity = AppThemeEntity.light;
-        break;
-      case AppThemeDBO.dark:
-        entity = AppThemeEntity.dark;
-        break;
-      case AppThemeDBO.system:
-        entity = AppThemeEntity.system;
-        break;
-      }
-    return entity;
-  }
 
   ThemeMode toThemeMode() {
     ThemeMode mode;

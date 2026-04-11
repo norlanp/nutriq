@@ -1,193 +1,104 @@
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:logging/logging.dart';
-import 'package:nutriq/core/data/dbo/tracked_day_dbo.dart';
-import 'package:nutriq/core/utils/extensions.dart';
+import 'package:nutriq/core/data/drift/app_database.dart';
+import 'package:nutriq/core/data/drift/dao/tracked_day_dao.dart';
 
 class TrackedDayDataSource {
-  final log = Logger('TrackedDayDataSource');
-  final Box<TrackedDayDBO> _trackedDayBox;
+  final TrackedDayDao _dao;
 
-  TrackedDayDataSource(this._trackedDayBox);
+  TrackedDayDataSource(this._dao);
 
-  Future<void> saveTrackedDay(TrackedDayDBO trackedDayDBO) async {
-    log.fine('Updating tracked day in db');
-    _trackedDayBox.put(trackedDayDBO.day.toParsedDay(), trackedDayDBO);
-  }
+  Future<void> saveTrackedDay(TrackedDaysCompanion day) =>
+      _dao.saveTrackedDay(day);
 
-  Future<void> saveAllTrackedDays(List<TrackedDayDBO> trackedDayDBOList) async {
-    log.fine('Updating tracked days in db');
-    _trackedDayBox.putAll({
-      for (var trackedDayDBO in trackedDayDBOList)
-        trackedDayDBO.day.toParsedDay(): trackedDayDBO
-    });
-  }
+  Future<void> saveAllTrackedDays(List<TrackedDaysCompanion> days) =>
+      _dao.saveAllTrackedDays(days);
 
-  Future<List<TrackedDayDBO>> getAllTrackedDays() async {
-    return _trackedDayBox.values.toList();
-  }
+  Future<List<TrackedDay>> getAllTrackedDays() => _dao.getAllTrackedDays();
 
-  Future<TrackedDayDBO?> getTrackedDay(DateTime day) async {
-    return _trackedDayBox.get(day.toParsedDay());
-  }
+  Future<TrackedDay?> getTrackedDay(DateTime day) => _dao.getTrackedDay(day);
 
-  Future<List<TrackedDayDBO>> getTrackedDaysInRange(
-      DateTime start, DateTime end) async {
-    List<TrackedDayDBO> trackedDays = _trackedDayBox.values
-        .where((trackedDay) =>
-            (trackedDay.day.isAfter(start) && trackedDay.day.isBefore(end)))
-        .toList();
-    return trackedDays;
-  }
+  Future<List<TrackedDay>> getTrackedDaysInRange(
+          DateTime start, DateTime end) =>
+      _dao.getTrackedDaysInRange(start, end);
 
-  Future<bool> hasTrackedDay(DateTime day) async =>
-      _trackedDayBox.get(day.toParsedDay()) != null;
+  Future<bool> hasTrackedDay(DateTime day) => _dao.hasTrackedDay(day);
 
-  Future<void> updateDayCalorieGoal(DateTime day, double calorieGoal) async {
-    log.fine('Updating tracked day total calories');
-    final updateDay = await getTrackedDay(day);
+  Future<void> updateDayCalorieGoal(DateTime day, double calorieGoal) =>
+      _dao.updateDayCalorieGoal(day, calorieGoal);
 
-    if (updateDay != null) {
-      updateDay.calorieGoal = calorieGoal;
-      updateDay.save();
-    }
-  }
+  Future<void> increaseDayCalorieGoal(DateTime day, double amount) =>
+      _dao.increaseDayCalorieGoal(day, amount);
 
-  Future<void> increaseDayCalorieGoal(DateTime day, double amount) async {
-    log.fine('Increasing tracked day total calories');
-    final updateDay = await getTrackedDay(day);
+  Future<void> reduceDayCalorieGoal(DateTime day, double amount) =>
+      _dao.reduceDayCalorieGoal(day, amount);
 
-    if (updateDay != null) {
-      updateDay.calorieGoal += amount;
-      updateDay.save();
-    }
-  }
+  Future<void> addDayCaloriesTracked(DateTime day, double calories) =>
+      _dao.addDayCaloriesTracked(day, calories);
 
-  Future<void> reduceDayCalorieGoal(DateTime day, double amount) async {
-    log.fine('Reducing tracked day total calories');
-    final updateDay = await getTrackedDay(day);
+  Future<void> decreaseDayCaloriesTracked(DateTime day, double calories) =>
+      _dao.decreaseDayCaloriesTracked(day, calories);
 
-    if (updateDay != null) {
-      updateDay.calorieGoal -= amount;
-      updateDay.save();
-    }
-  }
+  Future<void> updateDayMacroGoals(
+    DateTime day, {
+    double? carbsGoal,
+    double? fatGoal,
+    double? proteinGoal,
+  }) =>
+      _dao.updateDayMacroGoals(
+        day,
+        carbsGoal: carbsGoal,
+        fatGoal: fatGoal,
+        proteinGoal: proteinGoal,
+      );
 
-  Future<void> addDayCaloriesTracked(DateTime day, double addCalories) async {
-    log.fine('Adding new tracked day calories');
-    final updateDay = await getTrackedDay(day);
+  Future<void> increaseDayMacroGoal(
+    DateTime day, {
+    double? carbsAmount,
+    double? fatAmount,
+    double? proteinAmount,
+  }) =>
+      _dao.increaseDayMacroGoal(
+        day,
+        carbsAmount: carbsAmount,
+        fatAmount: fatAmount,
+        proteinAmount: proteinAmount,
+      );
 
-    if (updateDay != null) {
-      updateDay.caloriesTracked += addCalories;
-      updateDay.save();
-    }
-  }
+  Future<void> reduceDayMacroGoal(
+    DateTime day, {
+    double? carbsAmount,
+    double? fatAmount,
+    double? proteinAmount,
+  }) =>
+      _dao.reduceDayMacroGoal(
+        day,
+        carbsAmount: carbsAmount,
+        fatAmount: fatAmount,
+        proteinAmount: proteinAmount,
+      );
 
-  Future<void> decreaseDayCaloriesTracked(
-      DateTime day, double addCalories) async {
-    log.fine('Decreasing tracked day calories');
-    final updateDay = await getTrackedDay(day);
+  Future<void> addDayMacroTracked(
+    DateTime day, {
+    double? carbsAmount,
+    double? fatAmount,
+    double? proteinAmount,
+  }) =>
+      _dao.addDayMacroTracked(
+        day,
+        carbsAmount: carbsAmount,
+        fatAmount: fatAmount,
+        proteinAmount: proteinAmount,
+      );
 
-    if (updateDay != null) {
-      updateDay.caloriesTracked -= addCalories;
-      updateDay.save();
-    }
-  }
-
-  Future<void> updateDayMacroGoals(DateTime day,
-      {double? carbsGoal, double? fatGoal, double? proteinGoal}) async {
-    log.fine('Updating tracked day macro goals');
-
-    final updateDay = await getTrackedDay(day);
-
-    if (updateDay != null) {
-      if (carbsGoal != null) {
-        updateDay.carbsGoal = carbsGoal;
-      }
-      if (fatGoal != null) {
-        updateDay.fatGoal = fatGoal;
-      }
-      if (proteinGoal != null) {
-        updateDay.proteinGoal = proteinGoal;
-      }
-      updateDay.save();
-    }
-  }
-
-  Future<void> increaseDayMacroGoal(DateTime day,
-      {double? carbsAmount, double? fatAmount, double? proteinAmount}) async {
-    log.fine('Increasing tracked day macro goals');
-    final updateDay = await getTrackedDay(day);
-
-    if (updateDay != null) {
-      if (carbsAmount != null) {
-        updateDay.carbsGoal = (updateDay.carbsGoal ?? 0) + carbsAmount;
-      }
-      if (fatAmount != null) {
-        updateDay.fatGoal = (updateDay.fatGoal ?? 0) + fatAmount;
-      }
-      if (proteinAmount != null) {
-        updateDay.proteinGoal = (updateDay.proteinGoal ?? 0) + proteinAmount;
-      }
-      updateDay.save();
-    }
-  }
-
-  Future<void> reduceDayMacroGoal(DateTime day,
-      {double? carbsAmount, double? fatAmount, double? proteinAmount}) async {
-    log.fine('Reducing tracked day macro goals');
-    final updateDay = await getTrackedDay(day);
-
-    if (updateDay != null) {
-      if (carbsAmount != null) {
-        updateDay.carbsGoal = (updateDay.carbsGoal ?? 0) - carbsAmount;
-      }
-      if (fatAmount != null) {
-        updateDay.fatGoal = (updateDay.fatGoal ?? 0) - fatAmount;
-      }
-      if (proteinAmount != null) {
-        updateDay.proteinGoal = (updateDay.proteinGoal ?? 0) - proteinAmount;
-      }
-      updateDay.save();
-    }
-  }
-
-  Future<void> addDayMacroTracked(DateTime day,
-      {double? carbsAmount, double? fatAmount, double? proteinAmount}) async {
-    log.fine('Adding new tracked day macro');
-    final updateDay = await getTrackedDay(day);
-
-    if (updateDay != null) {
-      if (carbsAmount != null) {
-        updateDay.carbsTracked = (updateDay.carbsTracked ?? 0) + carbsAmount;
-      }
-      if (fatAmount != null) {
-        updateDay.fatTracked = (updateDay.fatTracked ?? 0) + fatAmount;
-      }
-      if (proteinAmount != null) {
-        updateDay.proteinTracked =
-            (updateDay.proteinTracked ?? 0) + proteinAmount;
-      }
-      updateDay.save();
-    }
-  }
-
-  Future<void> removeDayMacroTracked(DateTime day,
-      {double? carbsAmount, double? fatAmount, double? proteinAmount}) async {
-    log.fine('Removing tracked day macro');
-    final updateDay = await getTrackedDay(day);
-
-    if (updateDay != null) {
-      if (carbsAmount != null) {
-        updateDay.carbsTracked = (updateDay.carbsTracked ?? 0) - carbsAmount;
-      }
-      if (fatAmount != null) {
-        updateDay.fatTracked = (updateDay.fatTracked ?? 0) - fatAmount;
-      }
-      if (proteinAmount != null) {
-        updateDay.proteinTracked =
-            (updateDay.proteinTracked ?? 0) - proteinAmount;
-      }
-      updateDay.save();
-    }
-  }
+  Future<void> removeDayMacroTracked(
+    DateTime day, {
+    double? carbsAmount,
+    double? fatAmount,
+    double? proteinAmount,
+  }) =>
+      _dao.removeDayMacroTracked(
+        day,
+        carbsAmount: carbsAmount,
+        fatAmount: fatAmount,
+        proteinAmount: proteinAmount,
+      );
 }

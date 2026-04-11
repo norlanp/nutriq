@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/data/dbo/intake_type_dbo.dart';
+
 import 'package:nutriq/core/utils/custom_icons.dart';
 
 enum IntakeTypeEntity {
@@ -7,25 +7,6 @@ enum IntakeTypeEntity {
   lunch,
   dinner,
   snack;
-
-  factory IntakeTypeEntity.fromIntakeTypeDBO(IntakeTypeDBO intakeTypeDBO) {
-    IntakeTypeEntity intakeTypeEntity;
-    switch (intakeTypeDBO) {
-      case IntakeTypeDBO.breakfast:
-        intakeTypeEntity = IntakeTypeEntity.breakfast;
-        break;
-      case IntakeTypeDBO.lunch:
-        intakeTypeEntity = IntakeTypeEntity.lunch;
-        break;
-      case IntakeTypeDBO.dinner:
-        intakeTypeEntity = IntakeTypeEntity.dinner;
-        break;
-      case IntakeTypeDBO.snack:
-        intakeTypeEntity = IntakeTypeEntity.snack;
-        break;
-    }
-    return intakeTypeEntity;
-  }
 
   IconData getIconData() {
     IconData icon;

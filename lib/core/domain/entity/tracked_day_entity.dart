@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/data/dbo/tracked_day_dbo.dart';
 
 class TrackedDayEntity extends Equatable {
   static const maxKcalDifferenceOverGoal = 500;
@@ -16,29 +15,17 @@ class TrackedDayEntity extends Equatable {
   final double? proteinGoal;
   final double? proteinTracked;
 
-  const TrackedDayEntity(
-      {required this.day,
-      required this.calorieGoal,
-      required this.caloriesTracked,
-      this.carbsGoal,
-      this.carbsTracked,
-      this.fatGoal,
-      this.fatTracked,
-      this.proteinGoal,
-      this.proteinTracked});
-
-  factory TrackedDayEntity.fromTrackedDayDBO(TrackedDayDBO trackedDayDBO) {
-    return TrackedDayEntity(
-        day: trackedDayDBO.day,
-        calorieGoal: trackedDayDBO.calorieGoal,
-        caloriesTracked: trackedDayDBO.caloriesTracked,
-        carbsGoal: trackedDayDBO.carbsGoal,
-        carbsTracked: trackedDayDBO.carbsTracked,
-        fatGoal: trackedDayDBO.fatGoal,
-        fatTracked: trackedDayDBO.fatTracked,
-        proteinGoal: trackedDayDBO.proteinGoal,
-        proteinTracked: trackedDayDBO.proteinTracked);
-  }
+  const TrackedDayEntity({
+    required this.day,
+    required this.calorieGoal,
+    required this.caloriesTracked,
+    this.carbsGoal,
+    this.carbsTracked,
+    this.fatGoal,
+    this.fatTracked,
+    this.proteinGoal,
+    this.proteinTracked,
+  });
 
   // TODO: make enum class for rating
   Color getCalendarDayRatingColor(BuildContext context) {
@@ -65,8 +52,7 @@ class TrackedDayEntity extends Equatable {
     }
   }
 
-  bool _hasExceededMaxKcalDifferenceGoal(
-      double calorieGoal, caloriesTracked) {
+  bool _hasExceededMaxKcalDifferenceGoal(double calorieGoal, caloriesTracked) {
     double difference = calorieGoal - caloriesTracked;
 
     if (calorieGoal < caloriesTracked) {
@@ -78,14 +64,14 @@ class TrackedDayEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        day,
-        calorieGoal,
-        caloriesTracked,
-        carbsGoal,
-        carbsTracked,
-        fatGoal,
-        fatTracked,
-        proteinGoal,
-        proteinTracked
-      ];
+    day,
+    calorieGoal,
+    caloriesTracked,
+    carbsGoal,
+    carbsTracked,
+    fatGoal,
+    fatTracked,
+    proteinGoal,
+    proteinTracked,
+  ];
 }

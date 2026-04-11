@@ -1,33 +1,14 @@
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:logging/logging.dart';
-import 'package:nutriq/core/data/dbo/user_dbo.dart';
-import 'package:nutriq/core/data/dbo/user_gender_dbo.dart';
-import 'package:nutriq/core/data/dbo/user_pal_dbo.dart';
-import 'package:nutriq/core/data/dbo/user_weight_goal_dbo.dart';
+import 'package:nutriq/core/data/drift/app_database.dart';
+import 'package:nutriq/core/data/drift/dao/user_dao.dart';
 
 class UserDataSource {
-  static const _userKey = "UserKey";
-  final log = Logger('UserDataSource');
-  final Box<UserDBO> _userBox;
+  final UserDao _dao;
 
-  UserDataSource(this._userBox);
+  UserDataSource(this._dao);
 
-  Future<void> saveUserData(UserDBO userDBO) async {
-    log.fine('Updating user in db');
-    _userBox.put(_userKey, userDBO);
-  }
+  Future<void> saveUserData(UsersCompanion user) => _dao.saveUser(user);
 
-  Future<bool> hasUserData() async => _userBox.containsKey(_userKey);
+  Future<bool> hasUserData() => _dao.hasUser();
 
-  // TODO remove dummy data
-  Future<UserDBO> getUserData() async {
-    return _userBox.get(_userKey) ??
-        UserDBO(
-            birthday: DateTime(2000, 1, 1),
-            heightCM: 180,
-            weightKG: 80,
-            gender: UserGenderDBO.male,
-            goal: UserWeightGoalDBO.maintainWeight,
-            pal: UserPALDBO.active);
-  }
+  Future<User> getUserData() => _dao.getUser();
 }

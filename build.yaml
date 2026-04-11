@@ -1,0 +1,6 @@
+targets:
+  $default:
+    sources:
+      exclude:
+        - "lib/core/data/dbo/**"
+        - "test/**"
