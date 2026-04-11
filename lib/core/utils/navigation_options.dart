@@ -11,4 +11,5 @@ class NavigationOptions {
   static const imageFullScreenRoute = "imageFullScreen";
   static const recipeBuilderRoute = "recipeBuilder";
   static const recipeListRoute = "recipeList";
+  static const weightTrackingRoute = "weightTracking";
 }

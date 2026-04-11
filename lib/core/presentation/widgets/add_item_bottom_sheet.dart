@@ -171,6 +171,33 @@ class AddItemBottomSheet extends StatelessWidget {
                   .pushNamed(NavigationOptions.recipeListRoute);
             },
           ),
+          const Divider(indent: 16, endIndent: 16),
+          ListTile(
+            title: Text(
+              S.of(context).weightTracking,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            subtitle: Text(
+              S.of(context).logWeight,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.monitor_weight_outlined,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .pushNamed(NavigationOptions.weightTrackingRoute);
+            },
+          ),
         ],
       ),
     );

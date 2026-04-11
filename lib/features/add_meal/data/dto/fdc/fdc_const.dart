@@ -188,6 +188,16 @@ class FDCConst {
   static const fdcTotalSaturatedFatId = 1258;
   static const fdcTotalDietaryFiberId = 1079;
 
+  // Micronutrient codes
+  static const fdcSodiumId = 1093;
+  static const fdcPotassiumId = 1092;
+  static const fdcCholesterolId = 1253;
+  static const fdcVitaminAId = 1106;
+  static const fdcVitaminCId = 1162;
+  static const fdcVitaminDId = 1114;
+  static const fdcCalciumId = 1087;
+  static const fdcIronId = 1089;
+
   // Measure unit codes
   static const fdcPortionServingId = 1049;
   static const fdcPortionUnknownId = 9999;

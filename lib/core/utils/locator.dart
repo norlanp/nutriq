@@ -7,17 +7,22 @@ import 'package:nutriq/core/data/data_source/recipe_data_source.dart';
 import 'package:nutriq/core/data/data_source/tracked_day_data_source.dart';
 import 'package:nutriq/core/data/data_source/user_activity_data_source.dart';
 import 'package:nutriq/core/data/data_source/user_data_source.dart';
+import 'package:nutriq/core/data/data_source/weight_data_source.dart';
 import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/drift/dao/meal_dao.dart';
 import 'package:nutriq/core/data/drift/dao/recipe_dao.dart';
 import 'package:nutriq/core/data/repository/config_repository.dart' as data;
 import 'package:nutriq/core/domain/repository/config_repository.dart' as domain;
+import 'package:nutriq/core/domain/repository/weight_repository.dart'
+    as domain_weight;
 import 'package:nutriq/core/data/repository/intake_repository.dart';
 import 'package:nutriq/core/data/repository/physical_activity_repository.dart';
 import 'package:nutriq/core/data/repository/recipe_repository.dart';
 import 'package:nutriq/core/data/repository/tracked_day_repository.dart';
 import 'package:nutriq/core/data/repository/user_activity_repository.dart';
 import 'package:nutriq/core/data/repository/user_repository.dart';
+import 'package:nutriq/core/data/repository/weight_repository.dart'
+    as data_weight;
 import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/add_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/add_tracked_day_usecase.dart';
@@ -25,6 +30,9 @@ import 'package:nutriq/core/domain/usecase/add_user_activity_usercase.dart';
 import 'package:nutriq/core/domain/usecase/add_user_usecase.dart';
 import 'package:nutriq/core/domain/usecase/delete_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/delete_user_activity_usecase.dart';
+import 'package:nutriq/core/domain/usecase/weight/add_weight_usecase.dart';
+import 'package:nutriq/core/domain/usecase/weight/delete_weight_usecase.dart';
+import 'package:nutriq/core/domain/usecase/weight/get_weights_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_kcal_goal_usecase.dart';
@@ -67,6 +75,7 @@ import 'package:nutriq/features/settings/domain/usecase/export_data_usecase.dart
 import 'package:nutriq/features/settings/domain/usecase/import_data_usecase.dart';
 import 'package:nutriq/features/settings/presentation/bloc/export_import_bloc.dart';
 import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:nutriq/features/weight_tracking/presentation/bloc/weight_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final locator = GetIt.instance;
@@ -92,6 +101,7 @@ Future<void> initLocator() async {
   final recipeDao = RecipeDao(appDatabase);
   final userActivityDao = appDatabase.userActivityDao;
   final trackedDayDao = appDatabase.trackedDayDao;
+  final weightDao = appDatabase.weightDao;
 
   locator.registerLazySingleton(
     () => ConfigDataSource(configDao),
@@ -121,6 +131,10 @@ Future<void> initLocator() async {
     () => RecipeDataSource(recipeDao),
   );
 
+  locator.registerLazySingleton<WeightDataSource>(
+    () => WeightDataSource(weightDao),
+  );
+
   // Repositories
   locator.registerLazySingleton<domain.ConfigRepository>(
     () => data.ConfigRepository(locator()),
@@ -145,6 +159,9 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<recipe_domain.RecipeRepository>(
     () => RecipeRepository(locator(), locator()),
+  );
+  locator.registerLazySingleton<domain_weight.WeightRepository>(
+    () => data_weight.WeightRepository(locator()),
   );
 
   // UseCases
@@ -215,6 +232,15 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<DeleteRecipeUsecase>(
     () => DeleteRecipeUsecase(locator()),
   );
+  locator.registerLazySingleton<GetWeightsUsecase>(
+    () => GetWeightsUsecase(locator()),
+  );
+  locator.registerLazySingleton<AddWeightUsecase>(
+    () => AddWeightUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteWeightUsecase>(
+    () => DeleteWeightUsecase(locator()),
+  );
 
   // BLoCs
   locator.registerLazySingleton<OnboardingBloc>(
@@ -279,6 +305,9 @@ Future<void> initLocator() async {
   locator.registerFactory(() => RecentMealBloc(locator(), locator()));
   locator.registerFactory<RecipeBloc>(
     () => RecipeBloc(locator(), locator(), locator()),
+  );
+  locator.registerFactory<WeightBloc>(
+    () => WeightBloc(locator(), locator(), locator()),
   );
 
   await _initializeConfig(locator<ConfigDataSource>());

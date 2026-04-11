@@ -3717,6 +3717,181 @@ class S {
       args: [],
     );
   }
+
+  /// `Weight Tracking`
+  String get weightTracking {
+    return Intl.message(
+      'Weight Tracking',
+      name: 'weightTracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log Weight`
+  String get logWeight {
+    return Intl.message('Log Weight', name: 'logWeight', desc: '', args: []);
+  }
+
+  /// `Weight (kg)`
+  String get weightKg {
+    return Intl.message('Weight (kg)', name: 'weightKg', desc: '', args: []);
+  }
+
+  /// `Date`
+  String get date {
+    return Intl.message('Date', name: 'date', desc: '', args: []);
+  }
+
+  /// `Note`
+  String get note {
+    return Intl.message('Note', name: 'note', desc: '', args: []);
+  }
+
+  /// `No weight entries yet`
+  String get noWeightEntries {
+    return Intl.message(
+      'No weight entries yet',
+      name: 'noWeightEntries',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Entry`
+  String get deleteWeight {
+    return Intl.message(
+      'Delete Entry',
+      name: 'deleteWeight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `BMI`
+  String get bmi {
+    return Intl.message('BMI', name: 'bmi', desc: '', args: []);
+  }
+
+  /// `Underweight`
+  String get bmiUnderweight {
+    return Intl.message(
+      'Underweight',
+      name: 'bmiUnderweight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Normal`
+  String get bmiNormal {
+    return Intl.message('Normal', name: 'bmiNormal', desc: '', args: []);
+  }
+
+  /// `Overweight`
+  String get bmiOverweight {
+    return Intl.message(
+      'Overweight',
+      name: 'bmiOverweight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Obese`
+  String get bmiObese {
+    return Intl.message('Obese', name: 'bmiObese', desc: '', args: []);
+  }
+
+  /// `Goal Weight`
+  String get goalWeight {
+    return Intl.message('Goal Weight', name: 'goalWeight', desc: '', args: []);
+  }
+
+  /// `Current`
+  String get currentWeight {
+    return Intl.message('Current', name: 'currentWeight', desc: '', args: []);
+  }
+
+  /// `Start`
+  String get startWeight {
+    return Intl.message('Start', name: 'startWeight', desc: '', args: []);
+  }
+
+  /// `Weight Trend`
+  String get weightTrend {
+    return Intl.message(
+      'Weight Trend',
+      name: 'weightTrend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message('Save', name: 'save', desc: '', args: []);
+  }
+
+  /// `Daily Summary`
+  String get dailySummaryLabel {
+    return Intl.message(
+      'Daily Summary',
+      name: 'dailySummaryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly Summary`
+  String get weeklySummaryLabel {
+    return Intl.message(
+      'Weekly Summary',
+      name: 'weeklySummaryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily Goal`
+  String get dailyGoalLabel {
+    return Intl.message(
+      'Daily Goal',
+      name: 'dailyGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Consumed`
+  String get consumedLabel {
+    return Intl.message('Consumed', name: 'consumedLabel', desc: '', args: []);
+  }
+
+  /// `Remaining`
+  String get remainingLabel {
+    return Intl.message(
+      'Remaining',
+      name: 'remainingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Micronutrients`
+  String get microNutrientsLabel {
+    return Intl.message(
+      'Micronutrients',
+      name: 'microNutrientsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See All`
+  String get seeAllLabel {
+    return Intl.message('See All', name: 'seeAllLabel', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

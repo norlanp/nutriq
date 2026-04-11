@@ -1,46 +1,22 @@
-[x] Run flutter pub get to install drift/sqlite3_flutter_libs dependencies
-[x] Run build_runner to generate Drift .g.dart files (app_database.g.dart, dao/*.g.dart)
-[x] Rewrite data sources to use Drift DAOs instead of LocalStorage<T>
-    - config_data_source.dart
-    - user_data_source.dart
-    - intake_data_source.dart
-    - user_activity_data_source.dart
-    - tracked_day_data_source.dart
-    - physical_activity_data_source.dart (converted to entity-based)
-[x] Update mappers (mappers.dart) to work with Drift-generated data classes instead of Hive DBOs
-[x] Update repositories that expose DBO-specific methods (export/import)
-    - intake_repository.dart (getAllIntakesDBO, addAllIntakeDBOs)
-    - user_activity_repository.dart (getAllUserActivityDBO, addAllUserActivityDBOs)
-    - tracked_day_repository.dart (getAllTrackedDaysDBO, addAllTrackedDays)
-    - config_repository.dart (getConfigDBO)
-    - user_repository.dart (getUserDBO)
-[x] Update export_data_usecase.dart and import_data_usecase.dart for Drift data format
-[x] Update locator.dart - register AppDatabase + DAOs, remove Hive providers
-[x] Update main.dart - remove Hive initialization, use Drift database init instead
-[x] Delete Hive-specific files:
-    - lib/core/data/data_source/hive_local_storage.dart
-    - lib/core/data/data_source/local_storage.dart
-    - lib/core/utils/hive_db_provider.dart
-    - lib/core/utils/secure_app_storage_provider.dart
-    - lib/core/data/dbo/*.g.dart (all Hive-generated adapters)
-    - intake_test.hive (test artifact)
-[x] Delete Hive DBO files replaced by Drift equivalents:
-    - lib/core/data/dbo/intake_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/meal_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/meal_nutriments_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/config_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/user_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/user_activity_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/tracked_day_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/physical_activity_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/intake_type_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/user_gender_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/user_pal_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/user_weight_goal_dbo.dart (+ .g.dart)
-    - lib/core/data/dbo/app_theme_dbo.dart (+ .g.dart)
-[x] Update domain entity imports if any reference DBOs directly (MealEntity.fromOFFProduct etc.)
-[x] Remove hive, hive_flutter, hive_generator from pubspec.yaml
-[x] Remove flutter_secure_storage from pubspec.yaml if no longer needed
-[x] Update .gitignore to remove Hive-specific patterns, add *.db
-[x] Run flutter analyze to verify no lint warnings
-[x] Run existing tests and fix any broken ones
+[x] Add fl_chart dependency to pubspec.yaml
+[x] Extend MealNutrimentsEntity with micronutrient fields (vitamins, minerals)
+[x] Create Drift table + DAO for micronutrient daily targets
+[x] Update IntakeDao/mappers to persist micronutrient data
+[x] Build macro pie chart widget (calories/carbs/fats/proteins breakdown)
+[x] Build daily nutrition summary view (macro + micro % targets)
+[x] Build weekly nutrition summary view
+[x] Create WeightEntity (id, userId, weightKg, date, note?)
+[x] Create Drift WeightTable + WeightDao (CRUD, getBetweenDates, getLatest)
+[x] Create WeightDataSource + WeightRepository (impl + abstract contract)
+[x] Create mapper entries for WeightEntity ↔ Drift companion
+[x] Create GetWeightsUsecase, AddWeightUsecase, DeleteWeightUsecase
+[x] Create WeightBloc (LoadWeights, AddWeight, DeleteWeight)
+[x] Build weight logging screen (date picker, input, history list)
+[x] Build weight trend line chart (fl_chart)
+[x] Build BMI calculator display + goal progress visualization
+[x] Register all new DI entries in locator.dart
+[x] Add l10n strings for new UI (en/de/tr ARB files)
+[x] DB schema bump (v2→v3) with onUpgrade migration for weight table + micro targets
+[x] Run build_runner to regenerate Drift code
+[x] Run flutter analyze — zero new warnings
+[x] Run existing tests — 47/47 pass

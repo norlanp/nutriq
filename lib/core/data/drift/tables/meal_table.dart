@@ -21,6 +21,15 @@ class Meals extends Table {
   RealColumn get sugars100 => real().nullable()();
   RealColumn get saturatedFat100 => real().nullable()();
   RealColumn get fiber100 => real().nullable()();
+  // Micronutrients per 100g
+  RealColumn get sodium100 => real().nullable()();
+  RealColumn get potassium100 => real().nullable()();
+  RealColumn get cholesterol100 => real().nullable()();
+  RealColumn get vitaminA100 => real().nullable()();
+  RealColumn get vitaminC100 => real().nullable()();
+  RealColumn get vitaminD100 => real().nullable()();
+  RealColumn get calcium100 => real().nullable()();
+  RealColumn get iron100 => real().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

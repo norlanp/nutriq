@@ -12,6 +12,7 @@ import 'package:nutriq/core/domain/entity/user_entity.dart';
 import 'package:nutriq/core/domain/entity/user_gender_entity.dart';
 import 'package:nutriq/core/domain/entity/user_pal_entity.dart';
 import 'package:nutriq/core/domain/entity/user_weight_goal_entity.dart';
+import 'package:nutriq/core/domain/entity/weight_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 import 'package:nutriq/features/recipe_builder/domain/entity/recipe_entity.dart';
@@ -210,6 +211,14 @@ MealNutrimentsEntity mapMealToNutrimentsEntity(Meal meal) =>
       sugars100: meal.sugars100,
       saturatedFat100: meal.saturatedFat100,
       fiber100: meal.fiber100,
+      sodium100: meal.sodium100,
+      potassium100: meal.potassium100,
+      cholesterol100: meal.cholesterol100,
+      vitaminA100: meal.vitaminA100,
+      vitaminC100: meal.vitaminC100,
+      vitaminD100: meal.vitaminD100,
+      calcium100: meal.calcium100,
+      iron100: meal.iron100,
     );
 
 MealEntity mapMealToEntity(Meal meal) => MealEntity(
@@ -249,6 +258,14 @@ MealsCompanion mapMealEntityToCompanion(MealEntity entity) => MealsCompanion(
       sugars100: Value(entity.nutriments.sugars100),
       saturatedFat100: Value(entity.nutriments.saturatedFat100),
       fiber100: Value(entity.nutriments.fiber100),
+      sodium100: Value(entity.nutriments.sodium100),
+      potassium100: Value(entity.nutriments.potassium100),
+      cholesterol100: Value(entity.nutriments.cholesterol100),
+      vitaminA100: Value(entity.nutriments.vitaminA100),
+      vitaminC100: Value(entity.nutriments.vitaminC100),
+      vitaminD100: Value(entity.nutriments.vitaminD100),
+      calcium100: Value(entity.nutriments.calcium100),
+      iron100: Value(entity.nutriments.iron100),
     );
 
 IntakeEntity mapIntakeToEntity(Intake intake, Meal meal) => IntakeEntity(
@@ -417,4 +434,21 @@ RecipeItemEntity mapRecipeItemToEntity(RecipeItem item, MealEntity meal) =>
       meal: meal,
       amount: item.amount,
       unit: item.unit,
+    );
+
+WeightEntity mapWeightToEntity(Weight entry) => WeightEntity(
+      id: entry.id,
+      userId: entry.userId,
+      weightKg: entry.weightKg,
+      date: entry.date,
+      note: entry.note,
+    );
+
+WeightsCompanion mapWeightEntityToCompanion(WeightEntity entity) =>
+    WeightsCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      weightKg: Value(entity.weightKg),
+      date: Value(entity.date),
+      note: Value(entity.note),
     );

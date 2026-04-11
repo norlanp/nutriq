@@ -66,10 +66,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Temel miktar (g/ml)",
     ),
     "betaVersionName": MessageLookupByLibrary.simpleMessage("[Beta]"),
+    "bmi": MessageLookupByLibrary.simpleMessage("BMI"),
     "bmiInfo": MessageLookupByLibrary.simpleMessage(
       "Vücut Kitle İndeksi (BMI), yetişkinlerde aşırı kiloyu ve obeziteyi sınıflandırmak için kullanılan bir indekstir. Kilogram cinsinden ağırlığın, metre cinsinden boyun karesine bölünmesiyle tanımlanır (kg/m²).\n\nBMI, yağ ve kas kütlesi arasında ayrım yapmaz ve bazı bireyler için yanıltıcı olabilir.",
     ),
     "bmiLabel": MessageLookupByLibrary.simpleMessage("BMI"),
+    "bmiNormal": MessageLookupByLibrary.simpleMessage("Normal"),
+    "bmiObese": MessageLookupByLibrary.simpleMessage("Obez"),
+    "bmiOverweight": MessageLookupByLibrary.simpleMessage("Fazla Kilolu"),
+    "bmiUnderweight": MessageLookupByLibrary.simpleMessage("Düşük Kilolu"),
     "breakfastExample": MessageLookupByLibrary.simpleMessage(
       "ör. mısır gevreği, süt, kahve ...",
     ),
@@ -98,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Kilo Hedefini Seçin",
     ),
     "cmLabel": MessageLookupByLibrary.simpleMessage("cm"),
+    "consumedLabel": MessageLookupByLibrary.simpleMessage("Tüketilen"),
     "copyDialogTitle": MessageLookupByLibrary.simpleMessage(
       "Hangi yemek türüne kopyalamak istiyorsunuz?",
     ),
@@ -113,12 +119,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "createCustomDialogTitle": MessageLookupByLibrary.simpleMessage(
       "Özel yemek öğesi oluştur?",
     ),
+    "currentWeight": MessageLookupByLibrary.simpleMessage("Mevcut"),
+    "dailyGoalLabel": MessageLookupByLibrary.simpleMessage("Günlük Hedef"),
     "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage(
       "Günlük Kcal ayarı:",
     ),
+    "dailySummaryLabel": MessageLookupByLibrary.simpleMessage("Günlük Özet"),
     "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
       "Anonim kullanım verileri sağlayarak geliştirmeyi destekleyin",
     ),
+    "date": MessageLookupByLibrary.simpleMessage("Tarih"),
     "deleteRecipeLabel": MessageLookupByLibrary.simpleMessage("Tarifi sil"),
     "deleteTimeDialogContent": MessageLookupByLibrary.simpleMessage(
       "Seçilen öğeyi silmek istiyor musunuz?",
@@ -130,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Girdiler silinsin mi?",
     ),
     "deleteTimeDialogTitle": MessageLookupByLibrary.simpleMessage("Öğeyi Sil?"),
+    "deleteWeight": MessageLookupByLibrary.simpleMessage("Kaydı Sil"),
     "dialogCancelLabel": MessageLookupByLibrary.simpleMessage("İPTAL"),
     "dialogCopyLabel": MessageLookupByLibrary.simpleMessage("BUGÜNE KOPYALA"),
     "dialogDeleteLabel": MessageLookupByLibrary.simpleMessage("SİL"),
@@ -189,6 +200,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "goalLabel": MessageLookupByLibrary.simpleMessage("Hedef"),
     "goalLoseWeight": MessageLookupByLibrary.simpleMessage("Kilo Ver"),
     "goalMaintainWeight": MessageLookupByLibrary.simpleMessage("Kilo Koru"),
+    "goalWeight": MessageLookupByLibrary.simpleMessage("Hedef Kilo"),
     "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
     "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
     "heightLabel": MessageLookupByLibrary.simpleMessage("Boy"),
@@ -209,6 +221,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("kalan kcal"),
     "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
     "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
+    "logWeight": MessageLookupByLibrary.simpleMessage("Kilo Gir"),
     "lunchExample": MessageLookupByLibrary.simpleMessage(
       "ör. pizza, salata, pirinç ...",
     ),
@@ -233,6 +246,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Yemek boyutu (oz/fl oz)",
     ),
     "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Yemek birimi"),
+    "microNutrientsLabel": MessageLookupByLibrary.simpleMessage(
+      "Mikrobesin Öğeleri",
+    ),
     "milliliterUnit": MessageLookupByLibrary.simpleMessage("ml"),
     "missingProductInfo": MessageLookupByLibrary.simpleMessage(
       "Üründe gerekli kcal veya makro besin bilgileri eksik",
@@ -248,7 +264,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "Henüz tarif yok. Bir tane oluşturun!",
     ),
     "noResultsFound": MessageLookupByLibrary.simpleMessage("Sonuç bulunamadı"),
+    "noWeightEntries": MessageLookupByLibrary.simpleMessage(
+      "Henüz kilo kaydı yok",
+    ),
     "notAvailableLabel": MessageLookupByLibrary.simpleMessage("Mevcut Değil"),
+    "note": MessageLookupByLibrary.simpleMessage("Not"),
     "nothingAddedLabel": MessageLookupByLibrary.simpleMessage(
       "Hiçbir şey eklenmedi",
     ),
@@ -725,11 +745,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "recipeNameLabel": MessageLookupByLibrary.simpleMessage("Tarif adı"),
     "recipeServingsLabel": MessageLookupByLibrary.simpleMessage("Porsiyon"),
+    "remainingLabel": MessageLookupByLibrary.simpleMessage("Kalan"),
     "reportErrorDialogText": MessageLookupByLibrary.simpleMessage(
       "Geliştiriciye bir hata bildirmek istiyor musunuz?",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Tekrar Dene"),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("doymuş yağ"),
+    "save": MessageLookupByLibrary.simpleMessage("Kaydet"),
     "saveRecipeLabel": MessageLookupByLibrary.simpleMessage("Tarifi kaydet"),
     "scanProductLabel": MessageLookupByLibrary.simpleMessage("Ürünü Tara"),
     "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
@@ -741,6 +763,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchResultsLabel": MessageLookupByLibrary.simpleMessage(
       "Arama sonuçları",
     ),
+    "seeAllLabel": MessageLookupByLibrary.simpleMessage("Tümünü Gör"),
     "selectGenderDialogLabel": MessageLookupByLibrary.simpleMessage(
       "Cinsiyet Seçin",
     ),
@@ -805,10 +828,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "ör. elma, dondurma, çikolata ...",
     ),
     "snackLabel": MessageLookupByLibrary.simpleMessage("Atıştırmalık"),
+    "startWeight": MessageLookupByLibrary.simpleMessage("Başlangıç"),
     "sugarLabel": MessageLookupByLibrary.simpleMessage("şeker"),
     "suppliedLabel": MessageLookupByLibrary.simpleMessage("tüketilen"),
     "unitLabel": MessageLookupByLibrary.simpleMessage("Birim"),
+    "weeklySummaryLabel": MessageLookupByLibrary.simpleMessage("Haftalık Özet"),
+    "weightKg": MessageLookupByLibrary.simpleMessage("Kilo (kg)"),
     "weightLabel": MessageLookupByLibrary.simpleMessage("Kilo"),
+    "weightTracking": MessageLookupByLibrary.simpleMessage("Kilo Takibi"),
+    "weightTrend": MessageLookupByLibrary.simpleMessage("Kilo Trendi"),
     "yearsLabel": m3,
   };
 }

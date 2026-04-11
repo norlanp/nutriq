@@ -1414,6 +1414,54 @@ class $MealsTable extends Meals with TableInfo<$MealsTable, Meal> {
   late final GeneratedColumn<double> fiber100 = GeneratedColumn<double>(
       'fiber100', aliasedName, true,
       type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _sodium100Meta =
+      const VerificationMeta('sodium100');
+  @override
+  late final GeneratedColumn<double> sodium100 = GeneratedColumn<double>(
+      'sodium100', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _potassium100Meta =
+      const VerificationMeta('potassium100');
+  @override
+  late final GeneratedColumn<double> potassium100 = GeneratedColumn<double>(
+      'potassium100', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _cholesterol100Meta =
+      const VerificationMeta('cholesterol100');
+  @override
+  late final GeneratedColumn<double> cholesterol100 = GeneratedColumn<double>(
+      'cholesterol100', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _vitaminA100Meta =
+      const VerificationMeta('vitaminA100');
+  @override
+  late final GeneratedColumn<double> vitaminA100 = GeneratedColumn<double>(
+      'vitamin_a100', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _vitaminC100Meta =
+      const VerificationMeta('vitaminC100');
+  @override
+  late final GeneratedColumn<double> vitaminC100 = GeneratedColumn<double>(
+      'vitamin_c100', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _vitaminD100Meta =
+      const VerificationMeta('vitaminD100');
+  @override
+  late final GeneratedColumn<double> vitaminD100 = GeneratedColumn<double>(
+      'vitamin_d100', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _calcium100Meta =
+      const VerificationMeta('calcium100');
+  @override
+  late final GeneratedColumn<double> calcium100 = GeneratedColumn<double>(
+      'calcium100', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _iron100Meta =
+      const VerificationMeta('iron100');
+  @override
+  late final GeneratedColumn<double> iron100 = GeneratedColumn<double>(
+      'iron100', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1435,7 +1483,15 @@ class $MealsTable extends Meals with TableInfo<$MealsTable, Meal> {
         proteins100,
         sugars100,
         saturatedFat100,
-        fiber100
+        fiber100,
+        sodium100,
+        potassium100,
+        cholesterol100,
+        vitaminA100,
+        vitaminC100,
+        vitaminD100,
+        calcium100,
+        iron100
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1548,6 +1604,50 @@ class $MealsTable extends Meals with TableInfo<$MealsTable, Meal> {
       context.handle(_fiber100Meta,
           fiber100.isAcceptableOrUnknown(data['fiber100']!, _fiber100Meta));
     }
+    if (data.containsKey('sodium100')) {
+      context.handle(_sodium100Meta,
+          sodium100.isAcceptableOrUnknown(data['sodium100']!, _sodium100Meta));
+    }
+    if (data.containsKey('potassium100')) {
+      context.handle(
+          _potassium100Meta,
+          potassium100.isAcceptableOrUnknown(
+              data['potassium100']!, _potassium100Meta));
+    }
+    if (data.containsKey('cholesterol100')) {
+      context.handle(
+          _cholesterol100Meta,
+          cholesterol100.isAcceptableOrUnknown(
+              data['cholesterol100']!, _cholesterol100Meta));
+    }
+    if (data.containsKey('vitamin_a100')) {
+      context.handle(
+          _vitaminA100Meta,
+          vitaminA100.isAcceptableOrUnknown(
+              data['vitamin_a100']!, _vitaminA100Meta));
+    }
+    if (data.containsKey('vitamin_c100')) {
+      context.handle(
+          _vitaminC100Meta,
+          vitaminC100.isAcceptableOrUnknown(
+              data['vitamin_c100']!, _vitaminC100Meta));
+    }
+    if (data.containsKey('vitamin_d100')) {
+      context.handle(
+          _vitaminD100Meta,
+          vitaminD100.isAcceptableOrUnknown(
+              data['vitamin_d100']!, _vitaminD100Meta));
+    }
+    if (data.containsKey('calcium100')) {
+      context.handle(
+          _calcium100Meta,
+          calcium100.isAcceptableOrUnknown(
+              data['calcium100']!, _calcium100Meta));
+    }
+    if (data.containsKey('iron100')) {
+      context.handle(_iron100Meta,
+          iron100.isAcceptableOrUnknown(data['iron100']!, _iron100Meta));
+    }
     return context;
   }
 
@@ -1597,6 +1697,22 @@ class $MealsTable extends Meals with TableInfo<$MealsTable, Meal> {
           DriftSqlType.double, data['${effectivePrefix}saturated_fat100']),
       fiber100: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}fiber100']),
+      sodium100: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}sodium100']),
+      potassium100: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}potassium100']),
+      cholesterol100: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}cholesterol100']),
+      vitaminA100: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}vitamin_a100']),
+      vitaminC100: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}vitamin_c100']),
+      vitaminD100: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}vitamin_d100']),
+      calcium100: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}calcium100']),
+      iron100: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}iron100']),
     );
   }
 
@@ -1627,6 +1743,14 @@ class Meal extends DataClass implements Insertable<Meal> {
   final double? sugars100;
   final double? saturatedFat100;
   final double? fiber100;
+  final double? sodium100;
+  final double? potassium100;
+  final double? cholesterol100;
+  final double? vitaminA100;
+  final double? vitaminC100;
+  final double? vitaminD100;
+  final double? calcium100;
+  final double? iron100;
   const Meal(
       {required this.id,
       this.code,
@@ -1647,7 +1771,15 @@ class Meal extends DataClass implements Insertable<Meal> {
       this.proteins100,
       this.sugars100,
       this.saturatedFat100,
-      this.fiber100});
+      this.fiber100,
+      this.sodium100,
+      this.potassium100,
+      this.cholesterol100,
+      this.vitaminA100,
+      this.vitaminC100,
+      this.vitaminD100,
+      this.calcium100,
+      this.iron100});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1707,6 +1839,30 @@ class Meal extends DataClass implements Insertable<Meal> {
     if (!nullToAbsent || fiber100 != null) {
       map['fiber100'] = Variable<double>(fiber100);
     }
+    if (!nullToAbsent || sodium100 != null) {
+      map['sodium100'] = Variable<double>(sodium100);
+    }
+    if (!nullToAbsent || potassium100 != null) {
+      map['potassium100'] = Variable<double>(potassium100);
+    }
+    if (!nullToAbsent || cholesterol100 != null) {
+      map['cholesterol100'] = Variable<double>(cholesterol100);
+    }
+    if (!nullToAbsent || vitaminA100 != null) {
+      map['vitamin_a100'] = Variable<double>(vitaminA100);
+    }
+    if (!nullToAbsent || vitaminC100 != null) {
+      map['vitamin_c100'] = Variable<double>(vitaminC100);
+    }
+    if (!nullToAbsent || vitaminD100 != null) {
+      map['vitamin_d100'] = Variable<double>(vitaminD100);
+    }
+    if (!nullToAbsent || calcium100 != null) {
+      map['calcium100'] = Variable<double>(calcium100);
+    }
+    if (!nullToAbsent || iron100 != null) {
+      map['iron100'] = Variable<double>(iron100);
+    }
     return map;
   }
 
@@ -1760,6 +1916,30 @@ class Meal extends DataClass implements Insertable<Meal> {
       fiber100: fiber100 == null && nullToAbsent
           ? const Value.absent()
           : Value(fiber100),
+      sodium100: sodium100 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sodium100),
+      potassium100: potassium100 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(potassium100),
+      cholesterol100: cholesterol100 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cholesterol100),
+      vitaminA100: vitaminA100 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vitaminA100),
+      vitaminC100: vitaminC100 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vitaminC100),
+      vitaminD100: vitaminD100 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vitaminD100),
+      calcium100: calcium100 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(calcium100),
+      iron100: iron100 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iron100),
     );
   }
 
@@ -1788,6 +1968,14 @@ class Meal extends DataClass implements Insertable<Meal> {
       sugars100: serializer.fromJson<double?>(json['sugars100']),
       saturatedFat100: serializer.fromJson<double?>(json['saturatedFat100']),
       fiber100: serializer.fromJson<double?>(json['fiber100']),
+      sodium100: serializer.fromJson<double?>(json['sodium100']),
+      potassium100: serializer.fromJson<double?>(json['potassium100']),
+      cholesterol100: serializer.fromJson<double?>(json['cholesterol100']),
+      vitaminA100: serializer.fromJson<double?>(json['vitaminA100']),
+      vitaminC100: serializer.fromJson<double?>(json['vitaminC100']),
+      vitaminD100: serializer.fromJson<double?>(json['vitaminD100']),
+      calcium100: serializer.fromJson<double?>(json['calcium100']),
+      iron100: serializer.fromJson<double?>(json['iron100']),
     );
   }
   @override
@@ -1814,6 +2002,14 @@ class Meal extends DataClass implements Insertable<Meal> {
       'sugars100': serializer.toJson<double?>(sugars100),
       'saturatedFat100': serializer.toJson<double?>(saturatedFat100),
       'fiber100': serializer.toJson<double?>(fiber100),
+      'sodium100': serializer.toJson<double?>(sodium100),
+      'potassium100': serializer.toJson<double?>(potassium100),
+      'cholesterol100': serializer.toJson<double?>(cholesterol100),
+      'vitaminA100': serializer.toJson<double?>(vitaminA100),
+      'vitaminC100': serializer.toJson<double?>(vitaminC100),
+      'vitaminD100': serializer.toJson<double?>(vitaminD100),
+      'calcium100': serializer.toJson<double?>(calcium100),
+      'iron100': serializer.toJson<double?>(iron100),
     };
   }
 
@@ -1837,7 +2033,15 @@ class Meal extends DataClass implements Insertable<Meal> {
           Value<double?> proteins100 = const Value.absent(),
           Value<double?> sugars100 = const Value.absent(),
           Value<double?> saturatedFat100 = const Value.absent(),
-          Value<double?> fiber100 = const Value.absent()}) =>
+          Value<double?> fiber100 = const Value.absent(),
+          Value<double?> sodium100 = const Value.absent(),
+          Value<double?> potassium100 = const Value.absent(),
+          Value<double?> cholesterol100 = const Value.absent(),
+          Value<double?> vitaminA100 = const Value.absent(),
+          Value<double?> vitaminC100 = const Value.absent(),
+          Value<double?> vitaminD100 = const Value.absent(),
+          Value<double?> calcium100 = const Value.absent(),
+          Value<double?> iron100 = const Value.absent()}) =>
       Meal(
         id: id ?? this.id,
         code: code.present ? code.value : this.code,
@@ -1870,6 +2074,16 @@ class Meal extends DataClass implements Insertable<Meal> {
             ? saturatedFat100.value
             : this.saturatedFat100,
         fiber100: fiber100.present ? fiber100.value : this.fiber100,
+        sodium100: sodium100.present ? sodium100.value : this.sodium100,
+        potassium100:
+            potassium100.present ? potassium100.value : this.potassium100,
+        cholesterol100:
+            cholesterol100.present ? cholesterol100.value : this.cholesterol100,
+        vitaminA100: vitaminA100.present ? vitaminA100.value : this.vitaminA100,
+        vitaminC100: vitaminC100.present ? vitaminC100.value : this.vitaminC100,
+        vitaminD100: vitaminD100.present ? vitaminD100.value : this.vitaminD100,
+        calcium100: calcium100.present ? calcium100.value : this.calcium100,
+        iron100: iron100.present ? iron100.value : this.iron100,
       );
   Meal copyWithCompanion(MealsCompanion data) {
     return Meal(
@@ -1910,6 +2124,22 @@ class Meal extends DataClass implements Insertable<Meal> {
           ? data.saturatedFat100.value
           : this.saturatedFat100,
       fiber100: data.fiber100.present ? data.fiber100.value : this.fiber100,
+      sodium100: data.sodium100.present ? data.sodium100.value : this.sodium100,
+      potassium100: data.potassium100.present
+          ? data.potassium100.value
+          : this.potassium100,
+      cholesterol100: data.cholesterol100.present
+          ? data.cholesterol100.value
+          : this.cholesterol100,
+      vitaminA100:
+          data.vitaminA100.present ? data.vitaminA100.value : this.vitaminA100,
+      vitaminC100:
+          data.vitaminC100.present ? data.vitaminC100.value : this.vitaminC100,
+      vitaminD100:
+          data.vitaminD100.present ? data.vitaminD100.value : this.vitaminD100,
+      calcium100:
+          data.calcium100.present ? data.calcium100.value : this.calcium100,
+      iron100: data.iron100.present ? data.iron100.value : this.iron100,
     );
   }
 
@@ -1935,33 +2165,50 @@ class Meal extends DataClass implements Insertable<Meal> {
           ..write('proteins100: $proteins100, ')
           ..write('sugars100: $sugars100, ')
           ..write('saturatedFat100: $saturatedFat100, ')
-          ..write('fiber100: $fiber100')
+          ..write('fiber100: $fiber100, ')
+          ..write('sodium100: $sodium100, ')
+          ..write('potassium100: $potassium100, ')
+          ..write('cholesterol100: $cholesterol100, ')
+          ..write('vitaminA100: $vitaminA100, ')
+          ..write('vitaminC100: $vitaminC100, ')
+          ..write('vitaminD100: $vitaminD100, ')
+          ..write('calcium100: $calcium100, ')
+          ..write('iron100: $iron100')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      code,
-      name,
-      brands,
-      thumbnailImageUrl,
-      mainImageUrl,
-      url,
-      mealQuantity,
-      mealUnit,
-      servingQuantity,
-      servingUnit,
-      servingSize,
-      source,
-      energyKcal100,
-      carbohydrates100,
-      fat100,
-      proteins100,
-      sugars100,
-      saturatedFat100,
-      fiber100);
+  int get hashCode => Object.hashAll([
+        id,
+        code,
+        name,
+        brands,
+        thumbnailImageUrl,
+        mainImageUrl,
+        url,
+        mealQuantity,
+        mealUnit,
+        servingQuantity,
+        servingUnit,
+        servingSize,
+        source,
+        energyKcal100,
+        carbohydrates100,
+        fat100,
+        proteins100,
+        sugars100,
+        saturatedFat100,
+        fiber100,
+        sodium100,
+        potassium100,
+        cholesterol100,
+        vitaminA100,
+        vitaminC100,
+        vitaminD100,
+        calcium100,
+        iron100
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1985,7 +2232,15 @@ class Meal extends DataClass implements Insertable<Meal> {
           other.proteins100 == this.proteins100 &&
           other.sugars100 == this.sugars100 &&
           other.saturatedFat100 == this.saturatedFat100 &&
-          other.fiber100 == this.fiber100);
+          other.fiber100 == this.fiber100 &&
+          other.sodium100 == this.sodium100 &&
+          other.potassium100 == this.potassium100 &&
+          other.cholesterol100 == this.cholesterol100 &&
+          other.vitaminA100 == this.vitaminA100 &&
+          other.vitaminC100 == this.vitaminC100 &&
+          other.vitaminD100 == this.vitaminD100 &&
+          other.calcium100 == this.calcium100 &&
+          other.iron100 == this.iron100);
 }
 
 class MealsCompanion extends UpdateCompanion<Meal> {
@@ -2009,6 +2264,14 @@ class MealsCompanion extends UpdateCompanion<Meal> {
   final Value<double?> sugars100;
   final Value<double?> saturatedFat100;
   final Value<double?> fiber100;
+  final Value<double?> sodium100;
+  final Value<double?> potassium100;
+  final Value<double?> cholesterol100;
+  final Value<double?> vitaminA100;
+  final Value<double?> vitaminC100;
+  final Value<double?> vitaminD100;
+  final Value<double?> calcium100;
+  final Value<double?> iron100;
   final Value<int> rowid;
   const MealsCompanion({
     this.id = const Value.absent(),
@@ -2031,6 +2294,14 @@ class MealsCompanion extends UpdateCompanion<Meal> {
     this.sugars100 = const Value.absent(),
     this.saturatedFat100 = const Value.absent(),
     this.fiber100 = const Value.absent(),
+    this.sodium100 = const Value.absent(),
+    this.potassium100 = const Value.absent(),
+    this.cholesterol100 = const Value.absent(),
+    this.vitaminA100 = const Value.absent(),
+    this.vitaminC100 = const Value.absent(),
+    this.vitaminD100 = const Value.absent(),
+    this.calcium100 = const Value.absent(),
+    this.iron100 = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MealsCompanion.insert({
@@ -2054,6 +2325,14 @@ class MealsCompanion extends UpdateCompanion<Meal> {
     this.sugars100 = const Value.absent(),
     this.saturatedFat100 = const Value.absent(),
     this.fiber100 = const Value.absent(),
+    this.sodium100 = const Value.absent(),
+    this.potassium100 = const Value.absent(),
+    this.cholesterol100 = const Value.absent(),
+    this.vitaminA100 = const Value.absent(),
+    this.vitaminC100 = const Value.absent(),
+    this.vitaminD100 = const Value.absent(),
+    this.calcium100 = const Value.absent(),
+    this.iron100 = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id);
   static Insertable<Meal> custom({
@@ -2077,6 +2356,14 @@ class MealsCompanion extends UpdateCompanion<Meal> {
     Expression<double>? sugars100,
     Expression<double>? saturatedFat100,
     Expression<double>? fiber100,
+    Expression<double>? sodium100,
+    Expression<double>? potassium100,
+    Expression<double>? cholesterol100,
+    Expression<double>? vitaminA100,
+    Expression<double>? vitaminC100,
+    Expression<double>? vitaminD100,
+    Expression<double>? calcium100,
+    Expression<double>? iron100,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2100,6 +2387,14 @@ class MealsCompanion extends UpdateCompanion<Meal> {
       if (sugars100 != null) 'sugars100': sugars100,
       if (saturatedFat100 != null) 'saturated_fat100': saturatedFat100,
       if (fiber100 != null) 'fiber100': fiber100,
+      if (sodium100 != null) 'sodium100': sodium100,
+      if (potassium100 != null) 'potassium100': potassium100,
+      if (cholesterol100 != null) 'cholesterol100': cholesterol100,
+      if (vitaminA100 != null) 'vitamin_a100': vitaminA100,
+      if (vitaminC100 != null) 'vitamin_c100': vitaminC100,
+      if (vitaminD100 != null) 'vitamin_d100': vitaminD100,
+      if (calcium100 != null) 'calcium100': calcium100,
+      if (iron100 != null) 'iron100': iron100,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2125,6 +2420,14 @@ class MealsCompanion extends UpdateCompanion<Meal> {
       Value<double?>? sugars100,
       Value<double?>? saturatedFat100,
       Value<double?>? fiber100,
+      Value<double?>? sodium100,
+      Value<double?>? potassium100,
+      Value<double?>? cholesterol100,
+      Value<double?>? vitaminA100,
+      Value<double?>? vitaminC100,
+      Value<double?>? vitaminD100,
+      Value<double?>? calcium100,
+      Value<double?>? iron100,
       Value<int>? rowid}) {
     return MealsCompanion(
       id: id ?? this.id,
@@ -2147,6 +2450,14 @@ class MealsCompanion extends UpdateCompanion<Meal> {
       sugars100: sugars100 ?? this.sugars100,
       saturatedFat100: saturatedFat100 ?? this.saturatedFat100,
       fiber100: fiber100 ?? this.fiber100,
+      sodium100: sodium100 ?? this.sodium100,
+      potassium100: potassium100 ?? this.potassium100,
+      cholesterol100: cholesterol100 ?? this.cholesterol100,
+      vitaminA100: vitaminA100 ?? this.vitaminA100,
+      vitaminC100: vitaminC100 ?? this.vitaminC100,
+      vitaminD100: vitaminD100 ?? this.vitaminD100,
+      calcium100: calcium100 ?? this.calcium100,
+      iron100: iron100 ?? this.iron100,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2214,6 +2525,30 @@ class MealsCompanion extends UpdateCompanion<Meal> {
     if (fiber100.present) {
       map['fiber100'] = Variable<double>(fiber100.value);
     }
+    if (sodium100.present) {
+      map['sodium100'] = Variable<double>(sodium100.value);
+    }
+    if (potassium100.present) {
+      map['potassium100'] = Variable<double>(potassium100.value);
+    }
+    if (cholesterol100.present) {
+      map['cholesterol100'] = Variable<double>(cholesterol100.value);
+    }
+    if (vitaminA100.present) {
+      map['vitamin_a100'] = Variable<double>(vitaminA100.value);
+    }
+    if (vitaminC100.present) {
+      map['vitamin_c100'] = Variable<double>(vitaminC100.value);
+    }
+    if (vitaminD100.present) {
+      map['vitamin_d100'] = Variable<double>(vitaminD100.value);
+    }
+    if (calcium100.present) {
+      map['calcium100'] = Variable<double>(calcium100.value);
+    }
+    if (iron100.present) {
+      map['iron100'] = Variable<double>(iron100.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2243,6 +2578,14 @@ class MealsCompanion extends UpdateCompanion<Meal> {
           ..write('sugars100: $sugars100, ')
           ..write('saturatedFat100: $saturatedFat100, ')
           ..write('fiber100: $fiber100, ')
+          ..write('sodium100: $sodium100, ')
+          ..write('potassium100: $potassium100, ')
+          ..write('cholesterol100: $cholesterol100, ')
+          ..write('vitaminA100: $vitaminA100, ')
+          ..write('vitaminC100: $vitaminC100, ')
+          ..write('vitaminD100: $vitaminD100, ')
+          ..write('calcium100: $calcium100, ')
+          ..write('iron100: $iron100, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3677,6 +4020,299 @@ class RecipeItemsCompanion extends UpdateCompanion<RecipeItem> {
   }
 }
 
+class $WeightsTable extends Weights with TableInfo<$WeightsTable, Weight> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WeightsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _weightKgMeta =
+      const VerificationMeta('weightKg');
+  @override
+  late final GeneratedColumn<double> weightKg = GeneratedColumn<double>(
+      'weight_kg', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+      'date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+      'note', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [id, userId, weightKg, date, note];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'weights';
+  @override
+  VerificationContext validateIntegrity(Insertable<Weight> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('weight_kg')) {
+      context.handle(_weightKgMeta,
+          weightKg.isAcceptableOrUnknown(data['weight_kg']!, _weightKgMeta));
+    } else if (isInserting) {
+      context.missing(_weightKgMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+          _noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Weight map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Weight(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id'])!,
+      weightKg: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}weight_kg'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      note: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}note']),
+    );
+  }
+
+  @override
+  $WeightsTable createAlias(String alias) {
+    return $WeightsTable(attachedDatabase, alias);
+  }
+}
+
+class Weight extends DataClass implements Insertable<Weight> {
+  final int id;
+  final int userId;
+  final double weightKg;
+  final DateTime date;
+  final String? note;
+  const Weight(
+      {required this.id,
+      required this.userId,
+      required this.weightKg,
+      required this.date,
+      this.note});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
+    map['weight_kg'] = Variable<double>(weightKg);
+    map['date'] = Variable<DateTime>(date);
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    return map;
+  }
+
+  WeightsCompanion toCompanion(bool nullToAbsent) {
+    return WeightsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      weightKg: Value(weightKg),
+      date: Value(date),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+    );
+  }
+
+  factory Weight.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Weight(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
+      weightKg: serializer.fromJson<double>(json['weightKg']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      note: serializer.fromJson<String?>(json['note']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
+      'weightKg': serializer.toJson<double>(weightKg),
+      'date': serializer.toJson<DateTime>(date),
+      'note': serializer.toJson<String?>(note),
+    };
+  }
+
+  Weight copyWith(
+          {int? id,
+          int? userId,
+          double? weightKg,
+          DateTime? date,
+          Value<String?> note = const Value.absent()}) =>
+      Weight(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        weightKg: weightKg ?? this.weightKg,
+        date: date ?? this.date,
+        note: note.present ? note.value : this.note,
+      );
+  Weight copyWithCompanion(WeightsCompanion data) {
+    return Weight(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      weightKg: data.weightKg.present ? data.weightKg.value : this.weightKg,
+      date: data.date.present ? data.date.value : this.date,
+      note: data.note.present ? data.note.value : this.note,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Weight(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('date: $date, ')
+          ..write('note: $note')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, userId, weightKg, date, note);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Weight &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.weightKg == this.weightKg &&
+          other.date == this.date &&
+          other.note == this.note);
+}
+
+class WeightsCompanion extends UpdateCompanion<Weight> {
+  final Value<int> id;
+  final Value<int> userId;
+  final Value<double> weightKg;
+  final Value<DateTime> date;
+  final Value<String?> note;
+  const WeightsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.weightKg = const Value.absent(),
+    this.date = const Value.absent(),
+    this.note = const Value.absent(),
+  });
+  WeightsCompanion.insert({
+    this.id = const Value.absent(),
+    required int userId,
+    required double weightKg,
+    required DateTime date,
+    this.note = const Value.absent(),
+  })  : userId = Value(userId),
+        weightKg = Value(weightKg),
+        date = Value(date);
+  static Insertable<Weight> custom({
+    Expression<int>? id,
+    Expression<int>? userId,
+    Expression<double>? weightKg,
+    Expression<DateTime>? date,
+    Expression<String>? note,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (weightKg != null) 'weight_kg': weightKg,
+      if (date != null) 'date': date,
+      if (note != null) 'note': note,
+    });
+  }
+
+  WeightsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? userId,
+      Value<double>? weightKg,
+      Value<DateTime>? date,
+      Value<String?>? note}) {
+    return WeightsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      weightKg: weightKg ?? this.weightKg,
+      date: date ?? this.date,
+      note: note ?? this.note,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (weightKg.present) {
+      map['weight_kg'] = Variable<double>(weightKg.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WeightsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('date: $date, ')
+          ..write('note: $note')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3688,6 +4324,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $TrackedDaysTable trackedDays = $TrackedDaysTable(this);
   late final $RecipesTable recipes = $RecipesTable(this);
   late final $RecipeItemsTable recipeItems = $RecipeItemsTable(this);
+  late final $WeightsTable weights = $WeightsTable(this);
   late final ConfigDao configDao = ConfigDao(this as AppDatabase);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final IntakeDao intakeDao = IntakeDao(this as AppDatabase);
@@ -3696,6 +4333,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       UserActivityDao(this as AppDatabase);
   late final TrackedDayDao trackedDayDao = TrackedDayDao(this as AppDatabase);
   late final RecipeDao recipeDao = RecipeDao(this as AppDatabase);
+  late final WeightDao weightDao = WeightDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3708,7 +4346,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         userActivities,
         trackedDays,
         recipes,
-        recipeItems
+        recipeItems,
+        weights
       ];
 }
 
@@ -4361,6 +5000,14 @@ typedef $$MealsTableCreateCompanionBuilder = MealsCompanion Function({
   Value<double?> sugars100,
   Value<double?> saturatedFat100,
   Value<double?> fiber100,
+  Value<double?> sodium100,
+  Value<double?> potassium100,
+  Value<double?> cholesterol100,
+  Value<double?> vitaminA100,
+  Value<double?> vitaminC100,
+  Value<double?> vitaminD100,
+  Value<double?> calcium100,
+  Value<double?> iron100,
   Value<int> rowid,
 });
 typedef $$MealsTableUpdateCompanionBuilder = MealsCompanion Function({
@@ -4384,6 +5031,14 @@ typedef $$MealsTableUpdateCompanionBuilder = MealsCompanion Function({
   Value<double?> sugars100,
   Value<double?> saturatedFat100,
   Value<double?> fiber100,
+  Value<double?> sodium100,
+  Value<double?> potassium100,
+  Value<double?> cholesterol100,
+  Value<double?> vitaminA100,
+  Value<double?> vitaminC100,
+  Value<double?> vitaminD100,
+  Value<double?> calcium100,
+  Value<double?> iron100,
   Value<int> rowid,
 });
 
@@ -4458,6 +5113,31 @@ class $$MealsTableFilterComposer extends Composer<_$AppDatabase, $MealsTable> {
 
   ColumnFilters<double> get fiber100 => $composableBuilder(
       column: $table.fiber100, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get sodium100 => $composableBuilder(
+      column: $table.sodium100, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get potassium100 => $composableBuilder(
+      column: $table.potassium100, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get cholesterol100 => $composableBuilder(
+      column: $table.cholesterol100,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get vitaminA100 => $composableBuilder(
+      column: $table.vitaminA100, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get vitaminC100 => $composableBuilder(
+      column: $table.vitaminC100, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get vitaminD100 => $composableBuilder(
+      column: $table.vitaminD100, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get calcium100 => $composableBuilder(
+      column: $table.calcium100, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get iron100 => $composableBuilder(
+      column: $table.iron100, builder: (column) => ColumnFilters(column));
 }
 
 class $$MealsTableOrderingComposer
@@ -4535,6 +5215,32 @@ class $$MealsTableOrderingComposer
 
   ColumnOrderings<double> get fiber100 => $composableBuilder(
       column: $table.fiber100, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get sodium100 => $composableBuilder(
+      column: $table.sodium100, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get potassium100 => $composableBuilder(
+      column: $table.potassium100,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get cholesterol100 => $composableBuilder(
+      column: $table.cholesterol100,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get vitaminA100 => $composableBuilder(
+      column: $table.vitaminA100, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get vitaminC100 => $composableBuilder(
+      column: $table.vitaminC100, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get vitaminD100 => $composableBuilder(
+      column: $table.vitaminD100, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get calcium100 => $composableBuilder(
+      column: $table.calcium100, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get iron100 => $composableBuilder(
+      column: $table.iron100, builder: (column) => ColumnOrderings(column));
 }
 
 class $$MealsTableAnnotationComposer
@@ -4605,6 +5311,30 @@ class $$MealsTableAnnotationComposer
 
   GeneratedColumn<double> get fiber100 =>
       $composableBuilder(column: $table.fiber100, builder: (column) => column);
+
+  GeneratedColumn<double> get sodium100 =>
+      $composableBuilder(column: $table.sodium100, builder: (column) => column);
+
+  GeneratedColumn<double> get potassium100 => $composableBuilder(
+      column: $table.potassium100, builder: (column) => column);
+
+  GeneratedColumn<double> get cholesterol100 => $composableBuilder(
+      column: $table.cholesterol100, builder: (column) => column);
+
+  GeneratedColumn<double> get vitaminA100 => $composableBuilder(
+      column: $table.vitaminA100, builder: (column) => column);
+
+  GeneratedColumn<double> get vitaminC100 => $composableBuilder(
+      column: $table.vitaminC100, builder: (column) => column);
+
+  GeneratedColumn<double> get vitaminD100 => $composableBuilder(
+      column: $table.vitaminD100, builder: (column) => column);
+
+  GeneratedColumn<double> get calcium100 => $composableBuilder(
+      column: $table.calcium100, builder: (column) => column);
+
+  GeneratedColumn<double> get iron100 =>
+      $composableBuilder(column: $table.iron100, builder: (column) => column);
 }
 
 class $$MealsTableTableManager extends RootTableManager<
@@ -4650,6 +5380,14 @@ class $$MealsTableTableManager extends RootTableManager<
             Value<double?> sugars100 = const Value.absent(),
             Value<double?> saturatedFat100 = const Value.absent(),
             Value<double?> fiber100 = const Value.absent(),
+            Value<double?> sodium100 = const Value.absent(),
+            Value<double?> potassium100 = const Value.absent(),
+            Value<double?> cholesterol100 = const Value.absent(),
+            Value<double?> vitaminA100 = const Value.absent(),
+            Value<double?> vitaminC100 = const Value.absent(),
+            Value<double?> vitaminD100 = const Value.absent(),
+            Value<double?> calcium100 = const Value.absent(),
+            Value<double?> iron100 = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MealsCompanion(
@@ -4673,6 +5411,14 @@ class $$MealsTableTableManager extends RootTableManager<
             sugars100: sugars100,
             saturatedFat100: saturatedFat100,
             fiber100: fiber100,
+            sodium100: sodium100,
+            potassium100: potassium100,
+            cholesterol100: cholesterol100,
+            vitaminA100: vitaminA100,
+            vitaminC100: vitaminC100,
+            vitaminD100: vitaminD100,
+            calcium100: calcium100,
+            iron100: iron100,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -4696,6 +5442,14 @@ class $$MealsTableTableManager extends RootTableManager<
             Value<double?> sugars100 = const Value.absent(),
             Value<double?> saturatedFat100 = const Value.absent(),
             Value<double?> fiber100 = const Value.absent(),
+            Value<double?> sodium100 = const Value.absent(),
+            Value<double?> potassium100 = const Value.absent(),
+            Value<double?> cholesterol100 = const Value.absent(),
+            Value<double?> vitaminA100 = const Value.absent(),
+            Value<double?> vitaminC100 = const Value.absent(),
+            Value<double?> vitaminD100 = const Value.absent(),
+            Value<double?> calcium100 = const Value.absent(),
+            Value<double?> iron100 = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MealsCompanion.insert(
@@ -4719,6 +5473,14 @@ class $$MealsTableTableManager extends RootTableManager<
             sugars100: sugars100,
             saturatedFat100: saturatedFat100,
             fiber100: fiber100,
+            sodium100: sodium100,
+            potassium100: potassium100,
+            cholesterol100: cholesterol100,
+            vitaminA100: vitaminA100,
+            vitaminC100: vitaminC100,
+            vitaminD100: vitaminD100,
+            calcium100: calcium100,
+            iron100: iron100,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -5674,6 +6436,165 @@ typedef $$RecipeItemsTableProcessedTableManager = ProcessedTableManager<
     (RecipeItem, $$RecipeItemsTableReferences),
     RecipeItem,
     PrefetchHooks Function({bool recipeId})>;
+typedef $$WeightsTableCreateCompanionBuilder = WeightsCompanion Function({
+  Value<int> id,
+  required int userId,
+  required double weightKg,
+  required DateTime date,
+  Value<String?> note,
+});
+typedef $$WeightsTableUpdateCompanionBuilder = WeightsCompanion Function({
+  Value<int> id,
+  Value<int> userId,
+  Value<double> weightKg,
+  Value<DateTime> date,
+  Value<String?> note,
+});
+
+class $$WeightsTableFilterComposer
+    extends Composer<_$AppDatabase, $WeightsTable> {
+  $$WeightsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get weightKg => $composableBuilder(
+      column: $table.weightKg, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get note => $composableBuilder(
+      column: $table.note, builder: (column) => ColumnFilters(column));
+}
+
+class $$WeightsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WeightsTable> {
+  $$WeightsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get weightKg => $composableBuilder(
+      column: $table.weightKg, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get note => $composableBuilder(
+      column: $table.note, builder: (column) => ColumnOrderings(column));
+}
+
+class $$WeightsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WeightsTable> {
+  $$WeightsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<double> get weightKg =>
+      $composableBuilder(column: $table.weightKg, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+}
+
+class $$WeightsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $WeightsTable,
+    Weight,
+    $$WeightsTableFilterComposer,
+    $$WeightsTableOrderingComposer,
+    $$WeightsTableAnnotationComposer,
+    $$WeightsTableCreateCompanionBuilder,
+    $$WeightsTableUpdateCompanionBuilder,
+    (Weight, BaseReferences<_$AppDatabase, $WeightsTable, Weight>),
+    Weight,
+    PrefetchHooks Function()> {
+  $$WeightsTableTableManager(_$AppDatabase db, $WeightsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WeightsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WeightsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WeightsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> userId = const Value.absent(),
+            Value<double> weightKg = const Value.absent(),
+            Value<DateTime> date = const Value.absent(),
+            Value<String?> note = const Value.absent(),
+          }) =>
+              WeightsCompanion(
+            id: id,
+            userId: userId,
+            weightKg: weightKg,
+            date: date,
+            note: note,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int userId,
+            required double weightKg,
+            required DateTime date,
+            Value<String?> note = const Value.absent(),
+          }) =>
+              WeightsCompanion.insert(
+            id: id,
+            userId: userId,
+            weightKg: weightKg,
+            date: date,
+            note: note,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$WeightsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $WeightsTable,
+    Weight,
+    $$WeightsTableFilterComposer,
+    $$WeightsTableOrderingComposer,
+    $$WeightsTableAnnotationComposer,
+    $$WeightsTableCreateCompanionBuilder,
+    $$WeightsTableUpdateCompanionBuilder,
+    (Weight, BaseReferences<_$AppDatabase, $WeightsTable, Weight>),
+    Weight,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -5694,4 +6615,6 @@ class $AppDatabaseManager {
       $$RecipesTableTableManager(_db, _db.recipes);
   $$RecipeItemsTableTableManager get recipeItems =>
       $$RecipeItemsTableTableManager(_db, _db.recipeItems);
+  $$WeightsTableTableManager get weights =>
+      $$WeightsTableTableManager(_db, _db.weights);
 }

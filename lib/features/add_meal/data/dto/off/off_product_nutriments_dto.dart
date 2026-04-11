@@ -60,6 +60,31 @@ class OFFProductNutrimentsDTO {
   // final double? fiber_value;
   // final String? fiber_unit;
 
+  // Micronutrients
+  @JsonKey(name: 'sodium_100g')
+  final dynamic sodium_100g;
+
+  @JsonKey(name: 'potassium_100g')
+  final dynamic potassium_100g;
+
+  @JsonKey(name: 'cholesterol_100g')
+  final dynamic cholesterol_100g;
+
+  @JsonKey(name: 'vitamin-a_100g')
+  final dynamic vitamin_a_100g;
+
+  @JsonKey(name: 'vitamin-c_100g')
+  final dynamic vitamin_c_100g;
+
+  @JsonKey(name: 'vitamin-d_100g')
+  final dynamic vitamin_d_100g;
+
+  @JsonKey(name: 'calcium_100g')
+  final dynamic calcium_100g;
+
+  @JsonKey(name: 'iron_100g')
+  final dynamic iron_100g;
+
   OFFProductNutrimentsDTO({
     //required this.energy_kcal,
     required this.energy_kcal_100g,
@@ -96,6 +121,16 @@ class OFFProductNutrimentsDTO {
     // required this.fiber_serving,
     // required this.fiber_value,
     // required this.fiber_unit,
+
+    // Micronutrients
+    this.sodium_100g,
+    this.potassium_100g,
+    this.cholesterol_100g,
+    this.vitamin_a_100g,
+    this.vitamin_c_100g,
+    this.vitamin_d_100g,
+    this.calcium_100g,
+    this.iron_100g,
   });
 
   factory OFFProductNutrimentsDTO.fromJson(Map<String, dynamic> json) =>

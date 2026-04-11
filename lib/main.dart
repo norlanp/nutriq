@@ -24,6 +24,7 @@ import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
 import 'package:nutriq/features/recipe_builder/presentation/recipe_builder_screen.dart';
 import 'package:nutriq/features/recipe_builder/presentation/recipe_list_screen.dart';
 import 'package:nutriq/features/settings/settings_screen.dart';
+import 'package:nutriq/features/weight_tracking/presentation/screen/weight_tracking_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -115,6 +116,8 @@ class NutriqApp extends StatelessWidget {
             const RecipeListScreen(),
         NavigationOptions.recipeBuilderRoute: (context) =>
             const RecipeBuilderScreen(),
+        NavigationOptions.weightTrackingRoute: (context) =>
+            const WeightTrackingScreen(),
       },
     );
   }

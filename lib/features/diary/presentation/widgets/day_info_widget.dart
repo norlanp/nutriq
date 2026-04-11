@@ -6,6 +6,7 @@ import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
 import 'package:nutriq/core/presentation/widgets/activity_vertial_list.dart';
 import 'package:nutriq/core/presentation/widgets/copy_or_delete_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/copy_dialog.dart';
+import 'package:nutriq/core/presentation/widgets/daily_nutrition_summary.dart';
 import 'package:nutriq/core/presentation/widgets/delete_dialog.dart';
 import 'package:nutriq/core/utils/custom_icons.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
@@ -47,6 +48,9 @@ class DayInfoWidget extends StatelessWidget {
     required this.onCopyActivity,
   });
 
+  List<IntakeEntity> get _allIntakes =>
+      [...breakfastIntake, ...lunchIntake, ...dinnerIntake, ...snackIntake];
+
   @override
   Widget build(BuildContext context) {
     final trackedDay = trackedDayEntity;
@@ -69,7 +73,8 @@ class DayInfoWidget extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
-                                .onSurface.withValues(alpha: 0.7))),
+                                .onSurface
+                                .withValues(alpha: 0.7))),
                   )
                 : const SizedBox(),
             trackedDay != null
@@ -108,11 +113,17 @@ class DayInfoWidget extends StatelessWidget {
                                 ?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .onSurface.withValues(alpha: 0.7))),
+                                        .onSurface
+                                        .withValues(alpha: 0.7))),
                       ],
                     ),
                   )
                 : const SizedBox(),
+            const SizedBox(height: 8.0),
+            DailyNutritionSummary(
+              trackedDay: trackedDay,
+              intakes: _allIntakes,
+            ),
             const SizedBox(height: 8.0),
             ActivityVerticalList(
                 day: selectedDay,
@@ -178,6 +189,8 @@ class DayInfoWidget extends StatelessWidget {
                       : onCopyIntake,
               trackedDayEntity: trackedDay,
             ),
+            const SizedBox(height: 8.0),
+            _WeeklySummaryButton(selectedDay: selectedDay),
             const SizedBox(height: 16.0)
           ],
         )
@@ -256,5 +269,47 @@ class DayInfoWidget extends StatelessWidget {
     if (shouldDeleteActivity != null) {
       onDeleteActivity(activityEntity, trackedDayEntity);
     }
+  }
+}
+
+class _WeeklySummaryButton extends StatelessWidget {
+  final DateTime selectedDay;
+
+  const _WeeklySummaryButton({required this.selectedDay});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: OutlinedButton.icon(
+        onPressed: () => _showWeeklySummary(context),
+        icon: const Icon(Icons.bar_chart_outlined),
+        label: Text(S.of(context).weeklySummaryLabel),
+      ),
+    );
+  }
+
+  void _showWeeklySummary(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => const _WeeklySummarySheet(),
+    );
+  }
+}
+
+class _WeeklySummarySheet extends StatelessWidget {
+  const _WeeklySummarySheet();
+
+  @override
+  Widget build(BuildContext context) {
+    // Placeholder — in production this would fetch weekly data via BLoC
+    return const SizedBox(
+      height: 400,
+      child: Center(
+        child: Text('Weekly summary coming soon'),
+      ),
+    );
   }
 }

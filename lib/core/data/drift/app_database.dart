@@ -12,6 +12,7 @@ import 'package:nutriq/core/data/drift/tables/meal_table.dart';
 import 'package:nutriq/core/data/drift/tables/user_activity_table.dart';
 import 'package:nutriq/core/data/drift/tables/tracked_day_table.dart';
 import 'package:nutriq/core/data/drift/tables/recipe_table.dart';
+import 'package:nutriq/core/data/drift/tables/weight_table.dart';
 
 import 'package:nutriq/core/data/drift/dao/config_dao.dart';
 import 'package:nutriq/core/data/drift/dao/user_dao.dart';
@@ -20,6 +21,7 @@ import 'package:nutriq/core/data/drift/dao/meal_dao.dart';
 import 'package:nutriq/core/data/drift/dao/user_activity_dao.dart';
 import 'package:nutriq/core/data/drift/dao/tracked_day_dao.dart';
 import 'package:nutriq/core/data/drift/dao/recipe_dao.dart';
+import 'package:nutriq/core/data/drift/dao/weight_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -32,7 +34,8 @@ part 'app_database.g.dart';
     UserActivities,
     TrackedDays,
     Recipes,
-    RecipeItems
+    RecipeItems,
+    Weights
   ],
   daos: [
     ConfigDao,
@@ -41,7 +44,8 @@ part 'app_database.g.dart';
     MealDao,
     UserActivityDao,
     TrackedDayDao,
-    RecipeDao
+    RecipeDao,
+    WeightDao
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -50,7 +54,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -69,6 +73,33 @@ class AppDatabase extends _$AppDatabase {
           if (from < 2) {
             await m.createTable(recipes);
             await m.createTable(recipeItems);
+          }
+          if (from < 3) {
+            await m.createTable(weights);
+            await customStatement(
+              'ALTER TABLE meals ADD COLUMN sodium_100 REAL',
+            );
+            await customStatement(
+              'ALTER TABLE meals ADD COLUMN potassium_100 REAL',
+            );
+            await customStatement(
+              'ALTER TABLE meals ADD COLUMN cholesterol_100 REAL',
+            );
+            await customStatement(
+              'ALTER TABLE meals ADD COLUMN vitamin_a_100 REAL',
+            );
+            await customStatement(
+              'ALTER TABLE meals ADD COLUMN vitamin_c_100 REAL',
+            );
+            await customStatement(
+              'ALTER TABLE meals ADD COLUMN vitamin_d_100 REAL',
+            );
+            await customStatement(
+              'ALTER TABLE meals ADD COLUMN calcium_100 REAL',
+            );
+            await customStatement(
+              'ALTER TABLE meals ADD COLUMN iron_100 REAL',
+            );
           }
         },
       );

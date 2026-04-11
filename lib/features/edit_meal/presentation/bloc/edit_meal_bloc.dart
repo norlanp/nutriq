@@ -50,7 +50,16 @@ class EditMealBloc extends Bloc<EditMealEvent, EditMealState> {
         sugars100: multiplyIfNotNull(oldMealEntity.nutriments.sugars100),
         saturatedFat100:
             multiplyIfNotNull(oldMealEntity.nutriments.saturatedFat100),
-        fiber100: multiplyIfNotNull(oldMealEntity.nutriments.fiber100));
+        fiber100: multiplyIfNotNull(oldMealEntity.nutriments.fiber100),
+        sodium100: multiplyIfNotNull(oldMealEntity.nutriments.sodium100),
+        potassium100: multiplyIfNotNull(oldMealEntity.nutriments.potassium100),
+        cholesterol100:
+            multiplyIfNotNull(oldMealEntity.nutriments.cholesterol100),
+        vitaminA100: multiplyIfNotNull(oldMealEntity.nutriments.vitaminA100),
+        vitaminC100: multiplyIfNotNull(oldMealEntity.nutriments.vitaminC100),
+        vitaminD100: multiplyIfNotNull(oldMealEntity.nutriments.vitaminD100),
+        calcium100: multiplyIfNotNull(oldMealEntity.nutriments.calcium100),
+        iron100: multiplyIfNotNull(oldMealEntity.nutriments.iron100));
 
     return MealEntity(
         code: oldMealEntity.code,
