@@ -39,8 +39,10 @@ class AddItemBottomSheet extends StatelessWidget {
             subtitle: Text(
               S.of(context).activityExample,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
             ),
             // ignore: sized_box_for_whitespace
             leading: Container(
@@ -65,8 +67,10 @@ class AddItemBottomSheet extends StatelessWidget {
             subtitle: Text(
               S.of(context).breakfastExample,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
             ),
             // ignore: sized_box_for_whitespace
             leading: Container(
@@ -87,8 +91,10 @@ class AddItemBottomSheet extends StatelessWidget {
             subtitle: Text(
               S.of(context).lunchExample,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
             ),
             // ignore: sized_box_for_whitespace
             leading: Container(
@@ -109,8 +115,10 @@ class AddItemBottomSheet extends StatelessWidget {
             subtitle: Text(
               S.of(context).dinnerExample,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
             ),
             // ignore: sized_box_for_whitespace
             leading: Container(
@@ -131,8 +139,10 @@ class AddItemBottomSheet extends StatelessWidget {
             subtitle: Text(
               S.of(context).snackExample,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
             ),
             // ignore: sized_box_for_whitespace
             leading: Container(
@@ -140,6 +150,25 @@ class AddItemBottomSheet extends StatelessWidget {
                 child: Icon(IntakeTypeEntity.snack.getIconData())),
             onTap: () {
               _showAddItemScreen(context, AddMealType.snackType);
+            },
+          ),
+          const Divider(indent: 16, endIndent: 16),
+          ListTile(
+            title: Text(
+              S.of(context).myMealsLabel,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.restaurant,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .pushNamed(NavigationOptions.recipeListRoute);
             },
           ),
         ],

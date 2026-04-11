@@ -408,5 +408,14 @@
   "paSkiingGeneral": "kayak",
   "paSkiingGeneralDesc": "genel",
   "paSnowShovingModerate": "kar küreme",
-  "paSnowShovingModerateDesc": "elle, orta derecede çaba"
+  "paSnowShovingModerateDesc": "elle, orta derecede çaba",
+  "myMealsLabel": "Yemeklerim",
+  "noRecipesLabel": "Henüz tarif yok. Bir tane oluşturun!",
+  "ingredientsLabel": "malzemeler",
+  "recipeNameLabel": "Tarif adı",
+  "recipeServingsLabel": "Porsiyon",
+  "addIngredientLabel": "Malzeme ekle",
+  "saveRecipeLabel": "Tarifi kaydet",
+  "deleteRecipeLabel": "Tarifi sil",
+  "recipeBuilderLabel": "Tarif Oluşturucu"
 }

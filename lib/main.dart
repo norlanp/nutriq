@@ -21,6 +21,8 @@ import 'package:nutriq/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:nutriq/features/onboarding/onboarding_screen.dart';
 import 'package:nutriq/features/scanner/scanner_screen.dart';
 import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
+import 'package:nutriq/features/recipe_builder/presentation/recipe_builder_screen.dart';
+import 'package:nutriq/features/recipe_builder/presentation/recipe_list_screen.dart';
 import 'package:nutriq/features/settings/settings_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:provider/provider.dart';
@@ -109,6 +111,10 @@ class NutriqApp extends StatelessWidget {
             const ActivityDetailScreen(),
         NavigationOptions.imageFullScreenRoute: (context) =>
             const ImageFullScreen(),
+        NavigationOptions.recipeListRoute: (context) =>
+            const RecipeListScreen(),
+        NavigationOptions.recipeBuilderRoute: (context) =>
+            const RecipeBuilderScreen(),
       },
     );
   }

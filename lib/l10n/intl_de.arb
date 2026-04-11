@@ -401,5 +401,14 @@
   "paSkiingGeneral": "Skifahren",
   "paSkiingGeneralDesc": "allgemein",
   "paSnowShovingModerate": "Schnee schaufeln",
-  "paSnowShovingModerateDesc": "manuell, mäßige Anstrengung"
+  "paSnowShovingModerateDesc": "manuell, mäßige Anstrengung",
+  "myMealsLabel": "Meine Mahlzeiten",
+  "noRecipesLabel": "Noch keine Rezepte. Erstelle eins!",
+  "ingredientsLabel": "Zutaten",
+  "recipeNameLabel": "Rezeptname",
+  "recipeServingsLabel": "Portionen",
+  "addIngredientLabel": "Zutat hinzufügen",
+  "saveRecipeLabel": "Rezept speichern",
+  "deleteRecipeLabel": "Rezept löschen",
+  "recipeBuilderLabel": "Rezept-Builder"
 }

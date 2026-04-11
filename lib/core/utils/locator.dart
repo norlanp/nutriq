@@ -3,15 +3,18 @@ import 'package:get_it/get_it.dart';
 import 'package:nutriq/core/data/data_source/config_data_source.dart';
 import 'package:nutriq/core/data/data_source/intake_data_source.dart';
 import 'package:nutriq/core/data/data_source/physical_activity_data_source.dart';
+import 'package:nutriq/core/data/data_source/recipe_data_source.dart';
 import 'package:nutriq/core/data/data_source/tracked_day_data_source.dart';
 import 'package:nutriq/core/data/data_source/user_activity_data_source.dart';
 import 'package:nutriq/core/data/data_source/user_data_source.dart';
 import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/drift/dao/meal_dao.dart';
+import 'package:nutriq/core/data/drift/dao/recipe_dao.dart';
 import 'package:nutriq/core/data/repository/config_repository.dart' as data;
 import 'package:nutriq/core/domain/repository/config_repository.dart' as domain;
 import 'package:nutriq/core/data/repository/intake_repository.dart';
 import 'package:nutriq/core/data/repository/physical_activity_repository.dart';
+import 'package:nutriq/core/data/repository/recipe_repository.dart';
 import 'package:nutriq/core/data/repository/tracked_day_repository.dart';
 import 'package:nutriq/core/data/repository/user_activity_repository.dart';
 import 'package:nutriq/core/data/repository/user_repository.dart';
@@ -52,6 +55,12 @@ import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:nutriq/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:nutriq/features/recipe_builder/domain/repository/recipe_repository.dart'
+    as recipe_domain;
+import 'package:nutriq/features/recipe_builder/domain/usecase/add_recipe_usecase.dart';
+import 'package:nutriq/features/recipe_builder/domain/usecase/delete_recipe_usecase.dart';
+import 'package:nutriq/features/recipe_builder/domain/usecase/get_recipes_usecase.dart';
+import 'package:nutriq/features/recipe_builder/presentation/bloc/recipe_bloc.dart';
 import 'package:nutriq/features/scanner/domain/usecase/search_product_by_barcode_usecase.dart';
 import 'package:nutriq/features/scanner/presentation/scanner_bloc.dart';
 import 'package:nutriq/features/settings/domain/usecase/export_data_usecase.dart';
@@ -80,6 +89,7 @@ Future<void> initLocator() async {
   final userDao = appDatabase.userDao;
   final intakeDao = appDatabase.intakeDao;
   final mealDao = MealDao(appDatabase);
+  final recipeDao = RecipeDao(appDatabase);
   final userActivityDao = appDatabase.userActivityDao;
   final trackedDayDao = appDatabase.trackedDayDao;
 
@@ -105,6 +115,11 @@ Future<void> initLocator() async {
     () => TrackedDayDataSource(trackedDayDao),
   );
   locator.registerLazySingleton<MealDao>(() => mealDao);
+  locator.registerLazySingleton<RecipeDao>(() => recipeDao);
+
+  locator.registerLazySingleton<RecipeDataSource>(
+    () => RecipeDataSource(recipeDao),
+  );
 
   // Repositories
   locator.registerLazySingleton<domain.ConfigRepository>(
@@ -127,6 +142,9 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<TrackedDayRepository>(
     () => TrackedDayRepository(locator()),
+  );
+  locator.registerLazySingleton<recipe_domain.RecipeRepository>(
+    () => RecipeRepository(locator(), locator()),
   );
 
   // UseCases
@@ -187,6 +205,15 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton(
     () => ImportDataUsecase(locator(), locator(), locator()),
+  );
+  locator.registerLazySingleton<GetRecipesUsecase>(
+    () => GetRecipesUsecase(locator()),
+  );
+  locator.registerLazySingleton<AddRecipeUsecase>(
+    () => AddRecipeUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteRecipeUsecase>(
+    () => DeleteRecipeUsecase(locator()),
   );
 
   // BLoCs
@@ -250,6 +277,9 @@ Future<void> initLocator() async {
   );
   locator.registerFactory<FoodBloc>(() => FoodBloc(locator(), locator()));
   locator.registerFactory(() => RecentMealBloc(locator(), locator()));
+  locator.registerFactory<RecipeBloc>(
+    () => RecipeBloc(locator(), locator(), locator()),
+  );
 
   await _initializeConfig(locator<ConfigDataSource>());
 }

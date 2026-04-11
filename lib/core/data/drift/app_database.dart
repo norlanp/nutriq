@@ -11,6 +11,7 @@ import 'package:nutriq/core/data/drift/tables/intake_table.dart';
 import 'package:nutriq/core/data/drift/tables/meal_table.dart';
 import 'package:nutriq/core/data/drift/tables/user_activity_table.dart';
 import 'package:nutriq/core/data/drift/tables/tracked_day_table.dart';
+import 'package:nutriq/core/data/drift/tables/recipe_table.dart';
 
 import 'package:nutriq/core/data/drift/dao/config_dao.dart';
 import 'package:nutriq/core/data/drift/dao/user_dao.dart';
@@ -18,18 +19,29 @@ import 'package:nutriq/core/data/drift/dao/intake_dao.dart';
 import 'package:nutriq/core/data/drift/dao/meal_dao.dart';
 import 'package:nutriq/core/data/drift/dao/user_activity_dao.dart';
 import 'package:nutriq/core/data/drift/dao/tracked_day_dao.dart';
+import 'package:nutriq/core/data/drift/dao/recipe_dao.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [ConfigEntries, Users, Intakes, Meals, UserActivities, TrackedDays],
+  tables: [
+    ConfigEntries,
+    Users,
+    Intakes,
+    Meals,
+    UserActivities,
+    TrackedDays,
+    Recipes,
+    RecipeItems
+  ],
   daos: [
     ConfigDao,
     UserDao,
     IntakeDao,
     MealDao,
     UserActivityDao,
-    TrackedDayDao
+    TrackedDayDao,
+    RecipeDao
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -38,7 +50,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -52,6 +64,12 @@ class AppDatabase extends _$AppDatabase {
               selectedAppTheme: Value('system'),
             ),
           );
+        },
+        onUpgrade: (Migrator m, int from, int to) async {
+          if (from < 2) {
+            await m.createTable(recipes);
+            await m.createTable(recipeItems);
+          }
         },
       );
 }

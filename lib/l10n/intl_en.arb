@@ -411,5 +411,14 @@
   "paSkiingGeneral": "skiing",
   "paSkiingGeneralDesc": "general",
   "paSnowShovingModerate": "snow shoveling",
-  "paSnowShovingModerateDesc": "by hand, moderate effort"
+  "paSnowShovingModerateDesc": "by hand, moderate effort",
+  "myMealsLabel": "My Meals",
+  "noRecipesLabel": "No recipes yet. Create one!",
+  "ingredientsLabel": "ingredients",
+  "recipeNameLabel": "Recipe name",
+  "recipeServingsLabel": "Servings",
+  "addIngredientLabel": "Add ingredient",
+  "saveRecipeLabel": "Save recipe",
+  "deleteRecipeLabel": "Delete recipe",
+  "recipeBuilderLabel": "Recipe Builder"
 }

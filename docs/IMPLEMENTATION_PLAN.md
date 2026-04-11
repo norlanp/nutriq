@@ -40,18 +40,63 @@ Location: `/Users/norlan/code/mycal`
 | Health integrations | None | 35+ devices/apps | HealthKit, Health Connect |
 | Social/community | Not present | Forums, friends | Not planned (privacy) |
 
+## Completed Work
+
+### Project Setup & Architecture Fixes
+
+- [x] Rename project from OpenNutriTracker to Nutriq (`bac3691`)
+- [x] Migrate local storage from Hive to Drift/SQLite (`56f58a0`)
+  - Drift tables, DAOs, and generated code for all existing entities
+  - Removed all Hive DBOs, `.g.dart` adapters, `HiveDbProvider`, `SecureAppStorageProvider`
+  - Data mappers layer (`lib/core/data/mapper/mappers.dart`)
+  - Updated all 6 repositories to use Drift data sources
+- [x] Add domain repository contracts (abstract interfaces) (`3bd6e90`)
+  - `ConfigRepository`, `UserRepository`, `IntakeRepository`, `TrackedDayRepository`, `UserActivityRepository`, `PhysicalActivityRepository`
+- [x] Add repository contract tests (`3bd6e90`)
+- [x] Reorder DI registration to follow clean architecture layers: DataSources → Repositories → UseCases → BLoCs (`f498d47`)
+
+### Phase 1.1: Meal Slot System ✅
+
+Already implemented in upstream ONT. `IntakeTypeEntity` (B/L/D/S), `IntakeEntity.type`, Drift `type` column, `IntakeDao.getIntakesByDateAndType()`, `GetIntakeUsecase` per-type methods, `CalendarDayBloc` 4 separate lists, `DayInfoWidget` + `IntakeVerticalList` 4 sections with drag-and-drop.
+
+### Phase 1.2: Saved Meals & Recipe Builder ✅
+
+**Data Layer:**
+- Drift tables: `Recipes` (id, name, servings, createdAt, updatedAt), `RecipeItems` (id, recipeId→Recipes, mealId, amount, unit)
+- `RecipeDao` with CRUD, join queries (`getRecipeItemsWithMeals`), `RecipeItemWithMeal` helper class
+- `RecipeDataSource` wrapping DAO
+- DB schema bumped to v2 with `onUpgrade` migration
+- Mappers added to `mappers.dart`: `mapRecipeEntityToCompanion`, `mapRecipeItemEntityToCompanion`, `mapRecipeToEntity`, `mapRecipeItemToEntity`
+
+**Domain Layer:**
+- `RecipeEntity` (id, name, servings, items, computed totals: totalKcal/Carbs/Fats/Proteins)
+- `RecipeItemEntity` (id, recipeId, meal, amount, unit, computed totals)
+- `RecipeRepository` abstract contract
+- `GetRecipesUsecase`, `AddRecipeUsecase`, `DeleteRecipeUsecase`
+
+**Presentation Layer:**
+- `RecipeBloc` (LoadRecipesEvent, AddRecipeEvent, DeleteRecipeEvent → RecipesLoaded state)
+- `RecipeListScreen` ("My Meals") — list all recipes with kcal + delete
+- `RecipeBuilderScreen` — name/servings fields, reorderable ingredient list, add ingredient via AddMealScreen, save
+- Routes: `recipeListRoute`, `recipeBuilderRoute` in `NavigationOptions` + `main.dart`
+- "My Meals" entry added to `AddItemBottomSheet`
+
+**DI:** `RecipeDao`, `RecipeDataSource`, `RecipeRepository`, 3 use cases, `RecipeBloc` registered in `locator.dart`
+
+**l10n:** 8 new strings added to en/de/tr ARB files (myMealsLabel, noRecipesLabel, ingredientsLabel, recipeNameLabel, recipeServingsLabel, addIngredientLabel, saveRecipeLabel, recipeBuilderLabel)
+
 ## Implementation Phases
 
 ### Phase 1: Core Tracker Enhancements (Foundation)
 
 **Goal:** Strengthen basic tracking capabilities to match MFP core functionality.
 
-1. **Meal Slot System**
+1. **Meal Slot System** ✅ *Already implemented in upstream ONT*
    - Restructure diary into Breakfast/Lunch/Dinner/Snacks slots
    - Modify `IntakeEntity` and `IntakeDataSource` to include meal type
    - Update diary UI to show meal grouping
 
-2. **Saved Meals & Recipe Builder**
+2. **Saved Meals & Recipe Builder** ✅ *Implemented*
    - Add `RecipeEntity` and `SavedMealEntity` to domain
    - Create recipe builder UI (combine multiple foods into single recipe)
    - "My Meals" quick-add feature for frequent combinations
@@ -63,7 +108,7 @@ Location: `/Users/norlan/code/mycal`
    - Daily/weekly nutrition summary view
 
 4. **Weight & Progress Tracking**
-   - New `WeightEntity` and `WeightDataSource` (Hive)
+   - New `WeightEntity`, Drift table, DAO, and `WeightDataSource`
    - Weight logging screen with date picker
    - Weight trend graph (line chart)
    - BMI calculator and display
@@ -72,10 +117,10 @@ Location: `/Users/norlan/code/mycal`
 **New Packages:**
 - `fl_chart: ^0.68.0` - Charts and graphs
 
-**New Hive Boxes:**
-- `weightBox` - Weight entries
-- `recipeBox` - User-created recipes
-- `savedMealBox` - Quick-add meal combinations
+**New Drift Tables:**
+- `weight` - Weight entries
+- `recipe` - User-created recipes
+- `saved_meal` - Quick-add meal combinations
 
 ### Phase 2: Daily Habits & Engagement
 
@@ -108,9 +153,9 @@ Location: `/Users/norlan/code/mycal`
 - `permission_handler: ^11.3.1` - Notification permissions
 - `screenshot: ^3.0.0` - Chart export
 
-**New Hive Boxes:**
-- `waterBox` - Water intake entries
-- `notificationSettingsBox` - Reminder preferences
+**New Drift Tables:**
+- `water` - Water intake entries
+- `notification_settings` - Reminder preferences
 
 ### Phase 3: Priority Advanced Features
 
@@ -145,10 +190,10 @@ Location: `/Users/norlan/code/mycal`
 - `tflite_flutter: ^0.10.4` - TensorFlow Lite
 - `image_picker: ^1.1.2` - Camera capture
 
-**New Hive Boxes:**
-- `mealPlanBox` - Weekly meal plans
-- `fastingBox` - Fasting session history
-- `aiModelMetadataBox` - Model versioning
+**New Drift Tables:**
+- `meal_plan` - Weekly meal plans
+- `fasting` - Fasting session history
+- `ai_model_metadata` - Model versioning
 
 ### Phase 4: Platform Expansion & Polish
 
@@ -187,8 +232,8 @@ Location: `/Users/norlan/code/mycal`
 
 - **State Management:** Continue `flutter_bloc` + GetIt DI pattern
 - **Clean Architecture:** Feature-first modules under `lib/features/`
-- **Data Layer:** Extend Hive with new boxes, keep encryption
-- **Domain Layer:** Extend entities for new features
+- **Data Layer:** Drift/SQLite with tables and DAOs (migrated from Hive)
+- **Domain Layer:** Extend entities for new features; repository contracts as abstract classes
 - **Presentation Layer:** BLoCs per feature, reusable widgets
 
 ### New Patterns
@@ -247,12 +292,25 @@ lib/
         recipe_data_source.dart
         meal_plan_data_source.dart
         fasting_data_source.dart
-      dbo/
-        weight_dbo.dart
-        water_dbo.dart
-        recipe_dbo.dart
-        meal_plan_dbo.dart
-        fasting_dbo.dart
+      drift/
+        dao/
+          weight_dao.dart
+          water_dao.dart
+          recipe_dao.dart
+          meal_plan_dao.dart
+          fasting_dao.dart
+        tables/
+          weight_table.dart
+          water_table.dart
+          recipe_table.dart
+          meal_plan_table.dart
+          fasting_table.dart
+      mapper/
+        weight_mapper.dart
+        water_mapper.dart
+        recipe_mapper.dart
+        meal_plan_mapper.dart
+        fasting_mapper.dart
       repository/
         weight_repository.dart
         water_repository.dart
@@ -266,6 +324,12 @@ lib/
         recipe_entity.dart
         meal_plan_entity.dart
         fasting_entity.dart
+      repository/
+        weight_repository.dart
+        water_repository.dart
+        recipe_repository.dart
+        meal_plan_repository.dart
+        fasting_repository.dart
       usecase/
         weight/
         water/
@@ -294,4 +358,5 @@ assets/
 ---
 
 Created: 2026-04-09
-Status: Planning
+Last Updated: 2026-04-10
+Status: Phase 1 In Progress
