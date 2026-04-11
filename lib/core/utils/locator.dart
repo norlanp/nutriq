@@ -63,19 +63,130 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final locator = GetIt.instance;
 
 Future<void> initLocator() async {
-  // Init Drift database
   final appDatabase = AppDatabase();
 
-  // Backend
   await Supabase.initialize(
     url: Env.supabaseProjectUrl,
     anonKey: Env.supabaseProjectAnonKey,
   );
   locator.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
 
-  // Cache manager
   locator.registerLazySingleton<CacheManager>(
     () => OntImageCacheManager.instance,
+  );
+
+  // DataSources
+  final configDao = appDatabase.configDao;
+  final userDao = appDatabase.userDao;
+  final intakeDao = appDatabase.intakeDao;
+  final mealDao = MealDao(appDatabase);
+  final userActivityDao = appDatabase.userActivityDao;
+  final trackedDayDao = appDatabase.trackedDayDao;
+
+  locator.registerLazySingleton(
+    () => ConfigDataSource(configDao),
+  );
+  locator.registerLazySingleton<UserDataSource>(
+    () => UserDataSource(userDao),
+  );
+  locator.registerLazySingleton<IntakeDataSource>(
+    () => IntakeDataSource(intakeDao),
+  );
+  locator.registerLazySingleton<UserActivityDataSource>(
+    () => UserActivityDataSource(userActivityDao),
+  );
+  locator.registerLazySingleton<PhysicalActivityDataSource>(
+    () => PhysicalActivityDataSource(),
+  );
+  locator.registerLazySingleton<OFFDataSource>(() => OFFDataSource());
+  locator.registerLazySingleton<FDCDataSource>(() => FDCDataSource());
+  locator.registerLazySingleton<SpFdcDataSource>(() => SpFdcDataSource());
+  locator.registerLazySingleton(
+    () => TrackedDayDataSource(trackedDayDao),
+  );
+  locator.registerLazySingleton<MealDao>(() => mealDao);
+
+  // Repositories
+  locator.registerLazySingleton<domain.ConfigRepository>(
+    () => data.ConfigRepository(locator()),
+  );
+  locator.registerLazySingleton<UserRepository>(
+    () => UserRepository(locator()),
+  );
+  locator.registerLazySingleton<IntakeRepository>(
+    () => IntakeRepository(locator(), locator()),
+  );
+  locator.registerLazySingleton<ProductsRepository>(
+    () => ProductsRepository(locator(), locator(), locator()),
+  );
+  locator.registerLazySingleton<UserActivityRepository>(
+    () => UserActivityRepository(locator()),
+  );
+  locator.registerLazySingleton<PhysicalActivityRepository>(
+    () => PhysicalActivityRepository(locator()),
+  );
+  locator.registerLazySingleton<TrackedDayRepository>(
+    () => TrackedDayRepository(locator()),
+  );
+
+  // UseCases
+  locator.registerLazySingleton<GetConfigUsecase>(
+    () => GetConfigUsecase(locator()),
+  );
+  locator.registerLazySingleton<AddConfigUsecase>(
+    () => AddConfigUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetUserUsecase>(
+    () => GetUserUsecase(locator()),
+  );
+  locator.registerLazySingleton<AddUserUsecase>(
+    () => AddUserUsecase(locator()),
+  );
+  locator.registerLazySingleton<SearchProductsUseCase>(
+    () => SearchProductsUseCase(locator()),
+  );
+  locator.registerLazySingleton<SearchProductByBarcodeUseCase>(
+    () => SearchProductByBarcodeUseCase(locator()),
+  );
+  locator.registerLazySingleton<GetIntakeUsecase>(
+    () => GetIntakeUsecase(locator()),
+  );
+  locator.registerLazySingleton<AddIntakeUsecase>(
+    () => AddIntakeUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteIntakeUsecase>(
+    () => DeleteIntakeUsecase(locator()),
+  );
+  locator.registerLazySingleton<UpdateIntakeUsecase>(
+    () => UpdateIntakeUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetUserActivityUsecase>(
+    () => GetUserActivityUsecase(locator()),
+  );
+  locator.registerLazySingleton<AddUserActivityUsecase>(
+    () => AddUserActivityUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteUserActivityUsecase>(
+    () => DeleteUserActivityUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetPhysicalActivityUsecase>(
+    () => GetPhysicalActivityUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetTrackedDayUsecase>(
+    () => GetTrackedDayUsecase(locator()),
+  );
+  locator.registerLazySingleton<AddTrackedDayUsecase>(
+    () => AddTrackedDayUsecase(locator()),
+  );
+  locator.registerLazySingleton(
+    () => GetKcalGoalUsecase(locator(), locator(), locator()),
+  );
+  locator.registerLazySingleton(() => GetMacroGoalUsecase(locator()));
+  locator.registerLazySingleton(
+    () => ExportDataUsecase(locator(), locator(), locator()),
+  );
+  locator.registerLazySingleton(
+    () => ImportDataUsecase(locator(), locator(), locator()),
   );
 
   // BLoCs
@@ -139,122 +250,6 @@ Future<void> initLocator() async {
   );
   locator.registerFactory<FoodBloc>(() => FoodBloc(locator(), locator()));
   locator.registerFactory(() => RecentMealBloc(locator(), locator()));
-
-  // UseCases
-  locator.registerLazySingleton<GetConfigUsecase>(
-    () => GetConfigUsecase(locator()),
-  );
-  locator.registerLazySingleton<AddConfigUsecase>(
-    () => AddConfigUsecase(locator()),
-  );
-  locator.registerLazySingleton<GetUserUsecase>(
-    () => GetUserUsecase(locator()),
-  );
-  locator.registerLazySingleton<AddUserUsecase>(
-    () => AddUserUsecase(locator()),
-  );
-  locator.registerLazySingleton<SearchProductsUseCase>(
-    () => SearchProductsUseCase(locator()),
-  );
-  locator.registerLazySingleton<SearchProductByBarcodeUseCase>(
-    () => SearchProductByBarcodeUseCase(locator()),
-  );
-  locator.registerLazySingleton<GetIntakeUsecase>(
-    () => GetIntakeUsecase(locator()),
-  );
-  locator.registerLazySingleton<AddIntakeUsecase>(
-    () => AddIntakeUsecase(locator()),
-  );
-  locator.registerLazySingleton<DeleteIntakeUsecase>(
-    () => DeleteIntakeUsecase(locator()),
-  );
-  locator.registerLazySingleton<UpdateIntakeUsecase>(
-    () => UpdateIntakeUsecase(locator()),
-  );
-  locator.registerLazySingleton<GetUserActivityUsecase>(
-    () => GetUserActivityUsecase(locator()),
-  );
-  locator.registerLazySingleton<AddUserActivityUsecase>(
-    () => AddUserActivityUsecase(locator()),
-  );
-  locator.registerLazySingleton<DeleteUserActivityUsecase>(
-    () => DeleteUserActivityUsecase(locator()),
-  );
-  locator.registerLazySingleton<GetPhysicalActivityUsecase>(
-    () => GetPhysicalActivityUsecase(locator()),
-  );
-  locator.registerLazySingleton<GetTrackedDayUsecase>(
-    () => GetTrackedDayUsecase(locator()),
-  );
-  locator.registerLazySingleton<AddTrackedDayUsecase>(
-    () => AddTrackedDayUsecase(locator()),
-  );
-  locator.registerLazySingleton(
-    () => GetKcalGoalUsecase(locator(), locator(), locator()),
-  );
-  locator.registerLazySingleton(() => GetMacroGoalUsecase(locator()));
-  locator.registerLazySingleton(
-    () => ExportDataUsecase(locator(), locator(), locator()),
-  );
-  locator.registerLazySingleton(
-    () => ImportDataUsecase(locator(), locator(), locator()),
-  );
-
-  // Repositories
-  locator.registerLazySingleton<domain.ConfigRepository>(
-    () => data.ConfigRepository(locator()),
-  );
-  locator.registerLazySingleton<UserRepository>(
-    () => UserRepository(locator()),
-  );
-  locator.registerLazySingleton<IntakeRepository>(
-    () => IntakeRepository(locator(), locator()),
-  );
-  locator.registerLazySingleton<ProductsRepository>(
-    () => ProductsRepository(locator(), locator(), locator()),
-  );
-  locator.registerLazySingleton<UserActivityRepository>(
-    () => UserActivityRepository(locator()),
-  );
-  locator.registerLazySingleton<PhysicalActivityRepository>(
-    () => PhysicalActivityRepository(locator()),
-  );
-  locator.registerLazySingleton<TrackedDayRepository>(
-    () => TrackedDayRepository(locator()),
-  );
-
-  // DataSources
-  final configDao = appDatabase.configDao;
-  final userDao = appDatabase.userDao;
-  final intakeDao = appDatabase.intakeDao;
-  final mealDao = MealDao(appDatabase);
-  final userActivityDao = appDatabase.userActivityDao;
-  final trackedDayDao = appDatabase.trackedDayDao;
-
-  locator.registerLazySingleton(
-    () => ConfigDataSource(configDao),
-  );
-  locator.registerLazySingleton<UserDataSource>(
-    () => UserDataSource(userDao),
-  );
-  locator.registerLazySingleton<IntakeDataSource>(
-    () => IntakeDataSource(intakeDao),
-  );
-  locator.registerLazySingleton<UserActivityDataSource>(
-    () => UserActivityDataSource(userActivityDao),
-  );
-  locator.registerLazySingleton<PhysicalActivityDataSource>(
-    () => PhysicalActivityDataSource(),
-  );
-  locator.registerLazySingleton<OFFDataSource>(() => OFFDataSource());
-  locator.registerLazySingleton<FDCDataSource>(() => FDCDataSource());
-  locator.registerLazySingleton<SpFdcDataSource>(() => SpFdcDataSource());
-  locator.registerLazySingleton(
-    () => TrackedDayDataSource(trackedDayDao),
-  );
-
-  // Register MealDao for IntakeRepository
-  locator.registerLazySingleton<MealDao>(() => mealDao);
 
   await _initializeConfig(locator<ConfigDataSource>());
 }
