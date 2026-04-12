@@ -74,7 +74,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
           layoutType == LayoutType.mobile ? _buildBottomNavigationBar() : null,
     );
 
-    if (layoutType == LayoutType.desktop || layoutType == LayoutType.tablet) {
+    if (layoutType == LayoutType.tablet) {
       return Row(
         children: [
           _buildNavigationRail(),

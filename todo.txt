@@ -194,6 +194,8 @@
 
 ## Phase 4: Platform Expansion & Polish
 
+- [x] Remove macOS/desktop target — keep only iOS, Android, Web. Delete macos/ dir, remove from flutter config, remove AdaptiveScaffold desktop layout, remove keyboard_shortcuts, remove file_selector dep, remove desktop-specific codepaths.
+
 ### Item 13: Web + Desktop Support
 
 [x] Audit existing UI for mobile-only APIs (dpi, screen size assumptions) @file:lib/

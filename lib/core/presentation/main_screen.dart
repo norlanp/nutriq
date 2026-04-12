@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/presentation/utils/keyboard_shortcuts.dart';
 import 'package:nutriq/core/presentation/widgets/adaptive_scaffold.dart';
 
 class MainScreen extends StatelessWidget {
@@ -7,8 +6,6 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const KeyboardShortcuts(
-      child: AdaptiveScaffold(),
-    );
+    return const AdaptiveScaffold();
   }
 }

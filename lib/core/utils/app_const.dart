@@ -9,7 +9,6 @@ class AppConst {
   static const userAgentAppName = "Nutriq";
   static const platformNameAndroid = "Android";
   static const platformNameIOS = "iOS";
-  static const platformNameDesktop = "Desktop";
   static const platformNameWeb = "Web";
   static const reportErrorEmail = "nutriq-dev@pm.me";
   static const sourceCodeUrl = "https://github.com/simonoppowa/Nutriq";
@@ -26,7 +25,7 @@ class AppConst {
     } else if (platform_info.isPlatformIOS) {
       return platformNameIOS;
     } else {
-      return platformNameDesktop;
+      return platformNameWeb;
     }
   }
 
