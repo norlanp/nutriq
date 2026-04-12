@@ -13,7 +13,7 @@ Location: `/Users/norlan/code/mycal`
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
 | Data Storage | Privacy-first, local-only | Matches ONT ethos, no cloud dependency |
-| Platforms | All (Android, iOS, Web, Desktop) | Flutter enables multi-platform |
+| Platforms | iOS, Android, Web | Flutter multi-platform (Desktop removed) |
 | License | GPL-3.0 | Required by ONT fork |
 | Monetization | Fully free, open-source | No premium tier, no ads, no subscriptions |
 

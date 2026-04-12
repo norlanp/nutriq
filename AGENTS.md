@@ -10,7 +10,7 @@ You are an expert Flutter/Dart developer specializing in Clean Architecture and 
 - **Language**: Dart
 - **State Management**: `flutter_bloc`
 - **Dependency Injection**: `get_it`
-- **Local Database**: `hive`
+- **Local Database**: `drift` (SQLite)
 - **Internationalization**: `flutter_intl`
 - **Networking**: `http` / `supabase_flutter`
 
@@ -27,7 +27,7 @@ The project follows **Clean Architecture** principles. Always adhere to the foll
 3. **Data Layer** (`lib/core/data` or `lib/features/*/data`)
    - **Repositories**: Implementation of domain repository interfaces.
    - **Data Sources**: Low-level API or Database calls.
-   - **DTOs/DBOs**: Data Transfer Objects or Database Objects for serialization (`json_serializable`, `hive`).
+   - **DTOs/DBOs**: Data Transfer Objects or Database Objects for serialization (`drift`, `json_serializable`).
 
 ## Coding Standards
 - **Naming**: Follow Dart's `lowerCamelCase` for variables/functions and `UpperCamelCase` for classes.
