@@ -41,4 +41,8 @@ class ConfigDataSource {
 
   Future<void> addConfig(ConfigEntriesCompanion config) =>
       _dao.addConfig(config);
+
+  Future<String> getTDEEMethod() => _dao.getTDEEMethod();
+
+  Future<void> setTDEEMethod(String method) => _dao.setTDEEMethod(method);
 }

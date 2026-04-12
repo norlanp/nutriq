@@ -258,39 +258,39 @@
 
 ### Item 17: Body Measurements
 
-[ ] Create BodyMeasurementEntity (id, userId, date, waistCm?, neckCm?, hipCm?, chestCm?, bicepCm?, thighCm?, note?) @file:lib/core/domain/entity/body_measurement_entity.dart
-[ ] Create Drift BodyMeasurementTable (id PK, userId, date, waistCm, neckCm, hipCm, chestCm, bicepCm, thighCm, note) @file:lib/core/data/drift/tables/body_measurement_table.dart
-[ ] Create BodyMeasurementDao (add, delete, getByDate, getBetweenDates, getLatest) @file:lib/core/data/drift/dao/body_measurement_dao.dart
-[ ] Create BodyMeasurementDataSource wrapping DAO @file:lib/core/data/data_source/body_measurement_data_source.dart
-[ ] Create mapper: BodyMeasurementEntity ↔ Drift companion @file:lib/core/data/mapper/mappers.dart
-[ ] Create BodyMeasurementRepository abstract contract @file:lib/core/domain/repository/body_measurement_repository.dart
-[ ] Create BodyMeasurementRepositoryImpl @file:lib/core/data/repository/body_measurement_repository.dart
-[ ] Create GetBodyMeasurementsUsecase, AddBodyMeasurementUsecase, DeleteBodyMeasurementUsecase @file:lib/core/domain/usecase/body_measurement/
-[ ] Create BodyMeasurementBloc (LoadMeasurements, AddMeasurement, DeleteMeasurement) @file:lib/features/body_measurements/presentation/body_measurement_bloc.dart
-[ ] Create BodyMeasurementBloc event + state classes @file:lib/features/body_measurements/presentation/body_measurement_bloc.dart
-[ ] Build measurement logging screen (date picker, input fields per measurement type) @file:lib/features/body_measurements/presentation/body_measurement_screen.dart
-[ ] Build measurement trend chart (line chart per metric over time) @file:lib/features/body_measurements/presentation/widgets/measurement_trend_chart.dart
-[ ] Build measurement history list @file:lib/features/body_measurements/presentation/widgets/measurement_history_list.dart
-[ ] Add body_measurements route to NavigationOptions + main.dart @file:lib/main.dart
-[ ] Add body measurements entry in app navigation @file:lib/
-[ ] Add l10n strings for body measurements (en/de/tr ARB files) @file:l10n/
-[ ] Register body measurement DI entries in locator.dart @file:lib/core/di/locator.dart
-[ ] DB schema bump (v11→v12) for body_measurement table @file:lib/core/data/drift/
-[ ] Run build_runner, flutter analyze, tests
+[x] Create BodyMeasurementEntity (id, userId, date, waistCm?, neckCm?, hipCm?, chestCm?, bicepCm?, thighCm?, note?) @file:lib/core/domain/entity/body_measurement_entity.dart
+[x] Create Drift BodyMeasurementTable (id PK, userId, date, waistCm, neckCm, hipCm, chestCm, bicepCm, thighCm, note) @file:lib/core/data/drift/tables/body_measurement_table.dart
+[x] Create BodyMeasurementDao (add, delete, getByDate, getBetweenDates, getLatest) @file:lib/core/data/drift/dao/body_measurement_dao.dart
+[x] Create BodyMeasurementDataSource wrapping DAO @file:lib/core/data/data_source/body_measurement_data_source.dart
+[x] Create mapper: BodyMeasurementEntity ↔ Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create BodyMeasurementRepository abstract contract @file:lib/core/domain/repository/body_measurement_repository.dart
+[x] Create BodyMeasurementRepositoryImpl @file:lib/core/data/repository/body_measurement_repository.dart
+[x] Create GetBodyMeasurementsUsecase, AddBodyMeasurementUsecase, DeleteBodyMeasurementUsecase @file:lib/core/domain/usecase/body_measurement/
+[x] Create BodyMeasurementBloc (LoadMeasurements, AddMeasurement, DeleteMeasurement) @file:lib/features/body_measurements/presentation/body_measurement_bloc.dart
+[x] Create BodyMeasurementBloc event + state classes @file:lib/features/body_measurements/presentation/body_measurement_bloc.dart
+[x] Build measurement logging screen (date picker, input fields per measurement type) @file:lib/features/body_measurements/presentation/body_measurement_screen.dart
+[x] Build measurement trend chart (line chart per metric over time) @file:lib/features/body_measurements/presentation/widgets/measurement_trend_chart.dart
+[x] Build measurement history list @file:lib/features/body_measurements/presentation/widgets/measurement_history_list.dart
+[x] Add body_measurements route to NavigationOptions + main.dart @file:lib/main.dart
+[x] Add body measurements entry in app navigation @file:lib/
+[x] Add l10n strings for body measurements (en/de/tr ARB files) @file:l10n/
+[x] Register body measurement DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump (v11→v12) for body_measurement table @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
 
 ### Item 18: Food Database UX Improvements
 
-[ ] Audit current food search experience (latency, results relevance, error states) @file:lib/features/
-[ ] Improve search result list UX (loading shimmer, empty state, retry on error) @file:lib/features/
-[ ] Add recent/frequent foods section to food search @file:lib/features/
-[ ] Add barcode scan result → auto-fill food entry flow @file:lib/features/
-[ ] Add custom food creation flow (manual entry with all nutrition fields) @file:lib/features/
-[ ] Run flutter analyze, tests
+[x] Audit current food search experience (latency, results relevance, error states) @file:lib/features/
+[x] Improve search result list UX (loading shimmer, empty state, retry on error) @file:lib/features/
+[x] Add recent/frequent foods section to food search @file:lib/features/
+[x] Add barcode scan result → auto-fill food entry flow @file:lib/features/
+[x] Add custom food creation flow (manual entry with all nutrition fields) @file:lib/features/
+[x] Run flutter analyze, tests
 
 ### Item 19: BMR Enhancement (Mifflin-St Jeor)
 
-[ ] Add Mifflin-St Jeor calculation to UserEntity/BMI logic @file:lib/core/domain/entity/
-[ ] Update calorie goal setup to offer Mifflin-St Jeor as calculation method @file:lib/features/
-[ ] Show BMR breakdown in user profile/settings (BMR, TDEE, activity multiplier) @file:lib/features/
-[ ] Add l10n strings for BMR display @file:l10n/
-[ ] Run flutter analyze, tests
+[x] Add Mifflin-St Jeor calculation to UserEntity/BMI logic @file:lib/core/domain/entity/
+[x] Update calorie goal setup to offer Mifflin-St Jeor as calculation method @file:lib/features/
+[x] Show BMR breakdown in user profile/settings (BMR, TDEE, activity multiplier) @file:lib/features/
+[x] Add l10n strings for BMR display @file:l10n/
+[x] Run flutter analyze, tests

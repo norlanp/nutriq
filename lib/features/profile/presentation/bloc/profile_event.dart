@@ -8,3 +8,12 @@ abstract class ProfileEvent extends Equatable {
 class LoadProfileEvent extends ProfileEvent {
   LoadProfileEvent();
 }
+
+class ChangeTDEEMethodEvent extends ProfileEvent {
+  final TDEEMethodEntity method;
+
+  ChangeTDEEMethodEvent(this.method);
+
+  @override
+  List<Object?> get props => [method];
+}

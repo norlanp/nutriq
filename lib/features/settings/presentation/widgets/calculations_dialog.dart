@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
+import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
+import 'package:nutriq/core/utils/locator.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
@@ -40,6 +43,7 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
   double _carbsPctSelection = _defaultCarbsPctSelection * 100;
   double _proteinPctSelection = _defaultProteinPctSelection * 100;
   double _fatPctSelection = _defaultFatPctSelection * 100;
+  TDEEMethodEntity _tdeeMethodSelection = TDEEMethodEntity.iom2005;
 
   @override
   void didChangeDependencies() {
@@ -53,6 +57,7 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
     final userCarbsPct = await widget.settingsBloc.getUserCarbGoalPct();
     final userProteinPct = await widget.settingsBloc.getUserProteinGoalPct();
     final userFatPct = await widget.settingsBloc.getUserFatGoalPct();
+    final tdeeMethod = await locator<AddConfigUsecase>().getConfigTDEEMethod();
 
     setState(() {
       _kcalAdjustmentSelection = kcalAdjustment;
@@ -60,6 +65,7 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
       _proteinPctSelection =
           (userProteinPct ?? _defaultProteinPctSelection) * 100;
       _fatPctSelection = (userFatPct ?? _defaultFatPctSelection) * 100;
+      _tdeeMethodSelection = tdeeMethod;
     });
   }
 
@@ -81,10 +87,10 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
             onPressed: () {
               setState(() {
                 _kcalAdjustmentSelection = 0;
-                // Reset macros to default values
                 _carbsPctSelection = _defaultCarbsPctSelection * 100;
                 _proteinPctSelection = _defaultProteinPctSelection * 100;
                 _fatPctSelection = _defaultFatPctSelection * 100;
+                _tdeeMethodSelection = TDEEMethodEntity.iom2005;
               });
             },
           ),
@@ -92,21 +98,30 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
       ),
       content: Wrap(
         children: [
-          DropdownButtonFormField(
+          DropdownButtonFormField<TDEEMethodEntity>(
               isExpanded: true,
               decoration: InputDecoration(
-                enabled: false,
                 filled: false,
                 labelText: S.of(context).calculationsTDEELabel,
               ),
-              items: [
-                DropdownMenuItem(
+              value: _tdeeMethodSelection,
+              items: TDEEMethodEntity.values.map((method) {
+                return DropdownMenuItem(
+                    value: method,
                     child: Text(
-                  '${S.of(context).calculationsTDEEIOM2006Label} ${S.of(context).calculationsRecommendedLabel}',
-                  overflow: TextOverflow.ellipsis,
-                )),
-              ],
-              onChanged: null),
+                      method == TDEEMethodEntity.iom2005
+                          ? '${method.getName(context)} ${S.of(context).calculationsRecommendedLabel}'
+                          : method.getName(context),
+                      overflow: TextOverflow.ellipsis,
+                    ));
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    _tdeeMethodSelection = value;
+                  });
+                }
+              }),
           const SizedBox(height: 64),
           Container(
             alignment: Alignment.centerLeft,
@@ -335,18 +350,16 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
   }
 
   void _saveCalculationSettings() {
-    // Save the calorie offset as full number
     widget.settingsBloc
         .setKcalAdjustment(_kcalAdjustmentSelection.toInt().toDouble());
     widget.settingsBloc.setMacroGoals(
         _carbsPctSelection, _proteinPctSelection, _fatPctSelection);
+    locator<AddConfigUsecase>().setConfigTDEEMethod(_tdeeMethodSelection);
 
     widget.settingsBloc.add(LoadSettingsEvent());
-    // Update other blocs that need the new calorie value
     widget.profileBloc.add(LoadProfileEvent());
     widget.homeBloc.add(LoadItemsEvent());
 
-    // Update tracked day entity
     widget.settingsBloc.updateTrackedDay(DateTime.now());
     widget.diaryBloc.add(LoadDiaryYearEvent());
     widget.calendarDayBloc.add(RefreshCalendarDayEvent());

@@ -45,4 +45,23 @@ class TDEECalc {
     }
     return tdeeKcal;
   }
+
+  /// Returns TDEE based on the Mifflin-St Jeor equation (1990)
+  /// TDEE = BMR × activity multiplier
+  ///
+  /// Mifflin-St Jeor BMR formula:
+  /// Male:   BMR = 10 × weight(kg) + 6.25 × height(cm) - 5 × age(years) + 5
+  /// Female: BMR = 10 × weight(kg) + 6.25 × height(cm) - 5 × age(years) - 161
+  ///
+  /// Activity multipliers (ACE):
+  /// Sedentary:        1.2
+  /// Lightly active:   1.375
+  /// Moderately active: 1.55
+  /// Very active:       1.725
+  /// Extra active:      1.9
+  static double getTDEEKcalMifflinStJeor(UserEntity userEntity) {
+    final userBMR = BMRCalc.getBMRMifflinStJeor1990(userEntity);
+    final activityMultiplier = PalCalc.getMifflinActivityMultiplier(userEntity);
+    return userBMR * activityMultiplier;
+  }
 }

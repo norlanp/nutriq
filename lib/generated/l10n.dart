@@ -704,11 +704,61 @@ class S {
     );
   }
 
+  /// `Mifflin-St Jeor Equation`
+  String get calculationsTDEEMifflinStJeorLabel {
+    return Intl.message(
+      'Mifflin-St Jeor Equation',
+      name: 'calculationsTDEEMifflinStJeorLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `(recommended)`
   String get calculationsRecommendedLabel {
     return Intl.message(
       '(recommended)',
       name: 'calculationsRecommendedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `BMR`
+  String get bmrLabel {
+    return Intl.message('BMR', name: 'bmrLabel', desc: '', args: []);
+  }
+
+  /// `Basal Metabolic Rate`
+  String get bmrKcal {
+    return Intl.message(
+      'Basal Metabolic Rate',
+      name: 'bmrKcal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TDEE`
+  String get tdeeLabel {
+    return Intl.message('TDEE', name: 'tdeeLabel', desc: '', args: []);
+  }
+
+  /// `Activity Multiplier`
+  String get activityMultiplierLabel {
+    return Intl.message(
+      'Activity Multiplier',
+      name: 'activityMultiplierLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calculation Method`
+  String get calculationMethodLabel {
+    return Intl.message(
+      'Calculation Method',
+      name: 'calculationMethodLabel',
       desc: '',
       args: [],
     );
@@ -1373,6 +1423,56 @@ class S {
     );
   }
 
+  /// `Sugars per `
+  String get sugarsPer100Label {
+    return Intl.message(
+      'Sugars per ',
+      name: 'sugarsPer100Label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saturated fat per `
+  String get saturatedFatPer100Label {
+    return Intl.message(
+      'Saturated fat per ',
+      name: 'saturatedFatPer100Label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fiber per `
+  String get fiberPer100Label {
+    return Intl.message(
+      'Fiber per ',
+      name: 'fiberPer100Label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sodium per `
+  String get sodiumPer100Label {
+    return Intl.message(
+      'Sodium per ',
+      name: 'sodiumPer100Label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Potassium per `
+  String get potassiumPer100Label {
+    return Intl.message(
+      'Potassium per ',
+      name: 'potassiumPer100Label',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Error while saving meal. Did you input the correct meal information?`
   String get errorMealSave {
     return Intl.message(
@@ -1498,6 +1598,26 @@ class S {
     return Intl.message(
       'Mostly walking, running or carrying weight in job and active free time activities',
       name: 'palVeryActiveDescriptionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extra Active`
+  String get palExtraActiveLabel {
+    return Intl.message(
+      'Extra Active',
+      name: 'palExtraActiveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Very intense physical job and extremely active free time activities`
+  String get palExtraActiveDescriptionLabel {
+    return Intl.message(
+      'Very intense physical job and extremely active free time activities',
+      name: 'palExtraActiveDescriptionLabel',
       desc: '',
       args: [],
     );
@@ -1853,9 +1973,59 @@ class S {
     );
   }
 
+  /// `Try searching with different keywords`
+  String get noResultsHint {
+    return Intl.message(
+      'Try searching with different keywords',
+      name: 'noResultsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create custom food`
+  String get createCustomFoodLabel {
+    return Intl.message(
+      'Create custom food',
+      name: 'createCustomFoodLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Retry`
   String get retryLabel {
     return Intl.message('Retry', name: 'retryLabel', desc: '', args: []);
+  }
+
+  /// `Recent Foods`
+  String get recentFoodsLabel {
+    return Intl.message(
+      'Recent Foods',
+      name: 'recentFoodsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Food name is required`
+  String get customFoodNameRequired {
+    return Intl.message(
+      'Food name is required',
+      name: 'customFoodNameRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Energy (kcal per 100 g/ml)`
+  String get customFoodEnergyLabel {
+    return Intl.message(
+      'Energy (kcal per 100 g/ml)',
+      name: 'customFoodEnergyLabel',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `bicycling`
@@ -5241,6 +5411,81 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Body Measurements`
+  String get bodyMeasurementTitle {
+    return Intl.message(
+      'Body Measurements',
+      name: 'bodyMeasurementTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Measurement`
+  String get addMeasurement {
+    return Intl.message(
+      'Add Measurement',
+      name: 'addMeasurement',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No measurements yet`
+  String get noMeasurements {
+    return Intl.message(
+      'No measurements yet',
+      name: 'noMeasurements',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Measurement History`
+  String get measurementHistory {
+    return Intl.message(
+      'Measurement History',
+      name: 'measurementHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Waist (cm)`
+  String get waistCm {
+    return Intl.message('Waist (cm)', name: 'waistCm', desc: '', args: []);
+  }
+
+  /// `Neck (cm)`
+  String get neckCm {
+    return Intl.message('Neck (cm)', name: 'neckCm', desc: '', args: []);
+  }
+
+  /// `Hip (cm)`
+  String get hipCm {
+    return Intl.message('Hip (cm)', name: 'hipCm', desc: '', args: []);
+  }
+
+  /// `Chest (cm)`
+  String get chestCm {
+    return Intl.message('Chest (cm)', name: 'chestCm', desc: '', args: []);
+  }
+
+  /// `Bicep (cm)`
+  String get bicepCm {
+    return Intl.message('Bicep (cm)', name: 'bicepCm', desc: '', args: []);
+  }
+
+  /// `Thigh (cm)`
+  String get thighCm {
+    return Intl.message('Thigh (cm)', name: 'thighCm', desc: '', args: []);
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
   }
 }
 

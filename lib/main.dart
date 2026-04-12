@@ -16,6 +16,7 @@ import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/core/utils/theme_mode_provider.dart';
 import 'package:nutriq/features/activity_detail/activity_detail_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
+import 'package:nutriq/features/add_meal/presentation/custom_food_screen.dart';
 import 'package:nutriq/features/add_activity/presentation/add_activity_screen.dart';
 import 'package:nutriq/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:nutriq/features/onboarding/onboarding_screen.dart';
@@ -41,6 +42,7 @@ import 'package:nutriq/features/data_sync/presentation/export_screen.dart';
 import 'package:nutriq/features/data_sync/presentation/import_screen.dart';
 import 'package:nutriq/features/data_sync/presentation/cloud_backup_settings_screen.dart';
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_screen.dart';
+import 'package:nutriq/features/body_measurements/presentation/screen/body_measurement_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -168,6 +170,10 @@ class NutriqApp extends StatelessWidget {
             const CloudBackupSettingsScreen(),
         NavigationOptions.mealTimingRoute: (context) =>
             const MealTimingScreen(),
+        NavigationOptions.bodyMeasurementRoute: (context) =>
+            const BodyMeasurementScreen(),
+        NavigationOptions.customFoodRoute: (context) =>
+            const CustomFoodScreen(),
       },
     );
   }

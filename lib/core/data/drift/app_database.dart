@@ -18,6 +18,7 @@ import 'package:nutriq/core/data/drift/tables/fasting_table.dart';
 import 'package:nutriq/core/data/drift/tables/ai_model_metadata_table.dart';
 import 'package:nutriq/core/data/drift/tables/meal_plan_table.dart';
 import 'package:nutriq/core/data/drift/tables/photo_progress_table.dart';
+import 'package:nutriq/core/data/drift/tables/body_measurement_table.dart';
 
 import 'package:nutriq/core/data/drift/dao/config_dao.dart';
 import 'package:nutriq/core/data/drift/dao/user_dao.dart';
@@ -33,6 +34,7 @@ import 'package:nutriq/core/data/drift/dao/fasting_dao.dart';
 import 'package:nutriq/core/data/drift/dao/ai_model_metadata_dao.dart';
 import 'package:nutriq/core/data/drift/dao/meal_plan_dao.dart';
 import 'package:nutriq/core/data/drift/dao/photo_progress_dao.dart';
+import 'package:nutriq/core/data/drift/dao/body_measurement_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -52,7 +54,8 @@ part 'app_database.g.dart';
     Fasts,
     AiModelMetadataEntries,
     MealPlans,
-    PhotoProgressEntries
+    PhotoProgressEntries,
+    BodyMeasurements
   ],
   daos: [
     ConfigDao,
@@ -68,7 +71,8 @@ part 'app_database.g.dart';
     FastingDao,
     AiModelMetadataDao,
     MealPlanDao,
-    PhotoProgressDao
+    PhotoProgressDao,
+    BodyMeasurementDao
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -77,7 +81,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -151,6 +155,14 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 11) {
             await m.createTable(photoProgressEntries);
+          }
+          if (from < 12) {
+            await m.createTable(bodyMeasurements);
+          }
+          if (from < 13) {
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN tdee_method TEXT NOT NULL DEFAULT \'iom2005\'',
+            );
           }
         },
       );

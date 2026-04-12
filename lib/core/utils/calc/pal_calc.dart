@@ -4,12 +4,11 @@ import 'package:nutriq/core/domain/entity/user_pal_entity.dart';
 
 class PalCalc {
   ///
-  /// Return the physical activity level (PAL) value fom the PAL category
+  /// Return the physical activity level (PAL) value from the PAL category
   /// based on the IOM Physical Activity Recommendations 2004
   /// 'Chronicle of the Institute of Medicine physical activity recommendation:
   /// how a physical activity recommendation came to be among dietary
-  /// recommendations'
-  /// by Brooks et al.
+  /// recommendations' by Brooks et al.
   /// https://pubmed.ncbi.nlm.nih.gov/15113740/
   ///
   static double getPALValueFromActivityCategory(UserEntity userEntity) {
@@ -27,8 +26,42 @@ class PalCalc {
       case UserPALEntity.veryActive:
         palValue = 2.2;
         break;
+      case UserPALEntity.extraActive:
+        palValue = 2.2;
+        break;
     }
     return palValue;
+  }
+
+  ///
+  /// Returns Mifflin-St Jeor activity multiplier based on activity level.
+  /// Activity multipliers from the American Council on Exercise:
+  /// - Sedentary: 1.2
+  /// - Lightly active: 1.375
+  /// - Moderately active: 1.55
+  /// - Very active: 1.725
+  /// - Extra active: 1.9
+  ///
+  static double getMifflinActivityMultiplier(UserEntity userEntity) {
+    double multiplier;
+    switch (userEntity.pal) {
+      case UserPALEntity.sedentary:
+        multiplier = 1.2;
+        break;
+      case UserPALEntity.lowActive:
+        multiplier = 1.375;
+        break;
+      case UserPALEntity.active:
+        multiplier = 1.55;
+        break;
+      case UserPALEntity.veryActive:
+        multiplier = 1.725;
+        break;
+      case UserPALEntity.extraActive:
+        multiplier = 1.9;
+        break;
+    }
+    return multiplier;
   }
 
   ///

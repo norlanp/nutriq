@@ -44,10 +44,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "ör. koşu, bisiklet, yoga ...",
     ),
     "activityLabel": MessageLookupByLibrary.simpleMessage("Aktivite"),
+    "activityMultiplierLabel": MessageLookupByLibrary.simpleMessage(
+      "Aktivite Çarpanı",
+    ),
     "addExerciseLabel": MessageLookupByLibrary.simpleMessage("Egzersiz Ekle"),
     "addIngredientLabel": MessageLookupByLibrary.simpleMessage("Malzeme ekle"),
     "addItemLabel": MessageLookupByLibrary.simpleMessage("Yeni Öğe Ekle:"),
     "addLabel": MessageLookupByLibrary.simpleMessage("Ekle"),
+    "addMeasurement": MessageLookupByLibrary.simpleMessage("Ölçü Ekle"),
     "addWater": MessageLookupByLibrary.simpleMessage("Su Ekle"),
     "additionalInfoLabelCompendium2011": MessageLookupByLibrary.simpleMessage(
       "Bilgi\n\'2011 Compendium\n of Physical Activities\'\nden sağlanmıştır",
@@ -105,6 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "beforeLabel": MessageLookupByLibrary.simpleMessage("Önce"),
     "betaVersionName": MessageLookupByLibrary.simpleMessage("[Beta]"),
+    "bicepCm": MessageLookupByLibrary.simpleMessage("Biceps (cm)"),
     "bmi": MessageLookupByLibrary.simpleMessage("BMI"),
     "bmiInfo": MessageLookupByLibrary.simpleMessage(
       "Vücut Kitle İndeksi (BMI), yetişkinlerde aşırı kiloyu ve obeziteyi sınıflandırmak için kullanılan bir indekstir. Kilogram cinsinden ağırlığın, metre cinsinden boyun karesine bölünmesiyle tanımlanır (kg/m²).\n\nBMI, yağ ve kas kütlesi arasında ayrım yapmaz ve bazı bireyler için yanıltıcı olabilir.",
@@ -114,6 +119,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "bmiObese": MessageLookupByLibrary.simpleMessage("Obez"),
     "bmiOverweight": MessageLookupByLibrary.simpleMessage("Fazla Kilolu"),
     "bmiUnderweight": MessageLookupByLibrary.simpleMessage("Düşük Kilolu"),
+    "bmrKcal": MessageLookupByLibrary.simpleMessage("Bazal Metabolizma Hızı"),
+    "bmrLabel": MessageLookupByLibrary.simpleMessage("BMR"),
+    "bodyMeasurementTitle": MessageLookupByLibrary.simpleMessage(
+      "Vücut Ölçüleri",
+    ),
     "breakfastExample": MessageLookupByLibrary.simpleMessage(
       "ör. mısır gevreği, süt, kahve ...",
     ),
@@ -125,6 +135,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Kaydet"),
     "buttonStartLabel": MessageLookupByLibrary.simpleMessage("BAŞLA"),
     "buttonYesLabel": MessageLookupByLibrary.simpleMessage("EVET"),
+    "calculationMethodLabel": MessageLookupByLibrary.simpleMessage(
+      "Hesaplama Yöntemi",
+    ),
     "calculationsMacronutrientsDistributionLabel":
         MessageLookupByLibrary.simpleMessage("Makro besin dağılımı"),
     "calculationsMacrosDistribution": m2,
@@ -137,7 +150,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "calculationsTDEELabel": MessageLookupByLibrary.simpleMessage(
       "TDEE denklemi",
     ),
+    "calculationsTDEEMifflinStJeorLabel": MessageLookupByLibrary.simpleMessage(
+      "Mifflin-St Jeor Denklemi",
+    ),
     "caloriesTab": MessageLookupByLibrary.simpleMessage("Kalori"),
+    "cancel": MessageLookupByLibrary.simpleMessage("İptal"),
     "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("karbonhidrat"),
     "carbsLabel": MessageLookupByLibrary.simpleMessage("karbonhidrat"),
     "chartExportErrorLabel": MessageLookupByLibrary.simpleMessage(
@@ -146,6 +163,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chartExportedLabel": MessageLookupByLibrary.simpleMessage(
       "Grafik paylaşıldı",
     ),
+    "chestCm": MessageLookupByLibrary.simpleMessage("Göğüs (cm)"),
     "chooseWeightGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Kilo Hedefini Seçin",
     ),
@@ -166,8 +184,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "createCustomDialogTitle": MessageLookupByLibrary.simpleMessage(
       "Özel yemek öğesi oluştur?",
     ),
+    "createCustomFoodLabel": MessageLookupByLibrary.simpleMessage(
+      "Özel yiyecek oluştur",
+    ),
     "currentWeight": MessageLookupByLibrary.simpleMessage("Mevcut"),
     "custom": MessageLookupByLibrary.simpleMessage("Özel"),
+    "customFoodEnergyLabel": MessageLookupByLibrary.simpleMessage(
+      "Enerji (100 g/ml başına kcal)",
+    ),
+    "customFoodNameRequired": MessageLookupByLibrary.simpleMessage(
+      "Yiyecek adı gereklidir",
+    ),
     "dailyGoalLabel": MessageLookupByLibrary.simpleMessage("Günlük Hedef"),
     "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage(
       "Günlük Kcal ayarı:",
@@ -383,6 +410,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "fatLabel": MessageLookupByLibrary.simpleMessage("yağ"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("lif"),
+    "fiberPer100Label": MessageLookupByLibrary.simpleMessage("Lif başına "),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
     "fridayLabel": MessageLookupByLibrary.simpleMessage("Cum"),
     "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
@@ -418,6 +446,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "healthSyncWeight": MessageLookupByLibrary.simpleMessage("Kilo"),
     "healthSyncWorkouts": MessageLookupByLibrary.simpleMessage("Egzersizler"),
     "heightLabel": MessageLookupByLibrary.simpleMessage("Boy"),
+    "hipCm": MessageLookupByLibrary.simpleMessage("Kalça (cm)"),
     "homeLabel": MessageLookupByLibrary.simpleMessage("Ana Sayfa"),
     "hoursLabel": MessageLookupByLibrary.simpleMessage("Saat"),
     "importAction": MessageLookupByLibrary.simpleMessage("İçe Aktar"),
@@ -497,6 +526,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Henüz öğün zamanı verisi yok. Desenleri görmek için öğün eklerken zaman belirleyin.",
     ),
     "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Yemek birimi"),
+    "measurementHistory": MessageLookupByLibrary.simpleMessage("Ölçü Geçmişi"),
     "microNutrientsLabel": MessageLookupByLibrary.simpleMessage(
       "Mikrobesin Öğeleri",
     ),
@@ -513,6 +543,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthlyLabel": MessageLookupByLibrary.simpleMessage("Ay"),
     "movingAverage": MessageLookupByLibrary.simpleMessage("Hareketli Ortalama"),
     "myMealsLabel": MessageLookupByLibrary.simpleMessage("Yemeklerim"),
+    "neckCm": MessageLookupByLibrary.simpleMessage("Boyun (cm)"),
     "netCaloriesLabel": MessageLookupByLibrary.simpleMessage("Net Kalori"),
     "noActivityRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
       "Son zamanlarda eklenen aktivite yok",
@@ -520,6 +551,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noMealsRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
       "Son zamanlarda eklenen yemek yok",
     ),
+    "noMeasurements": MessageLookupByLibrary.simpleMessage("Henüz ölçü yok"),
     "noPhotosLabel": MessageLookupByLibrary.simpleMessage(
       "Henüz ilerleme fotoğrafı yok. Eklemek için + tuşuna dokunun.",
     ),
@@ -527,6 +559,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Henüz tarif yok. Bir tane oluşturun!",
     ),
     "noResultsFound": MessageLookupByLibrary.simpleMessage("Sonuç bulunamadı"),
+    "noResultsHint": MessageLookupByLibrary.simpleMessage(
+      "Farklı anahtar kelimelerle aramayı deneyin",
+    ),
     "noWaterEntries": MessageLookupByLibrary.simpleMessage(
       "Henüz su kaydı yok",
     ),
@@ -987,6 +1022,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "iş yerinde çoğunlukla ayakta durma veya yürüme ve aktif serbest zaman aktiviteleri",
     ),
     "palActiveLabel": MessageLookupByLibrary.simpleMessage("Aktif"),
+    "palExtraActiveDescriptionLabel": MessageLookupByLibrary.simpleMessage(
+      "Çok yoğun fiziksel iş ve son derece aktif serbest zaman aktiviteleri",
+    ),
+    "palExtraActiveLabel": MessageLookupByLibrary.simpleMessage("Ekstra Aktif"),
     "palLowActiveDescriptionLabel": MessageLookupByLibrary.simpleMessage(
       "ör. iş yerinde oturma veya ayakta durma ve hafif serbest zaman aktiviteleri",
     ),
@@ -1017,6 +1056,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "photoTagsHint": MessageLookupByLibrary.simpleMessage("ör. ön, yan"),
     "photoTagsLabel": MessageLookupByLibrary.simpleMessage("Etiketler"),
+    "potassiumPer100Label": MessageLookupByLibrary.simpleMessage(
+      "Potasyum başına ",
+    ),
     "presetCustom": MessageLookupByLibrary.simpleMessage("Özel"),
     "presetEighteenSix": MessageLookupByLibrary.simpleMessage("18:6"),
     "presetOMAD": MessageLookupByLibrary.simpleMessage("OMAD"),
@@ -1032,6 +1074,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "readLabel": MessageLookupByLibrary.simpleMessage(
       "Gizlilik politikasını okudum ve kabul ediyorum.",
     ),
+    "recentFoodsLabel": MessageLookupByLibrary.simpleMessage("Son Yiyecekler"),
     "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
       "Son Eklenenler",
     ),
@@ -1048,6 +1091,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Tekrar Dene"),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("doymuş yağ"),
+    "saturatedFatPer100Label": MessageLookupByLibrary.simpleMessage(
+      "Doymuş yağ başına ",
+    ),
     "saturdayLabel": MessageLookupByLibrary.simpleMessage("Cmt"),
     "save": MessageLookupByLibrary.simpleMessage("Kaydet"),
     "saveRecipeLabel": MessageLookupByLibrary.simpleMessage("Tarifi kaydet"),
@@ -1129,13 +1175,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "ör. elma, dondurma, çikolata ...",
     ),
     "snackLabel": MessageLookupByLibrary.simpleMessage("Atıştırmalık"),
+    "sodiumPer100Label": MessageLookupByLibrary.simpleMessage("Sodyum başına "),
     "startFastLabel": MessageLookupByLibrary.simpleMessage("Oruç Başlat"),
     "startWeight": MessageLookupByLibrary.simpleMessage("Başlangıç"),
     "streakLabel": MessageLookupByLibrary.simpleMessage("Seri"),
     "sugarLabel": MessageLookupByLibrary.simpleMessage("şeker"),
+    "sugarsPer100Label": MessageLookupByLibrary.simpleMessage("Şeker başına "),
     "summaryTimeLabel": MessageLookupByLibrary.simpleMessage("Özet Zamanı"),
     "sundayLabel": MessageLookupByLibrary.simpleMessage("Paz"),
     "suppliedLabel": MessageLookupByLibrary.simpleMessage("tüketilen"),
+    "tdeeLabel": MessageLookupByLibrary.simpleMessage("TDEE"),
+    "thighCm": MessageLookupByLibrary.simpleMessage("Uyluk (cm)"),
     "thursdayLabel": MessageLookupByLibrary.simpleMessage("Per"),
     "todayEntries": MessageLookupByLibrary.simpleMessage("Bugün"),
     "tuesdayLabel": MessageLookupByLibrary.simpleMessage("Sal"),
@@ -1143,6 +1193,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "viewPhotoLabel": MessageLookupByLibrary.simpleMessage(
       "Fotoğrafı Görüntüle",
     ),
+    "waistCm": MessageLookupByLibrary.simpleMessage("Bel (cm)"),
     "waterProgress": m6,
     "waterTrackerTitle": MessageLookupByLibrary.simpleMessage("Su Takipçi"),
     "wednesdayLabel": MessageLookupByLibrary.simpleMessage("Çar"),

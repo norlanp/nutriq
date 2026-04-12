@@ -1,9 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutriq/core/domain/entity/bmr_calculation_entity.dart';
+import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 import 'package:nutriq/core/domain/entity/user_bmi_entity.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
+import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/add_tracked_day_usecase.dart';
 import 'package:nutriq/core/domain/usecase/add_user_usecase.dart';
+import 'package:nutriq/core/domain/usecase/bmr/calculate_bmr_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_kcal_goal_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_user_usecase.dart';
@@ -15,7 +19,6 @@ import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 
 part 'profile_event.dart';
-
 part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
@@ -24,13 +27,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final AddTrackedDayUsecase _addTrackedDayUsecase;
   final GetConfigUsecase _getConfigUsecase;
   final GetKcalGoalUsecase _getKcalGoalUsecase;
+  final AddConfigUsecase _addConfigUsecase;
+  final CalculateBMRUsecase _calculateBMRUsecase;
 
   ProfileBloc(
       this._getUserUsecase,
       this._addUserUsecase,
       this._addTrackedDayUsecase,
       this._getConfigUsecase,
-      this._getKcalGoalUsecase)
+      this._getKcalGoalUsecase,
+      this._addConfigUsecase,
+      this._calculateBMRUsecase)
       : super(ProfileInitial()) {
     on<LoadProfileEvent>((event, emit) async {
       emit(ProfileLoadingState());
@@ -41,11 +48,39 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           bmiValue: userBMIValue,
           nutritionalStatus: BMICalc.getNutritionalStatus(userBMIValue));
       final userConfig = await _getConfigUsecase.getConfig();
+      final bmrCalculation =
+          _calculateBMRUsecase(user, method: userConfig.tdeeMethod);
 
       emit(ProfileLoadedState(
           userBMI: userBMIEntity,
           userEntity: user,
-          usesImperialUnits: userConfig.usesImperialUnits));
+          usesImperialUnits: userConfig.usesImperialUnits,
+          bmrCalculation: bmrCalculation,
+          tdeeMethod: userConfig.tdeeMethod));
+    });
+
+    on<ChangeTDEEMethodEvent>((event, emit) async {
+      await _addConfigUsecase.setConfigTDEEMethod(event.method);
+
+      final user = await _getUserUsecase.getUserData();
+      final userBMIValue = BMICalc.getBMI(user);
+      final userBMIEntity = UserBMIEntity(
+          bmiValue: userBMIValue,
+          nutritionalStatus: BMICalc.getNutritionalStatus(userBMIValue));
+      final userConfig = await _getConfigUsecase.getConfig();
+      final bmrCalculation =
+          _calculateBMRUsecase(user, method: userConfig.tdeeMethod);
+
+      emit(ProfileLoadedState(
+          userBMI: userBMIEntity,
+          userEntity: user,
+          usesImperialUnits: userConfig.usesImperialUnits,
+          bmrCalculation: bmrCalculation,
+          tdeeMethod: userConfig.tdeeMethod));
+
+      locator<HomeBloc>().add(const LoadItemsEvent());
+      locator<DiaryBloc>().add(const LoadDiaryYearEvent());
+      locator<CalendarDayBloc>().add(RefreshCalendarDayEvent());
     });
   }
 

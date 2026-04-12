@@ -6,7 +6,8 @@ enum UserPALEntity {
   sedentary,
   lowActive,
   active,
-  veryActive;
+  veryActive,
+  extraActive;
 
   String getName(BuildContext context) {
     String name;
@@ -22,6 +23,9 @@ enum UserPALEntity {
         break;
       case UserPALEntity.veryActive:
         name = S.of(context).palVeryActiveLabel;
+        break;
+      case UserPALEntity.extraActive:
+        name = S.of(context).palExtraActiveLabel;
         break;
     }
     return name;

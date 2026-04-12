@@ -44,6 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "z. B. Laufen, Radfahren, Yoga ...",
     ),
     "activityLabel": MessageLookupByLibrary.simpleMessage("Aktivität"),
+    "activityMultiplierLabel": MessageLookupByLibrary.simpleMessage(
+      "Aktivitätsmultiplikator",
+    ),
     "addExerciseLabel": MessageLookupByLibrary.simpleMessage(
       "Übung hinzufügen",
     ),
@@ -54,6 +57,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Neuen Eintrag hinzufügen:",
     ),
     "addLabel": MessageLookupByLibrary.simpleMessage("Hinzufügen"),
+    "addMeasurement": MessageLookupByLibrary.simpleMessage(
+      "Messung hinzufügen",
+    ),
     "addWater": MessageLookupByLibrary.simpleMessage("Wasser hinzufügen"),
     "additionalInfoLabelCompendium2011": MessageLookupByLibrary.simpleMessage(
       "Informationen bereitgestellt von\n\'2011 Compendium\n of Physical Activities\'",
@@ -108,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "averageLabel": MessageLookupByLibrary.simpleMessage("Durchschn."),
     "beforeLabel": MessageLookupByLibrary.simpleMessage("Vorher"),
     "betaVersionName": MessageLookupByLibrary.simpleMessage("[Beta]"),
+    "bicepCm": MessageLookupByLibrary.simpleMessage("Bizeps (cm)"),
     "bmi": MessageLookupByLibrary.simpleMessage("BMI"),
     "bmiInfo": MessageLookupByLibrary.simpleMessage(
       "Der Body-Mass-Index (BMI) ist ein Index zur Klassifizierung von Übergewicht und Fettleibigkeit bei Erwachsenen. Er wird berechnet, indem das Gewicht in Kilogramm durch das Quadrat der Körpergröße in Metern (kg/m²) geteilt wird.\n\nDer BMI unterscheidet nicht zwischen Fett- und Muskelmasse und kann für einige Personen irreführend sein.",
@@ -117,6 +124,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "bmiObese": MessageLookupByLibrary.simpleMessage("Adipositas"),
     "bmiOverweight": MessageLookupByLibrary.simpleMessage("Übergewicht"),
     "bmiUnderweight": MessageLookupByLibrary.simpleMessage("Untergewicht"),
+    "bmrKcal": MessageLookupByLibrary.simpleMessage("Basalmetabolismus"),
+    "bmrLabel": MessageLookupByLibrary.simpleMessage("BMR"),
+    "bodyMeasurementTitle": MessageLookupByLibrary.simpleMessage("Körpermaße"),
     "breakfastExample": MessageLookupByLibrary.simpleMessage(
       "z. B. Müsli, Milch, Kaffee ...",
     ),
@@ -128,6 +138,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Speichern"),
     "buttonStartLabel": MessageLookupByLibrary.simpleMessage("START"),
     "buttonYesLabel": MessageLookupByLibrary.simpleMessage("JA"),
+    "calculationMethodLabel": MessageLookupByLibrary.simpleMessage(
+      "Berechnungsmethode",
+    ),
     "calculationsMacronutrientsDistributionLabel":
         MessageLookupByLibrary.simpleMessage("Verteilung der Makronährstoffe"),
     "calculationsMacrosDistribution": m2,
@@ -140,7 +153,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "calculationsTDEELabel": MessageLookupByLibrary.simpleMessage(
       "TDEE-Gleichung",
     ),
+    "calculationsTDEEMifflinStJeorLabel": MessageLookupByLibrary.simpleMessage(
+      "Mifflin-St Jeor Gleichung",
+    ),
     "caloriesTab": MessageLookupByLibrary.simpleMessage("Kalorien"),
+    "cancel": MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("Kohlenhydrate"),
     "carbsLabel": MessageLookupByLibrary.simpleMessage("Kohlenhydrate"),
     "chartExportErrorLabel": MessageLookupByLibrary.simpleMessage(
@@ -149,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chartExportedLabel": MessageLookupByLibrary.simpleMessage(
       "Diagramm geteilt",
     ),
+    "chestCm": MessageLookupByLibrary.simpleMessage("Brust (cm)"),
     "chooseWeightGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Gewichtsziel wählen",
     ),
@@ -169,8 +187,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "createCustomDialogTitle": MessageLookupByLibrary.simpleMessage(
       "Benutzerdefinierte Mahlzeit erstellen?",
     ),
+    "createCustomFoodLabel": MessageLookupByLibrary.simpleMessage(
+      "Eigenes Lebensmittel erstellen",
+    ),
     "currentWeight": MessageLookupByLibrary.simpleMessage("Aktuell"),
     "custom": MessageLookupByLibrary.simpleMessage("Benutzerdefiniert"),
+    "customFoodEnergyLabel": MessageLookupByLibrary.simpleMessage(
+      "Energie (kcal pro 100 g/ml)",
+    ),
+    "customFoodNameRequired": MessageLookupByLibrary.simpleMessage(
+      "Lebensmittelname ist erforderlich",
+    ),
     "dailyGoalLabel": MessageLookupByLibrary.simpleMessage("Tagesziel"),
     "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage(
       "Tägliche kcal-Anpassung:",
@@ -401,6 +428,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "fatLabel": MessageLookupByLibrary.simpleMessage("Fett"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("Ballaststoffe"),
+    "fiberPer100Label": MessageLookupByLibrary.simpleMessage(
+      "Ballaststoffe pro ",
+    ),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
     "fridayLabel": MessageLookupByLibrary.simpleMessage("Fr"),
     "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("♀ weiblich"),
@@ -435,6 +465,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "healthSyncWeight": MessageLookupByLibrary.simpleMessage("Gewicht"),
     "healthSyncWorkouts": MessageLookupByLibrary.simpleMessage("Workouts"),
     "heightLabel": MessageLookupByLibrary.simpleMessage("Größe"),
+    "hipCm": MessageLookupByLibrary.simpleMessage("Hüfte (cm)"),
     "homeLabel": MessageLookupByLibrary.simpleMessage("Startseite"),
     "hoursLabel": MessageLookupByLibrary.simpleMessage("Stunden"),
     "importAction": MessageLookupByLibrary.simpleMessage("Importieren"),
@@ -517,6 +548,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Noch keine Mahlzeitenzeit-Daten. Geben Sie eine Zeit beim Eintragen von Mahlzeiten an, um Muster zu sehen.",
     ),
     "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Mahlzeiteinheit"),
+    "measurementHistory": MessageLookupByLibrary.simpleMessage("Messverlauf"),
     "microNutrientsLabel": MessageLookupByLibrary.simpleMessage(
       "Mikronährstoffe",
     ),
@@ -535,12 +567,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "Gleitender Durchschnitt",
     ),
     "myMealsLabel": MessageLookupByLibrary.simpleMessage("Meine Mahlzeiten"),
+    "neckCm": MessageLookupByLibrary.simpleMessage("Hals (cm)"),
     "netCaloriesLabel": MessageLookupByLibrary.simpleMessage("Netto-Kalorien"),
     "noActivityRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
       "Keine kürzlich hinzugefügten Aktivitäten",
     ),
     "noMealsRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
       "Keine kürzlich hinzugefügten Mahlzeiten",
+    ),
+    "noMeasurements": MessageLookupByLibrary.simpleMessage(
+      "Noch keine Messungen",
     ),
     "noPhotosLabel": MessageLookupByLibrary.simpleMessage(
       "Noch keine Fortschrittsfotos. Tippen Sie auf + zum Hinzufügen.",
@@ -550,6 +586,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "noResultsFound": MessageLookupByLibrary.simpleMessage(
       "Keine Ergebnisse gefunden",
+    ),
+    "noResultsHint": MessageLookupByLibrary.simpleMessage(
+      "Versuchen Sie mit anderen Suchbegriffen",
     ),
     "noWaterEntries": MessageLookupByLibrary.simpleMessage(
       "Noch keine Wassereinträge",
@@ -1030,6 +1069,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Überwiegend Stehen oder Gehen bei der Arbeit und aktive Freizeitaktivitäten",
     ),
     "palActiveLabel": MessageLookupByLibrary.simpleMessage("Aktiv"),
+    "palExtraActiveDescriptionLabel": MessageLookupByLibrary.simpleMessage(
+      "Sehr intensive körperliche Arbeit und extrem aktive Freizeitaktivitäten",
+    ),
+    "palExtraActiveLabel": MessageLookupByLibrary.simpleMessage("Extrem aktiv"),
     "palLowActiveDescriptionLabel": MessageLookupByLibrary.simpleMessage(
       "z. B. Sitzen oder Stehen bei der Arbeit und leichte Freizeitaktivitäten",
     ),
@@ -1066,6 +1109,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "z.B. Vorderseite, Seite",
     ),
     "photoTagsLabel": MessageLookupByLibrary.simpleMessage("Tags"),
+    "potassiumPer100Label": MessageLookupByLibrary.simpleMessage("Kalium pro "),
     "presetCustom": MessageLookupByLibrary.simpleMessage("Benutzerdefiniert"),
     "presetEighteenSix": MessageLookupByLibrary.simpleMessage("18:6"),
     "presetOMAD": MessageLookupByLibrary.simpleMessage("OMAD"),
@@ -1080,6 +1124,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "quantityLabel": MessageLookupByLibrary.simpleMessage("Menge"),
     "readLabel": MessageLookupByLibrary.simpleMessage(
       "Ich habe die Datenschutzbestimmungen gelesen und akzeptiere sie.",
+    ),
+    "recentFoodsLabel": MessageLookupByLibrary.simpleMessage(
+      "Kürzliche Lebensmittel",
     ),
     "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Kürzlich"),
     "recipeBuilderLabel": MessageLookupByLibrary.simpleMessage(
@@ -1098,6 +1145,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "retryLabel": MessageLookupByLibrary.simpleMessage("Erneut versuchen"),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage(
       "gesättigtes Fett",
+    ),
+    "saturatedFatPer100Label": MessageLookupByLibrary.simpleMessage(
+      "Gesättigtes Fett pro ",
     ),
     "saturdayLabel": MessageLookupByLibrary.simpleMessage("Sa"),
     "save": MessageLookupByLibrary.simpleMessage("Speichern"),
@@ -1167,20 +1217,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "z. B. Apfel, Eiscreme, Schokolade ...",
     ),
     "snackLabel": MessageLookupByLibrary.simpleMessage("Snack"),
+    "sodiumPer100Label": MessageLookupByLibrary.simpleMessage("Natrium pro "),
     "startFastLabel": MessageLookupByLibrary.simpleMessage("Fasten starten"),
     "startWeight": MessageLookupByLibrary.simpleMessage("Start"),
     "streakLabel": MessageLookupByLibrary.simpleMessage("Serie"),
     "sugarLabel": MessageLookupByLibrary.simpleMessage("Zucker"),
+    "sugarsPer100Label": MessageLookupByLibrary.simpleMessage("Zucker pro "),
     "summaryTimeLabel": MessageLookupByLibrary.simpleMessage(
       "Zeit der Zusammenfassung",
     ),
     "sundayLabel": MessageLookupByLibrary.simpleMessage("So"),
     "suppliedLabel": MessageLookupByLibrary.simpleMessage("zugeführt"),
+    "tdeeLabel": MessageLookupByLibrary.simpleMessage("TDEE"),
+    "thighCm": MessageLookupByLibrary.simpleMessage("Oberschenkel (cm)"),
     "thursdayLabel": MessageLookupByLibrary.simpleMessage("Do"),
     "todayEntries": MessageLookupByLibrary.simpleMessage("Heute"),
     "tuesdayLabel": MessageLookupByLibrary.simpleMessage("Di"),
     "unitLabel": MessageLookupByLibrary.simpleMessage("Einheit"),
     "viewPhotoLabel": MessageLookupByLibrary.simpleMessage("Foto ansehen"),
+    "waistCm": MessageLookupByLibrary.simpleMessage("Taille (cm)"),
     "waterProgress": m6,
     "waterTrackerTitle": MessageLookupByLibrary.simpleMessage("Wasser-Tracker"),
     "wednesdayLabel": MessageLookupByLibrary.simpleMessage("Mi"),

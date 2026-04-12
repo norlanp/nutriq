@@ -1,5 +1,6 @@
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
+import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 
 abstract class ConfigRepository {
   Future<void> updateConfig(ConfigEntity configEntity);
@@ -23,4 +24,8 @@ abstract class ConfigRepository {
   Future<void> setConfigKcalAdjustment(double kcalAdjustment);
 
   Future<void> setUserMacroPct(double carbs, double protein, double fat);
+
+  Future<TDEEMethodEntity> getConfigTDEEMethod();
+
+  Future<void> setConfigTDEEMethod(TDEEMethodEntity method);
 }

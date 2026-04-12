@@ -1,6 +1,7 @@
 import 'package:nutriq/core/data/repository/config_repository.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
+import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 
 class AddConfigUsecase {
   final ConfigRepository _configRepository;
@@ -36,5 +37,13 @@ class AddConfigUsecase {
   Future<void> setConfigMacroGoalPct(
       double carbGoalPct, double proteinGoalPct, double fatPctGoal) async {
     _configRepository.setUserMacroPct(carbGoalPct, proteinGoalPct, fatPctGoal);
+  }
+
+  Future<void> setConfigTDEEMethod(TDEEMethodEntity method) async {
+    await _configRepository.setConfigTDEEMethod(method);
+  }
+
+  Future<TDEEMethodEntity> getConfigTDEEMethod() async {
+    return await _configRepository.getConfigTDEEMethod();
   }
 }

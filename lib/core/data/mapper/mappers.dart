@@ -4,6 +4,7 @@ import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/drift/tables/config_table.dart';
 import 'package:nutriq/core/domain/entity/ai_model_metadata_entity.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
+import 'package:nutriq/core/domain/entity/body_measurement_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
 import 'package:nutriq/core/domain/entity/fasting_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
@@ -11,6 +12,7 @@ import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/notification_settings_entity.dart';
 import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
 import 'package:nutriq/core/domain/entity/photo_progress_entity.dart';
+import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
@@ -58,6 +60,7 @@ ConfigEntity mapConfigEntryToEntity(ConfigEntry entry) => ConfigEntity(
       userProteinGoalPct: entry.userProteinGoalPct,
       userFatGoalPct: entry.userFatGoalPct,
       dailyWaterGoalMl: entry.dailyWaterGoalMl ?? 2000,
+      tdeeMethod: mapTDEEMethodStringToEntity(entry.tdeeMethod),
     );
 
 ConfigEntriesCompanion mapConfigEntityToCompanion(ConfigEntity entity) =>
@@ -73,6 +76,7 @@ ConfigEntriesCompanion mapConfigEntityToCompanion(ConfigEntity entity) =>
       userProteinGoalPct: Value(entity.userProteinGoalPct),
       userFatGoalPct: Value(entity.userFatGoalPct),
       dailyWaterGoalMl: Value(entity.dailyWaterGoalMl),
+      tdeeMethod: Value(mapTDEEMethodEntityToString(entity.tdeeMethod)),
     );
 
 UserGenderEntity mapUserGenderStringToEntity(String gender) {
@@ -123,6 +127,8 @@ UserPALEntity mapUserPALStringToEntity(String pal) {
       return UserPALEntity.lowActive;
     case 'active':
       return UserPALEntity.active;
+    case 'extraActive':
+      return UserPALEntity.extraActive;
     default:
       return UserPALEntity.veryActive;
   }
@@ -138,6 +144,26 @@ String mapUserPALEntityToString(UserPALEntity entity) {
       return 'active';
     case UserPALEntity.veryActive:
       return 'veryActive';
+    case UserPALEntity.extraActive:
+      return 'extraActive';
+  }
+}
+
+TDEEMethodEntity mapTDEEMethodStringToEntity(String method) {
+  switch (method) {
+    case 'mifflinStJeor':
+      return TDEEMethodEntity.mifflinStJeor;
+    default:
+      return TDEEMethodEntity.iom2005;
+  }
+}
+
+String mapTDEEMethodEntityToString(TDEEMethodEntity entity) {
+  switch (entity) {
+    case TDEEMethodEntity.iom2005:
+      return 'iom2005';
+    case TDEEMethodEntity.mifflinStJeor:
+      return 'mifflinStJeor';
   }
 }
 
@@ -629,5 +655,34 @@ PhotoProgressEntriesCompanion mapPhotoProgressEntityToCompanion(
       filePath: Value(entity.filePath),
       date: Value(entity.date),
       tags: Value(entity.tags),
+      note: Value(entity.note),
+    );
+
+BodyMeasurementEntity mapBodyMeasurementToEntity(BodyMeasurement entry) =>
+    BodyMeasurementEntity(
+      id: entry.id,
+      userId: entry.userId,
+      date: entry.date,
+      waistCm: entry.waistCm,
+      neckCm: entry.neckCm,
+      hipCm: entry.hipCm,
+      chestCm: entry.chestCm,
+      bicepCm: entry.bicepCm,
+      thighCm: entry.thighCm,
+      note: entry.note,
+    );
+
+BodyMeasurementsCompanion mapBodyMeasurementEntityToCompanion(
+        BodyMeasurementEntity entity) =>
+    BodyMeasurementsCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      date: Value(entity.date),
+      waistCm: Value(entity.waistCm),
+      neckCm: Value(entity.neckCm),
+      hipCm: Value(entity.hipCm),
+      chestCm: Value(entity.chestCm),
+      bicepCm: Value(entity.bicepCm),
+      thighCm: Value(entity.thighCm),
       note: Value(entity.note),
     );

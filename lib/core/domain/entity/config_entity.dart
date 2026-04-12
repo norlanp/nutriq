@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
+import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 
 class ConfigEntity extends Equatable {
   final bool hasAcceptedDisclaimer;
@@ -12,6 +13,7 @@ class ConfigEntity extends Equatable {
   final double? userProteinGoalPct;
   final double? userFatGoalPct;
   final int? dailyWaterGoalMl;
+  final TDEEMethodEntity tdeeMethod;
 
   const ConfigEntity(
     this.hasAcceptedDisclaimer,
@@ -24,6 +26,7 @@ class ConfigEntity extends Equatable {
     this.userProteinGoalPct,
     this.userFatGoalPct,
     this.dailyWaterGoalMl = 2000,
+    this.tdeeMethod = TDEEMethodEntity.iom2005,
   });
 
   @override
@@ -37,5 +40,6 @@ class ConfigEntity extends Equatable {
         userProteinGoalPct,
         userFatGoalPct,
         dailyWaterGoalMl,
+        tdeeMethod,
       ];
 }

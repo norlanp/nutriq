@@ -114,4 +114,15 @@ class ConfigDao extends DatabaseAccessor<AppDatabase> with _$ConfigDaoMixin {
   Future<void> addConfig(ConfigEntriesCompanion config) async {
     await into(configEntries).insertOnConflictUpdate(config);
   }
+
+  Future<String> getTDEEMethod() async {
+    final config = await getConfig();
+    return config.tdeeMethod;
+  }
+
+  Future<void> setTDEEMethod(String method) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(tdeeMethod: Value(method)),
+    );
+  }
 }

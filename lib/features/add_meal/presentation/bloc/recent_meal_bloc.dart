@@ -7,7 +7,6 @@ import 'package:nutriq/core/domain/usecase/get_intake_usecase.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 
 part 'recent_meal_event.dart';
-
 part 'recent_meal_state.dart';
 
 class RecentMealBloc extends Bloc<RecentMealEvent, RecentMealState> {
@@ -25,13 +24,24 @@ class RecentMealBloc extends Bloc<RecentMealEvent, RecentMealState> {
         final recentIntake = await _getIntakeUsecase.getRecentIntake();
         final searchString = (event.searchString).toLowerCase();
 
+        // Deduplicate by meal name, keeping the most recent entry
+        final seenNames = <String>{};
+        final dedupedIntakes = <IntakeEntity>[];
+        for (final intake in recentIntake) {
+          final name = intake.meal.name?.toLowerCase() ?? '';
+          if (seenNames.add(name)) {
+            dedupedIntakes.add(intake);
+          }
+          if (dedupedIntakes.length >= 10) break;
+        }
+
         if (searchString.isEmpty) {
           emit(RecentMealLoadedState(
-              recentMeals: recentIntake.map((intake) => intake.meal).toList(),
+              recentMeals: dedupedIntakes.map((intake) => intake.meal).toList(),
               usesImperialUnits: config.usesImperialUnits));
         } else {
           emit(RecentMealLoadedState(
-              recentMeals: recentIntake
+              recentMeals: dedupedIntakes
                   .where(matchesSearchString(searchString))
                   .map((intake) => intake.meal)
                   .toList(),

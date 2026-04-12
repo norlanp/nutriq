@@ -41,16 +41,23 @@ class _EditMealScreenState extends State<EditMealScreen> {
   final _carbsTextController = TextEditingController();
   final _fatTextController = TextEditingController();
   final _proteinTextController = TextEditingController();
+  final _sugarsTextController = TextEditingController();
+  final _saturatedFatTextController = TextEditingController();
+  final _fiberTextController = TextEditingController();
+  final _sodiumTextController = TextEditingController();
+  final _potassiumTextController = TextEditingController();
 
   final _units = ['g', 'ml', 'g/ml'];
   late String? selectedUnit;
 
-  // late List<DropdownMenuItem> _mealUnitDropdownItems;
   late List<ButtonSegment<String>> _mealUnitButtonSegment;
 
-  // TODO: Add base quantity and unit
   String baseQuantity = "100";
   String baseQuantityUnit = " g/ml";
+
+  bool get _isCustomMeal =>
+      _mealEntity.source == MealSourceEntity.custom ||
+      _mealEntity.source == MealSourceEntity.unknown;
 
   @override
   void initState() {
@@ -85,6 +92,16 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _fatTextController.text = _mealEntity.nutriments.fat100.toStringOrEmpty();
     _proteinTextController.text =
         _mealEntity.nutriments.proteins100.toStringOrEmpty();
+    _sugarsTextController.text =
+        _mealEntity.nutriments.sugars100.toStringOrEmpty();
+    _saturatedFatTextController.text =
+        _mealEntity.nutriments.saturatedFat100.toStringOrEmpty();
+    _fiberTextController.text =
+        _mealEntity.nutriments.fiber100.toStringOrEmpty();
+    _sodiumTextController.text =
+        _mealEntity.nutriments.sodium100.toStringOrEmpty();
+    _potassiumTextController.text =
+        _mealEntity.nutriments.potassium100.toStringOrEmpty();
     selectedUnit = _switchButtonUnit(_mealEntity.mealUnit);
 
     // Convert meal size to imperial units if necessary
@@ -121,7 +138,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(S.of(context).editMealLabel),
+          title: Text(_isCustomMeal
+              ? S.of(context).createCustomFoodLabel
+              : S.of(context).editMealLabel),
           actions: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -156,20 +175,21 @@ class _EditMealScreenState extends State<EditMealScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Center(
-            child: ClipOval(
-          child: CachedNetworkImage(
-            cacheManager: locator<CacheManager>(),
-            width: 120,
-            height: 120,
-            placeholder: (context, string) => const DefaultMealImage(),
-            errorWidget: (context, exception, stacktrace) =>
-                const DefaultMealImage(),
-            fit: BoxFit.cover,
-            imageUrl: _mealEntity.mainImageUrl ?? "",
-          ),
-        )),
-        const SizedBox(height: 32),
+        if (_mealEntity.mainImageUrl != null)
+          Center(
+              child: ClipOval(
+            child: CachedNetworkImage(
+              cacheManager: locator<CacheManager>(),
+              width: 120,
+              height: 120,
+              placeholder: (context, string) => const DefaultMealImage(),
+              errorWidget: (context, exception, stacktrace) =>
+                  const DefaultMealImage(),
+              fit: BoxFit.cover,
+              imageUrl: _mealEntity.mainImageUrl ?? "",
+            ),
+          )),
+        if (_mealEntity.mainImageUrl != null) const SizedBox(height: 32),
         TextFormField(
           controller: _nameTextController,
           decoration: InputDecoration(
@@ -226,6 +246,12 @@ class _EditMealScreenState extends State<EditMealScreen> {
           keyboardType: TextInputType.number,
         ),
         const SizedBox(height: 48),
+        // Macronutrients header
+        Text(
+          S.of(context).nutritionInfoLabel,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 16),
         TextFormField(
           controller: _kcalTextController,
           inputFormatters: CustomTextInputFormatter.doubleOnly(),
@@ -267,6 +293,59 @@ class _EditMealScreenState extends State<EditMealScreen> {
               border: const OutlineInputBorder()),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
         ),
+        const SizedBox(height: 24),
+        // Additional macronutrients
+        TextFormField(
+          controller: _sugarsTextController,
+          inputFormatters: CustomTextInputFormatter.doubleOnly(),
+          decoration: InputDecoration(
+              labelText: S.of(context).sugarsPer100Label + baseQuantityUnit,
+              border: const OutlineInputBorder()),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: _saturatedFatTextController,
+          inputFormatters: CustomTextInputFormatter.doubleOnly(),
+          decoration: InputDecoration(
+              labelText:
+                  S.of(context).saturatedFatPer100Label + baseQuantityUnit,
+              border: const OutlineInputBorder()),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: _fiberTextController,
+          inputFormatters: CustomTextInputFormatter.doubleOnly(),
+          decoration: InputDecoration(
+              labelText: S.of(context).fiberPer100Label + baseQuantityUnit,
+              border: const OutlineInputBorder()),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        ),
+        const SizedBox(height: 24),
+        // Micronutrients header
+        Text(
+          S.of(context).microNutrientsLabel,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: _sodiumTextController,
+          inputFormatters: CustomTextInputFormatter.doubleOnly(),
+          decoration: InputDecoration(
+              labelText: S.of(context).sodiumPer100Label + baseQuantityUnit,
+              border: const OutlineInputBorder()),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: _potassiumTextController,
+          inputFormatters: CustomTextInputFormatter.doubleOnly(),
+          decoration: InputDecoration(
+              labelText: S.of(context).potassiumPer100Label + baseQuantityUnit,
+              border: const OutlineInputBorder()),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        ),
       ],
     );
   }
@@ -290,7 +369,12 @@ class _EditMealScreenState extends State<EditMealScreen> {
           _kcalTextController.text,
           _carbsTextController.text,
           _fatTextController.text,
-          _proteinTextController.text);
+          _proteinTextController.text,
+          sugarsText: _sugarsTextController.text,
+          saturatedFatText: _saturatedFatTextController.text,
+          fiberText: _fiberTextController.text,
+          sodiumText: _sodiumTextController.text,
+          potassiumText: _potassiumTextController.text);
 
       Navigator.of(context).pushNamedAndRemoveUntil(
           NavigationOptions.mealDetailRoute,

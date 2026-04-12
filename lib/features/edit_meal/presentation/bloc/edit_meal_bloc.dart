@@ -22,17 +22,29 @@ class EditMealBloc extends Bloc<EditMealEvent, EditMealState> {
   }
 
   MealEntity createNewMealEntity(
-      MealEntity oldMealEntity,
-      String nameText,
-      String brandsText,
-      String mealQuantityText,
-      String servingQuantityText,
-      String baseQuantity,
-      String? unitText,
-      String kcalText,
-      String carbsText,
-      String fatText,
-      String proteinText) {
+    MealEntity oldMealEntity,
+    String nameText,
+    String brandsText,
+    String mealQuantityText,
+    String servingQuantityText,
+    String baseQuantity,
+    String? unitText,
+    String kcalText,
+    String carbsText,
+    String fatText,
+    String proteinText, {
+    String? sugarsText,
+    String? saturatedFatText,
+    String? fiberText,
+    String? sodiumText,
+    String? potassiumText,
+    String? cholesterolText,
+    String? vitaminAText,
+    String? vitaminCText,
+    String? vitaminDText,
+    String? calciumText,
+    String? ironText,
+  }) {
     final baseQuantityDouble = double.tryParse(baseQuantity);
 
     final double factorTo100g =
@@ -47,19 +59,28 @@ class EditMealBloc extends Bloc<EditMealEvent, EditMealState> {
         carbohydrates100: multiplyIfNotNull(carbsText.toDoubleOrNull()),
         fat100: multiplyIfNotNull(fatText.toDoubleOrNull()),
         proteins100: multiplyIfNotNull(proteinText.toDoubleOrNull()),
-        sugars100: multiplyIfNotNull(oldMealEntity.nutriments.sugars100),
-        saturatedFat100:
-            multiplyIfNotNull(oldMealEntity.nutriments.saturatedFat100),
-        fiber100: multiplyIfNotNull(oldMealEntity.nutriments.fiber100),
-        sodium100: multiplyIfNotNull(oldMealEntity.nutriments.sodium100),
-        potassium100: multiplyIfNotNull(oldMealEntity.nutriments.potassium100),
-        cholesterol100:
-            multiplyIfNotNull(oldMealEntity.nutriments.cholesterol100),
-        vitaminA100: multiplyIfNotNull(oldMealEntity.nutriments.vitaminA100),
-        vitaminC100: multiplyIfNotNull(oldMealEntity.nutriments.vitaminC100),
-        vitaminD100: multiplyIfNotNull(oldMealEntity.nutriments.vitaminD100),
-        calcium100: multiplyIfNotNull(oldMealEntity.nutriments.calcium100),
-        iron100: multiplyIfNotNull(oldMealEntity.nutriments.iron100));
+        sugars100: multiplyIfNotNull(
+            sugarsText?.toDoubleOrNull() ?? oldMealEntity.nutriments.sugars100),
+        saturatedFat100: multiplyIfNotNull(saturatedFatText?.toDoubleOrNull() ??
+            oldMealEntity.nutriments.saturatedFat100),
+        fiber100: multiplyIfNotNull(
+            fiberText?.toDoubleOrNull() ?? oldMealEntity.nutriments.fiber100),
+        sodium100: multiplyIfNotNull(
+            sodiumText?.toDoubleOrNull() ?? oldMealEntity.nutriments.sodium100),
+        potassium100: multiplyIfNotNull(potassiumText?.toDoubleOrNull() ??
+            oldMealEntity.nutriments.potassium100),
+        cholesterol100: multiplyIfNotNull(cholesterolText?.toDoubleOrNull() ??
+            oldMealEntity.nutriments.cholesterol100),
+        vitaminA100: multiplyIfNotNull(vitaminAText?.toDoubleOrNull() ??
+            oldMealEntity.nutriments.vitaminA100),
+        vitaminC100: multiplyIfNotNull(vitaminCText?.toDoubleOrNull() ??
+            oldMealEntity.nutriments.vitaminC100),
+        vitaminD100: multiplyIfNotNull(vitaminDText?.toDoubleOrNull() ??
+            oldMealEntity.nutriments.vitaminD100),
+        calcium100: multiplyIfNotNull(calciumText?.toDoubleOrNull() ??
+            oldMealEntity.nutriments.calcium100),
+        iron100: multiplyIfNotNull(
+            ironText?.toDoubleOrNull() ?? oldMealEntity.nutriments.iron100));
 
     return MealEntity(
         code: oldMealEntity.code,
@@ -74,6 +95,8 @@ class EditMealBloc extends Bloc<EditMealEvent, EditMealState> {
         servingUnit: servingQuantityText.toStringOrNull(),
         servingSize: oldMealEntity.servingSize,
         nutriments: newMealNutriments,
-        source: oldMealEntity.source);
+        source: oldMealEntity.source == MealSourceEntity.unknown
+            ? MealSourceEntity.custom
+            : oldMealEntity.source);
   }
 }

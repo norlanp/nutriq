@@ -23,14 +23,14 @@ Location: `/Users/norlan/code/mycal`
 |---------|-----|-----|--------|--------|
 | Food diary | Basic diary | 4-slot diary (B/L/D/S) | 4-slot diary | ✅ |
 | Barcode scanner | Yes | Yes | Yes (existing) | ✅ |
-| Food database | 3 sources | 14M+ items | Keep 3 sources, improve UX | 🟡 UX improvement pending |
+| Food database | 3 sources | 14M+ items | Keep 3 sources, improve UX | ✅ |
 | Macro/micro tracking | Basic macros | Full macro + micronutrients | Full macro + micronutrients | ✅ |
 | Saved meals/recipes | Custom meals only | My Meals + full recipes | Full recipes + meal presets | ✅ |
 | Weight tracking | Not present | Full weight logging + graph | Weight log + trends | ✅ |
-| Body measurements | Not present | Waist, neck, etc. | Optional measurements | ❌ Not started |
+| Body measurements | Not present | Waist, neck, etc. | Optional measurements | ✅ |
 | Water tracking | Not present | Hydration tracker | Daily water tracker | ✅ |
 | Exercise calorie adjustment | Activity log | Net calories | Auto-adjust daily budget | ✅ |
-| BMR/BMI calculator | Basic kcal goals | Mifflin-St Jeor | Enhanced calculator | ✅ (Mifflin-St Jeor 🟡) |
+| BMR/BMI calculator | Basic kcal goals | Mifflin-St Jeor | Enhanced calculator | ✅ |
 | Reminders/notifications | Not present | Meal logging reminders | Local notifications | ✅ |
 | Progress charts | Not present | Weekly/monthly trends | Trend charts | ✅ |
 | Photo progress | Not present | Before/after photos | Local photo storage | ✅ |
@@ -38,7 +38,7 @@ Location: `/Users/norlan/code/mycal`
 | AI food recognition | Not present | Meal Scan (premium) | On-device ML (free) | ✅ |
 | Meal planning | Not present | Weekly meal plans | Weekly planner + shopping list | ✅ |
 | Health integrations | None | 35+ devices/apps | HealthKit, Health Connect | ✅ |
-| Social/community | Not present | Forums, friends | Not planned (privacy) | — |
+
 
 ## Completed Work
 
@@ -230,22 +230,25 @@ Already implemented in upstream ONT. `IntakeTypeEntity` (B/L/D/S), `IntakeEntity
 
 **Goal:** Close remaining feature gaps from the original MFP comparison.
 
-17. **Body Measurements** ❌ *Not started*
+17. **Body Measurements** ✅ *Implemented*
     - New `BodyMeasurementEntity`, Drift table, DAO, and `BodyMeasurementDataSource`
-    - Measurement logging screen (waist, neck, hip, chest, bicep, thigh)
-    - Measurement trend charts over time
+    - Measurement logging screen with date picker (waist, neck, hip, chest, bicep, thigh)
+    - Measurement trend charts with toggleable metric filter chips
     - Measurement history list
+    - Body measurements entry in bottom sheet navigation
 
-18. **Food Database UX Improvements** 🟡 *Partially exists*
-    - Audit and improve food search experience
-    - Add recent/frequent foods section
-    - Better barcode scan → food entry flow
-    - Custom food creation flow
+18. **Food Database UX Improvements** ✅ *Implemented*
+    - Shimmer loading states on search results
+    - Error results widget with retry button
+    - Recent/frequent foods section in default search state
+    - Barcode scan → auto-fill food entry flow (verified existing)
+    - Custom food creation screen with manual nutrition entry
 
-19. **BMR Enhancement (Mifflin-St Jeor)** 🟡 *Basic BMR exists, Mifflin-St Jeor not implemented*
+19. **BMR Enhancement (Mifflin-St Jeor)** ✅ *Implemented*
     - Mifflin-St Jeor formula as alternative BMR calculation
-    - Show BMR/TDEE breakdown in profile
-    - Offer calculation method choice during setup
+    - Show BMR/TDEE breakdown in profile (BMROverview widget)
+    - TDEE method selector dropdown in profile and calculations dialog
+    - Calculation method persisted to config
 
 **New Drift Tables:**
 - `body_measurement` - Body measurement entries
@@ -391,5 +394,5 @@ lib/
 ---
 
 Created: 2026-04-09
-Last Updated: 2026-04-10
-Status: All Phases Complete. Remaining: Body Measurements, Food DB UX, BMR/Mifflin-St Jeor
+Last Updated: 2026-04-12
+Status: All Phases Complete. All features implemented.

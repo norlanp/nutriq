@@ -19,6 +19,7 @@ class ConfigEntries extends Table {
   RealColumn get userFatGoalPct => real().nullable()();
   IntColumn get dailyWaterGoalMl =>
       integer().nullable().withDefault(const Constant(2000))();
+  TextColumn get tdeeMethod => text().withDefault(const Constant('iom2005'))();
 
   @override
   Set<Column> get primaryKey => {id};

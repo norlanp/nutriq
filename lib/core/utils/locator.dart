@@ -14,6 +14,7 @@ import 'package:nutriq/core/data/data_source/notification_settings_data_source.d
 import 'package:nutriq/core/data/data_source/ai_model_metadata_data_source.dart';
 import 'package:nutriq/core/data/data_source/meal_plan_data_source.dart';
 import 'package:nutriq/core/data/data_source/photo_progress_data_source.dart';
+import 'package:nutriq/core/data/data_source/body_measurement_data_source.dart';
 import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/drift/dao/meal_dao.dart';
 import 'package:nutriq/core/data/drift/dao/recipe_dao.dart';
@@ -22,6 +23,7 @@ import 'package:nutriq/core/data/drift/dao/fasting_dao.dart';
 import 'package:nutriq/core/data/drift/dao/ai_model_metadata_dao.dart';
 import 'package:nutriq/core/data/drift/dao/meal_plan_dao.dart';
 import 'package:nutriq/core/data/drift/dao/photo_progress_dao.dart';
+import 'package:nutriq/core/data/drift/dao/body_measurement_dao.dart';
 import 'package:nutriq/core/data/repository/config_repository.dart' as data;
 import 'package:nutriq/core/domain/repository/config_repository.dart' as domain;
 import 'package:nutriq/core/domain/repository/water_repository.dart'
@@ -34,6 +36,8 @@ import 'package:nutriq/core/domain/repository/meal_plan_repository.dart'
     as domain_meal_plan;
 import 'package:nutriq/core/domain/repository/photo_progress_repository.dart'
     as domain_photo_progress;
+import 'package:nutriq/core/domain/repository/body_measurement_repository.dart'
+    as domain_body_measurement;
 import 'package:nutriq/core/domain/repository/weight_repository.dart'
     as domain_weight;
 import 'package:nutriq/core/data/repository/intake_repository.dart';
@@ -56,6 +60,8 @@ import 'package:nutriq/core/data/repository/meal_plan_repository.dart'
     as data_meal_plan;
 import 'package:nutriq/core/data/repository/photo_progress_repository.dart'
     as data_photo_progress;
+import 'package:nutriq/core/data/repository/body_measurement_repository.dart'
+    as data_body_measurement;
 import 'package:nutriq/core/domain/repository/notification_settings_repository.dart'
     as domain_notification;
 import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
@@ -63,6 +69,7 @@ import 'package:nutriq/core/domain/usecase/add_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/add_tracked_day_usecase.dart';
 import 'package:nutriq/core/domain/usecase/add_user_activity_usercase.dart';
 import 'package:nutriq/core/domain/usecase/add_user_usecase.dart';
+import 'package:nutriq/core/domain/usecase/bmr/calculate_bmr_usecase.dart';
 import 'package:nutriq/core/domain/usecase/delete_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/delete_user_activity_usecase.dart';
 import 'package:nutriq/core/domain/usecase/weight/add_weight_usecase.dart';
@@ -86,6 +93,9 @@ import 'package:nutriq/core/domain/usecase/meal_plan/generate_shopping_list_usec
 import 'package:nutriq/core/domain/usecase/photo_progress/add_photo_usecase.dart';
 import 'package:nutriq/core/domain/usecase/photo_progress/get_photos_usecase.dart';
 import 'package:nutriq/core/domain/usecase/photo_progress/delete_photo_usecase.dart';
+import 'package:nutriq/core/domain/usecase/body_measurement/add_body_measurement_usecase.dart';
+import 'package:nutriq/core/domain/usecase/body_measurement/get_body_measurements_usecase.dart';
+import 'package:nutriq/core/domain/usecase/body_measurement/delete_body_measurement_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_kcal_goal_usecase.dart';
@@ -138,6 +148,7 @@ import 'package:nutriq/features/water_tracking/presentation/water_bloc.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/fasting_bloc.dart';
 import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
 import 'package:nutriq/features/photo_progress/presentation/photo_progress_bloc.dart';
+import 'package:nutriq/features/body_measurements/presentation/body_measurement_bloc.dart';
 import 'package:nutriq/features/progress_charts/presentation/progress_charts_bloc.dart';
 import 'package:nutriq/features/health_sync/domain/health_sync_service.dart';
 import 'package:nutriq/features/health_sync/domain/usecase/sync_steps_usecase.dart';
@@ -192,6 +203,7 @@ Future<void> initLocator() async {
   final aiModelMetadataDao = AiModelMetadataDao(appDatabase);
   final mealPlanDao = MealPlanDao(appDatabase);
   final photoProgressDao = PhotoProgressDao(appDatabase);
+  final bodyMeasurementDao = BodyMeasurementDao(appDatabase);
 
   locator.registerLazySingleton(
     () => ConfigDataSource(configDao),
@@ -253,6 +265,10 @@ Future<void> initLocator() async {
     () => PhotoProgressDataSource(photoProgressDao),
   );
 
+  locator.registerLazySingleton<BodyMeasurementDataSource>(
+    () => BodyMeasurementDataSource(bodyMeasurementDao),
+  );
+
   // Repositories
   locator.registerLazySingleton<domain.ConfigRepository>(
     () => data.ConfigRepository(locator()),
@@ -304,6 +320,11 @@ Future<void> initLocator() async {
 
   locator.registerLazySingleton<domain_photo_progress.PhotoProgressRepository>(
     () => data_photo_progress.PhotoProgressRepository(locator()),
+  );
+
+  locator
+      .registerLazySingleton<domain_body_measurement.BodyMeasurementRepository>(
+    () => data_body_measurement.BodyMeasurementRepository(locator()),
   );
 
   // UseCases
@@ -432,6 +453,10 @@ Future<void> initLocator() async {
     () => NetCaloriesUsecase(locator()),
   );
 
+  locator.registerLazySingleton<CalculateBMRUsecase>(
+    () => CalculateBMRUsecase(),
+  );
+
   locator.registerLazySingleton<GetMealPlanUsecase>(
     () => GetMealPlanUsecase(locator()),
   );
@@ -453,6 +478,16 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<DeletePhotoUsecase>(
     () => DeletePhotoUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<AddBodyMeasurementUsecase>(
+    () => AddBodyMeasurementUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetBodyMeasurementsUsecase>(
+    () => GetBodyMeasurementsUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteBodyMeasurementUsecase>(
+    () => DeleteBodyMeasurementUsecase(locator()),
   );
 
   locator.registerLazySingleton<FoodClassifierService>(
@@ -495,7 +530,8 @@ Future<void> initLocator() async {
     ),
   );
   locator.registerLazySingleton<ProfileBloc>(
-    () => ProfileBloc(locator(), locator(), locator(), locator(), locator()),
+    () => ProfileBloc(locator(), locator(), locator(), locator(), locator(),
+        locator(), locator()),
   );
   locator.registerLazySingleton(
     () => SettingsBloc(locator(), locator(), locator(), locator(), locator()),
@@ -588,6 +624,14 @@ Future<void> initLocator() async {
       locator(),
       locator(),
       locator(),
+    ),
+  );
+
+  locator.registerFactory<BodyMeasurementBloc>(
+    () => BodyMeasurementBloc(
+      getMeasurements: locator<GetBodyMeasurementsUsecase>(),
+      addMeasurement: locator<AddBodyMeasurementUsecase>(),
+      deleteMeasurement: locator<DeleteBodyMeasurementUsecase>(),
     ),
   );
 

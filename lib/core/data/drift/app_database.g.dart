@@ -97,6 +97,14 @@ class $ConfigEntriesTable extends ConfigEntries
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultValue: const Constant(2000));
+  static const VerificationMeta _tdeeMethodMeta =
+      const VerificationMeta('tdeeMethod');
+  @override
+  late final GeneratedColumn<String> tdeeMethod = GeneratedColumn<String>(
+      'tdee_method', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('iom2005'));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -109,7 +117,8 @@ class $ConfigEntriesTable extends ConfigEntries
         userCarbGoalPct,
         userProteinGoalPct,
         userFatGoalPct,
-        dailyWaterGoalMl
+        dailyWaterGoalMl,
+        tdeeMethod
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -185,6 +194,12 @@ class $ConfigEntriesTable extends ConfigEntries
           dailyWaterGoalMl.isAcceptableOrUnknown(
               data['daily_water_goal_ml']!, _dailyWaterGoalMlMeta));
     }
+    if (data.containsKey('tdee_method')) {
+      context.handle(
+          _tdeeMethodMeta,
+          tdeeMethod.isAcceptableOrUnknown(
+              data['tdee_method']!, _tdeeMethodMeta));
+    }
     return context;
   }
 
@@ -218,6 +233,8 @@ class $ConfigEntriesTable extends ConfigEntries
           DriftSqlType.double, data['${effectivePrefix}user_fat_goal_pct']),
       dailyWaterGoalMl: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}daily_water_goal_ml']),
+      tdeeMethod: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tdee_method'])!,
     );
   }
 
@@ -239,6 +256,7 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
   final double? userProteinGoalPct;
   final double? userFatGoalPct;
   final int? dailyWaterGoalMl;
+  final String tdeeMethod;
   const ConfigEntry(
       {required this.id,
       required this.hasAcceptedDisclaimer,
@@ -250,7 +268,8 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
       this.userCarbGoalPct,
       this.userProteinGoalPct,
       this.userFatGoalPct,
-      this.dailyWaterGoalMl});
+      this.dailyWaterGoalMl,
+      required this.tdeeMethod});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -278,6 +297,7 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
     if (!nullToAbsent || dailyWaterGoalMl != null) {
       map['daily_water_goal_ml'] = Variable<int>(dailyWaterGoalMl);
     }
+    map['tdee_method'] = Variable<String>(tdeeMethod);
     return map;
   }
 
@@ -306,6 +326,7 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
       dailyWaterGoalMl: dailyWaterGoalMl == null && nullToAbsent
           ? const Value.absent()
           : Value(dailyWaterGoalMl),
+      tdeeMethod: Value(tdeeMethod),
     );
   }
 
@@ -328,6 +349,7 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
           serializer.fromJson<double?>(json['userProteinGoalPct']),
       userFatGoalPct: serializer.fromJson<double?>(json['userFatGoalPct']),
       dailyWaterGoalMl: serializer.fromJson<int?>(json['dailyWaterGoalMl']),
+      tdeeMethod: serializer.fromJson<String>(json['tdeeMethod']),
     );
   }
   @override
@@ -346,6 +368,7 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
       'userProteinGoalPct': serializer.toJson<double?>(userProteinGoalPct),
       'userFatGoalPct': serializer.toJson<double?>(userFatGoalPct),
       'dailyWaterGoalMl': serializer.toJson<int?>(dailyWaterGoalMl),
+      'tdeeMethod': serializer.toJson<String>(tdeeMethod),
     };
   }
 
@@ -360,7 +383,8 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
           Value<double?> userCarbGoalPct = const Value.absent(),
           Value<double?> userProteinGoalPct = const Value.absent(),
           Value<double?> userFatGoalPct = const Value.absent(),
-          Value<int?> dailyWaterGoalMl = const Value.absent()}) =>
+          Value<int?> dailyWaterGoalMl = const Value.absent(),
+          String? tdeeMethod}) =>
       ConfigEntry(
         id: id ?? this.id,
         hasAcceptedDisclaimer:
@@ -386,6 +410,7 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
         dailyWaterGoalMl: dailyWaterGoalMl.present
             ? dailyWaterGoalMl.value
             : this.dailyWaterGoalMl,
+        tdeeMethod: tdeeMethod ?? this.tdeeMethod,
       );
   ConfigEntry copyWithCompanion(ConfigEntriesCompanion data) {
     return ConfigEntry(
@@ -420,6 +445,8 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
       dailyWaterGoalMl: data.dailyWaterGoalMl.present
           ? data.dailyWaterGoalMl.value
           : this.dailyWaterGoalMl,
+      tdeeMethod:
+          data.tdeeMethod.present ? data.tdeeMethod.value : this.tdeeMethod,
     );
   }
 
@@ -437,7 +464,8 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
           ..write('userCarbGoalPct: $userCarbGoalPct, ')
           ..write('userProteinGoalPct: $userProteinGoalPct, ')
           ..write('userFatGoalPct: $userFatGoalPct, ')
-          ..write('dailyWaterGoalMl: $dailyWaterGoalMl')
+          ..write('dailyWaterGoalMl: $dailyWaterGoalMl, ')
+          ..write('tdeeMethod: $tdeeMethod')
           ..write(')'))
         .toString();
   }
@@ -454,7 +482,8 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
       userCarbGoalPct,
       userProteinGoalPct,
       userFatGoalPct,
-      dailyWaterGoalMl);
+      dailyWaterGoalMl,
+      tdeeMethod);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -470,7 +499,8 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
           other.userCarbGoalPct == this.userCarbGoalPct &&
           other.userProteinGoalPct == this.userProteinGoalPct &&
           other.userFatGoalPct == this.userFatGoalPct &&
-          other.dailyWaterGoalMl == this.dailyWaterGoalMl);
+          other.dailyWaterGoalMl == this.dailyWaterGoalMl &&
+          other.tdeeMethod == this.tdeeMethod);
 }
 
 class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
@@ -485,6 +515,7 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
   final Value<double?> userProteinGoalPct;
   final Value<double?> userFatGoalPct;
   final Value<int?> dailyWaterGoalMl;
+  final Value<String> tdeeMethod;
   const ConfigEntriesCompanion({
     this.id = const Value.absent(),
     this.hasAcceptedDisclaimer = const Value.absent(),
@@ -497,6 +528,7 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
     this.userProteinGoalPct = const Value.absent(),
     this.userFatGoalPct = const Value.absent(),
     this.dailyWaterGoalMl = const Value.absent(),
+    this.tdeeMethod = const Value.absent(),
   });
   ConfigEntriesCompanion.insert({
     this.id = const Value.absent(),
@@ -510,6 +542,7 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
     this.userProteinGoalPct = const Value.absent(),
     this.userFatGoalPct = const Value.absent(),
     this.dailyWaterGoalMl = const Value.absent(),
+    this.tdeeMethod = const Value.absent(),
   });
   static Insertable<ConfigEntry> custom({
     Expression<int>? id,
@@ -523,6 +556,7 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
     Expression<double>? userProteinGoalPct,
     Expression<double>? userFatGoalPct,
     Expression<int>? dailyWaterGoalMl,
+    Expression<String>? tdeeMethod,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -540,6 +574,7 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
         'user_protein_goal_pct': userProteinGoalPct,
       if (userFatGoalPct != null) 'user_fat_goal_pct': userFatGoalPct,
       if (dailyWaterGoalMl != null) 'daily_water_goal_ml': dailyWaterGoalMl,
+      if (tdeeMethod != null) 'tdee_method': tdeeMethod,
     });
   }
 
@@ -554,7 +589,8 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
       Value<double?>? userCarbGoalPct,
       Value<double?>? userProteinGoalPct,
       Value<double?>? userFatGoalPct,
-      Value<int?>? dailyWaterGoalMl}) {
+      Value<int?>? dailyWaterGoalMl,
+      Value<String>? tdeeMethod}) {
     return ConfigEntriesCompanion(
       id: id ?? this.id,
       hasAcceptedDisclaimer:
@@ -569,6 +605,7 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
       userProteinGoalPct: userProteinGoalPct ?? this.userProteinGoalPct,
       userFatGoalPct: userFatGoalPct ?? this.userFatGoalPct,
       dailyWaterGoalMl: dailyWaterGoalMl ?? this.dailyWaterGoalMl,
+      tdeeMethod: tdeeMethod ?? this.tdeeMethod,
     );
   }
 
@@ -610,6 +647,9 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
     if (dailyWaterGoalMl.present) {
       map['daily_water_goal_ml'] = Variable<int>(dailyWaterGoalMl.value);
     }
+    if (tdeeMethod.present) {
+      map['tdee_method'] = Variable<String>(tdeeMethod.value);
+    }
     return map;
   }
 
@@ -627,7 +667,8 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
           ..write('userCarbGoalPct: $userCarbGoalPct, ')
           ..write('userProteinGoalPct: $userProteinGoalPct, ')
           ..write('userFatGoalPct: $userFatGoalPct, ')
-          ..write('dailyWaterGoalMl: $dailyWaterGoalMl')
+          ..write('dailyWaterGoalMl: $dailyWaterGoalMl, ')
+          ..write('tdeeMethod: $tdeeMethod')
           ..write(')'))
         .toString();
   }
@@ -6469,6 +6510,499 @@ class PhotoProgressEntriesCompanion
   }
 }
 
+class $BodyMeasurementsTable extends BodyMeasurements
+    with TableInfo<$BodyMeasurementsTable, BodyMeasurement> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BodyMeasurementsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+      'date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _waistCmMeta =
+      const VerificationMeta('waistCm');
+  @override
+  late final GeneratedColumn<double> waistCm = GeneratedColumn<double>(
+      'waist_cm', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _neckCmMeta = const VerificationMeta('neckCm');
+  @override
+  late final GeneratedColumn<double> neckCm = GeneratedColumn<double>(
+      'neck_cm', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _hipCmMeta = const VerificationMeta('hipCm');
+  @override
+  late final GeneratedColumn<double> hipCm = GeneratedColumn<double>(
+      'hip_cm', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _chestCmMeta =
+      const VerificationMeta('chestCm');
+  @override
+  late final GeneratedColumn<double> chestCm = GeneratedColumn<double>(
+      'chest_cm', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _bicepCmMeta =
+      const VerificationMeta('bicepCm');
+  @override
+  late final GeneratedColumn<double> bicepCm = GeneratedColumn<double>(
+      'bicep_cm', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _thighCmMeta =
+      const VerificationMeta('thighCm');
+  @override
+  late final GeneratedColumn<double> thighCm = GeneratedColumn<double>(
+      'thigh_cm', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+      'note', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        userId,
+        date,
+        waistCm,
+        neckCm,
+        hipCm,
+        chestCm,
+        bicepCm,
+        thighCm,
+        note
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'body_measurements';
+  @override
+  VerificationContext validateIntegrity(Insertable<BodyMeasurement> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('waist_cm')) {
+      context.handle(_waistCmMeta,
+          waistCm.isAcceptableOrUnknown(data['waist_cm']!, _waistCmMeta));
+    }
+    if (data.containsKey('neck_cm')) {
+      context.handle(_neckCmMeta,
+          neckCm.isAcceptableOrUnknown(data['neck_cm']!, _neckCmMeta));
+    }
+    if (data.containsKey('hip_cm')) {
+      context.handle(
+          _hipCmMeta, hipCm.isAcceptableOrUnknown(data['hip_cm']!, _hipCmMeta));
+    }
+    if (data.containsKey('chest_cm')) {
+      context.handle(_chestCmMeta,
+          chestCm.isAcceptableOrUnknown(data['chest_cm']!, _chestCmMeta));
+    }
+    if (data.containsKey('bicep_cm')) {
+      context.handle(_bicepCmMeta,
+          bicepCm.isAcceptableOrUnknown(data['bicep_cm']!, _bicepCmMeta));
+    }
+    if (data.containsKey('thigh_cm')) {
+      context.handle(_thighCmMeta,
+          thighCm.isAcceptableOrUnknown(data['thigh_cm']!, _thighCmMeta));
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+          _noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BodyMeasurement map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BodyMeasurement(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      waistCm: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}waist_cm']),
+      neckCm: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}neck_cm']),
+      hipCm: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}hip_cm']),
+      chestCm: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}chest_cm']),
+      bicepCm: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}bicep_cm']),
+      thighCm: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}thigh_cm']),
+      note: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}note']),
+    );
+  }
+
+  @override
+  $BodyMeasurementsTable createAlias(String alias) {
+    return $BodyMeasurementsTable(attachedDatabase, alias);
+  }
+}
+
+class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
+  final int id;
+  final int userId;
+  final DateTime date;
+  final double? waistCm;
+  final double? neckCm;
+  final double? hipCm;
+  final double? chestCm;
+  final double? bicepCm;
+  final double? thighCm;
+  final String? note;
+  const BodyMeasurement(
+      {required this.id,
+      required this.userId,
+      required this.date,
+      this.waistCm,
+      this.neckCm,
+      this.hipCm,
+      this.chestCm,
+      this.bicepCm,
+      this.thighCm,
+      this.note});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
+    map['date'] = Variable<DateTime>(date);
+    if (!nullToAbsent || waistCm != null) {
+      map['waist_cm'] = Variable<double>(waistCm);
+    }
+    if (!nullToAbsent || neckCm != null) {
+      map['neck_cm'] = Variable<double>(neckCm);
+    }
+    if (!nullToAbsent || hipCm != null) {
+      map['hip_cm'] = Variable<double>(hipCm);
+    }
+    if (!nullToAbsent || chestCm != null) {
+      map['chest_cm'] = Variable<double>(chestCm);
+    }
+    if (!nullToAbsent || bicepCm != null) {
+      map['bicep_cm'] = Variable<double>(bicepCm);
+    }
+    if (!nullToAbsent || thighCm != null) {
+      map['thigh_cm'] = Variable<double>(thighCm);
+    }
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    return map;
+  }
+
+  BodyMeasurementsCompanion toCompanion(bool nullToAbsent) {
+    return BodyMeasurementsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      date: Value(date),
+      waistCm: waistCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(waistCm),
+      neckCm:
+          neckCm == null && nullToAbsent ? const Value.absent() : Value(neckCm),
+      hipCm:
+          hipCm == null && nullToAbsent ? const Value.absent() : Value(hipCm),
+      chestCm: chestCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(chestCm),
+      bicepCm: bicepCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bicepCm),
+      thighCm: thighCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(thighCm),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+    );
+  }
+
+  factory BodyMeasurement.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BodyMeasurement(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      waistCm: serializer.fromJson<double?>(json['waistCm']),
+      neckCm: serializer.fromJson<double?>(json['neckCm']),
+      hipCm: serializer.fromJson<double?>(json['hipCm']),
+      chestCm: serializer.fromJson<double?>(json['chestCm']),
+      bicepCm: serializer.fromJson<double?>(json['bicepCm']),
+      thighCm: serializer.fromJson<double?>(json['thighCm']),
+      note: serializer.fromJson<String?>(json['note']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
+      'date': serializer.toJson<DateTime>(date),
+      'waistCm': serializer.toJson<double?>(waistCm),
+      'neckCm': serializer.toJson<double?>(neckCm),
+      'hipCm': serializer.toJson<double?>(hipCm),
+      'chestCm': serializer.toJson<double?>(chestCm),
+      'bicepCm': serializer.toJson<double?>(bicepCm),
+      'thighCm': serializer.toJson<double?>(thighCm),
+      'note': serializer.toJson<String?>(note),
+    };
+  }
+
+  BodyMeasurement copyWith(
+          {int? id,
+          int? userId,
+          DateTime? date,
+          Value<double?> waistCm = const Value.absent(),
+          Value<double?> neckCm = const Value.absent(),
+          Value<double?> hipCm = const Value.absent(),
+          Value<double?> chestCm = const Value.absent(),
+          Value<double?> bicepCm = const Value.absent(),
+          Value<double?> thighCm = const Value.absent(),
+          Value<String?> note = const Value.absent()}) =>
+      BodyMeasurement(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        date: date ?? this.date,
+        waistCm: waistCm.present ? waistCm.value : this.waistCm,
+        neckCm: neckCm.present ? neckCm.value : this.neckCm,
+        hipCm: hipCm.present ? hipCm.value : this.hipCm,
+        chestCm: chestCm.present ? chestCm.value : this.chestCm,
+        bicepCm: bicepCm.present ? bicepCm.value : this.bicepCm,
+        thighCm: thighCm.present ? thighCm.value : this.thighCm,
+        note: note.present ? note.value : this.note,
+      );
+  BodyMeasurement copyWithCompanion(BodyMeasurementsCompanion data) {
+    return BodyMeasurement(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      date: data.date.present ? data.date.value : this.date,
+      waistCm: data.waistCm.present ? data.waistCm.value : this.waistCm,
+      neckCm: data.neckCm.present ? data.neckCm.value : this.neckCm,
+      hipCm: data.hipCm.present ? data.hipCm.value : this.hipCm,
+      chestCm: data.chestCm.present ? data.chestCm.value : this.chestCm,
+      bicepCm: data.bicepCm.present ? data.bicepCm.value : this.bicepCm,
+      thighCm: data.thighCm.present ? data.thighCm.value : this.thighCm,
+      note: data.note.present ? data.note.value : this.note,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BodyMeasurement(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('date: $date, ')
+          ..write('waistCm: $waistCm, ')
+          ..write('neckCm: $neckCm, ')
+          ..write('hipCm: $hipCm, ')
+          ..write('chestCm: $chestCm, ')
+          ..write('bicepCm: $bicepCm, ')
+          ..write('thighCm: $thighCm, ')
+          ..write('note: $note')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, userId, date, waistCm, neckCm, hipCm,
+      chestCm, bicepCm, thighCm, note);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BodyMeasurement &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.date == this.date &&
+          other.waistCm == this.waistCm &&
+          other.neckCm == this.neckCm &&
+          other.hipCm == this.hipCm &&
+          other.chestCm == this.chestCm &&
+          other.bicepCm == this.bicepCm &&
+          other.thighCm == this.thighCm &&
+          other.note == this.note);
+}
+
+class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
+  final Value<int> id;
+  final Value<int> userId;
+  final Value<DateTime> date;
+  final Value<double?> waistCm;
+  final Value<double?> neckCm;
+  final Value<double?> hipCm;
+  final Value<double?> chestCm;
+  final Value<double?> bicepCm;
+  final Value<double?> thighCm;
+  final Value<String?> note;
+  const BodyMeasurementsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.date = const Value.absent(),
+    this.waistCm = const Value.absent(),
+    this.neckCm = const Value.absent(),
+    this.hipCm = const Value.absent(),
+    this.chestCm = const Value.absent(),
+    this.bicepCm = const Value.absent(),
+    this.thighCm = const Value.absent(),
+    this.note = const Value.absent(),
+  });
+  BodyMeasurementsCompanion.insert({
+    this.id = const Value.absent(),
+    required int userId,
+    required DateTime date,
+    this.waistCm = const Value.absent(),
+    this.neckCm = const Value.absent(),
+    this.hipCm = const Value.absent(),
+    this.chestCm = const Value.absent(),
+    this.bicepCm = const Value.absent(),
+    this.thighCm = const Value.absent(),
+    this.note = const Value.absent(),
+  })  : userId = Value(userId),
+        date = Value(date);
+  static Insertable<BodyMeasurement> custom({
+    Expression<int>? id,
+    Expression<int>? userId,
+    Expression<DateTime>? date,
+    Expression<double>? waistCm,
+    Expression<double>? neckCm,
+    Expression<double>? hipCm,
+    Expression<double>? chestCm,
+    Expression<double>? bicepCm,
+    Expression<double>? thighCm,
+    Expression<String>? note,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (date != null) 'date': date,
+      if (waistCm != null) 'waist_cm': waistCm,
+      if (neckCm != null) 'neck_cm': neckCm,
+      if (hipCm != null) 'hip_cm': hipCm,
+      if (chestCm != null) 'chest_cm': chestCm,
+      if (bicepCm != null) 'bicep_cm': bicepCm,
+      if (thighCm != null) 'thigh_cm': thighCm,
+      if (note != null) 'note': note,
+    });
+  }
+
+  BodyMeasurementsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? userId,
+      Value<DateTime>? date,
+      Value<double?>? waistCm,
+      Value<double?>? neckCm,
+      Value<double?>? hipCm,
+      Value<double?>? chestCm,
+      Value<double?>? bicepCm,
+      Value<double?>? thighCm,
+      Value<String?>? note}) {
+    return BodyMeasurementsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      date: date ?? this.date,
+      waistCm: waistCm ?? this.waistCm,
+      neckCm: neckCm ?? this.neckCm,
+      hipCm: hipCm ?? this.hipCm,
+      chestCm: chestCm ?? this.chestCm,
+      bicepCm: bicepCm ?? this.bicepCm,
+      thighCm: thighCm ?? this.thighCm,
+      note: note ?? this.note,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (waistCm.present) {
+      map['waist_cm'] = Variable<double>(waistCm.value);
+    }
+    if (neckCm.present) {
+      map['neck_cm'] = Variable<double>(neckCm.value);
+    }
+    if (hipCm.present) {
+      map['hip_cm'] = Variable<double>(hipCm.value);
+    }
+    if (chestCm.present) {
+      map['chest_cm'] = Variable<double>(chestCm.value);
+    }
+    if (bicepCm.present) {
+      map['bicep_cm'] = Variable<double>(bicepCm.value);
+    }
+    if (thighCm.present) {
+      map['thigh_cm'] = Variable<double>(thighCm.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BodyMeasurementsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('date: $date, ')
+          ..write('waistCm: $waistCm, ')
+          ..write('neckCm: $neckCm, ')
+          ..write('hipCm: $hipCm, ')
+          ..write('chestCm: $chestCm, ')
+          ..write('bicepCm: $bicepCm, ')
+          ..write('thighCm: $thighCm, ')
+          ..write('note: $note')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6490,6 +7024,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $MealPlansTable mealPlans = $MealPlansTable(this);
   late final $PhotoProgressEntriesTable photoProgressEntries =
       $PhotoProgressEntriesTable(this);
+  late final $BodyMeasurementsTable bodyMeasurements =
+      $BodyMeasurementsTable(this);
   late final ConfigDao configDao = ConfigDao(this as AppDatabase);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final IntakeDao intakeDao = IntakeDao(this as AppDatabase);
@@ -6508,6 +7044,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final MealPlanDao mealPlanDao = MealPlanDao(this as AppDatabase);
   late final PhotoProgressDao photoProgressDao =
       PhotoProgressDao(this as AppDatabase);
+  late final BodyMeasurementDao bodyMeasurementDao =
+      BodyMeasurementDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6527,7 +7065,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         fasts,
         aiModelMetadataEntries,
         mealPlans,
-        photoProgressEntries
+        photoProgressEntries,
+        bodyMeasurements
       ];
 }
 
@@ -6544,6 +7083,7 @@ typedef $$ConfigEntriesTableCreateCompanionBuilder = ConfigEntriesCompanion
   Value<double?> userProteinGoalPct,
   Value<double?> userFatGoalPct,
   Value<int?> dailyWaterGoalMl,
+  Value<String> tdeeMethod,
 });
 typedef $$ConfigEntriesTableUpdateCompanionBuilder = ConfigEntriesCompanion
     Function({
@@ -6558,6 +7098,7 @@ typedef $$ConfigEntriesTableUpdateCompanionBuilder = ConfigEntriesCompanion
   Value<double?> userProteinGoalPct,
   Value<double?> userFatGoalPct,
   Value<int?> dailyWaterGoalMl,
+  Value<String> tdeeMethod,
 });
 
 class $$ConfigEntriesTableFilterComposer
@@ -6611,6 +7152,9 @@ class $$ConfigEntriesTableFilterComposer
   ColumnFilters<int> get dailyWaterGoalMl => $composableBuilder(
       column: $table.dailyWaterGoalMl,
       builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get tdeeMethod => $composableBuilder(
+      column: $table.tdeeMethod, builder: (column) => ColumnFilters(column));
 }
 
 class $$ConfigEntriesTableOrderingComposer
@@ -6664,6 +7208,9 @@ class $$ConfigEntriesTableOrderingComposer
   ColumnOrderings<int> get dailyWaterGoalMl => $composableBuilder(
       column: $table.dailyWaterGoalMl,
       builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get tdeeMethod => $composableBuilder(
+      column: $table.tdeeMethod, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ConfigEntriesTableAnnotationComposer
@@ -6707,6 +7254,9 @@ class $$ConfigEntriesTableAnnotationComposer
 
   GeneratedColumn<int> get dailyWaterGoalMl => $composableBuilder(
       column: $table.dailyWaterGoalMl, builder: (column) => column);
+
+  GeneratedColumn<String> get tdeeMethod => $composableBuilder(
+      column: $table.tdeeMethod, builder: (column) => column);
 }
 
 class $$ConfigEntriesTableTableManager extends RootTableManager<
@@ -6746,6 +7296,7 @@ class $$ConfigEntriesTableTableManager extends RootTableManager<
             Value<double?> userProteinGoalPct = const Value.absent(),
             Value<double?> userFatGoalPct = const Value.absent(),
             Value<int?> dailyWaterGoalMl = const Value.absent(),
+            Value<String> tdeeMethod = const Value.absent(),
           }) =>
               ConfigEntriesCompanion(
             id: id,
@@ -6759,6 +7310,7 @@ class $$ConfigEntriesTableTableManager extends RootTableManager<
             userProteinGoalPct: userProteinGoalPct,
             userFatGoalPct: userFatGoalPct,
             dailyWaterGoalMl: dailyWaterGoalMl,
+            tdeeMethod: tdeeMethod,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -6772,6 +7324,7 @@ class $$ConfigEntriesTableTableManager extends RootTableManager<
             Value<double?> userProteinGoalPct = const Value.absent(),
             Value<double?> userFatGoalPct = const Value.absent(),
             Value<int?> dailyWaterGoalMl = const Value.absent(),
+            Value<String> tdeeMethod = const Value.absent(),
           }) =>
               ConfigEntriesCompanion.insert(
             id: id,
@@ -6785,6 +7338,7 @@ class $$ConfigEntriesTableTableManager extends RootTableManager<
             userProteinGoalPct: userProteinGoalPct,
             userFatGoalPct: userFatGoalPct,
             dailyWaterGoalMl: dailyWaterGoalMl,
+            tdeeMethod: tdeeMethod,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -9903,6 +10457,249 @@ typedef $$PhotoProgressEntriesTableProcessedTableManager
         ),
         PhotoProgressEntry,
         PrefetchHooks Function()>;
+typedef $$BodyMeasurementsTableCreateCompanionBuilder
+    = BodyMeasurementsCompanion Function({
+  Value<int> id,
+  required int userId,
+  required DateTime date,
+  Value<double?> waistCm,
+  Value<double?> neckCm,
+  Value<double?> hipCm,
+  Value<double?> chestCm,
+  Value<double?> bicepCm,
+  Value<double?> thighCm,
+  Value<String?> note,
+});
+typedef $$BodyMeasurementsTableUpdateCompanionBuilder
+    = BodyMeasurementsCompanion Function({
+  Value<int> id,
+  Value<int> userId,
+  Value<DateTime> date,
+  Value<double?> waistCm,
+  Value<double?> neckCm,
+  Value<double?> hipCm,
+  Value<double?> chestCm,
+  Value<double?> bicepCm,
+  Value<double?> thighCm,
+  Value<String?> note,
+});
+
+class $$BodyMeasurementsTableFilterComposer
+    extends Composer<_$AppDatabase, $BodyMeasurementsTable> {
+  $$BodyMeasurementsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get waistCm => $composableBuilder(
+      column: $table.waistCm, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get neckCm => $composableBuilder(
+      column: $table.neckCm, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get hipCm => $composableBuilder(
+      column: $table.hipCm, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get chestCm => $composableBuilder(
+      column: $table.chestCm, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get bicepCm => $composableBuilder(
+      column: $table.bicepCm, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get thighCm => $composableBuilder(
+      column: $table.thighCm, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get note => $composableBuilder(
+      column: $table.note, builder: (column) => ColumnFilters(column));
+}
+
+class $$BodyMeasurementsTableOrderingComposer
+    extends Composer<_$AppDatabase, $BodyMeasurementsTable> {
+  $$BodyMeasurementsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get waistCm => $composableBuilder(
+      column: $table.waistCm, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get neckCm => $composableBuilder(
+      column: $table.neckCm, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get hipCm => $composableBuilder(
+      column: $table.hipCm, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get chestCm => $composableBuilder(
+      column: $table.chestCm, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get bicepCm => $composableBuilder(
+      column: $table.bicepCm, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get thighCm => $composableBuilder(
+      column: $table.thighCm, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get note => $composableBuilder(
+      column: $table.note, builder: (column) => ColumnOrderings(column));
+}
+
+class $$BodyMeasurementsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BodyMeasurementsTable> {
+  $$BodyMeasurementsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<double> get waistCm =>
+      $composableBuilder(column: $table.waistCm, builder: (column) => column);
+
+  GeneratedColumn<double> get neckCm =>
+      $composableBuilder(column: $table.neckCm, builder: (column) => column);
+
+  GeneratedColumn<double> get hipCm =>
+      $composableBuilder(column: $table.hipCm, builder: (column) => column);
+
+  GeneratedColumn<double> get chestCm =>
+      $composableBuilder(column: $table.chestCm, builder: (column) => column);
+
+  GeneratedColumn<double> get bicepCm =>
+      $composableBuilder(column: $table.bicepCm, builder: (column) => column);
+
+  GeneratedColumn<double> get thighCm =>
+      $composableBuilder(column: $table.thighCm, builder: (column) => column);
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+}
+
+class $$BodyMeasurementsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $BodyMeasurementsTable,
+    BodyMeasurement,
+    $$BodyMeasurementsTableFilterComposer,
+    $$BodyMeasurementsTableOrderingComposer,
+    $$BodyMeasurementsTableAnnotationComposer,
+    $$BodyMeasurementsTableCreateCompanionBuilder,
+    $$BodyMeasurementsTableUpdateCompanionBuilder,
+    (
+      BodyMeasurement,
+      BaseReferences<_$AppDatabase, $BodyMeasurementsTable, BodyMeasurement>
+    ),
+    BodyMeasurement,
+    PrefetchHooks Function()> {
+  $$BodyMeasurementsTableTableManager(
+      _$AppDatabase db, $BodyMeasurementsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BodyMeasurementsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BodyMeasurementsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BodyMeasurementsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> userId = const Value.absent(),
+            Value<DateTime> date = const Value.absent(),
+            Value<double?> waistCm = const Value.absent(),
+            Value<double?> neckCm = const Value.absent(),
+            Value<double?> hipCm = const Value.absent(),
+            Value<double?> chestCm = const Value.absent(),
+            Value<double?> bicepCm = const Value.absent(),
+            Value<double?> thighCm = const Value.absent(),
+            Value<String?> note = const Value.absent(),
+          }) =>
+              BodyMeasurementsCompanion(
+            id: id,
+            userId: userId,
+            date: date,
+            waistCm: waistCm,
+            neckCm: neckCm,
+            hipCm: hipCm,
+            chestCm: chestCm,
+            bicepCm: bicepCm,
+            thighCm: thighCm,
+            note: note,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int userId,
+            required DateTime date,
+            Value<double?> waistCm = const Value.absent(),
+            Value<double?> neckCm = const Value.absent(),
+            Value<double?> hipCm = const Value.absent(),
+            Value<double?> chestCm = const Value.absent(),
+            Value<double?> bicepCm = const Value.absent(),
+            Value<double?> thighCm = const Value.absent(),
+            Value<String?> note = const Value.absent(),
+          }) =>
+              BodyMeasurementsCompanion.insert(
+            id: id,
+            userId: userId,
+            date: date,
+            waistCm: waistCm,
+            neckCm: neckCm,
+            hipCm: hipCm,
+            chestCm: chestCm,
+            bicepCm: bicepCm,
+            thighCm: thighCm,
+            note: note,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$BodyMeasurementsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $BodyMeasurementsTable,
+    BodyMeasurement,
+    $$BodyMeasurementsTableFilterComposer,
+    $$BodyMeasurementsTableOrderingComposer,
+    $$BodyMeasurementsTableAnnotationComposer,
+    $$BodyMeasurementsTableCreateCompanionBuilder,
+    $$BodyMeasurementsTableUpdateCompanionBuilder,
+    (
+      BodyMeasurement,
+      BaseReferences<_$AppDatabase, $BodyMeasurementsTable, BodyMeasurement>
+    ),
+    BodyMeasurement,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -9938,4 +10735,6 @@ class $AppDatabaseManager {
       $$MealPlansTableTableManager(_db, _db.mealPlans);
   $$PhotoProgressEntriesTableTableManager get photoProgressEntries =>
       $$PhotoProgressEntriesTableTableManager(_db, _db.photoProgressEntries);
+  $$BodyMeasurementsTableTableManager get bodyMeasurements =>
+      $$BodyMeasurementsTableTableManager(_db, _db.bodyMeasurements);
 }

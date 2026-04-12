@@ -28,4 +28,6 @@ class NavigationOptions {
   static const importRoute = "import";
   static const cloudBackupRoute = "cloudBackup";
   static const mealTimingRoute = "mealTiming";
+  static const bodyMeasurementRoute = "bodyMeasurement";
+  static const customFoodRoute = "customFood";
 }

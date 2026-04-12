@@ -44,12 +44,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "e.g. running, biking, yoga ...",
     ),
     "activityLabel": MessageLookupByLibrary.simpleMessage("Activity"),
+    "activityMultiplierLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity Multiplier",
+    ),
     "addExerciseLabel": MessageLookupByLibrary.simpleMessage("Add Exercise"),
     "addIngredientLabel": MessageLookupByLibrary.simpleMessage(
       "Add ingredient",
     ),
     "addItemLabel": MessageLookupByLibrary.simpleMessage("Add new Item:"),
     "addLabel": MessageLookupByLibrary.simpleMessage("Add"),
+    "addMeasurement": MessageLookupByLibrary.simpleMessage("Add Measurement"),
     "addWater": MessageLookupByLibrary.simpleMessage("Add Water"),
     "additionalInfoLabelCompendium2011": MessageLookupByLibrary.simpleMessage(
       "Information provided\n by the \n\'2011 Compendium\n of Physical Activities\'",
@@ -103,6 +107,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "beforeLabel": MessageLookupByLibrary.simpleMessage("Before"),
     "betaVersionName": MessageLookupByLibrary.simpleMessage("[Beta]"),
+    "bicepCm": MessageLookupByLibrary.simpleMessage("Bicep (cm)"),
     "bmi": MessageLookupByLibrary.simpleMessage("BMI"),
     "bmiInfo": MessageLookupByLibrary.simpleMessage(
       "Body Mass Index (BMI) is a index to classify overweight and obesity in adults. It is defined as weight in kilograms divided by the square of height in meters (kg/m²).\n\nBMI does not differentiate between fat and muscle mass and can be misleading for some individuals.",
@@ -112,6 +117,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "bmiObese": MessageLookupByLibrary.simpleMessage("Obese"),
     "bmiOverweight": MessageLookupByLibrary.simpleMessage("Overweight"),
     "bmiUnderweight": MessageLookupByLibrary.simpleMessage("Underweight"),
+    "bmrKcal": MessageLookupByLibrary.simpleMessage("Basal Metabolic Rate"),
+    "bmrLabel": MessageLookupByLibrary.simpleMessage("BMR"),
+    "bodyMeasurementTitle": MessageLookupByLibrary.simpleMessage(
+      "Body Measurements",
+    ),
     "breakfastExample": MessageLookupByLibrary.simpleMessage(
       "e.g. cereal, milk, coffee ...",
     ),
@@ -123,6 +133,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Save"),
     "buttonStartLabel": MessageLookupByLibrary.simpleMessage("START"),
     "buttonYesLabel": MessageLookupByLibrary.simpleMessage("YES"),
+    "calculationMethodLabel": MessageLookupByLibrary.simpleMessage(
+      "Calculation Method",
+    ),
     "calculationsMacronutrientsDistributionLabel":
         MessageLookupByLibrary.simpleMessage("Macros distribution"),
     "calculationsMacrosDistribution": m2,
@@ -135,13 +148,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "calculationsTDEELabel": MessageLookupByLibrary.simpleMessage(
       "TDEE equation",
     ),
+    "calculationsTDEEMifflinStJeorLabel": MessageLookupByLibrary.simpleMessage(
+      "Mifflin-St Jeor Equation",
+    ),
     "caloriesTab": MessageLookupByLibrary.simpleMessage("Calories"),
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("carbohydrate"),
     "carbsLabel": MessageLookupByLibrary.simpleMessage("carbs"),
     "chartExportErrorLabel": MessageLookupByLibrary.simpleMessage(
       "Failed to share chart",
     ),
     "chartExportedLabel": MessageLookupByLibrary.simpleMessage("Chart shared"),
+    "chestCm": MessageLookupByLibrary.simpleMessage("Chest (cm)"),
     "chooseWeightGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Choose Weight Goal",
     ),
@@ -162,8 +180,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "createCustomDialogTitle": MessageLookupByLibrary.simpleMessage(
       "Create custom meal item?",
     ),
+    "createCustomFoodLabel": MessageLookupByLibrary.simpleMessage(
+      "Create custom food",
+    ),
     "currentWeight": MessageLookupByLibrary.simpleMessage("Current"),
     "custom": MessageLookupByLibrary.simpleMessage("Custom"),
+    "customFoodEnergyLabel": MessageLookupByLibrary.simpleMessage(
+      "Energy (kcal per 100 g/ml)",
+    ),
+    "customFoodNameRequired": MessageLookupByLibrary.simpleMessage(
+      "Food name is required",
+    ),
     "dailyGoalLabel": MessageLookupByLibrary.simpleMessage("Daily Goal"),
     "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage(
       "Daily Kcal adjustment:",
@@ -372,6 +399,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "fatLabel": MessageLookupByLibrary.simpleMessage("fat"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("fiber"),
+    "fiberPer100Label": MessageLookupByLibrary.simpleMessage("Fiber per "),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
     "fridayLabel": MessageLookupByLibrary.simpleMessage("Fri"),
     "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
@@ -405,6 +433,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "healthSyncWeight": MessageLookupByLibrary.simpleMessage("Weight"),
     "healthSyncWorkouts": MessageLookupByLibrary.simpleMessage("Workouts"),
     "heightLabel": MessageLookupByLibrary.simpleMessage("Height"),
+    "hipCm": MessageLookupByLibrary.simpleMessage("Hip (cm)"),
     "homeLabel": MessageLookupByLibrary.simpleMessage("Home"),
     "hoursLabel": MessageLookupByLibrary.simpleMessage("Hours"),
     "importAction": MessageLookupByLibrary.simpleMessage("Import"),
@@ -478,6 +507,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No meal time data yet. Set a time when logging meals to see patterns.",
     ),
     "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Meal unit"),
+    "measurementHistory": MessageLookupByLibrary.simpleMessage(
+      "Measurement History",
+    ),
     "microNutrientsLabel": MessageLookupByLibrary.simpleMessage(
       "Micronutrients",
     ),
@@ -494,12 +526,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthlyLabel": MessageLookupByLibrary.simpleMessage("Month"),
     "movingAverage": MessageLookupByLibrary.simpleMessage("Moving Average"),
     "myMealsLabel": MessageLookupByLibrary.simpleMessage("My Meals"),
+    "neckCm": MessageLookupByLibrary.simpleMessage("Neck (cm)"),
     "netCaloriesLabel": MessageLookupByLibrary.simpleMessage("Net Calories"),
     "noActivityRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
       "No activity recently added",
     ),
     "noMealsRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
       "No meals recently added",
+    ),
+    "noMeasurements": MessageLookupByLibrary.simpleMessage(
+      "No measurements yet",
     ),
     "noPhotosLabel": MessageLookupByLibrary.simpleMessage(
       "No progress photos yet. Tap + to add one.",
@@ -508,6 +544,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No recipes yet. Create one!",
     ),
     "noResultsFound": MessageLookupByLibrary.simpleMessage("No results found"),
+    "noResultsHint": MessageLookupByLibrary.simpleMessage(
+      "Try searching with different keywords",
+    ),
     "noWaterEntries": MessageLookupByLibrary.simpleMessage(
       "No water entries yet",
     ),
@@ -976,6 +1015,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Mostly standing or walking in job and active free time activities",
     ),
     "palActiveLabel": MessageLookupByLibrary.simpleMessage("Active"),
+    "palExtraActiveDescriptionLabel": MessageLookupByLibrary.simpleMessage(
+      "Very intense physical job and extremely active free time activities",
+    ),
+    "palExtraActiveLabel": MessageLookupByLibrary.simpleMessage("Extra Active"),
     "palLowActiveDescriptionLabel": MessageLookupByLibrary.simpleMessage(
       "e.g. sitting or standing in job and light free time activities",
     ),
@@ -1008,6 +1051,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "photoTagsHint": MessageLookupByLibrary.simpleMessage("e.g. front, side"),
     "photoTagsLabel": MessageLookupByLibrary.simpleMessage("Tags"),
+    "potassiumPer100Label": MessageLookupByLibrary.simpleMessage(
+      "Potassium per ",
+    ),
     "presetCustom": MessageLookupByLibrary.simpleMessage("Custom"),
     "presetEighteenSix": MessageLookupByLibrary.simpleMessage("18:6"),
     "presetOMAD": MessageLookupByLibrary.simpleMessage("OMAD"),
@@ -1023,6 +1069,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "readLabel": MessageLookupByLibrary.simpleMessage(
       "I have read and accept the privacy policy.",
     ),
+    "recentFoodsLabel": MessageLookupByLibrary.simpleMessage("Recent Foods"),
     "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Recently"),
     "recipeBuilderLabel": MessageLookupByLibrary.simpleMessage(
       "Recipe Builder",
@@ -1039,6 +1086,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Retry"),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("saturated fat"),
+    "saturatedFatPer100Label": MessageLookupByLibrary.simpleMessage(
+      "Saturated fat per ",
+    ),
     "saturdayLabel": MessageLookupByLibrary.simpleMessage("Sat"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "saveRecipeLabel": MessageLookupByLibrary.simpleMessage("Save recipe"),
@@ -1116,18 +1166,23 @@ class MessageLookup extends MessageLookupByLibrary {
       "e.g. apple, ice cream, chocolate ...",
     ),
     "snackLabel": MessageLookupByLibrary.simpleMessage("Snack"),
+    "sodiumPer100Label": MessageLookupByLibrary.simpleMessage("Sodium per "),
     "startFastLabel": MessageLookupByLibrary.simpleMessage("Start Fast"),
     "startWeight": MessageLookupByLibrary.simpleMessage("Start"),
     "streakLabel": MessageLookupByLibrary.simpleMessage("Streak"),
     "sugarLabel": MessageLookupByLibrary.simpleMessage("sugar"),
+    "sugarsPer100Label": MessageLookupByLibrary.simpleMessage("Sugars per "),
     "summaryTimeLabel": MessageLookupByLibrary.simpleMessage("Summary Time"),
     "sundayLabel": MessageLookupByLibrary.simpleMessage("Sun"),
     "suppliedLabel": MessageLookupByLibrary.simpleMessage("supplied"),
+    "tdeeLabel": MessageLookupByLibrary.simpleMessage("TDEE"),
+    "thighCm": MessageLookupByLibrary.simpleMessage("Thigh (cm)"),
     "thursdayLabel": MessageLookupByLibrary.simpleMessage("Thu"),
     "todayEntries": MessageLookupByLibrary.simpleMessage("Today"),
     "tuesdayLabel": MessageLookupByLibrary.simpleMessage("Tue"),
     "unitLabel": MessageLookupByLibrary.simpleMessage("Unit"),
     "viewPhotoLabel": MessageLookupByLibrary.simpleMessage("View Photo"),
+    "waistCm": MessageLookupByLibrary.simpleMessage("Waist (cm)"),
     "waterProgress": m6,
     "waterTrackerTitle": MessageLookupByLibrary.simpleMessage("Water Tracker"),
     "wednesdayLabel": MessageLookupByLibrary.simpleMessage("Wed"),

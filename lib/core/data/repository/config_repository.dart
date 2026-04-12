@@ -3,6 +3,7 @@ import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/mapper/mappers.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
+import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 import 'package:nutriq/core/domain/repository/config_repository.dart' as domain;
 
 class ConfigRepository implements domain.ConfigRepository {
@@ -74,5 +75,16 @@ class ConfigRepository implements domain.ConfigRepository {
     await _configDataSource.setCarbGoalPct(carbs);
     await _configDataSource.setProteinGoalPct(protein);
     await _configDataSource.setFatGoalPct(fat);
+  }
+
+  @override
+  Future<TDEEMethodEntity> getConfigTDEEMethod() async {
+    final methodString = await _configDataSource.getTDEEMethod();
+    return mapTDEEMethodStringToEntity(methodString);
+  }
+
+  @override
+  Future<void> setConfigTDEEMethod(TDEEMethodEntity method) async {
+    await _configDataSource.setTDEEMethod(mapTDEEMethodEntityToString(method));
   }
 }

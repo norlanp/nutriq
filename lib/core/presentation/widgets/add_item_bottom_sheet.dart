@@ -225,6 +225,24 @@ class AddItemBottomSheet extends StatelessWidget {
           ),
           ListTile(
             title: Text(
+              S.of(context).bodyMeasurementTitle,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.straighten,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .pushNamed(NavigationOptions.bodyMeasurementRoute);
+            },
+          ),
+          ListTile(
+            title: Text(
               S.of(context).progressChartsLabel,
               style: Theme.of(context)
                   .textTheme
