@@ -19,26 +19,26 @@ Location: `/Users/norlan/code/mycal`
 
 ## Feature Gap Analysis
 
-| Feature | ONT | MFP | Target |
-|---------|-----|-----|--------|
-| Food diary | Basic diary | 4-slot diary (B/L/D/S) | 4-slot diary |
-| Barcode scanner | Yes | Yes | Yes (existing) |
-| Food database | 3 sources | 14M+ items | Keep 3 sources, improve UX |
-| Macro/micro tracking | Basic macros | Full macro + micronutrients | Full macro + micronutrients |
-| Saved meals/recipes | Custom meals only | My Meals + full recipes | Full recipes + meal presets |
-| Weight tracking | Not present | Full weight logging + graph | Weight log + trends |
-| Body measurements | Not present | Waist, neck, etc. | Optional measurements |
-| Water tracking | Not present | Hydration tracker | Daily water tracker |
-| Exercise calorie adjustment | Activity log | Net calories | Auto-adjust daily budget |
-| BMR/BMI calculator | Basic kcal goals | Mifflin-St Jeor | Enhanced calculator |
-| Reminders/notifications | Not present | Meal logging reminders | Local notifications |
-| Progress charts | Not present | Weekly/monthly trends | Trend charts |
-| Photo progress | Not present | Before/after photos | Local photo storage |
-| Intermittent fasting | Not present | Fasting timer (premium) | Fasting tracker (free) |
-| AI food recognition | Not present | Meal Scan (premium) | On-device ML (free) |
-| Meal planning | Not present | Weekly meal plans | Weekly planner + shopping list |
-| Health integrations | None | 35+ devices/apps | HealthKit, Health Connect |
-| Social/community | Not present | Forums, friends | Not planned (privacy) |
+| Feature | ONT | MFP | Target | Status |
+|---------|-----|-----|--------|--------|
+| Food diary | Basic diary | 4-slot diary (B/L/D/S) | 4-slot diary | ✅ |
+| Barcode scanner | Yes | Yes | Yes (existing) | ✅ |
+| Food database | 3 sources | 14M+ items | Keep 3 sources, improve UX | 🟡 UX improvement pending |
+| Macro/micro tracking | Basic macros | Full macro + micronutrients | Full macro + micronutrients | ✅ |
+| Saved meals/recipes | Custom meals only | My Meals + full recipes | Full recipes + meal presets | ✅ |
+| Weight tracking | Not present | Full weight logging + graph | Weight log + trends | ✅ |
+| Body measurements | Not present | Waist, neck, etc. | Optional measurements | ❌ Not started |
+| Water tracking | Not present | Hydration tracker | Daily water tracker | ✅ |
+| Exercise calorie adjustment | Activity log | Net calories | Auto-adjust daily budget | ✅ |
+| BMR/BMI calculator | Basic kcal goals | Mifflin-St Jeor | Enhanced calculator | ✅ (Mifflin-St Jeor 🟡) |
+| Reminders/notifications | Not present | Meal logging reminders | Local notifications | ✅ |
+| Progress charts | Not present | Weekly/monthly trends | Trend charts | ✅ |
+| Photo progress | Not present | Before/after photos | Local photo storage | ✅ |
+| Intermittent fasting | Not present | Fasting timer (premium) | Fasting tracker (free) | ✅ |
+| AI food recognition | Not present | Meal Scan (premium) | On-device ML (free) | ✅ |
+| Meal planning | Not present | Weekly meal plans | Weekly planner + shopping list | ✅ |
+| Health integrations | None | 35+ devices/apps | HealthKit, Health Connect | ✅ |
+| Social/community | Not present | Forums, friends | Not planned (privacy) | — |
 
 ## Completed Work
 
@@ -101,13 +101,13 @@ Already implemented in upstream ONT. `IntakeTypeEntity` (B/L/D/S), `IntakeEntity
    - Create recipe builder UI (combine multiple foods into single recipe)
    - "My Meals" quick-add feature for frequent combinations
 
-3. **Enhanced Macro/Micro Dashboard**
+3. **Enhanced Macro/Micro Dashboard** ✅ *Implemented*
    - Extend `MealNutrimentsEntity` to include micronutrients
    - Add vitamin/mineral tracking with daily % targets
    - Macro pie charts using `fl_chart`
    - Daily/weekly nutrition summary view
 
-4. **Weight & Progress Tracking**
+4. **Weight & Progress Tracking** ✅ *Implemented*
    - New `WeightEntity`, Drift table, DAO, and `WeightDataSource`
    - Weight logging screen with date picker
    - Weight trend graph (line chart)
@@ -126,23 +126,23 @@ Already implemented in upstream ONT. `IntakeTypeEntity` (B/L/D/S), `IntakeEntity
 
 **Goal:** Build habit-forming features and daily tracking completeness.
 
-5. **Local Notifications/Reminders**
+5. **Local Notifications/Reminders** ✅ *Implemented*
    - `flutter_local_notifications` setup
    - Configurable reminder times for meals
    - Daily summary notification
 
-6. **Water Intake Tracker**
+6. **Water Intake Tracker** ✅ *Implemented*
    - New `WaterEntity` and `WaterDataSource`
    - Quick-add water buttons (250ml, 500ml, custom)
    - Daily water goal with progress visualization
 
-7. **Progress Charts**
+7. **Progress Charts** ✅ *Implemented*
    - Weekly/monthly calorie averages
    - Macro trend charts (stacked bar)
    - Weight trend with moving average
    - Export charts as images
 
-8. **Exercise Calorie Adjustment**
+8. **Exercise Calorie Adjustment** ✅ *Implemented*
    - Connect `UserActivityEntity` to daily calorie budget
    - Net calories calculation (consumed - burned)
    - Show remaining budget after exercise
@@ -161,29 +161,29 @@ Already implemented in upstream ONT. `IntakeTypeEntity` (B/L/D/S), `IntakeEntity
 
 **Goal:** Implement high-priority advanced features (user-selected).
 
-9. **Health Platform Integrations**
+9. **Health Platform Integrations** ✅ *Implemented*
    - Apple HealthKit integration (iOS)
    - Google Health Connect integration (Android)
    - Sync steps, workouts, weight
    - Bidirectional sync where supported
 
-10. **AI Food Recognition (On-Device)**
-    - TensorFlow Lite model for food classification
-    - Camera capture and image preprocessing
-    - Local inference (no cloud)
-    - Fallback to manual search if low confidence
+10. **AI Food Recognition (On-Device)** ✅ *Implemented*
+     - TensorFlow Lite model for food classification
+     - Camera capture and image preprocessing
+     - Local inference (no cloud)
+     - Fallback to manual search if low confidence
 
-11. **Meal Planning**
-    - Weekly meal planner UI
-    - Drag-and-drop meals to days
-    - Shopping list generation from meal plan
-    - Nutrition preview for planned meals
+11. **Meal Planning** ✅ *Implemented*
+     - Weekly meal planner UI
+     - Drag-and-drop meals to days
+     - Shopping list generation from meal plan
+     - Nutrition preview for planned meals
 
-12. **Intermittent Fasting Tracker**
-    - Fasting window timer
-    - Presets: 16:8, 18:6, 20:4, OMAD, custom
-    - Fasting history and streaks
-    - Notifications for fast start/end
+12. **Intermittent Fasting Tracker** ✅ *Implemented*
+     - Fasting window timer
+     - Presets: 16:8, 18:6, 20:4, OMAD, custom
+     - Fasting history and streaks
+     - Notifications for fast start/end
 
 **New Packages:**
 - `health: ^10.2.0` - HealthKit/Health Connect
@@ -199,32 +199,56 @@ Already implemented in upstream ONT. `IntakeTypeEntity` (B/L/D/S), `IntakeEntity
 
 **Goal:** Extend to web/desktop and add finishing touches.
 
-13. **Web + Desktop Support**
-    - Responsive layout adaptations
-    - Platform-specific UI (Material for mobile, adaptive for desktop)
-    - Keyboard shortcuts for desktop
-    - Web-specific optimizations
+13. **Web + Desktop Support** ✅ *Implemented* (iOS, Android, Web only; macOS removed)
+     - Responsive layout adaptations
+     - Platform-specific UI (Material for mobile, adaptive for desktop)
+     - Keyboard shortcuts for desktop
+     - Web-specific optimizations
 
-14. **Food Timestamps**
-    - Add time field to `IntakeEntity`
-    - Time picker in food entry
-    - Chronological meal display
-    - Pattern analysis (meal timing trends)
+14. **Food Timestamps** ✅ *Implemented*
+     - Add time field to `IntakeEntity`
+     - Time picker in food entry
+     - Chronological meal display
+     - Pattern analysis (meal timing trends)
 
-15. **Data Sync (Optional)**
-    - Local file-based export/import (JSON/CSV)
-    - Optional encrypted backup sync via user's cloud storage (iCloud, Google Drive)
-    - Keeps privacy-first approach
+15. **Data Sync (Optional)** ✅ *Implemented*
+     - Local file-based export/import (JSON/CSV)
+     - Optional encrypted backup sync via user's cloud storage (iCloud, Google Drive)
+     - Keeps privacy-first approach
 
-16. **Photo Progress**
-    - Before/after photo storage
-    - Side-by-side comparison view
-    - Progress photo timeline
+16. **Photo Progress** ✅ *Implemented*
+     - Before/after photo storage
+     - Side-by-side comparison view
+     - Progress photo timeline
 
 **New Packages:**
 - `file_selector: ^1.0.3` - Desktop file picking
 - `path_provider: ^2.1.5` - Cross-platform paths (existing, extend usage)
 - `share_plus: ^9.0.0` - Share exports
+
+### Phase 5: Remaining Feature Gaps
+
+**Goal:** Close remaining feature gaps from the original MFP comparison.
+
+17. **Body Measurements** ❌ *Not started*
+    - New `BodyMeasurementEntity`, Drift table, DAO, and `BodyMeasurementDataSource`
+    - Measurement logging screen (waist, neck, hip, chest, bicep, thigh)
+    - Measurement trend charts over time
+    - Measurement history list
+
+18. **Food Database UX Improvements** 🟡 *Partially exists*
+    - Audit and improve food search experience
+    - Add recent/frequent foods section
+    - Better barcode scan → food entry flow
+    - Custom food creation flow
+
+19. **BMR Enhancement (Mifflin-St Jeor)** 🟡 *Basic BMR exists, Mifflin-St Jeor not implemented*
+    - Mifflin-St Jeor formula as alternative BMR calculation
+    - Show BMR/TDEE breakdown in profile
+    - Offer calculation method choice during setup
+
+**New Drift Tables:**
+- `body_measurement` - Body measurement entries
 
 ## Architecture Principles
 
@@ -339,6 +363,15 @@ lib/
 assets/
   models/
     food_classifier.tflite      # Phase 3 AI model
+lib/
+  features/
+    body_measurements/          # Phase 5
+      presentation/
+        body_measurement_bloc.dart
+        body_measurement_screen.dart
+        widgets/
+          measurement_trend_chart.dart
+          measurement_history_list.dart
 ```
 
 ## Implementation Order Recommendation
@@ -359,4 +392,4 @@ assets/
 
 Created: 2026-04-09
 Last Updated: 2026-04-10
-Status: Phase 1 In Progress
+Status: All Phases Complete. Remaining: Body Measurements, Food DB UX, BMR/Mifflin-St Jeor
