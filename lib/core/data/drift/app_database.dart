@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
+
+import 'package:nutriq/core/data/drift/database_connection_io.dart'
+    if (dart.library.html) 'package:nutriq/core/data/drift/database_connection_web.dart'
+    as conn;
 
 import 'package:nutriq/core/data/drift/tables/config_table.dart';
 import 'package:nutriq/core/data/drift/tables/user_table.dart';
@@ -13,6 +12,12 @@ import 'package:nutriq/core/data/drift/tables/user_activity_table.dart';
 import 'package:nutriq/core/data/drift/tables/tracked_day_table.dart';
 import 'package:nutriq/core/data/drift/tables/recipe_table.dart';
 import 'package:nutriq/core/data/drift/tables/weight_table.dart';
+import 'package:nutriq/core/data/drift/tables/notification_settings_table.dart';
+import 'package:nutriq/core/data/drift/tables/water_table.dart';
+import 'package:nutriq/core/data/drift/tables/fasting_table.dart';
+import 'package:nutriq/core/data/drift/tables/ai_model_metadata_table.dart';
+import 'package:nutriq/core/data/drift/tables/meal_plan_table.dart';
+import 'package:nutriq/core/data/drift/tables/photo_progress_table.dart';
 
 import 'package:nutriq/core/data/drift/dao/config_dao.dart';
 import 'package:nutriq/core/data/drift/dao/user_dao.dart';
@@ -22,6 +27,12 @@ import 'package:nutriq/core/data/drift/dao/user_activity_dao.dart';
 import 'package:nutriq/core/data/drift/dao/tracked_day_dao.dart';
 import 'package:nutriq/core/data/drift/dao/recipe_dao.dart';
 import 'package:nutriq/core/data/drift/dao/weight_dao.dart';
+import 'package:nutriq/core/data/drift/dao/notification_settings_dao.dart';
+import 'package:nutriq/core/data/drift/dao/water_dao.dart';
+import 'package:nutriq/core/data/drift/dao/fasting_dao.dart';
+import 'package:nutriq/core/data/drift/dao/ai_model_metadata_dao.dart';
+import 'package:nutriq/core/data/drift/dao/meal_plan_dao.dart';
+import 'package:nutriq/core/data/drift/dao/photo_progress_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -35,7 +46,13 @@ part 'app_database.g.dart';
     TrackedDays,
     Recipes,
     RecipeItems,
-    Weights
+    Weights,
+    NotificationSettings,
+    WaterEntries,
+    Fasts,
+    AiModelMetadataEntries,
+    MealPlans,
+    PhotoProgressEntries
   ],
   daos: [
     ConfigDao,
@@ -45,16 +62,22 @@ part 'app_database.g.dart';
     UserActivityDao,
     TrackedDayDao,
     RecipeDao,
-    WeightDao
+    WeightDao,
+    NotificationSettingsDao,
+    WaterDao,
+    FastingDao,
+    AiModelMetadataDao,
+    MealPlanDao,
+    PhotoProgressDao
   ],
 )
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase() : super(conn.createDatabaseConnection());
 
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -101,14 +124,34 @@ class AppDatabase extends _$AppDatabase {
               'ALTER TABLE meals ADD COLUMN iron_100 REAL',
             );
           }
+          if (from < 4) {
+            await m.createTable(notificationSettings);
+          }
+          if (from < 5) {
+            await m.createTable(waterEntries);
+          }
+          if (from < 6) {
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN daily_water_goal_ml INTEGER NOT NULL DEFAULT 2000',
+            );
+          }
+          if (from < 7) {
+            await m.createTable(fasts);
+          }
+          if (from < 8) {
+            await customStatement(
+              'ALTER TABLE intakes ADD COLUMN time_minutes INTEGER',
+            );
+          }
+          if (from < 9) {
+            await m.createTable(aiModelMetadataEntries);
+          }
+          if (from < 10) {
+            await m.createTable(mealPlans);
+          }
+          if (from < 11) {
+            await m.createTable(photoProgressEntries);
+          }
         },
       );
-}
-
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'nutriq.db'));
-    return NativeDatabase.createInBackground(file);
-  });
 }

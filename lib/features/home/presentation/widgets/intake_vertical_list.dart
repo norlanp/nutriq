@@ -205,6 +205,7 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                         onItemTapped: widget.onItemTappedCallback,
                         firstListElement: firstListElement,
                         usesImperialUnits: widget.usesImperialUnits,
+                        showTimestamp: true,
                       ),
                     );
                   }
@@ -224,7 +225,8 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
 
   void _onItemDropped(IntakeEntity entity) {
     _mealDetailBloc.addIntake(context, entity.unit, entity.amount.toString(),
-        widget.addMealType.getIntakeType(), entity.meal, entity.dateTime);
+        widget.addMealType.getIntakeType(), entity.meal, entity.dateTime,
+        time: entity.time);
     _homeBloc.deleteIntakeItem(entity);
 
     // Refresh Home Page

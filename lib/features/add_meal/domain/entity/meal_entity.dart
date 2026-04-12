@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:equatable/equatable.dart';
 
@@ -57,23 +57,24 @@ class MealEntity extends Equatable {
   });
 
   factory MealEntity.empty() => MealEntity(
-    code: IdGenerator.getUniqueID(),
-    name: null,
-    url: null,
-    mealQuantity: null,
-    mealUnit: 'gml',
-    servingQuantity: null,
-    servingUnit: 'gml',
-    servingSize: '',
-    nutriments: MealNutrimentsEntity.empty(),
-    source: MealSourceEntity.custom,
-  );
+        code: IdGenerator.getUniqueID(),
+        name: null,
+        url: null,
+        mealQuantity: null,
+        mealUnit: 'gml',
+        servingQuantity: null,
+        servingUnit: 'gml',
+        servingSize: '',
+        nutriments: MealNutrimentsEntity.empty(),
+        source: MealSourceEntity.custom,
+      );
 
   factory MealEntity.fromOFFProduct(OFFProductDTO offProduct) {
     return MealEntity(
       code: offProduct.code,
       name: offProduct.getLocaleName(
-        SupportedLanguage.fromCode(Platform.localeName),
+        SupportedLanguage.fromCode(
+            ui.PlatformDispatcher.instance.locale.toString()),
       ),
       brands: offProduct.brands,
       thumbnailImageUrl: offProduct.image_front_thumb_url,
@@ -113,7 +114,8 @@ class MealEntity extends Equatable {
     return MealEntity(
       code: fdcId,
       name: foodItem.getLocaleDescription(
-        SupportedLanguage.fromCode(Platform.localeName),
+        SupportedLanguage.fromCode(
+            ui.PlatformDispatcher.instance.locale.toString()),
       ),
       brands: null,
       url: FDCConst.getFoodDetailUrlString(fdcId),

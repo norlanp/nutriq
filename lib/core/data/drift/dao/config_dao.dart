@@ -100,6 +100,17 @@ class ConfigDao extends DatabaseAccessor<AppDatabase> with _$ConfigDaoMixin {
     );
   }
 
+  Future<int> getDailyWaterGoalMl() async {
+    final config = await getConfig();
+    return config.dailyWaterGoalMl ?? 2000;
+  }
+
+  Future<void> setDailyWaterGoalMl(int value) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(dailyWaterGoalMl: Value(value)),
+    );
+  }
+
   Future<void> addConfig(ConfigEntriesCompanion config) async {
     await into(configEntries).insertOnConflictUpdate(config);
   }

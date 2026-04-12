@@ -19,4 +19,8 @@ abstract class IntakeRepository {
   Future<List<IntakeEntity>> getRecentIntake();
 
   Future<IntakeEntity?> getIntakeById(String intakeId);
+
+  Future<List<IntakeEntity>> getIntakesByDate(DateTime date);
+
+  Future<List<IntakeEntity>> getAllIntakesOrderedByTime();
 }

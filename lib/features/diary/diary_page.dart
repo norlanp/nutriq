@@ -107,6 +107,8 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
                 lunchIntake: state.lunchIntakeList,
                 dinnerIntake: state.dinnerIntakeList,
                 snackIntake: state.snackIntakeList,
+                burnedCalories: state.burnedCalories,
+                netCalories: state.netCalories,
                 onDeleteIntake: _onDeleteIntakeItem,
                 onDeleteActivity: _onDeleteActivityItem,
                 onCopyIntake: _onCopyIntakeItem,

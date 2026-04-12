@@ -1,17 +1,24 @@
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/drift/tables/config_table.dart';
+import 'package:nutriq/core/domain/entity/ai_model_metadata_entity.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
+import 'package:nutriq/core/domain/entity/fasting_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
+import 'package:nutriq/core/domain/entity/notification_settings_entity.dart';
 import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
+import 'package:nutriq/core/domain/entity/photo_progress_entity.dart';
 import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
 import 'package:nutriq/core/domain/entity/user_gender_entity.dart';
 import 'package:nutriq/core/domain/entity/user_pal_entity.dart';
 import 'package:nutriq/core/domain/entity/user_weight_goal_entity.dart';
+import 'package:nutriq/core/domain/entity/meal_plan_entity.dart';
+import 'package:nutriq/core/domain/entity/water_entity.dart';
 import 'package:nutriq/core/domain/entity/weight_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.dart';
@@ -50,6 +57,7 @@ ConfigEntity mapConfigEntryToEntity(ConfigEntry entry) => ConfigEntity(
       userCarbGoalPct: entry.userCarbGoalPct,
       userProteinGoalPct: entry.userProteinGoalPct,
       userFatGoalPct: entry.userFatGoalPct,
+      dailyWaterGoalMl: entry.dailyWaterGoalMl ?? 2000,
     );
 
 ConfigEntriesCompanion mapConfigEntityToCompanion(ConfigEntity entity) =>
@@ -64,6 +72,7 @@ ConfigEntriesCompanion mapConfigEntityToCompanion(ConfigEntity entity) =>
       userCarbGoalPct: Value(entity.userCarbGoalPct),
       userProteinGoalPct: Value(entity.userProteinGoalPct),
       userFatGoalPct: Value(entity.userFatGoalPct),
+      dailyWaterGoalMl: Value(entity.dailyWaterGoalMl),
     );
 
 UserGenderEntity mapUserGenderStringToEntity(String gender) {
@@ -268,6 +277,16 @@ MealsCompanion mapMealEntityToCompanion(MealEntity entity) => MealsCompanion(
       iron100: Value(entity.nutriments.iron100),
     );
 
+int? _timeOfDayToMinutes(TimeOfDay? time) {
+  if (time == null) return null;
+  return time.hour * 60 + time.minute;
+}
+
+TimeOfDay? _minutesToTimeOfDay(int? minutes) {
+  if (minutes == null) return null;
+  return TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
+}
+
 IntakeEntity mapIntakeToEntity(Intake intake, Meal meal) => IntakeEntity(
       id: intake.id,
       unit: intake.unit,
@@ -275,6 +294,7 @@ IntakeEntity mapIntakeToEntity(Intake intake, Meal meal) => IntakeEntity(
       type: mapIntakeTypeStringToEntity(intake.type),
       meal: mapMealToEntity(meal),
       dateTime: intake.date,
+      time: _minutesToTimeOfDay(intake.timeMinutes),
     );
 
 IntakesCompanion mapIntakeEntityToCompanion(IntakeEntity entity) =>
@@ -285,6 +305,7 @@ IntakesCompanion mapIntakeEntityToCompanion(IntakeEntity entity) =>
       type: Value(mapIntakeTypeEntityToString(entity.type)),
       mealId: Value(entity.meal.code ?? ''),
       date: Value(entity.dateTime),
+      timeMinutes: Value(_timeOfDayToMinutes(entity.time)),
     );
 
 TrackedDayEntity mapTrackedDayToEntity(TrackedDay entry) => TrackedDayEntity(
@@ -450,5 +471,163 @@ WeightsCompanion mapWeightEntityToCompanion(WeightEntity entity) =>
       userId: Value(entity.userId),
       weightKg: Value(entity.weightKg),
       date: Value(entity.date),
+      note: Value(entity.note),
+    );
+
+NotificationSettingsEntity mapNotificationSettingsToEntity(
+  NotificationSetting data,
+) =>
+    NotificationSettingsEntity(
+      id: data.id,
+      userId: data.userId,
+      mealReminderMinutes: {
+        if (data.breakfastTime != null)
+          IntakeTypeEntity.breakfast: data.breakfastTime!,
+        if (data.lunchTime != null) IntakeTypeEntity.lunch: data.lunchTime!,
+        if (data.dinnerTime != null) IntakeTypeEntity.dinner: data.dinnerTime!,
+        if (data.snackTime != null) IntakeTypeEntity.snack: data.snackTime!,
+      },
+      dailySummaryEnabled: data.dailySummaryEnabled,
+      dailySummaryMinutes: data.dailySummaryTime ?? 0,
+    );
+
+NotificationSettingsCompanion mapNotificationSettingsEntityToCompanion(
+  NotificationSettingsEntity entity,
+) =>
+    NotificationSettingsCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      breakfastTime:
+          Value(entity.mealReminderMinutes[IntakeTypeEntity.breakfast]),
+      lunchTime: Value(entity.mealReminderMinutes[IntakeTypeEntity.lunch]),
+      dinnerTime: Value(entity.mealReminderMinutes[IntakeTypeEntity.dinner]),
+      snackTime: Value(entity.mealReminderMinutes[IntakeTypeEntity.snack]),
+      dailySummaryEnabled: Value(entity.dailySummaryEnabled),
+      dailySummaryTime: Value(entity.dailySummaryMinutes),
+    );
+
+WaterEntity mapWaterToEntity(WaterEntry entry) => WaterEntity(
+      id: entry.id,
+      userId: entry.userId,
+      amountMl: entry.amountMl,
+      date: entry.date,
+      timestamp: entry.timestamp,
+    );
+
+WaterEntriesCompanion mapWaterEntityToCompanion(WaterEntity entity) =>
+    WaterEntriesCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      amountMl: Value(entity.amountMl),
+      date: Value(entity.date),
+      timestamp: Value(entity.timestamp),
+    );
+
+FastingPresetType _mapPresetTypeStringToEntity(String type) {
+  switch (type) {
+    case 'sixteenEight':
+      return FastingPresetType.sixteenEight;
+    case 'eighteenSix':
+      return FastingPresetType.eighteenSix;
+    case 'twentyFour':
+      return FastingPresetType.twentyFour;
+    case 'omad':
+      return FastingPresetType.omad;
+    default:
+      return FastingPresetType.custom;
+  }
+}
+
+String _mapPresetTypeEntityToString(FastingPresetType type) {
+  switch (type) {
+    case FastingPresetType.sixteenEight:
+      return 'sixteenEight';
+    case FastingPresetType.eighteenSix:
+      return 'eighteenSix';
+    case FastingPresetType.twentyFour:
+      return 'twentyFour';
+    case FastingPresetType.omad:
+      return 'omad';
+    case FastingPresetType.custom:
+      return 'custom';
+  }
+}
+
+FastingEntity mapFastingToEntity(Fast entry) => FastingEntity(
+      id: entry.id,
+      userId: entry.userId,
+      startTime: entry.startTime,
+      endTime: entry.endTime,
+      targetDurationMinutes: entry.targetDurationMinutes,
+      presetType: _mapPresetTypeStringToEntity(entry.presetType),
+    );
+
+FastsCompanion mapFastingEntityToCompanion(FastingEntity entity) =>
+    FastsCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      startTime: Value(entity.startTime),
+      endTime: Value(entity.endTime),
+      targetDurationMinutes: Value(entity.targetDurationMinutes),
+      presetType: Value(_mapPresetTypeEntityToString(entity.presetType)),
+    );
+
+MealPlanEntity mapMealPlanToEntity(MealPlan entry) => MealPlanEntity(
+      id: entry.id,
+      userId: entry.userId,
+      date: entry.date,
+      mealSlot: mapIntakeTypeStringToEntity(entry.mealSlot),
+      recipeId: entry.recipeId,
+      mealId: entry.mealId,
+      note: entry.note,
+    );
+
+MealPlansCompanion mapMealPlanEntityToCompanion(MealPlanEntity entity) =>
+    MealPlansCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      date: Value(entity.date),
+      mealSlot: Value(mapIntakeTypeEntityToString(entity.mealSlot)),
+      recipeId: Value(entity.recipeId),
+      mealId: Value(entity.mealId),
+      note: Value(entity.note),
+    );
+
+AiModelMetadataEntity mapAiModelMetadataToEntity(AiModelMetadataEntry entry) =>
+    AiModelMetadataEntity(
+      id: entry.id,
+      modelVersion: entry.modelVersion,
+      assetPath: entry.assetPath,
+      lastUpdated: entry.lastUpdated,
+    );
+
+AiModelMetadataEntriesCompanion mapAiModelMetadataEntityToCompanion(
+        AiModelMetadataEntity entity) =>
+    AiModelMetadataEntriesCompanion(
+      id: Value(entity.id),
+      modelVersion: Value(entity.modelVersion),
+      assetPath: Value(entity.assetPath),
+      lastUpdated: Value(entity.lastUpdated),
+    );
+
+PhotoProgressEntity mapPhotoProgressToEntity(PhotoProgressEntry entry) =>
+    PhotoProgressEntity(
+      id: entry.id,
+      userId: entry.userId,
+      filePath: entry.filePath,
+      date: entry.date,
+      tags: entry.tags,
+      note: entry.note,
+    );
+
+PhotoProgressEntriesCompanion mapPhotoProgressEntityToCompanion(
+  PhotoProgressEntity entity,
+) =>
+    PhotoProgressEntriesCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      filePath: Value(entity.filePath),
+      date: Value(entity.date),
+      tags: Value(entity.tags),
       note: Value(entity.note),
     );

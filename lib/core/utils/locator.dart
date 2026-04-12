@@ -1,6 +1,7 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
 import 'package:nutriq/core/data/data_source/config_data_source.dart';
+import 'package:nutriq/core/data/data_source/fasting_data_source.dart';
 import 'package:nutriq/core/data/data_source/intake_data_source.dart';
 import 'package:nutriq/core/data/data_source/physical_activity_data_source.dart';
 import 'package:nutriq/core/data/data_source/recipe_data_source.dart';
@@ -8,11 +9,31 @@ import 'package:nutriq/core/data/data_source/tracked_day_data_source.dart';
 import 'package:nutriq/core/data/data_source/user_activity_data_source.dart';
 import 'package:nutriq/core/data/data_source/user_data_source.dart';
 import 'package:nutriq/core/data/data_source/weight_data_source.dart';
+import 'package:nutriq/core/data/data_source/water_data_source.dart';
+import 'package:nutriq/core/data/data_source/notification_settings_data_source.dart';
+import 'package:nutriq/core/data/data_source/ai_model_metadata_data_source.dart';
+import 'package:nutriq/core/data/data_source/meal_plan_data_source.dart';
+import 'package:nutriq/core/data/data_source/photo_progress_data_source.dart';
 import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/drift/dao/meal_dao.dart';
 import 'package:nutriq/core/data/drift/dao/recipe_dao.dart';
+import 'package:nutriq/core/data/drift/dao/water_dao.dart';
+import 'package:nutriq/core/data/drift/dao/fasting_dao.dart';
+import 'package:nutriq/core/data/drift/dao/ai_model_metadata_dao.dart';
+import 'package:nutriq/core/data/drift/dao/meal_plan_dao.dart';
+import 'package:nutriq/core/data/drift/dao/photo_progress_dao.dart';
 import 'package:nutriq/core/data/repository/config_repository.dart' as data;
 import 'package:nutriq/core/domain/repository/config_repository.dart' as domain;
+import 'package:nutriq/core/domain/repository/water_repository.dart'
+    as domain_water;
+import 'package:nutriq/core/domain/repository/fasting_repository.dart'
+    as domain_fasting;
+import 'package:nutriq/core/domain/repository/ai_model_metadata_repository.dart'
+    as domain_ai_model;
+import 'package:nutriq/core/domain/repository/meal_plan_repository.dart'
+    as domain_meal_plan;
+import 'package:nutriq/core/domain/repository/photo_progress_repository.dart'
+    as domain_photo_progress;
 import 'package:nutriq/core/domain/repository/weight_repository.dart'
     as domain_weight;
 import 'package:nutriq/core/data/repository/intake_repository.dart';
@@ -23,6 +44,20 @@ import 'package:nutriq/core/data/repository/user_activity_repository.dart';
 import 'package:nutriq/core/data/repository/user_repository.dart';
 import 'package:nutriq/core/data/repository/weight_repository.dart'
     as data_weight;
+import 'package:nutriq/core/data/repository/notification_settings_repository.dart'
+    as data_notification;
+import 'package:nutriq/core/data/repository/water_repository.dart'
+    as data_water;
+import 'package:nutriq/core/data/repository/fasting_repository.dart'
+    as data_fasting;
+import 'package:nutriq/core/data/repository/ai_model_metadata_repository.dart'
+    as data_ai_model;
+import 'package:nutriq/core/data/repository/meal_plan_repository.dart'
+    as data_meal_plan;
+import 'package:nutriq/core/data/repository/photo_progress_repository.dart'
+    as data_photo_progress;
+import 'package:nutriq/core/domain/repository/notification_settings_repository.dart'
+    as domain_notification;
 import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/add_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/add_tracked_day_usecase.dart';
@@ -33,6 +68,24 @@ import 'package:nutriq/core/domain/usecase/delete_user_activity_usecase.dart';
 import 'package:nutriq/core/domain/usecase/weight/add_weight_usecase.dart';
 import 'package:nutriq/core/domain/usecase/weight/delete_weight_usecase.dart';
 import 'package:nutriq/core/domain/usecase/weight/get_weights_usecase.dart';
+import 'package:nutriq/core/domain/usecase/notification/get_notification_settings_usecase.dart';
+import 'package:nutriq/core/domain/usecase/notification/save_notification_settings_usecase.dart';
+import 'package:nutriq/core/domain/usecase/water/add_water_usecase.dart';
+import 'package:nutriq/core/domain/usecase/water/delete_water_usecase.dart';
+import 'package:nutriq/core/domain/usecase/water/get_daily_water_total_usecase.dart';
+import 'package:nutriq/core/domain/usecase/water/get_water_usecase.dart';
+import 'package:nutriq/core/domain/usecase/fasting/start_fasting_usecase.dart';
+import 'package:nutriq/core/domain/usecase/fasting/end_fasting_usecase.dart';
+import 'package:nutriq/core/domain/usecase/fasting/get_active_fasting_usecase.dart';
+import 'package:nutriq/core/domain/usecase/fasting/get_current_streak_usecase.dart';
+import 'package:nutriq/core/domain/usecase/fasting/get_fasting_history_usecase.dart';
+import 'package:nutriq/core/domain/usecase/meal_plan/get_meal_plan_usecase.dart';
+import 'package:nutriq/core/domain/usecase/meal_plan/save_meal_plan_usecase.dart';
+import 'package:nutriq/core/domain/usecase/meal_plan/delete_meal_plan_usecase.dart';
+import 'package:nutriq/core/domain/usecase/meal_plan/generate_shopping_list_usecase.dart';
+import 'package:nutriq/core/domain/usecase/photo_progress/add_photo_usecase.dart';
+import 'package:nutriq/core/domain/usecase/photo_progress/get_photos_usecase.dart';
+import 'package:nutriq/core/domain/usecase/photo_progress/delete_photo_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_kcal_goal_usecase.dart';
@@ -41,6 +94,8 @@ import 'package:nutriq/core/domain/usecase/get_physical_activity_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_tracked_day_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_user_activity_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_user_usecase.dart';
+import 'package:nutriq/core/domain/usecase/exercise/get_daily_burned_calories_usecase.dart';
+import 'package:nutriq/core/domain/usecase/exercise/net_calories_usecase.dart';
 import 'package:nutriq/core/domain/usecase/update_intake_usecase.dart';
 import 'package:nutriq/core/utils/env.dart';
 import 'package:nutriq/core/utils/ont_image_cache_manager.dart';
@@ -76,6 +131,35 @@ import 'package:nutriq/features/settings/domain/usecase/import_data_usecase.dart
 import 'package:nutriq/features/settings/presentation/bloc/export_import_bloc.dart';
 import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:nutriq/features/weight_tracking/presentation/bloc/weight_bloc.dart';
+import 'package:nutriq/features/notifications/presentation/notification_bloc.dart';
+import 'package:nutriq/features/notifications/data/notification_scheduler.dart';
+import 'package:nutriq/features/notifications/data/notification_init.dart';
+import 'package:nutriq/features/water_tracking/presentation/water_bloc.dart';
+import 'package:nutriq/features/fasting_tracker/presentation/fasting_bloc.dart';
+import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
+import 'package:nutriq/features/photo_progress/presentation/photo_progress_bloc.dart';
+import 'package:nutriq/features/progress_charts/presentation/progress_charts_bloc.dart';
+import 'package:nutriq/features/health_sync/domain/health_sync_service.dart';
+import 'package:nutriq/features/health_sync/domain/usecase/sync_steps_usecase.dart';
+import 'package:nutriq/features/health_sync/domain/usecase/sync_workouts_usecase.dart';
+import 'package:nutriq/features/health_sync/domain/usecase/sync_weight_usecase.dart';
+import 'package:nutriq/features/health_sync/data/platform_health_service_factory_io.dart'
+    if (dart.library.html) 'package:nutriq/features/health_sync/data/platform_health_service_factory_web.dart'
+    as health_factory;
+import 'package:nutriq/features/health_sync/presentation/health_sync_bloc.dart';
+import 'package:nutriq/features/ai_food_scanner/data/food_classifier_service.dart';
+import 'package:nutriq/features/ai_food_scanner/domain/usecase/classify_food_usecase.dart';
+import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
+import 'package:nutriq/features/photo_progress/data/photo_storage_service.dart';
+import 'package:nutriq/core/data/data_export_service.dart';
+import 'package:nutriq/core/data/data_import_service.dart';
+import 'package:nutriq/core/data/encrypted_backup_service.dart';
+import 'package:nutriq/core/domain/usecase/progress/get_weekly_nutrition_usecase.dart';
+import 'package:nutriq/core/domain/usecase/progress/get_monthly_nutrition_usecase.dart';
+import 'package:nutriq/core/domain/usecase/weight/get_weights_in_range_usecase.dart';
+import 'package:nutriq/core/domain/usecase/meal_timing/get_intakes_by_date_usecase.dart';
+import 'package:nutriq/core/domain/usecase/meal_timing/get_all_intakes_ordered_by_time_usecase.dart';
+import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final locator = GetIt.instance;
@@ -102,6 +186,12 @@ Future<void> initLocator() async {
   final userActivityDao = appDatabase.userActivityDao;
   final trackedDayDao = appDatabase.trackedDayDao;
   final weightDao = appDatabase.weightDao;
+  final notificationSettingsDao = appDatabase.notificationSettingsDao;
+  final waterDao = WaterDao(appDatabase);
+  final fastingDao = FastingDao(appDatabase);
+  final aiModelMetadataDao = AiModelMetadataDao(appDatabase);
+  final mealPlanDao = MealPlanDao(appDatabase);
+  final photoProgressDao = PhotoProgressDao(appDatabase);
 
   locator.registerLazySingleton(
     () => ConfigDataSource(configDao),
@@ -135,6 +225,34 @@ Future<void> initLocator() async {
     () => WeightDataSource(weightDao),
   );
 
+  locator.registerLazySingleton<WaterDao>(() => waterDao);
+
+  locator.registerLazySingleton<FastingDao>(() => fastingDao);
+
+  locator.registerLazySingleton<NotificationSettingsDataSource>(
+    () => NotificationSettingsDataSource(notificationSettingsDao),
+  );
+
+  locator.registerLazySingleton<WaterDataSource>(
+    () => WaterDataSource(waterDao),
+  );
+
+  locator.registerLazySingleton<FastingDataSource>(
+    () => FastingDataSource(fastingDao),
+  );
+
+  locator.registerLazySingleton<AiModelMetadataDataSource>(
+    () => AiModelMetadataDataSource(aiModelMetadataDao),
+  );
+
+  locator.registerLazySingleton<MealPlanDataSource>(
+    () => MealPlanDataSource(mealPlanDao),
+  );
+
+  locator.registerLazySingleton<PhotoProgressDataSource>(
+    () => PhotoProgressDataSource(photoProgressDao),
+  );
+
   // Repositories
   locator.registerLazySingleton<domain.ConfigRepository>(
     () => data.ConfigRepository(locator()),
@@ -162,6 +280,30 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<domain_weight.WeightRepository>(
     () => data_weight.WeightRepository(locator()),
+  );
+  locator.registerLazySingleton<
+      domain_notification.NotificationSettingsRepository>(
+    () => data_notification.NotificationSettingsRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_water.WaterRepository>(
+    () => data_water.WaterRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_fasting.FastingRepository>(
+    () => data_fasting.FastingRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_ai_model.AiModelMetadataRepository>(
+    () => data_ai_model.AiModelMetadataRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_meal_plan.MealPlanRepository>(
+    () => data_meal_plan.MealPlanRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_photo_progress.PhotoProgressRepository>(
+    () => data_photo_progress.PhotoProgressRepository(locator()),
   );
 
   // UseCases
@@ -241,6 +383,85 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<DeleteWeightUsecase>(
     () => DeleteWeightUsecase(locator()),
   );
+  locator.registerLazySingleton<GetNotificationSettingsUsecase>(
+    () => GetNotificationSettingsUsecase(locator()),
+  );
+  locator.registerLazySingleton<SaveNotificationSettingsUsecase>(
+    () => SaveNotificationSettingsUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetWaterUsecase>(
+    () => GetWaterUsecase(locator()),
+  );
+  locator.registerLazySingleton<AddWaterUsecase>(
+    () => AddWaterUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteWaterUsecase>(
+    () => DeleteWaterUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetDailyWaterTotalUsecase>(
+    () => GetDailyWaterTotalUsecase(locator()),
+  );
+  locator.registerLazySingleton<StartFastingUsecase>(
+    () => StartFastingUsecase(locator()),
+  );
+  locator.registerLazySingleton<EndFastingUsecase>(
+    () => EndFastingUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetActiveFastingUsecase>(
+    () => GetActiveFastingUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetCurrentStreakUsecase>(
+    () => GetCurrentStreakUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetFastingHistoryUsecase>(
+    () => GetFastingHistoryUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetWeeklyNutritionUsecase>(
+    () => GetWeeklyNutritionUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetMonthlyNutritionUsecase>(
+    () => GetMonthlyNutritionUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetWeightsInRangeUsecase>(
+    () => GetWeightsInRangeUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetDailyBurnedCaloriesUsecase>(
+    () => GetDailyBurnedCaloriesUsecase(locator()),
+  );
+  locator.registerLazySingleton<NetCaloriesUsecase>(
+    () => NetCaloriesUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<GetMealPlanUsecase>(
+    () => GetMealPlanUsecase(locator()),
+  );
+  locator.registerLazySingleton<SaveMealPlanUsecase>(
+    () => SaveMealPlanUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteMealPlanUsecase>(
+    () => DeleteMealPlanUsecase(locator()),
+  );
+  locator.registerLazySingleton<GenerateShoppingListUsecase>(
+    () => GenerateShoppingListUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<AddPhotoUsecase>(
+    () => AddPhotoUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetPhotosUsecase>(
+    () => GetPhotosUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeletePhotoUsecase>(
+    () => DeletePhotoUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<FoodClassifierService>(
+    () => FoodClassifierService(),
+  );
+
+  locator.registerLazySingleton<ClassifyFoodUsecase>(
+    () => ClassifyFoodUsecase(locator()),
+  );
 
   // BLoCs
   locator.registerLazySingleton<OnboardingBloc>(
@@ -263,6 +484,8 @@ Future<void> initLocator() async {
   locator.registerLazySingleton(() => DiaryBloc(locator(), locator()));
   locator.registerLazySingleton(
     () => CalendarDayBloc(
+      locator(),
+      locator(),
       locator(),
       locator(),
       locator(),
@@ -308,6 +531,111 @@ Future<void> initLocator() async {
   );
   locator.registerFactory<WeightBloc>(
     () => WeightBloc(locator(), locator(), locator()),
+  );
+  locator.registerFactory<NotificationBloc>(
+    () => NotificationBloc(locator(), locator()),
+  );
+  locator.registerFactory<WaterBloc>(
+    () => WaterBloc(locator(), locator(), locator(), locator()),
+  );
+  locator.registerFactory<ProgressChartsBloc>(
+    () => ProgressChartsBloc(locator(), locator(), locator()),
+  );
+
+  // Notification Scheduler
+  final notificationPlugin = await initNotifications();
+  if (notificationPlugin != null) {
+    locator.registerLazySingleton<NotificationScheduler>(
+      () => NotificationScheduler(notificationPlugin),
+    );
+  }
+
+  locator.registerFactory<FastingBloc>(
+    () => FastingBloc(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator.isRegistered<NotificationScheduler>()
+          ? locator<NotificationScheduler>()
+          : null,
+    ),
+  );
+
+  locator.registerFactory<MealPlanBloc>(
+    () => MealPlanBloc(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<GetIntakesByDateUsecase>(
+    () => GetIntakesByDateUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetAllIntakesOrderedByTimeUsecase>(
+    () => GetAllIntakesOrderedByTimeUsecase(locator()),
+  );
+
+  locator.registerFactory<MealTimingBloc>(
+    () => MealTimingBloc(locator()),
+  );
+
+  locator.registerFactory<PhotoProgressBloc>(
+    () => PhotoProgressBloc(
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<HealthSyncService>(
+    () => health_factory.PlatformHealthServiceFactory.create(),
+  );
+
+  locator.registerLazySingleton<SyncStepsUsecase>(
+    () => SyncStepsUsecase(locator()),
+  );
+  locator.registerLazySingleton<SyncWorkoutsUsecase>(
+    () => SyncWorkoutsUsecase(locator()),
+  );
+  locator.registerLazySingleton<SyncWeightUsecase>(
+    () => SyncWeightUsecase(locator(), locator()),
+  );
+
+  locator.registerFactory<HealthSyncBloc>(
+    () => HealthSyncBloc(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
+
+  locator.registerFactory<AiScannerBloc>(
+    () => AiScannerBloc(locator()),
+  );
+
+  locator.registerLazySingleton<PhotoStorageService>(
+    () => PhotoStorageService(),
+  );
+
+  locator.registerLazySingleton<DataExportService>(
+    () => DataExportService(appDatabase),
+  );
+
+  locator.registerLazySingleton<DataImportService>(
+    () => DataImportService(appDatabase),
+  );
+
+  locator.registerLazySingleton<EncryptedBackupService>(
+    () => EncryptedBackupService(
+      locator<DataExportService>(),
+      locator<DataImportService>(),
+    ),
   );
 
   await _initializeConfig(locator<ConfigDataSource>());

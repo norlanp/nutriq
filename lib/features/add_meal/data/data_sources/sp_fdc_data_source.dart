@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/utils/locator.dart';
@@ -16,7 +16,8 @@ class SpFdcDataSource {
       log.fine('Fetching Supabase FDC results');
       final supaBaseClient = locator<SupabaseClient>();
       final queryDescriptionColumn = SPConst.getFdcFoodDescriptionColumnName(
-          SupportedLanguage.fromCode(Platform.localeName));
+          SupportedLanguage.fromCode(
+              ui.PlatformDispatcher.instance.locale.toString()));
 
       final response = await supaBaseClient
           .from(SPConst.fdcFoodTableName)

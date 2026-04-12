@@ -11,6 +11,7 @@ class ConfigEntity extends Equatable {
   final double? userCarbGoalPct;
   final double? userProteinGoalPct;
   final double? userFatGoalPct;
+  final int? dailyWaterGoalMl;
 
   const ConfigEntity(
     this.hasAcceptedDisclaimer,
@@ -22,17 +23,19 @@ class ConfigEntity extends Equatable {
     this.userCarbGoalPct,
     this.userProteinGoalPct,
     this.userFatGoalPct,
+    this.dailyWaterGoalMl = 2000,
   });
 
   @override
   List<Object?> get props => [
-    hasAcceptedDisclaimer,
-    hasAcceptedPolicy,
-    hasAcceptedSendAnonymousData,
-    usesImperialUnits,
-    userKcalAdjustment,
-    userCarbGoalPct,
-    userProteinGoalPct,
-    userFatGoalPct,
-  ];
+        hasAcceptedDisclaimer,
+        hasAcceptedPolicy,
+        hasAcceptedSendAnonymousData,
+        usesImperialUnits,
+        userKcalAdjustment,
+        userCarbGoalPct,
+        userProteinGoalPct,
+        userFatGoalPct,
+        dailyWaterGoalMl,
+      ];
 }

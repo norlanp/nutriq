@@ -31,8 +31,21 @@
 
   <title>nutriq</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- sql.js for Drift web database support -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
 </head>
 <body>
+  <script>
+    // Expose sql.js database for Drift's WebDatabase
+    var sqlite3InitModule = function() {
+      return initSqlJs({
+        locateFile: function(filename) {
+          return 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/' + filename;
+        }
+      });
+    };
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

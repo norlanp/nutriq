@@ -52,7 +52,11 @@ class IntakeDao extends DatabaseAccessor<AppDatabase> with _$IntakeDaoMixin {
                 t.type.equals(intakeType) &
                 t.date.isBiggerOrEqualValue(startOfDay) &
                 t.date.isSmallerThanValue(endOfDay),
-          ))
+          )
+          ..orderBy([
+            (t) => OrderingTerm.asc(t.timeMinutes),
+            (t) => OrderingTerm.asc(t.date),
+          ]))
         .get();
   }
 
@@ -60,6 +64,31 @@ class IntakeDao extends DatabaseAccessor<AppDatabase> with _$IntakeDaoMixin {
     return await (select(intakes)
           ..orderBy([(t) => OrderingTerm.desc(t.date)])
           ..limit(limit))
+        .get();
+  }
+
+  Future<List<Intake>> getIntakesByDate(DateTime dateTime) async {
+    final startOfDay = DateTime(dateTime.year, dateTime.month, dateTime.day);
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+    return await (select(intakes)
+          ..where(
+            (t) =>
+                t.date.isBiggerOrEqualValue(startOfDay) &
+                t.date.isSmallerThanValue(endOfDay),
+          )
+          ..orderBy([
+            (t) => OrderingTerm.asc(t.timeMinutes),
+            (t) => OrderingTerm.asc(t.date),
+          ]))
+        .get();
+  }
+
+  Future<List<Intake>> getAllIntakesOrderedByTime() async {
+    return await (select(intakes)
+          ..orderBy([
+            (t) => OrderingTerm.asc(t.timeMinutes),
+            (t) => OrderingTerm.asc(t.date),
+          ]))
         .get();
   }
 }

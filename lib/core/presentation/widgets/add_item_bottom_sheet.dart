@@ -155,6 +155,31 @@ class AddItemBottomSheet extends StatelessWidget {
           const Divider(indent: 16, endIndent: 16),
           ListTile(
             title: Text(
+              S.of(context).aiScannerLabel,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            subtitle: Text(
+              S.of(context).aiScannerExample,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.photo_camera_outlined,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(NavigationOptions.aiScannerRoute);
+            },
+          ),
+          ListTile(
+            title: Text(
               S.of(context).myMealsLabel,
               style: Theme.of(context)
                   .textTheme
@@ -196,6 +221,112 @@ class AddItemBottomSheet extends StatelessWidget {
               Navigator.of(context).pop();
               Navigator.of(context)
                   .pushNamed(NavigationOptions.weightTrackingRoute);
+            },
+          ),
+          ListTile(
+            title: Text(
+              S.of(context).progressChartsLabel,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.bar_chart,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .pushNamed(NavigationOptions.progressChartsRoute);
+            },
+          ),
+          ListTile(
+            title: Text(
+              S.of(context).fastingTrackerLabel,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.timer_outlined,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .pushNamed(NavigationOptions.fastingTrackerRoute);
+            },
+          ),
+          const Divider(indent: 16, endIndent: 16),
+          ListTile(
+            title: Text(
+              S.of(context).mealPlanLabel,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            subtitle: Text(
+              S.of(context).mealPlanSubtitle,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.calendar_month,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(NavigationOptions.mealPlanRoute);
+            },
+          ),
+          ListTile(
+            title: Text(
+              S.of(context).photoProgressLabel,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            subtitle: Text(
+              S.of(context).photoProgressSubtitle,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.photo_camera_front_outlined,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .pushNamed(NavigationOptions.photoProgressRoute);
+            },
+          ),
+          ListTile(
+            title: Text(
+              S.of(context).mealTimingLabel,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.schedule_outlined,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .pushNamed(NavigationOptions.mealTimingRoute);
             },
           ),
         ],

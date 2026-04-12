@@ -5,6 +5,7 @@ import 'package:nutriq/core/presentation/widgets/app_banner_version.dart';
 import 'package:nutriq/core/presentation/widgets/disclaimer_dialog.dart';
 import 'package:nutriq/core/utils/app_const.dart';
 import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/core/utils/theme_mode_provider.dart';
 import 'package:nutriq/core/utils/url_const.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
@@ -61,6 +62,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
             return ListView(
               children: [
                 const SizedBox(height: 16.0),
+                ListTile(
+                  leading: const Icon(Icons.notifications_outlined),
+                  title: Text(S.of(context).notificationSettingsLabel),
+                  onTap: () => Navigator.of(context).pushNamed(
+                    NavigationOptions.notificationSettingsRoute,
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.health_and_safety_outlined),
+                  title: Text(S.of(context).healthSyncTitle),
+                  onTap: () => Navigator.of(context).pushNamed(
+                    NavigationOptions.healthSyncRoute,
+                  ),
+                ),
                 ListTile(
                   leading: const Icon(Icons.ac_unit_outlined),
                   title: Text(S.of(context).settingsUnitsLabel),

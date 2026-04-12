@@ -25,6 +25,22 @@ import 'package:nutriq/features/recipe_builder/presentation/recipe_builder_scree
 import 'package:nutriq/features/recipe_builder/presentation/recipe_list_screen.dart';
 import 'package:nutriq/features/settings/settings_screen.dart';
 import 'package:nutriq/features/weight_tracking/presentation/screen/weight_tracking_screen.dart';
+import 'package:nutriq/features/notifications/presentation/notification_settings_screen.dart';
+import 'package:nutriq/features/water_tracking/presentation/screen/water_tracker_screen.dart';
+import 'package:nutriq/features/progress_charts/presentation/progress_charts_screen.dart';
+import 'package:nutriq/features/fasting_tracker/presentation/fasting_timer_screen.dart';
+import 'package:nutriq/features/fasting_tracker/presentation/fasting_history_screen.dart';
+import 'package:nutriq/features/health_sync/presentation/health_sync_screen.dart';
+import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_screen.dart';
+import 'package:nutriq/features/meal_planning/presentation/meal_plan_screen.dart';
+import 'package:nutriq/features/meal_planning/presentation/shopping_list_screen.dart';
+import 'package:nutriq/features/photo_progress/presentation/photo_capture_screen.dart';
+import 'package:nutriq/features/photo_progress/presentation/photo_comparison_screen.dart';
+import 'package:nutriq/features/photo_progress/presentation/photo_timeline_screen.dart';
+import 'package:nutriq/features/data_sync/presentation/export_screen.dart';
+import 'package:nutriq/features/data_sync/presentation/import_screen.dart';
+import 'package:nutriq/features/data_sync/presentation/cloud_backup_settings_screen.dart';
+import 'package:nutriq/features/meal_timing/presentation/meal_timing_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -118,6 +134,40 @@ class NutriqApp extends StatelessWidget {
             const RecipeBuilderScreen(),
         NavigationOptions.weightTrackingRoute: (context) =>
             const WeightTrackingScreen(),
+        NavigationOptions.notificationSettingsRoute: (context) =>
+            const NotificationSettingsScreen(),
+        NavigationOptions.waterTrackingRoute: (context) =>
+            const WaterTrackerScreen(),
+        NavigationOptions.progressChartsRoute: (context) =>
+            const ProgressChartsScreen(),
+        NavigationOptions.fastingTrackerRoute: (context) =>
+            const FastingTimerScreen(),
+        NavigationOptions.fastingHistoryRoute: (context) =>
+            const FastingHistoryScreen(),
+        NavigationOptions.healthSyncRoute: (context) =>
+            const HealthSyncScreen(),
+        NavigationOptions.aiScannerRoute: (context) => const AiScannerScreen(),
+        NavigationOptions.mealPlanRoute: (context) => const MealPlanScreen(),
+        NavigationOptions.shoppingListRoute: (context) =>
+            const ShoppingListScreen(),
+        NavigationOptions.photoProgressRoute: (context) =>
+            const PhotoTimelineScreen(),
+        NavigationOptions.photoCaptureRoute: (context) =>
+            const PhotoCaptureScreen(),
+        NavigationOptions.photoComparisonRoute: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          return PhotoComparisonScreen(
+            beforePhoto: args['beforePhoto'],
+            afterPhoto: args['afterPhoto'],
+          );
+        },
+        NavigationOptions.exportRoute: (context) => const ExportScreen(),
+        NavigationOptions.importRoute: (context) => const ImportScreen(),
+        NavigationOptions.cloudBackupRoute: (context) =>
+            const CloudBackupSettingsScreen(),
+        NavigationOptions.mealTimingRoute: (context) =>
+            const MealTimingScreen(),
       },
     );
   }

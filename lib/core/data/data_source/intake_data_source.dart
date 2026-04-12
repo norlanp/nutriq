@@ -32,4 +32,10 @@ class IntakeDataSource {
 
   Future<List<Intake>> getRecentlyAddedIntake({int number = 100}) =>
       _dao.getRecentlyAdded(limit: number);
+
+  Future<List<Intake>> getIntakesByDate(DateTime dateTime) =>
+      _dao.getIntakesByDate(dateTime);
+
+  Future<List<Intake>> getAllIntakesOrderedByTime() =>
+      _dao.getAllIntakesOrderedByTime();
 }

@@ -12,4 +12,20 @@ class NavigationOptions {
   static const recipeBuilderRoute = "recipeBuilder";
   static const recipeListRoute = "recipeList";
   static const weightTrackingRoute = "weightTracking";
+  static const notificationSettingsRoute = "notificationSettings";
+  static const waterTrackingRoute = "waterTracking";
+  static const progressChartsRoute = "progressCharts";
+  static const fastingTrackerRoute = "fastingTracker";
+  static const fastingHistoryRoute = "fastingHistory";
+  static const healthSyncRoute = "healthSync";
+  static const aiScannerRoute = "aiScanner";
+  static const mealPlanRoute = "mealPlan";
+  static const shoppingListRoute = "shoppingList";
+  static const photoProgressRoute = "photoProgress";
+  static const photoCaptureRoute = "photoCapture";
+  static const photoComparisonRoute = "photoComparison";
+  static const exportRoute = "export";
+  static const importRoute = "import";
+  static const cloudBackupRoute = "cloudBackup";
+  static const mealTimingRoute = "mealTiming";
 }

@@ -20,3 +20,234 @@
 [x] Run build_runner to regenerate Drift code
 [x] Run flutter analyze — zero new warnings
 [x] Run existing tests — 47/47 pass
+
+## Phase 2: Daily Habits & Engagement
+
+### Item 5: Local Notifications/Reminders
+
+[x] Add flutter_local_notifications + permission_handler deps to pubspec.yaml @file:pubspec.yaml
+[x] Create NotificationSettingsEntity (id, userId, mealReminders: Map<IntakeType, TimeOfDay>, dailySummaryEnabled, dailySummaryTime) @file:lib/core/domain/entity/notification_settings_entity.dart
+[x] Create Drift NotificationSettingsTable (id PK, userId, breakfastTime, lunchTime, dinnerTime, snackTime, dailySummaryEnabled, dailySummaryTime) @file:lib/core/data/drift/tables/notification_settings_table.dart
+[x] Create NotificationSettingsDao (getSettings, upsertSettings) @file:lib/core/data/drift/dao/notification_settings_dao.dart
+[x] Create NotificationSettingsDataSource wrapping DAO @file:lib/core/data/data_source/notification_settings_data_source.dart
+[x] Create mapper: NotificationSettingsEntity ↔ Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create NotificationSettingsRepository abstract contract (getSettings, saveSettings) @file:lib/core/domain/repository/notification_settings_repository.dart
+[x] Create NotificationSettingsRepositoryImpl @file:lib/core/data/repository/notification_settings_repository.dart
+[x] Create GetNotificationSettingsUsecase, SaveNotificationSettingsUsecase @file:lib/core/domain/usecase/notification/
+[x] Create NotificationBloc (LoadSettings, SaveSettings, ToggleDailySummary) @file:lib/features/notifications/presentation/notification_bloc.dart
+[x] Create NotificationBloc event + state classes @file:lib/features/notifications/presentation/notification_bloc.dart
+[x] Setup flutter_local_notifications init in main.dart (Android channel, iOS permissions) @file:lib/main.dart
+[x] Create NotificationScheduler service (schedule/cancel meal reminders, daily summary) @file:lib/features/notifications/data/notification_scheduler.dart
+[x] Build notification settings screen (time pickers per meal slot, daily summary toggle + time) @file:lib/features/notifications/presentation/notification_settings_screen.dart
+[x] Add notification_settings route to NavigationOptions + main.dart @file:lib/main.dart
+[x] Add notification settings entry in app settings/drawer @file:lib/
+[x] Add l10n strings for notifications (13 ARB keys: meal reminder labels, summary, enable/disable) @file:l10n/
+[x] Register all notification DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump (v3→v4) with onUpgrade for notification_settings table @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 6: Water Intake Tracker
+
+[x] Create WaterEntity (id, userId, amountMl, date, timestamp) @file:lib/core/domain/entity/water_entity.dart
+[x] Create Drift WaterTable (id PK, userId, amountMl, date, timestamp) @file:lib/core/data/drift/tables/water_table.dart
+[x] Create WaterDao (addEntry, deleteEntry, getByDate, getDailyTotal, getBetweenDates) @file:lib/core/data/drift/dao/water_dao.dart
+[x] Create WaterDataSource wrapping DAO @file:lib/core/data/data_source/water_data_source.dart
+[x] Create mapper: WaterEntity ↔ Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create WaterRepository abstract contract @file:lib/core/domain/repository/water_repository.dart
+[x] Create WaterRepositoryImpl @file:lib/core/data/repository/water_repository.dart
+[x] Create GetWaterUsecase (by date), AddWaterUsecase, DeleteWaterUsecase, GetDailyWaterTotalUsecase @file:lib/core/domain/usecase/water/
+[x] Create WaterBloc (LoadWater, AddWater, DeleteWater, UpdateDailyGoal, DailyProgress) @file:lib/features/water_tracking/presentation/water_bloc.dart
+[x] Create WaterBloc event + state classes @file:lib/features/water_tracking/presentation/water_bloc.dart
+[x] Add daily water goal to UserEntity or ConfigEntity (dailyWaterGoalMl) @file:lib/core/domain/entity/
+[x] Build water tracker screen: quick-add buttons (250ml, 500ml, custom amount dialog) @file:lib/features/water_tracking/presentation/water_tracker_screen.dart
+[x] Build daily water goal progress ring/indicator @file:lib/features/water_tracking/presentation/widgets/water_progress_ring.dart
+[x] Build water intake history list (today's entries with delete) @file:lib/features/water_tracking/presentation/widgets/water_entry_list.dart
+[x] Add water_tracker route to NavigationOptions + main.dart @file:lib/main.dart
+[x] Add water tracker entry in home screen / day info widget @file:lib/features/water_tracking/presentation/widgets/water_tracker_summary_widget.dart
+[x] Add l10n strings for water tracking (10+ ARB keys: waterLabel, addWater, dailyGoal, ml, etc.) @file:l10n/
+[x] Register all water DI entries in locator.dart @file:lib/core/utils/locator.dart
+[x] DB schema bump (v4→v5) with onUpgrade for water table (+ water goal in config) @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 7: Progress Charts
+
+[x] Create ProgressChartsBloc (LoadWeeklyData, LoadMonthlyData, ChangeDateRange) @file:lib/features/progress_charts/presentation/progress_charts_bloc.dart
+[x] Create ProgressChartsBloc event + state classes @file:lib/features/progress_charts/presentation/progress_charts_bloc.dart
+[x] Create GetWeeklyNutritionUsecase (aggregate daily kcal/macros for week) @file:lib/core/domain/usecase/progress/get_weekly_nutrition_usecase.dart
+[x] Create GetMonthlyNutritionUsecase (aggregate daily kcal/macros for month) @file:lib/core/domain/usecase/progress/get_monthly_nutrition_usecase.dart
+[x] Build weekly calorie average chart (bar chart, daily kcal bars + avg line) @file:lib/features/progress_charts/presentation/widgets/weekly_calorie_chart.dart
+[x] Build monthly calorie average chart @file:lib/features/progress_charts/presentation/widgets/monthly_calorie_chart.dart
+[x] Build macro trend stacked bar chart (carbs/fats/proteins stacked per day) @file:lib/features/progress_charts/presentation/widgets/macro_trend_chart.dart
+[x] Build weight trend + moving average overlay chart @file:lib/features/progress_charts/presentation/widgets/weight_trend_chart.dart
+[x] Build progress charts screen (tabbed: calories / macros / weight, date range selector) @file:lib/features/progress_charts/presentation/progress_charts_screen.dart
+[x] Add progress_charts route to NavigationOptions + main.dart @file:lib/main.dart
+[x] Add progress charts entry in app navigation @file:lib/core/presentation/widgets/add_item_bottom_sheet.dart
+[x] Add screenshot + share_plus deps for chart export @file:pubspec.yaml
+[x] Implement chart export as image (screenshot + share_plus) @file:lib/features/progress_charts/
+[x] Add l10n strings for progress charts @file:l10n/
+[x] Register progress charts DI entries in locator.dart @file:lib/core/utils/locator.dart
+[x] Run build_runner, flutter analyze, tests — 0 errors/warnings
+
+### Item 8: Exercise Calorie Adjustment
+
+[x] Review existing UserActivityEntity + UserActivityDao for calorie data @file:lib/core/domain/entity/user_activity_entity.dart
+[x] Create GetDailyBurnedCaloriesUsecase (sum activity calories for date) @file:lib/core/domain/usecase/
+[x] Create NetCaloriesUsecase (consumed kcal - burned kcal) @file:lib/core/domain/usecase/
+[x] Extend CalendarDayBloc to load daily burned calories + compute net @file:lib/features/
+[x] Update day info widget: show "Net Calories" row (consumed - burned) @file:lib/features/
+[x] Show remaining calorie budget after exercise on diary view @file:lib/features/
+[x] Build activity calorie impact display (list of exercises with kcal burned today) @file:lib/features/
+[x] Add exercise quick-add from diary view @file:lib/features/
+[x] Add l10n strings for exercise calorie display @file:l10n/
+[x] Register exercise calorie DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] Run flutter analyze, tests
+
+## Phase 3: Priority Advanced Features
+
+### Item 9: Health Platform Integrations
+
+[x] Add health dep to pubspec.yaml @file:pubspec.yaml
+[x] Create HealthSyncService abstract interface (readSteps, readWorkouts, readWeight, writeWeight) @file:lib/features/health_sync/domain/health_sync_service.dart
+[x] Create HealthKitServiceImpl (iOS: health package, steps/workouts/weight sync) @file:lib/features/health_sync/data/healthkit_service_impl.dart
+[x] Create HealthConnectServiceImpl (Android: health package, steps/workouts/weight sync) @file:lib/features/health_sync/data/health_connect_service_impl.dart
+[x] Create PlatformHealthServiceFactory (returns correct impl based on Platform.isIOS/isAndroid) @file:lib/features/health_sync/data/platform_health_service_factory.dart
+[x] Create SyncStepsUsecase, SyncWorkoutsUsecase, SyncWeightUsecase @file:lib/features/health_sync/domain/usecase/
+[x] Create HealthSyncBloc (SyncAll, SyncSteps, SyncWorkouts, SyncWeight, LoadSyncStatus) @file:lib/features/health_sync/presentation/health_sync_bloc.dart
+[x] Create HealthSyncBloc event + state classes @file:lib/features/health_sync/presentation/health_sync_bloc.dart
+[x] Build health sync settings screen (enable/disable per data type, last sync timestamp, sync now button) @file:lib/features/health_sync/presentation/health_sync_screen.dart
+[x] Request HealthKit/Health Connect permissions on first enable @file:lib/features/health_sync/
+[x] Implement bidirectional weight sync (app → health platform, health platform → app) @file:lib/features/health_sync/
+[x] Add health_sync route to NavigationOptions + main.dart @file:lib/main.dart
+[x] Add health sync entry in app settings @file:lib/
+[x] Add l10n strings for health sync @file:l10n/
+[x] Register health sync DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] Run flutter analyze, tests
+
+### Item 10: AI Food Recognition (On-Device)
+
+[x] Add tflite_flutter + image_picker deps to pubspec.yaml @file:pubspec.yaml
+[x] Create AiModelMetadataEntity + Drift table/DAO (modelVersion, assetPath, lastUpdated) @file:lib/core/data/drift/
+[x] Create AiModelMetadataDataSource + Repository @file:lib/core/data/
+[x] Create FoodClassifierService (load model, preprocess image, run inference, return top-K results) @file:lib/features/ai_food_scanner/data/food_classifier_service.dart
+[x] Create ClassifyFoodUsecase (capture → classify → return FoodCandidate list with confidence) @file:lib/features/ai_food_scanner/domain/usecase/classify_food_usecase.dart
+[x] Create AiScannerBloc (CaptureAndClassify, SelectResult, ManualSearchFallback) @file:lib/features/ai_food_scanner/presentation/ai_scanner_bloc.dart
+[x] Create AiScannerBloc event + state classes @file:lib/features/ai_food_scanner/presentation/ai_scanner_bloc.dart
+[x] Build camera capture screen with live viewfinder @file:lib/features/ai_food_scanner/presentation/ai_scanner_screen.dart
+[x] Build classification results screen (confidence %, food name, tap to add, "search manually" fallback) @file:lib/features/ai_food_scanner/presentation/classification_results_screen.dart
+[x] Add food_classifier.tflite model placeholder to assets/models/ @file:assets/models/
+[x] Add asset registration in pubspec.yaml for model file @file:pubspec.yaml
+[x] Add ai_scanner route to NavigationOptions + main.dart @file:lib/main.dart
+[x] Add AI scanner entry in AddItemBottomSheet (camera icon) @file:lib/core/presentation/widgets/add_item_bottom_sheet.dart
+[x] Create mapper for AiModelMetadataEntity @file:lib/core/data/mapper/mappers.dart
+[x] Add l10n strings for AI scanner @file:l10n/
+[x] Register AI scanner DI entries in locator.dart @file:lib/core/utils/locator.dart
+[x] DB schema bump (v8→v9) for ai_model_metadata table @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 11: Meal Planning
+
+[x] Create MealPlanEntity (id, userId, date, mealSlot, recipeId?, mealId?, note) @file:lib/core/domain/entity/meal_plan_entity.dart
+[x] Create Drift MealPlanTable (id PK, userId, date, mealSlot, recipeId FK nullable, mealId FK nullable, note) @file:lib/core/data/drift/tables/meal_plan_table.dart
+[x] Create MealPlanDao (addPlan, deletePlan, getByWeek, getByDate, getShoppingList) @file:lib/core/data/drift/dao/meal_plan_dao.dart
+[x] Create MealPlanDataSource wrapping DAO @file:lib/core/data/data_source/meal_plan_data_source.dart
+[x] Create mapper: MealPlanEntity ↔ Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create MealPlanRepository abstract contract @file:lib/core/domain/repository/meal_plan_repository.dart
+[x] Create MealPlanRepositoryImpl @file:lib/core/data/repository/meal_plan_repository.dart
+[x] Create GetMealPlanUsecase, SaveMealPlanUsecase, DeleteMealPlanUsecase, GenerateShoppingListUsecase @file:lib/core/domain/usecase/meal_plan/
+[x] Create MealPlanBloc (LoadWeek, AddMealToSlot, RemoveMealFromSlot, GenerateShoppingList) @file:lib/features/meal_planning/presentation/meal_plan_bloc.dart
+[x] Create MealPlanBloc event + state classes @file:lib/features/meal_planning/presentation/meal_plan_bloc.dart
+[x] Build weekly meal planner screen (7-day grid, B/L/D/S slots per day, drag-and-drop meals) @file:lib/features/meal_planning/presentation/meal_plan_screen.dart
+[x] Build drag-and-drop meal slot widget (accept recipes/meals from sidebar) @file:lib/features/meal_planning/presentation/widgets/meal_slot_widget.dart
+[x] Build shopping list screen (aggregated ingredients from meal plan, checkable items) @file:lib/features/meal_planning/presentation/shopping_list_screen.dart
+[x] Build nutrition preview for planned day/week (projected kcal + macros) @file:lib/features/meal_planning/presentation/widgets/nutrition_preview.dart
+[x] Add meal_plan + shopping_list routes to NavigationOptions + main.dart @file:lib/main.dart
+[x] Add meal planning entry in app navigation @file:lib/
+[x] Add l10n strings for meal planning @file:l10n/
+[x] Register meal planning DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump (v9→v10) for meal_plan table @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 12: Intermittent Fasting Tracker
+
+[x] Create FastingEntity (id, userId, startTime, endTime, targetDurationMinutes, presetType) @file:lib/core/domain/entity/fasting_entity.dart
+[x] Create Drift FastingTable (id PK, userId, startTime, endTime, targetDurationMinutes, presetType) @file:lib/core/data/drift/tables/fasting_table.dart
+[x] Create FastingDao (startFast, endFast, getActiveFast, getHistory, getStreaks) @file:lib/core/data/drift/dao/fasting_dao.dart
+[x] Create FastingDataSource wrapping DAO @file:lib/core/data/data_source/fasting_data_source.dart
+[x] Create mapper: FastingEntity ↔ Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create FastingRepository abstract contract @file:lib/core/domain/repository/fasting_repository.dart
+[x] Create FastingRepositoryImpl @file:lib/core/data/repository/fasting_repository.dart
+[x] Create StartFastingUsecase, EndFastingUsecase, GetActiveFastingUsecase, GetFastingHistoryUsecase, GetCurrentStreakUsecase @file:lib/core/domain/usecase/fasting/
+[x] Create FastingBloc (StartFast, EndFast, LoadActive, LoadHistory, TickTimer) @file:lib/features/fasting_tracker/presentation/fasting_bloc.dart
+[x] Create FastingBloc event + state classes @file:lib/features/fasting_tracker/presentation/fasting_bloc.dart
+[x] Add fasting timer tick (Timer.periodic every second for active fast countdown) @file:lib/features/fasting_tracker/presentation/fasting_bloc.dart
+[x] Build fasting timer screen (active fast: elapsed %, remaining time, end button) @file:lib/features/fasting_tracker/presentation/fasting_timer_screen.dart
+[x] Build preset selector (16:8, 18:6, 20:4, OMAD, custom start/end) @file:lib/features/fasting_tracker/presentation/widgets/preset_selector.dart
+[x] Build fasting history screen (list of past fasts with duration + type) @file:lib/features/fasting_tracker/presentation/fasting_history_screen.dart
+[x] Build current streak display (consecutive days meeting target) @file:lib/features/fasting_tracker/presentation/widgets/streak_display.dart
+[x] Add fasting start/end local notifications (reuse notification scheduler) @file:lib/features/fasting_tracker/
+[x] Add fasting_tracker routes to NavigationOptions + main.dart @file:lib/main.dart
+[x] Add fasting tracker entry in app navigation @file:lib/
+[x] Add l10n strings for fasting tracker @file:l10n/
+[x] Register fasting DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump (v7→v8) for fasting table @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+## Phase 4: Platform Expansion & Polish
+
+### Item 13: Web + Desktop Support
+
+[x] Audit existing UI for mobile-only APIs (dpi, screen size assumptions) @file:lib/
+[x] Create responsive breakpoints utility (mobile <600, tablet 600-1200, desktop >1200) @file:lib/core/presentation/utils/
+[x] Create AdaptiveScaffold widget (drawer nav on desktop, bottom nav on mobile) @file:lib/core/presentation/widgets/adaptive_scaffold.dart
+[x] Refactor main navigation to use AdaptiveScaffold @file:lib/
+[x] Add keyboard shortcuts (Ctrl+N new entry, Ctrl+S save, Escape back) @file:lib/core/presentation/utils/keyboard_shortcuts.dart
+[x] Test web build: flutter build web @file:.
+[x] Test macOS build: flutter build macos @file:.
+[x] Fix any platform-specific compilation errors @file:lib/
+[x] Add file_selector dep for desktop file picking @file:pubspec.yaml
+[x] Run flutter analyze, tests
+
+### Item 14: Food Timestamps
+
+[x] Add `time` field (TimeOfDay?) to IntakeEntity @file:lib/core/domain/entity/intake_entity.dart
+[x] Add `time` column to Drift IntakeTable (INTEGER as minutes since midnight) @file:lib/core/data/drift/tables/
+[x] Update IntakeDao to persist + query by time @file:lib/core/data/drift/dao/intake_dao.dart
+[x] Update mapper for IntakeEntity ↔ Drift (time field) @file:lib/core/data/mapper/mappers.dart
+[x] Build time picker in food entry/add meal screen @file:lib/features/
+[x] Update intake list display: sort by time, show timestamp per entry @file:lib/features/
+[x] Build meal timing pattern analysis screen (avg meal times, distribution chart) @file:lib/features/
+[x] Add l10n strings for timestamps @file:l10n/
+[x] DB schema bump for time column (already at v8, current schema v11) @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 15: Data Sync (Optional)
+
+[x] Create DataExportService (serialize all user data to JSON/CSV) @file:lib/core/data/
+[x] Create DataImportService (parse JSON/CSV, validate, upsert to DB) @file:lib/core/data/
+[x] Build export screen (select data types, format, save to file) @file:lib/features/
+[x] Build import screen (pick file, preview data, confirm import) @file:lib/features/
+[x] Add share_plus dep for sharing export files @file:pubspec.yaml
+[x] Create EncryptedBackupService (AES encrypt export, upload to iCloud/Google Drive) @file:lib/core/data/
+[x] Build cloud backup settings screen (choose provider, last backup, restore) @file:lib/features/
+[x] Add l10n strings for data sync @file:l10n/
+[x] Run flutter analyze, tests
+
+### Item 16: Photo Progress
+
+[x] Create PhotoProgressEntity (id, userId, filePath, date, tags, note) @file:lib/core/domain/entity/photo_progress_entity.dart
+[x] Create Drift PhotoProgressTable (id PK, userId, filePath, date, tags, note) @file:lib/core/data/drift/tables/photo_progress_table.dart
+[x] Create PhotoProgressDao (addPhoto, deletePhoto, getByDateRange, getLatest) @file:lib/core/data/drift/dao/photo_progress_dao.dart
+[x] Create PhotoProgressDataSource + Repository @file:lib/core/data/
+[x] Create mapper: PhotoProgressEntity ↔ Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create AddPhotoUsecase, GetPhotosUsecase, DeletePhotoUsecase @file:lib/core/domain/usecase/photo_progress/
+[x] Create PhotoProgressBloc (LoadPhotos, AddPhoto, DeletePhoto, ComparePhotos) @file:lib/features/photo_progress/presentation/photo_progress_bloc.dart
+[x] Build photo capture screen (take/select photo, add date + tags + note) @file:lib/features/photo_progress/presentation/photo_capture_screen.dart
+[x] Build before/after comparison view (side-by-side slider) @file:lib/features/photo_progress/presentation/photo_comparison_screen.dart
+[x] Build progress photo timeline (scrollable by date, thumbnails) @file:lib/features/photo_progress/presentation/photo_timeline_screen.dart
+[x] Store photos in app documents directory (not in DB) @file:lib/features/photo_progress/data/
+[x] Add photo_progress routes to NavigationOptions + main.dart @file:lib/main.dart
+[x] Add photo progress entry in app navigation @file:lib/
+[x] Add l10n strings for photo progress @file:l10n/
+[x] Register photo progress DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump (v10→v11) for photo_progress table @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests

@@ -3892,6 +3892,1356 @@ class S {
   String get seeAllLabel {
     return Intl.message('See All', name: 'seeAllLabel', desc: '', args: []);
   }
+
+  /// `Notifications`
+  String get notificationSettingsLabel {
+    return Intl.message(
+      'Notifications',
+      name: 'notificationSettingsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Meal Reminders`
+  String get mealRemindersLabel {
+    return Intl.message(
+      'Meal Reminders',
+      name: 'mealRemindersLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable Daily Summary`
+  String get enableDailySummaryLabel {
+    return Intl.message(
+      'Enable Daily Summary',
+      name: 'enableDailySummaryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Summary Time`
+  String get summaryTimeLabel {
+    return Intl.message(
+      'Summary Time',
+      name: 'summaryTimeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not set`
+  String get notSetLabel {
+    return Intl.message('Not set', name: 'notSetLabel', desc: '', args: []);
+  }
+
+  /// `Water Tracker`
+  String get waterTrackerTitle {
+    return Intl.message(
+      'Water Tracker',
+      name: 'waterTrackerTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Water`
+  String get addWater {
+    return Intl.message('Add Water', name: 'addWater', desc: '', args: []);
+  }
+
+  /// `ml`
+  String get ml {
+    return Intl.message('ml', name: 'ml', desc: '', args: []);
+  }
+
+  /// `Custom`
+  String get custom {
+    return Intl.message('Custom', name: 'custom', desc: '', args: []);
+  }
+
+  /// `No water entries yet`
+  String get noWaterEntries {
+    return Intl.message(
+      'No water entries yet',
+      name: 'noWaterEntries',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today`
+  String get todayEntries {
+    return Intl.message('Today', name: 'todayEntries', desc: '', args: []);
+  }
+
+  /// `Daily Water Goal`
+  String get dailyWaterGoal {
+    return Intl.message(
+      'Daily Water Goal',
+      name: 'dailyWaterGoal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{current} / {goal} ml`
+  String waterProgress(Object current, Object goal) {
+    return Intl.message(
+      '$current / $goal ml',
+      name: 'waterProgress',
+      desc: '',
+      args: [current, goal],
+    );
+  }
+
+  /// `Progress`
+  String get progressChartsLabel {
+    return Intl.message(
+      'Progress',
+      name: 'progressChartsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly Calories`
+  String get weeklyCalorieChart {
+    return Intl.message(
+      'Weekly Calories',
+      name: 'weeklyCalorieChart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly Calories`
+  String get monthlyCalorieChart {
+    return Intl.message(
+      'Monthly Calories',
+      name: 'monthlyCalorieChart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Macro Trend`
+  String get macroTrendChart {
+    return Intl.message(
+      'Macro Trend',
+      name: 'macroTrendChart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Avg`
+  String get averageLabel {
+    return Intl.message('Avg', name: 'averageLabel', desc: '', args: []);
+  }
+
+  /// `Week`
+  String get weeklyLabel {
+    return Intl.message('Week', name: 'weeklyLabel', desc: '', args: []);
+  }
+
+  /// `Month`
+  String get monthlyLabel {
+    return Intl.message('Month', name: 'monthlyLabel', desc: '', args: []);
+  }
+
+  /// `Calories`
+  String get caloriesTab {
+    return Intl.message('Calories', name: 'caloriesTab', desc: '', args: []);
+  }
+
+  /// `Macros`
+  String get macrosTab {
+    return Intl.message('Macros', name: 'macrosTab', desc: '', args: []);
+  }
+
+  /// `Weight`
+  String get weightTab {
+    return Intl.message('Weight', name: 'weightTab', desc: '', args: []);
+  }
+
+  /// `Not enough weight data to show trend`
+  String get insufficientWeightData {
+    return Intl.message(
+      'Not enough weight data to show trend',
+      name: 'insufficientWeightData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moving Average`
+  String get movingAverage {
+    return Intl.message(
+      'Moving Average',
+      name: 'movingAverage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Burned`
+  String get burnedCaloriesLabel {
+    return Intl.message(
+      'Burned',
+      name: 'burnedCaloriesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Net Calories`
+  String get netCaloriesLabel {
+    return Intl.message(
+      'Net Calories',
+      name: 'netCaloriesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exercise Impact`
+  String get exerciseCalorieImpact {
+    return Intl.message(
+      'Exercise Impact',
+      name: 'exerciseCalorieImpact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Intermittent Fasting`
+  String get fastingTrackerLabel {
+    return Intl.message(
+      'Intermittent Fasting',
+      name: 'fastingTrackerLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Fast`
+  String get startFastLabel {
+    return Intl.message(
+      'Start Fast',
+      name: 'startFastLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End Fast`
+  String get endFastLabel {
+    return Intl.message('End Fast', name: 'endFastLabel', desc: '', args: []);
+  }
+
+  /// `Active Fast`
+  String get activeFastLabel {
+    return Intl.message(
+      'Active Fast',
+      name: 'activeFastLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No active fast`
+  String get inactiveFastLabel {
+    return Intl.message(
+      'No active fast',
+      name: 'inactiveFastLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `16:8`
+  String get presetSixteenEight {
+    return Intl.message('16:8', name: 'presetSixteenEight', desc: '', args: []);
+  }
+
+  /// `18:6`
+  String get presetEighteenSix {
+    return Intl.message('18:6', name: 'presetEighteenSix', desc: '', args: []);
+  }
+
+  /// `20:4`
+  String get presetTwentyFour {
+    return Intl.message('20:4', name: 'presetTwentyFour', desc: '', args: []);
+  }
+
+  /// `OMAD`
+  String get presetOMAD {
+    return Intl.message('OMAD', name: 'presetOMAD', desc: '', args: []);
+  }
+
+  /// `Custom`
+  String get presetCustom {
+    return Intl.message('Custom', name: 'presetCustom', desc: '', args: []);
+  }
+
+  /// `Elapsed`
+  String get elapsedTimeLabel {
+    return Intl.message(
+      'Elapsed',
+      name: 'elapsedTimeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remaining`
+  String get remainingTimeLabel {
+    return Intl.message(
+      'Remaining',
+      name: 'remainingTimeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Streak`
+  String get streakLabel {
+    return Intl.message('Streak', name: 'streakLabel', desc: '', args: []);
+  }
+
+  /// `Fasting History`
+  String get fastingHistoryLabel {
+    return Intl.message(
+      'Fasting History',
+      name: 'fastingHistoryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hours`
+  String get hoursLabel {
+    return Intl.message('Hours', name: 'hoursLabel', desc: '', args: []);
+  }
+
+  /// `Minutes`
+  String get minutesLabel {
+    return Intl.message('Minutes', name: 'minutesLabel', desc: '', args: []);
+  }
+
+  /// `Share Chart`
+  String get exportChartLabel {
+    return Intl.message(
+      'Share Chart',
+      name: 'exportChartLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chart shared`
+  String get chartExportedLabel {
+    return Intl.message(
+      'Chart shared',
+      name: 'chartExportedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to share chart`
+  String get chartExportErrorLabel {
+    return Intl.message(
+      'Failed to share chart',
+      name: 'chartExportErrorLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remaining Budget`
+  String get remainingBudgetLabel {
+    return Intl.message(
+      'Remaining Budget',
+      name: 'remainingBudgetLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exercises Today`
+  String get exerciseListLabel {
+    return Intl.message(
+      'Exercises Today',
+      name: 'exerciseListLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Exercise`
+  String get addExerciseLabel {
+    return Intl.message(
+      'Add Exercise',
+      name: 'addExerciseLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fasting Started`
+  String get fastingStartedNotificationTitle {
+    return Intl.message(
+      'Fasting Started',
+      name: 'fastingStartedNotificationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your fasting period has begun. Stay strong!`
+  String get fastingStartedNotificationBody {
+    return Intl.message(
+      'Your fasting period has begun. Stay strong!',
+      name: 'fastingStartedNotificationBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fasting Complete`
+  String get fastingEndedNotificationTitle {
+    return Intl.message(
+      'Fasting Complete',
+      name: 'fastingEndedNotificationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Congratulations! You have reached your fasting goal.`
+  String get fastingEndedNotificationBody {
+    return Intl.message(
+      'Congratulations! You have reached your fasting goal.',
+      name: 'fastingEndedNotificationBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Health Sync`
+  String get healthSyncTitle {
+    return Intl.message(
+      'Health Sync',
+      name: 'healthSyncTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission required to access health data`
+  String get healthSyncPermissionRequired {
+    return Intl.message(
+      'Permission required to access health data',
+      name: 'healthSyncPermissionRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grant Permission`
+  String get healthSyncGrantPermission {
+    return Intl.message(
+      'Grant Permission',
+      name: 'healthSyncGrantPermission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data Types`
+  String get healthSyncDataTypes {
+    return Intl.message(
+      'Data Types',
+      name: 'healthSyncDataTypes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Steps`
+  String get healthSyncSteps {
+    return Intl.message('Steps', name: 'healthSyncSteps', desc: '', args: []);
+  }
+
+  /// `Workouts`
+  String get healthSyncWorkouts {
+    return Intl.message(
+      'Workouts',
+      name: 'healthSyncWorkouts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weight`
+  String get healthSyncWeight {
+    return Intl.message('Weight', name: 'healthSyncWeight', desc: '', args: []);
+  }
+
+  /// `Last synced: {timestamp}`
+  String healthSyncLastSync(Object timestamp) {
+    return Intl.message(
+      'Last synced: $timestamp',
+      name: 'healthSyncLastSync',
+      desc: '',
+      args: [timestamp],
+    );
+  }
+
+  /// `Never synced`
+  String get healthSyncNeverSynced {
+    return Intl.message(
+      'Never synced',
+      name: 'healthSyncNeverSynced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sync Now`
+  String get healthSyncNow {
+    return Intl.message('Sync Now', name: 'healthSyncNow', desc: '', args: []);
+  }
+
+  /// `{steps} steps synced`
+  String healthSyncStepsResult(Object steps) {
+    return Intl.message(
+      '$steps steps synced',
+      name: 'healthSyncStepsResult',
+      desc: '',
+      args: [steps],
+    );
+  }
+
+  /// `AI Food Scanner`
+  String get aiScannerLabel {
+    return Intl.message(
+      'AI Food Scanner',
+      name: 'aiScannerLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Identify food with AI`
+  String get aiScannerExample {
+    return Intl.message(
+      'Identify food with AI',
+      name: 'aiScannerExample',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI Food Scanner`
+  String get aiScannerTitle {
+    return Intl.message(
+      'AI Food Scanner',
+      name: 'aiScannerTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take a photo or pick from gallery to identify food`
+  String get aiScannerSubtitle {
+    return Intl.message(
+      'Take a photo or pick from gallery to identify food',
+      name: 'aiScannerSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take Photo`
+  String get aiScannerCaptureButton {
+    return Intl.message(
+      'Take Photo',
+      name: 'aiScannerCaptureButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick from Gallery`
+  String get aiScannerGalleryButton {
+    return Intl.message(
+      'Pick from Gallery',
+      name: 'aiScannerGalleryButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search manually`
+  String get aiScannerSearchManually {
+    return Intl.message(
+      'Search manually',
+      name: 'aiScannerSearchManually',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classification Results`
+  String get aiScannerResultsTitle {
+    return Intl.message(
+      'Classification Results',
+      name: 'aiScannerResultsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{pct}% confidence`
+  String aiScannerConfidence(Object pct) {
+    return Intl.message(
+      '$pct% confidence',
+      name: 'aiScannerConfidence',
+      desc: '',
+      args: [pct],
+    );
+  }
+
+  /// `Meal Planning`
+  String get mealPlanLabel {
+    return Intl.message(
+      'Meal Planning',
+      name: 'mealPlanLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Plan meals for the week`
+  String get mealPlanSubtitle {
+    return Intl.message(
+      'Plan meals for the week',
+      name: 'mealPlanSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shopping List`
+  String get shoppingListLabel {
+    return Intl.message(
+      'Shopping List',
+      name: 'shoppingListLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No items in shopping list`
+  String get emptyShoppingListLabel {
+    return Intl.message(
+      'No items in shopping list',
+      name: 'emptyShoppingListLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Empty`
+  String get emptySlotLabel {
+    return Intl.message('Empty', name: 'emptySlotLabel', desc: '', args: []);
+  }
+
+  /// `Meal added to plan`
+  String get mealAddedToPlanLabel {
+    return Intl.message(
+      'Meal added to plan',
+      name: 'mealAddedToPlanLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Projected Nutrition`
+  String get nutritionPreviewLabel {
+    return Intl.message(
+      'Projected Nutrition',
+      name: 'nutritionPreviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mon`
+  String get mondayLabel {
+    return Intl.message('Mon', name: 'mondayLabel', desc: '', args: []);
+  }
+
+  /// `Tue`
+  String get tuesdayLabel {
+    return Intl.message('Tue', name: 'tuesdayLabel', desc: '', args: []);
+  }
+
+  /// `Wed`
+  String get wednesdayLabel {
+    return Intl.message('Wed', name: 'wednesdayLabel', desc: '', args: []);
+  }
+
+  /// `Thu`
+  String get thursdayLabel {
+    return Intl.message('Thu', name: 'thursdayLabel', desc: '', args: []);
+  }
+
+  /// `Fri`
+  String get fridayLabel {
+    return Intl.message('Fri', name: 'fridayLabel', desc: '', args: []);
+  }
+
+  /// `Sat`
+  String get saturdayLabel {
+    return Intl.message('Sat', name: 'saturdayLabel', desc: '', args: []);
+  }
+
+  /// `Sun`
+  String get sundayLabel {
+    return Intl.message('Sun', name: 'sundayLabel', desc: '', args: []);
+  }
+
+  /// `New entry`
+  String get keyboardShortcutNewEntry {
+    return Intl.message(
+      'New entry',
+      name: 'keyboardShortcutNewEntry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get keyboardShortcutSave {
+    return Intl.message(
+      'Save',
+      name: 'keyboardShortcutSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go back`
+  String get keyboardShortcutBack {
+    return Intl.message(
+      'Go back',
+      name: 'keyboardShortcutBack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Photo Progress`
+  String get photoProgressTitle {
+    return Intl.message(
+      'Photo Progress',
+      name: 'photoProgressTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Photo Progress`
+  String get photoProgressLabel {
+    return Intl.message(
+      'Photo Progress',
+      name: 'photoProgressLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Track progress with photos`
+  String get photoProgressSubtitle {
+    return Intl.message(
+      'Track progress with photos',
+      name: 'photoProgressSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take Photo`
+  String get photoCaptureButton {
+    return Intl.message(
+      'Take Photo',
+      name: 'photoCaptureButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick from Gallery`
+  String get photoGalleryButton {
+    return Intl.message(
+      'Pick from Gallery',
+      name: 'photoGalleryButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tags`
+  String get photoTagsLabel {
+    return Intl.message('Tags', name: 'photoTagsLabel', desc: '', args: []);
+  }
+
+  /// `e.g. front, side`
+  String get photoTagsHint {
+    return Intl.message(
+      'e.g. front, side',
+      name: 'photoTagsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Before & After`
+  String get photoComparisonTitle {
+    return Intl.message(
+      'Before & After',
+      name: 'photoComparisonTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Before`
+  String get beforeLabel {
+    return Intl.message('Before', name: 'beforeLabel', desc: '', args: []);
+  }
+
+  /// `After`
+  String get afterLabel {
+    return Intl.message('After', name: 'afterLabel', desc: '', args: []);
+  }
+
+  /// `No progress photos yet. Tap + to add one.`
+  String get noPhotosLabel {
+    return Intl.message(
+      'No progress photos yet. Tap + to add one.',
+      name: 'noPhotosLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View Photo`
+  String get viewPhotoLabel {
+    return Intl.message(
+      'View Photo',
+      name: 'viewPhotoLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Photo`
+  String get deletePhotoLabel {
+    return Intl.message(
+      'Delete Photo',
+      name: 'deletePhotoLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this photo?`
+  String get deletePhotoDialogContent {
+    return Intl.message(
+      'Are you sure you want to delete this photo?',
+      name: 'deletePhotoDialogContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export Data`
+  String get dataSyncExportTitle {
+    return Intl.message(
+      'Export Data',
+      name: 'dataSyncExportTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import Data`
+  String get dataSyncImportTitle {
+    return Intl.message(
+      'Import Data',
+      name: 'dataSyncImportTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select data types to export`
+  String get dataSyncSelectDataTypes {
+    return Intl.message(
+      'Select data types to export',
+      name: 'dataSyncSelectDataTypes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export format`
+  String get dataSyncSelectFormat {
+    return Intl.message(
+      'Export format',
+      name: 'dataSyncSelectFormat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `JSON`
+  String get dataSyncFormatJson {
+    return Intl.message('JSON', name: 'dataSyncFormatJson', desc: '', args: []);
+  }
+
+  /// `ZIP`
+  String get dataSyncFormatZip {
+    return Intl.message('ZIP', name: 'dataSyncFormatZip', desc: '', args: []);
+  }
+
+  /// `Data exported successfully`
+  String get dataSyncExportSuccess {
+    return Intl.message(
+      'Data exported successfully',
+      name: 'dataSyncExportSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data imported successfully`
+  String get dataSyncImportSuccess {
+    return Intl.message(
+      'Data imported successfully',
+      name: 'dataSyncImportSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Encrypted Backup`
+  String get dataSyncEncryptBackup {
+    return Intl.message(
+      'Encrypted Backup',
+      name: 'dataSyncEncryptBackup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create an AES-256 encrypted backup of your data. The backup is stored locally on your device.`
+  String get dataSyncEncryptBackupDescription {
+    return Intl.message(
+      'Create an AES-256 encrypted backup of your data. The backup is stored locally on your device.',
+      name: 'dataSyncEncryptBackupDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Encrypted Backup`
+  String get dataSyncCreateEncryptedBackup {
+    return Intl.message(
+      'Create Encrypted Backup',
+      name: 'dataSyncCreateEncryptedBackup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore from Encrypted Backup`
+  String get dataSyncRestoreEncrypted {
+    return Intl.message(
+      'Restore from Encrypted Backup',
+      name: 'dataSyncRestoreEncrypted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get dataSyncPassword {
+    return Intl.message(
+      'Password',
+      name: 'dataSyncPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Password`
+  String get dataSyncConfirmPassword {
+    return Intl.message(
+      'Confirm Password',
+      name: 'dataSyncConfirmPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Passwords do not match`
+  String get dataSyncPasswordMismatch {
+    return Intl.message(
+      'Passwords do not match',
+      name: 'dataSyncPasswordMismatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings`
+  String get dataSyncTypeConfig {
+    return Intl.message(
+      'Settings',
+      name: 'dataSyncTypeConfig',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User Profile`
+  String get dataSyncTypeUsers {
+    return Intl.message(
+      'User Profile',
+      name: 'dataSyncTypeUsers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Food Intakes`
+  String get dataSyncTypeIntakes {
+    return Intl.message(
+      'Food Intakes',
+      name: 'dataSyncTypeIntakes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Meals`
+  String get dataSyncTypeMeals {
+    return Intl.message('Meals', name: 'dataSyncTypeMeals', desc: '', args: []);
+  }
+
+  /// `Activities`
+  String get dataSyncTypeActivities {
+    return Intl.message(
+      'Activities',
+      name: 'dataSyncTypeActivities',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tracked Days`
+  String get dataSyncTypeTrackedDays {
+    return Intl.message(
+      'Tracked Days',
+      name: 'dataSyncTypeTrackedDays',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipes`
+  String get dataSyncTypeRecipes {
+    return Intl.message(
+      'Recipes',
+      name: 'dataSyncTypeRecipes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weights`
+  String get dataSyncTypeWeights {
+    return Intl.message(
+      'Weights',
+      name: 'dataSyncTypeWeights',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification Settings`
+  String get dataSyncTypeNotificationSettings {
+    return Intl.message(
+      'Notification Settings',
+      name: 'dataSyncTypeNotificationSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Water Entries`
+  String get dataSyncTypeWaterEntries {
+    return Intl.message(
+      'Water Entries',
+      name: 'dataSyncTypeWaterEntries',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fasting Sessions`
+  String get dataSyncTypeFasts {
+    return Intl.message(
+      'Fasting Sessions',
+      name: 'dataSyncTypeFasts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Meal Plans`
+  String get dataSyncTypeMealPlans {
+    return Intl.message(
+      'Meal Plans',
+      name: 'dataSyncTypeMealPlans',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import data from a previously exported JSON or ZIP file. This will merge with existing data.`
+  String get dataSyncImportDescription {
+    return Intl.message(
+      'Import data from a previously exported JSON or ZIP file. This will merge with existing data.',
+      name: 'dataSyncImportDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import from JSON`
+  String get dataSyncImportJson {
+    return Intl.message(
+      'Import from JSON',
+      name: 'dataSyncImportJson',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import from ZIP`
+  String get dataSyncImportZip {
+    return Intl.message(
+      'Import from ZIP',
+      name: 'dataSyncImportZip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Encrypted Restore`
+  String get dataSyncEncryptedRestore {
+    return Intl.message(
+      'Encrypted Restore',
+      name: 'dataSyncEncryptedRestore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import Preview`
+  String get dataSyncPreviewTitle {
+    return Intl.message(
+      'Import Preview',
+      name: 'dataSyncPreviewTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `records`
+  String get dataSyncRecords {
+    return Intl.message('records', name: 'dataSyncRecords', desc: '', args: []);
+  }
+
+  /// `Backup file path`
+  String get dataSyncBackupFilePath {
+    return Intl.message(
+      'Backup file path',
+      name: 'dataSyncBackupFilePath',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cloud Backup`
+  String get dataSyncCloudBackupTitle {
+    return Intl.message(
+      'Cloud Backup',
+      name: 'dataSyncCloudBackupTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Backup created successfully`
+  String get dataSyncBackupCreated {
+    return Intl.message(
+      'Backup created successfully',
+      name: 'dataSyncBackupCreated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last Backup`
+  String get dataSyncLastBackup {
+    return Intl.message(
+      'Last Backup',
+      name: 'dataSyncLastBackup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No backup found`
+  String get dataSyncNoBackup {
+    return Intl.message(
+      'No backup found',
+      name: 'dataSyncNoBackup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cloud Provider`
+  String get dataSyncCloudProvider {
+    return Intl.message(
+      'Cloud Provider',
+      name: 'dataSyncCloudProvider',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coming soon`
+  String get dataSyncComingSoon {
+    return Intl.message(
+      'Coming soon',
+      name: 'dataSyncComingSoon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Local Encryption`
+  String get dataSyncLocalEncryption {
+    return Intl.message(
+      'Local Encryption',
+      name: 'dataSyncLocalEncryption',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Encrypt and store your backup locally. You can transfer the encrypted file to cloud storage manually.`
+  String get dataSyncLocalEncryptionDescription {
+    return Intl.message(
+      'Encrypt and store your backup locally. You can transfer the encrypted file to cloud storage manually.',
+      name: 'dataSyncLocalEncryptionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore from Backup`
+  String get dataSyncRestoreFromBackup {
+    return Intl.message(
+      'Restore from Backup',
+      name: 'dataSyncRestoreFromBackup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Meal Time`
+  String get mealTimeLabel {
+    return Intl.message('Meal Time', name: 'mealTimeLabel', desc: '', args: []);
+  }
+
+  /// `Now`
+  String get mealTimeNowLabel {
+    return Intl.message('Now', name: 'mealTimeNowLabel', desc: '', args: []);
+  }
+
+  /// `Meal Timing`
+  String get mealTimingLabel {
+    return Intl.message(
+      'Meal Timing',
+      name: 'mealTimingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Average Meal Times`
+  String get mealTimingAvgTimesLabel {
+    return Intl.message(
+      'Average Meal Times',
+      name: 'mealTimingAvgTimesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Meal Time Distribution`
+  String get mealTimingDistributionLabel {
+    return Intl.message(
+      'Meal Time Distribution',
+      name: 'mealTimingDistributionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No meal time data yet. Set a time when logging meals to see patterns.`
+  String get mealTimingNoDataLabel {
+    return Intl.message(
+      'No meal time data yet. Set a time when logging meals to see patterns.',
+      name: 'mealTimingNoDataLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recent Entries`
+  String get mealTimingEntriesLabel {
+    return Intl.message(
+      'Recent Entries',
+      name: 'mealTimingEntriesLabel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

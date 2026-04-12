@@ -10,7 +10,7 @@ import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MealDetailBottomSheet extends StatelessWidget {
+class MealDetailBottomSheet extends StatefulWidget {
   final MealEntity product;
   final DateTime day;
   final IntakeTypeEntity intakeTypeEntity;
@@ -30,6 +30,13 @@ class MealDetailBottomSheet extends StatelessWidget {
       required this.onQuantityOrUnitChanged,
       required this.mealDetailBloc,
       required this.selectedUnit});
+
+  @override
+  State<MealDetailBottomSheet> createState() => _MealDetailBottomSheetState();
+}
+
+class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
+  TimeOfDay? _selectedTime;
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +69,11 @@ class MealDetailBottomSheet extends StatelessWidget {
                           Expanded(
                             child: TextFormField(
                               enabled: !productMissingRequiredInfo,
-                              controller: quantityTextController
+                              controller: widget.quantityTextController
                                 ..addListener(() {
-                                  onQuantityOrUnitChanged(
-                                      quantityTextController.text,
-                                      selectedUnit);
+                                  widget.onQuantityOrUnitChanged(
+                                      widget.quantityTextController.text,
+                                      widget.selectedUnit);
                                 }),
                               keyboardType: TextInputType.numberWithOptions(
                                   decimal: true),
@@ -84,29 +91,60 @@ class MealDetailBottomSheet extends StatelessWidget {
                           Expanded(
                               child: DropdownButtonFormField(
                                   isExpanded: true,
-                                  value: selectedUnit,
+                                  value: widget.selectedUnit,
                                   decoration: InputDecoration(
                                       border: const OutlineInputBorder(),
                                       labelText: S.of(context).unitLabel),
                                   items: <DropdownMenuItem<String>>[
-                                    if (product.hasServingValues)
+                                    if (widget.product.hasServingValues)
                                       _getServingDropdownItem(context),
-                                    if (product.isSolid ||
-                                        !product.isLiquid && !product.isSolid)
+                                    if (widget.product.isSolid ||
+                                        !widget.product.isLiquid &&
+                                            !widget.product.isSolid)
                                       ..._getSolidUnitDropdownItems(context),
-                                    if (product.isLiquid ||
-                                        !product.isLiquid && !product.isSolid)
+                                    if (widget.product.isLiquid ||
+                                        !widget.product.isLiquid &&
+                                            !widget.product.isSolid)
                                       ..._getLiquidUnitDropdownItems(context),
                                     ..._getOtherDropdownItems(context)
                                   ],
                                   onChanged: (value) {
-                                    onQuantityOrUnitChanged(
-                                        quantityTextController.text, value);
+                                    widget.onQuantityOrUnitChanged(
+                                        widget.quantityTextController.text,
+                                        value);
                                   }))
                         ],
                       ),
+                      const SizedBox(height: 12.0),
+                      InkWell(
+                        onTap: () => _pickTime(context),
+                        borderRadius: BorderRadius.circular(8),
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            labelText: S.of(context).mealTimeLabel,
+                            suffixIcon: _selectedTime != null
+                                ? IconButton(
+                                    icon: const Icon(Icons.clear, size: 18),
+                                    onPressed: () {
+                                      setState(() {
+                                        _selectedTime = null;
+                                      });
+                                    },
+                                  )
+                                : const Icon(Icons.access_time),
+                          ),
+                          child: Text(
+                            _selectedTime != null
+                                ? _selectedTime!.format(context)
+                                : S.of(context).mealTimeNowLabel,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12.0),
                       SizedBox(
-                        width: double.infinity, // Make button full width
+                        width: double.infinity,
                         child: ElevatedButton.icon(
                             onPressed: !productMissingRequiredInfo
                                 ? () {
@@ -143,8 +181,20 @@ class MealDetailBottomSheet extends StatelessWidget {
         });
   }
 
+  Future<void> _pickTime(BuildContext context) async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime ?? TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedTime = picked;
+      });
+    }
+  }
+
   bool _hasRequiredProductInfoMissing() {
-    final productNutriments = product.nutriments;
+    final productNutriments = widget.product.nutriments;
     if (productNutriments.energyKcal100 == null ||
         productNutriments.carbohydrates100 == null ||
         productNutriments.fat100 == null ||
@@ -156,13 +206,14 @@ class MealDetailBottomSheet extends StatelessWidget {
   }
 
   void onAddButtonPressed(BuildContext context) {
-    mealDetailBloc.addIntake(
+    widget.mealDetailBloc.addIntake(
         context,
-        mealDetailBloc.state.selectedUnit,
-        mealDetailBloc.state.totalQuantityConverted,
-        intakeTypeEntity,
-        product,
-        day);
+        widget.mealDetailBloc.state.selectedUnit,
+        widget.mealDetailBloc.state.totalQuantityConverted,
+        widget.intakeTypeEntity,
+        widget.product,
+        widget.day,
+        time: _selectedTime);
 
     // Refresh Home Page
     locator<HomeBloc>().add(const LoadItemsEvent());
@@ -182,8 +233,8 @@ class MealDetailBottomSheet extends StatelessWidget {
     return DropdownMenuItem(
       value: UnitDropdownItem.serving.toString(),
       child: Text(
-          product.servingSize ??
-              '${S.of(context).servingLabel} (${product.servingQuantity} ${product.servingUnit})',
+          widget.product.servingSize ??
+              '${S.of(context).servingLabel} (${widget.product.servingQuantity} ${widget.product.servingUnit})',
           overflow: TextOverflow.ellipsis,
           maxLines: 1),
     );

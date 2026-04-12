@@ -17,6 +17,8 @@ class ConfigEntries extends Table {
   RealColumn get userCarbGoalPct => real().nullable()();
   RealColumn get userProteinGoalPct => real().nullable()();
   RealColumn get userFatGoalPct => real().nullable()();
+  IntColumn get dailyWaterGoalMl =>
+      integer().nullable().withDefault(const Constant(2000))();
 
   @override
   Set<Column> get primaryKey => {id};

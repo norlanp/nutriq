@@ -12,6 +12,7 @@ class IntakeCard extends StatelessWidget {
   final Function(BuildContext, IntakeEntity, bool)? onItemTapped;
   final bool firstListElement;
   final bool usesImperialUnits;
+  final bool showTimestamp;
 
   const IntakeCard(
       {required super.key,
@@ -19,7 +20,8 @@ class IntakeCard extends StatelessWidget {
       this.onItemLongPressed,
       this.onItemTapped,
       required this.firstListElement,
-      required this.usesImperialUnits});
+      required this.usesImperialUnits,
+      this.showTimestamp = false});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,8 @@ class IntakeCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Theme.of(context)
                           .colorScheme
-                          .secondaryContainer.withValues(alpha: 0.5),
+                          .secondaryContainer
+                          .withValues(alpha: 0.5),
                     ),
                   ),
                   Container(
@@ -74,7 +77,8 @@ class IntakeCard extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: Theme.of(context)
                             .colorScheme
-                            .tertiaryContainer.withValues(alpha: 0.8),
+                            .tertiaryContainer
+                            .withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(20)),
                     child: Text(
                       '${intake.totalKcal.toInt()} kcal',
@@ -84,6 +88,32 @@ class IntakeCard extends StatelessWidget {
                               .onTertiaryContainer),
                     ),
                   ),
+                  if (showTimestamp && intake.time != null)
+                    Positioned(
+                      bottom: 4,
+                      right: 4,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          intake.time!.format(context),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelSmall
+                              ?.copyWith(
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
+                              ),
+                        ),
+                      ),
+                    ),
                   Container(
                       padding: const EdgeInsets.all(8.0),
                       alignment: Alignment.bottomLeft,
@@ -114,8 +144,8 @@ class IntakeCard extends StatelessWidget {
                                 ?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .onSecondaryContainer.withValues(
-                                            alpha: 0.7)),
+                                        .onSecondaryContainer
+                                        .withValues(alpha: 0.7)),
                           ),
                         ],
                       ))

@@ -7,6 +7,8 @@ import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
 import 'package:nutriq/core/domain/usecase/add_tracked_day_usecase.dart';
 import 'package:nutriq/core/domain/usecase/delete_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/delete_user_activity_usecase.dart';
+import 'package:nutriq/core/domain/usecase/exercise/get_daily_burned_calories_usecase.dart';
+import 'package:nutriq/core/domain/usecase/exercise/net_calories_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_tracked_day_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_user_activity_usecase.dart';
@@ -25,6 +27,8 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
   final DeleteUserActivityUsecase _deleteUserActivityUsecase;
   final GetTrackedDayUsecase _getTrackedDayUsecase;
   final AddTrackedDayUsecase _addTrackedDayUsecase;
+  final GetDailyBurnedCaloriesUsecase _getDailyBurnedCaloriesUsecase;
+  final NetCaloriesUsecase _netCaloriesUsecase;
 
   DateTime? _currentDay;
 
@@ -34,7 +38,9 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
       this._deleteIntakeUsecase,
       this._deleteUserActivityUsecase,
       this._getTrackedDayUsecase,
-      this._addTrackedDayUsecase)
+      this._addTrackedDayUsecase,
+      this._getDailyBurnedCaloriesUsecase,
+      this._netCaloriesUsecase)
       : super(CalendarDayInitial()) {
     on<LoadCalendarDayEvent>((event, emit) async {
       emit(CalendarDayLoading());
@@ -64,13 +70,21 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
 
     final trackedDayEntity = await _getTrackedDayUsecase.getTrackedDay(day);
 
+    final burnedCalories =
+        await _getDailyBurnedCaloriesUsecase.getDailyBurnedCalories(day);
+    final consumedCalories = trackedDayEntity?.caloriesTracked ?? 0;
+    final netCalories = await _netCaloriesUsecase.getNetCalories(
+        consumedKcal: consumedCalories, date: day);
+
     emit(CalendarDayLoaded(
         trackedDayEntity,
         userActivities,
         breakfastIntakeList,
         lunchIntakeList,
         dinnerIntakeList,
-        snackIntakeList));
+        snackIntakeList,
+        burnedCalories,
+        netCalories));
   }
 
   Future<void> deleteIntakeItem(

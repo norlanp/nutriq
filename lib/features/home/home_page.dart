@@ -14,6 +14,7 @@ import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/features/home/presentation/widgets/dashboard_widget.dart';
 import 'package:nutriq/features/home/presentation/widgets/intake_vertical_list.dart';
+import 'package:nutriq/features/water_tracking/presentation/widgets/water_tracker_summary_widget.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class HomePage extends StatefulWidget {
@@ -130,6 +131,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           totalFatsGoal: totalFatsGoal,
           totalProteinsGoal: totalProteinsGoal,
         ),
+        const WaterTrackerSummaryWidget(),
         ActivityVerticalList(
           day: DateTime.now(),
           title: S.of(context).activityLabel,

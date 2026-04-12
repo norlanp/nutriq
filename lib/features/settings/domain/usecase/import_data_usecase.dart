@@ -1,12 +1,15 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/repository/intake_repository.dart';
 import 'package:nutriq/core/data/repository/tracked_day_repository.dart';
 import 'package:nutriq/core/data/repository/user_activity_repository.dart';
+import 'package:nutriq/core/utils/file_helper_stub.dart'
+    if (dart.library.html) 'package:nutriq/core/utils/file_helper_web.dart'
+    as file_helper;
 
 class ImportDataUsecase {
   final UserActivityRepository _userActivityRepository;
@@ -20,14 +23,30 @@ class ImportDataUsecase {
       String userIntakeJsonFileName, String trackedDayJsonFileName) async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.any,
+      withData: kIsWeb,
     );
 
-    if (result == null || result.files.single.path == null) {
+    if (result == null) {
       throw Exception('No file selected');
     }
 
-    final file = File(result.files.single.path!);
-    final zipBytes = await file.readAsBytes();
+    final file = result.files.single;
+
+    List<int> zipBytes;
+    if (kIsWeb) {
+      // On web, use bytes from the picker directly
+      if (file.bytes == null) {
+        throw Exception('No file data available');
+      }
+      zipBytes = file.bytes!;
+    } else {
+      if (file.path == null) {
+        throw Exception('No file path available');
+      }
+      // On native, read from file path
+      zipBytes = await file_helper.readFileBytes(file.path!);
+    }
+
     final archive = ZipDecoder().decodeBytes(zipBytes);
 
     final userActivityFile = archive.findFile(userActivityJsonFileName);

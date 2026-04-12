@@ -73,6 +73,18 @@ class IntakeRepository implements domain.IntakeRepository {
     return result == null ? null : await _mapIntake(result);
   }
 
+  @override
+  Future<List<IntakeEntity>> getIntakesByDate(DateTime date) async {
+    final intakeList = await _intakeDataSource.getIntakesByDate(date);
+    return Future.wait(intakeList.map((i) => _mapIntake(i)));
+  }
+
+  @override
+  Future<List<IntakeEntity>> getAllIntakesOrderedByTime() async {
+    final intakeList = await _intakeDataSource.getAllIntakesOrderedByTime();
+    return Future.wait(intakeList.map((i) => _mapIntake(i)));
+  }
+
   Future<IntakeEntity> _mapIntake(Intake intake) async {
     final meal = await _mealDao.getMealById(intake.mealId);
     if (meal == null) {

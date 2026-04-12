@@ -58,3 +58,17 @@ result
 
 # FVM Version Cache
 .fvm/
+
+# Web build artifacts
+build/
+
+# macOS build artifacts
+**/Flutter/ephemeral/
+**/xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# Generated Drift files (regenerated via build_runner)
+*.g.dart
+
+# TFLite model binaries
+assets/models/*.tflite

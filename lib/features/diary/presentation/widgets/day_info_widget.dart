@@ -8,6 +8,9 @@ import 'package:nutriq/core/presentation/widgets/copy_or_delete_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/copy_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/daily_nutrition_summary.dart';
 import 'package:nutriq/core/presentation/widgets/delete_dialog.dart';
+import 'package:nutriq/core/presentation/widgets/exercise_calorie_impact_list.dart';
+import 'package:nutriq/core/presentation/widgets/exercise_quick_add_button.dart';
+import 'package:nutriq/core/presentation/widgets/remaining_budget_row.dart';
 import 'package:nutriq/core/utils/custom_icons.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/home/presentation/widgets/intake_vertical_list.dart';
@@ -21,6 +24,8 @@ class DayInfoWidget extends StatelessWidget {
   final List<IntakeEntity> lunchIntake;
   final List<IntakeEntity> dinnerIntake;
   final List<IntakeEntity> snackIntake;
+  final double burnedCalories;
+  final double netCalories;
 
   final bool usesImperialUnits;
   final Function(IntakeEntity intake, TrackedDayEntity? trackedDayEntity)
@@ -41,6 +46,8 @@ class DayInfoWidget extends StatelessWidget {
     required this.lunchIntake,
     required this.dinnerIntake,
     required this.snackIntake,
+    required this.burnedCalories,
+    required this.netCalories,
     required this.usesImperialUnits,
     required this.onDeleteIntake,
     required this.onDeleteActivity,
@@ -92,7 +99,8 @@ class DayInfoWidget extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0, vertical: 8.0),
                             child: Text(
-                              _getCaloriesTrackedDisplayString(trackedDay),
+                              _getCaloriesTrackedDisplayString(
+                                  context, trackedDay),
                               style: Theme.of(context)
                                   .textTheme
                                   .titleLarge
@@ -120,6 +128,54 @@ class DayInfoWidget extends StatelessWidget {
                   )
                 : const SizedBox(),
             const SizedBox(height: 8.0),
+            if (burnedCalories > 0)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Card(
+                  elevation: 0.0,
+                  margin: const EdgeInsets.all(0.0),
+                  color: Theme.of(context).colorScheme.tertiaryContainer,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8.0),
+                    child: Row(
+                      children: [
+                        Icon(Icons.local_fire_department_outlined,
+                            size: 20,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          child: Text(
+                            '${S.of(context).exerciseCalorieImpact}: ${S.of(context).burnedCaloriesLabel} ${burnedCalories.toInt()} kcal | ${S.of(context).netCaloriesLabel} ${netCalories.toInt()} kcal',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onTertiaryContainer),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            if (burnedCalories > 0 && trackedDay != null)
+              RemainingBudgetRow(
+                calorieGoal: trackedDay.calorieGoal,
+                consumedCalories: trackedDay.caloriesTracked,
+                burnedCalories: burnedCalories,
+              ),
+            const SizedBox(height: 4.0),
+            if (userActivities.isNotEmpty)
+              ExerciseCalorieImpactList(
+                userActivities: userActivities,
+                totalBurnedCalories: burnedCalories,
+              ),
+            const SizedBox(height: 4.0),
             DailyNutritionSummary(
               trackedDay: trackedDay,
               intakes: _allIntakes,
@@ -130,6 +186,8 @@ class DayInfoWidget extends StatelessWidget {
                 title: S.of(context).activityLabel,
                 userActivityList: userActivities,
                 onItemLongPressedCallback: onActivityItemLongPressed),
+            ExerciseQuickAddButton(day: selectedDay),
+            const SizedBox(height: 8.0),
             IntakeVerticalList(
               day: selectedDay,
               title: S.of(context).breakfastLabel,
@@ -198,7 +256,8 @@ class DayInfoWidget extends StatelessWidget {
     );
   }
 
-  String _getCaloriesTrackedDisplayString(TrackedDayEntity trackedDay) {
+  String _getCaloriesTrackedDisplayString(
+      BuildContext context, TrackedDayEntity trackedDay) {
     int caloriesTracked;
     if (trackedDay.caloriesTracked.isNegative) {
       caloriesTracked = 0;
@@ -206,7 +265,10 @@ class DayInfoWidget extends StatelessWidget {
       caloriesTracked = trackedDay.caloriesTracked.toInt();
     }
 
-    return '$caloriesTracked/${trackedDay.calorieGoal.toInt()} kcal';
+    final burnedLabel = S.of(context).burnedCaloriesLabel;
+    final netLabel = S.of(context).netCaloriesLabel;
+
+    return '$caloriesTracked/${trackedDay.calorieGoal.toInt()} kcal\n$burnedLabel: ${burnedCalories.toInt()} kcal | $netLabel: ${netCalories.toInt()} kcal';
   }
 
   String _getMacroTrackedDisplayString(TrackedDayEntity trackedDay) {

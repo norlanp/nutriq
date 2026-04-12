@@ -7,6 +7,7 @@ class Intakes extends Table {
   TextColumn get type => text()();
   TextColumn get mealId => text()();
   DateTimeColumn get date => dateTime()();
+  IntColumn get timeMinutes => integer().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
