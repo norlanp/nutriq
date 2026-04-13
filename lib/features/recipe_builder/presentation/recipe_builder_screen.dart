@@ -66,6 +66,11 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                     style: Theme.of(context).textTheme.titleMedium),
                 const Spacer(),
                 IconButton(
+                  icon: const Icon(Icons.link),
+                  tooltip: S.of(context).importFromUrl,
+                  onPressed: _navigateToImport,
+                ),
+                IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: _addIngredient,
                 ),
@@ -142,6 +147,13 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
         ));
       });
     }
+  }
+
+  void _navigateToImport() {
+    Navigator.pushNamed(
+      context,
+      NavigationOptions.recipeImportRoute,
+    );
   }
 
   void _saveRecipe() {

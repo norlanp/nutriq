@@ -44,8 +44,7 @@ class _DiaryTableCalendarState extends State<DiaryTableCalendar> {
               Theme.of(context).textTheme.bodyMedium ?? const TextStyle(),
           todayDecoration: BoxDecoration(
               border: Border.all(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  width: 2.0),
+                  color: Theme.of(context).colorScheme.onSurface, width: 2.0),
               shape: BoxShape.circle),
           selectedTextStyle: Theme.of(context)
                   .textTheme

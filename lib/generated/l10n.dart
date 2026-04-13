@@ -4753,39 +4753,44 @@ class S {
     );
   }
 
-  /// `Mon`
+  /// `Monday`
   String get mondayLabel {
-    return Intl.message('Mon', name: 'mondayLabel', desc: '', args: []);
+    return Intl.message('Monday', name: 'mondayLabel', desc: '', args: []);
   }
 
-  /// `Tue`
+  /// `Tuesday`
   String get tuesdayLabel {
-    return Intl.message('Tue', name: 'tuesdayLabel', desc: '', args: []);
+    return Intl.message('Tuesday', name: 'tuesdayLabel', desc: '', args: []);
   }
 
-  /// `Wed`
+  /// `Wednesday`
   String get wednesdayLabel {
-    return Intl.message('Wed', name: 'wednesdayLabel', desc: '', args: []);
+    return Intl.message(
+      'Wednesday',
+      name: 'wednesdayLabel',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Thu`
+  /// `Thursday`
   String get thursdayLabel {
-    return Intl.message('Thu', name: 'thursdayLabel', desc: '', args: []);
+    return Intl.message('Thursday', name: 'thursdayLabel', desc: '', args: []);
   }
 
-  /// `Fri`
+  /// `Friday`
   String get fridayLabel {
-    return Intl.message('Fri', name: 'fridayLabel', desc: '', args: []);
+    return Intl.message('Friday', name: 'fridayLabel', desc: '', args: []);
   }
 
-  /// `Sat`
+  /// `Saturday`
   String get saturdayLabel {
-    return Intl.message('Sat', name: 'saturdayLabel', desc: '', args: []);
+    return Intl.message('Saturday', name: 'saturdayLabel', desc: '', args: []);
   }
 
-  /// `Sun`
+  /// `Sunday`
   String get sundayLabel {
-    return Intl.message('Sun', name: 'sundayLabel', desc: '', args: []);
+    return Intl.message('Sunday', name: 'sundayLabel', desc: '', args: []);
   }
 
   /// `New entry`
@@ -5486,6 +5491,1236 @@ class S {
   /// `Cancel`
   String get cancel {
     return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
+  }
+
+  /// `Food Grade`
+  String get foodGradeLabel {
+    return Intl.message(
+      'Food Grade',
+      name: 'foodGradeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Food Grade rates foods from A (best) to D (worst) based on nutritional density. Higher protein and fiber improve the grade, while high sugar, sodium, saturated fat, and calorie density lower it.`
+  String get foodGradeDescription {
+    return Intl.message(
+      'Food Grade rates foods from A (best) to D (worst) based on nutritional density. Higher protein and fiber improve the grade, while high sugar, sodium, saturated fat, and calorie density lower it.',
+      name: 'foodGradeDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grade A - Excellent`
+  String get gradeA {
+    return Intl.message(
+      'Grade A - Excellent',
+      name: 'gradeA',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grade B - Good`
+  String get gradeB {
+    return Intl.message('Grade B - Good', name: 'gradeB', desc: '', args: []);
+  }
+
+  /// `Grade C - Moderate`
+  String get gradeC {
+    return Intl.message(
+      'Grade C - Moderate',
+      name: 'gradeC',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grade D - Poor`
+  String get gradeD {
+    return Intl.message('Grade D - Poor', name: 'gradeD', desc: '', args: []);
+  }
+
+  /// `Very high nutritional value. Rich in protein and fiber, low in sugar, sodium, and saturated fat. These foods support a healthy diet.`
+  String get gradeAExplain {
+    return Intl.message(
+      'Very high nutritional value. Rich in protein and fiber, low in sugar, sodium, and saturated fat. These foods support a healthy diet.',
+      name: 'gradeAExplain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Good nutritional value. Generally beneficial with moderate amounts of positive nutrients and limited negative factors.`
+  String get gradeBExplain {
+    return Intl.message(
+      'Good nutritional value. Generally beneficial with moderate amounts of positive nutrients and limited negative factors.',
+      name: 'gradeBExplain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moderate nutritional value. May contain higher amounts of sugar, sodium, or saturated fat. Consume in moderation.`
+  String get gradeCExplain {
+    return Intl.message(
+      'Moderate nutritional value. May contain higher amounts of sugar, sodium, or saturated fat. Consume in moderation.',
+      name: 'gradeCExplain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Low nutritional value. High in sugar, sodium, saturated fat, or calories with limited beneficial nutrients. Limit consumption.`
+  String get gradeDExplain {
+    return Intl.message(
+      'Low nutritional value. High in sugar, sodium, saturated fat, or calories with limited beneficial nutrients. Limit consumption.',
+      name: 'gradeDExplain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filter by Grade`
+  String get filterByGrade {
+    return Intl.message(
+      'Filter by Grade',
+      name: 'filterByGrade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minimum Grade`
+  String get minimumGrade {
+    return Intl.message(
+      'Minimum Grade',
+      name: 'minimumGrade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily Note`
+  String get dailyNoteLabel {
+    return Intl.message(
+      'Daily Note',
+      name: 'dailyNoteLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a note for today...`
+  String get dailyNoteHint {
+    return Intl.message(
+      'Write a note for today...',
+      name: 'dailyNoteHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No note yet`
+  String get dailyNoteEmpty {
+    return Intl.message(
+      'No note yet',
+      name: 'dailyNoteEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Note saved`
+  String get dailyNoteSaved {
+    return Intl.message(
+      'Note saved',
+      name: 'dailyNoteSaved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Has note`
+  String get hasNoteIndicator {
+    return Intl.message(
+      'Has note',
+      name: 'hasNoteIndicator',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Autopilot`
+  String get autopilotLabel {
+    return Intl.message(
+      'Autopilot',
+      name: 'autopilotLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Automatically adjusts your daily calorie budget based on your weight trend. Losing too fast increases your budget; losing too slowly decreases it.`
+  String get autopilotDescription {
+    return Intl.message(
+      'Automatically adjusts your daily calorie budget based on your weight trend. Losing too fast increases your budget; losing too slowly decreases it.',
+      name: 'autopilotDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enabled`
+  String get autopilotEnabled {
+    return Intl.message(
+      'Enabled',
+      name: 'autopilotEnabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disabled`
+  String get autopilotDisabled {
+    return Intl.message(
+      'Disabled',
+      name: 'autopilotDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Baseline Calories`
+  String get baselineCalories {
+    return Intl.message(
+      'Baseline Calories',
+      name: 'baselineCalories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Adjusted Calories`
+  String get adjustedCalories {
+    return Intl.message(
+      'Adjusted Calories',
+      name: 'adjustedCalories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last Adjustment`
+  String get lastAdjustment {
+    return Intl.message(
+      'Last Adjustment',
+      name: 'lastAdjustment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recalculate Budget`
+  String get recalculateBudget {
+    return Intl.message(
+      'Recalculate Budget',
+      name: 'recalculateBudget',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calorie Cycling`
+  String get calorieCyclingLabel {
+    return Intl.message(
+      'Calorie Cycling',
+      name: 'calorieCyclingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set different calorie targets for each day of the week. This helps you eat more on active days and less on rest days while maintaining your weekly budget.`
+  String get calorieCyclingDescription {
+    return Intl.message(
+      'Set different calorie targets for each day of the week. This helps you eat more on active days and less on rest days while maintaining your weekly budget.',
+      name: 'calorieCyclingDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable Calorie Cycling`
+  String get enableCalorieCycling {
+    return Intl.message(
+      'Enable Calorie Cycling',
+      name: 'enableCalorieCycling',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekday Targets`
+  String get weekdayTargets {
+    return Intl.message(
+      'Weekday Targets',
+      name: 'weekdayTargets',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily Target`
+  String get dailyTarget {
+    return Intl.message(
+      'Daily Target',
+      name: 'dailyTarget',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Global Calorie Budget`
+  String get globalCalorieBudget {
+    return Intl.message(
+      'Global Calorie Budget',
+      name: 'globalCalorieBudget',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exercise Credit`
+  String get exerciseCreditLabel {
+    return Intl.message(
+      'Exercise Credit',
+      name: 'exerciseCreditLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `None`
+  String get exerciseCreditNone {
+    return Intl.message('None', name: 'exerciseCreditNone', desc: '', args: []);
+  }
+
+  /// `50%`
+  String get exerciseCredit50 {
+    return Intl.message('50%', name: 'exerciseCredit50', desc: '', args: []);
+  }
+
+  /// `100%`
+  String get exerciseCredit100 {
+    return Intl.message('100%', name: 'exerciseCredit100', desc: '', args: []);
+  }
+
+  /// `Custom`
+  String get exerciseCreditCustom {
+    return Intl.message(
+      'Custom',
+      name: 'exerciseCreditCustom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Credit Percent`
+  String get exerciseCreditPercent {
+    return Intl.message(
+      'Credit Percent',
+      name: 'exerciseCreditPercent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom Trackers`
+  String get customTrackersLabel {
+    return Intl.message(
+      'Custom Trackers',
+      name: 'customTrackersLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Tracker`
+  String get createTracker {
+    return Intl.message(
+      'Create Tracker',
+      name: 'createTracker',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tracker Name`
+  String get trackerName {
+    return Intl.message(
+      'Tracker Name',
+      name: 'trackerName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type`
+  String get trackerType {
+    return Intl.message('Type', name: 'trackerType', desc: '', args: []);
+  }
+
+  /// `Scale`
+  String get scaleType {
+    return Intl.message('Scale', name: 'scaleType', desc: '', args: []);
+  }
+
+  /// `Boolean`
+  String get booleanType {
+    return Intl.message('Boolean', name: 'booleanType', desc: '', args: []);
+  }
+
+  /// `Text`
+  String get textType {
+    return Intl.message('Text', name: 'textType', desc: '', args: []);
+  }
+
+  /// `Min`
+  String get minValue {
+    return Intl.message('Min', name: 'minValue', desc: '', args: []);
+  }
+
+  /// `Max`
+  String get maxValue {
+    return Intl.message('Max', name: 'maxValue', desc: '', args: []);
+  }
+
+  /// `Log Entry`
+  String get logEntry {
+    return Intl.message('Log Entry', name: 'logEntry', desc: '', args: []);
+  }
+
+  /// `Delete Tracker`
+  String get deleteTracker {
+    return Intl.message(
+      'Delete Tracker',
+      name: 'deleteTracker',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trend`
+  String get trackerTrend {
+    return Intl.message('Trend', name: 'trackerTrend', desc: '', args: []);
+  }
+
+  /// `Import Recipe`
+  String get recipeImportTitle {
+    return Intl.message(
+      'Import Recipe',
+      name: 'recipeImportTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import from URL`
+  String get importFromUrl {
+    return Intl.message(
+      'Import from URL',
+      name: 'importFromUrl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipe URL`
+  String get recipeUrl {
+    return Intl.message('Recipe URL', name: 'recipeUrl', desc: '', args: []);
+  }
+
+  /// `Importing recipe...`
+  String get importingRecipe {
+    return Intl.message(
+      'Importing recipe...',
+      name: 'importingRecipe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipe Preview`
+  String get recipePreview {
+    return Intl.message(
+      'Recipe Preview',
+      name: 'recipePreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Instructions`
+  String get instructionsLabel {
+    return Intl.message(
+      'Instructions',
+      name: 'instructionsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time`
+  String get timeLabel {
+    return Intl.message('Time', name: 'timeLabel', desc: '', args: []);
+  }
+
+  /// `Prep time`
+  String get prepTimeLabel {
+    return Intl.message('Prep time', name: 'prepTimeLabel', desc: '', args: []);
+  }
+
+  /// `Cook time`
+  String get cookTimeLabel {
+    return Intl.message('Cook time', name: 'cookTimeLabel', desc: '', args: []);
+  }
+
+  /// `Nutrition`
+  String get nutritionLabel {
+    return Intl.message(
+      'Nutrition',
+      name: 'nutritionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calories`
+  String get caloriesLabel {
+    return Intl.message('Calories', name: 'caloriesLabel', desc: '', args: []);
+  }
+
+  /// `Source`
+  String get sourceUrlLabel {
+    return Intl.message('Source', name: 'sourceUrlLabel', desc: '', args: []);
+  }
+
+  /// `Confirm Import`
+  String get confirmImport {
+    return Intl.message(
+      'Confirm Import',
+      name: 'confirmImport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Symptom Tracking`
+  String get symptomTitle {
+    return Intl.message(
+      'Symptom Tracking',
+      name: 'symptomTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Symptom`
+  String get addSymptom {
+    return Intl.message('Add Symptom', name: 'addSymptom', desc: '', args: []);
+  }
+
+  /// `Delete Symptom`
+  String get deleteSymptom {
+    return Intl.message(
+      'Delete Symptom',
+      name: 'deleteSymptom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Symptom Type`
+  String get symptomType {
+    return Intl.message(
+      'Symptom Type',
+      name: 'symptomType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Severity`
+  String get symptomSeverity {
+    return Intl.message(
+      'Severity',
+      name: 'symptomSeverity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notes`
+  String get symptomNotes {
+    return Intl.message('Notes', name: 'symptomNotes', desc: '', args: []);
+  }
+
+  /// `Severity Trend`
+  String get symptomTrend {
+    return Intl.message(
+      'Severity Trend',
+      name: 'symptomTrend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `History`
+  String get symptomHistory {
+    return Intl.message('History', name: 'symptomHistory', desc: '', args: []);
+  }
+
+  /// `No symptom data yet. Start logging!`
+  String get noSymptomData {
+    return Intl.message(
+      'No symptom data yet. Start logging!',
+      name: 'noSymptomData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Need at least 2 entries for trend`
+  String get insufficientSymptomData {
+    return Intl.message(
+      'Need at least 2 entries for trend',
+      name: 'insufficientSymptomData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Severity over time`
+  String get symptomSeverityOverTime {
+    return Intl.message(
+      'Severity over time',
+      name: 'symptomSeverityOverTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Headache`
+  String get symptomTypeHeadache {
+    return Intl.message(
+      'Headache',
+      name: 'symptomTypeHeadache',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fatigue`
+  String get symptomTypeFatigue {
+    return Intl.message(
+      'Fatigue',
+      name: 'symptomTypeFatigue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nausea`
+  String get symptomTypeNausea {
+    return Intl.message(
+      'Nausea',
+      name: 'symptomTypeNausea',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dizziness`
+  String get symptomTypeDizziness {
+    return Intl.message(
+      'Dizziness',
+      name: 'symptomTypeDizziness',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bloating`
+  String get symptomTypeBloating {
+    return Intl.message(
+      'Bloating',
+      name: 'symptomTypeBloating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cramps`
+  String get symptomTypeCramps {
+    return Intl.message(
+      'Cramps',
+      name: 'symptomTypeCramps',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Anxiety`
+  String get symptomTypeAnxiety {
+    return Intl.message(
+      'Anxiety',
+      name: 'symptomTypeAnxiety',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insomnia`
+  String get symptomTypeInsomnia {
+    return Intl.message(
+      'Insomnia',
+      name: 'symptomTypeInsomnia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get symptomTypeOther {
+    return Intl.message('Other', name: 'symptomTypeOther', desc: '', args: []);
+  }
+
+  /// `Allergens`
+  String get allergenSettingsLabel {
+    return Intl.message(
+      'Allergens',
+      name: 'allergenSettingsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allergen Settings`
+  String get allergenSettingsTitle {
+    return Intl.message(
+      'Allergen Settings',
+      name: 'allergenSettingsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select allergens to filter from search results. Foods containing selected allergens will be hidden.`
+  String get allergenSettingsDescription {
+    return Intl.message(
+      'Select allergens to filter from search results. Foods containing selected allergens will be hidden.',
+      name: 'allergenSettingsDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contains allergen`
+  String get allergenWarning {
+    return Intl.message(
+      'Contains allergen',
+      name: 'allergenWarning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contains`
+  String get containsAllergen {
+    return Intl.message(
+      'Contains',
+      name: 'containsAllergen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} allergens filtering active`
+  String allergenFilterEnabled(int count) {
+    return Intl.message(
+      '$count allergens filtering active',
+      name: 'allergenFilterEnabled',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Gluten`
+  String get allergenGluten {
+    return Intl.message('Gluten', name: 'allergenGluten', desc: '', args: []);
+  }
+
+  /// `Dairy`
+  String get allergenDairy {
+    return Intl.message('Dairy', name: 'allergenDairy', desc: '', args: []);
+  }
+
+  /// `Soy`
+  String get allergenSoy {
+    return Intl.message('Soy', name: 'allergenSoy', desc: '', args: []);
+  }
+
+  /// `Nuts`
+  String get allergenNuts {
+    return Intl.message('Nuts', name: 'allergenNuts', desc: '', args: []);
+  }
+
+  /// `Shellfish`
+  String get allergenShellfish {
+    return Intl.message(
+      'Shellfish',
+      name: 'allergenShellfish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Eggs`
+  String get allergenEggs {
+    return Intl.message('Eggs', name: 'allergenEggs', desc: '', args: []);
+  }
+
+  /// `Fish`
+  String get allergenFish {
+    return Intl.message('Fish', name: 'allergenFish', desc: '', args: []);
+  }
+
+  /// `Sesame`
+  String get allergenSesame {
+    return Intl.message('Sesame', name: 'allergenSesame', desc: '', args: []);
+  }
+
+  /// `Peanuts`
+  String get allergenPeanuts {
+    return Intl.message('Peanuts', name: 'allergenPeanuts', desc: '', args: []);
+  }
+
+  /// `Celery`
+  String get allergenCelery {
+    return Intl.message('Celery', name: 'allergenCelery', desc: '', args: []);
+  }
+
+  /// `Mustard`
+  String get allergenMustard {
+    return Intl.message('Mustard', name: 'allergenMustard', desc: '', args: []);
+  }
+
+  /// `Lupin`
+  String get allergenLupin {
+    return Intl.message('Lupin', name: 'allergenLupin', desc: '', args: []);
+  }
+
+  /// `Molluscs`
+  String get allergenMolluscs {
+    return Intl.message(
+      'Molluscs',
+      name: 'allergenMolluscs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sulphur Dioxide`
+  String get allergenSulphurDioxide {
+    return Intl.message(
+      'Sulphur Dioxide',
+      name: 'allergenSulphurDioxide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wheat, barley, rye and other gluten-containing grains`
+  String get allergenGlutenDesc {
+    return Intl.message(
+      'Wheat, barley, rye and other gluten-containing grains',
+      name: 'allergenGlutenDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Milk, cheese, butter, yogurt and other dairy products`
+  String get allergenDairyDesc {
+    return Intl.message(
+      'Milk, cheese, butter, yogurt and other dairy products',
+      name: 'allergenDairyDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Soybeans, tofu, soy sauce and other soy products`
+  String get allergenSoyDesc {
+    return Intl.message(
+      'Soybeans, tofu, soy sauce and other soy products',
+      name: 'allergenSoyDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Almonds, hazelnuts, walnuts and other tree nuts`
+  String get allergenNutsDesc {
+    return Intl.message(
+      'Almonds, hazelnuts, walnuts and other tree nuts',
+      name: 'allergenNutsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shrimp, crab, lobster and other shellfish`
+  String get allergenShellfishDesc {
+    return Intl.message(
+      'Shrimp, crab, lobster and other shellfish',
+      name: 'allergenShellfishDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Eggs and egg-based products`
+  String get allergenEggsDesc {
+    return Intl.message(
+      'Eggs and egg-based products',
+      name: 'allergenEggsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fish and fish-based products`
+  String get allergenFishDesc {
+    return Intl.message(
+      'Fish and fish-based products',
+      name: 'allergenFishDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sesame seeds and sesame-based products`
+  String get allergenSesameDesc {
+    return Intl.message(
+      'Sesame seeds and sesame-based products',
+      name: 'allergenSesameDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Peanuts and peanut-based products`
+  String get allergenPeanutsDesc {
+    return Intl.message(
+      'Peanuts and peanut-based products',
+      name: 'allergenPeanutsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Celery and celeriac`
+  String get allergenCeleryDesc {
+    return Intl.message(
+      'Celery and celeriac',
+      name: 'allergenCeleryDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mustard seeds and mustard-based products`
+  String get allergenMustardDesc {
+    return Intl.message(
+      'Mustard seeds and mustard-based products',
+      name: 'allergenMustardDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lupin seeds and lupin flour`
+  String get allergenLupinDesc {
+    return Intl.message(
+      'Lupin seeds and lupin flour',
+      name: 'allergenLupinDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mussels, oysters, squid and other molluscs`
+  String get allergenMolluscsDesc {
+    return Intl.message(
+      'Mussels, oysters, squid and other molluscs',
+      name: 'allergenMolluscsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sulphites, commonly found in wine and dried fruit`
+  String get allergenSulphurDioxideDesc {
+    return Intl.message(
+      'Sulphites, commonly found in wine and dried fruit',
+      name: 'allergenSulphurDioxideDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Medications`
+  String get medicationTitle {
+    return Intl.message(
+      'Medications',
+      name: 'medicationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Medication`
+  String get addMedication {
+    return Intl.message(
+      'Add Medication',
+      name: 'addMedication',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Medication`
+  String get deleteMedication {
+    return Intl.message(
+      'Delete Medication',
+      name: 'deleteMedication',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Medication Name`
+  String get medicationName {
+    return Intl.message(
+      'Medication Name',
+      name: 'medicationName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dosage`
+  String get medicationDosage {
+    return Intl.message('Dosage', name: 'medicationDosage', desc: '', args: []);
+  }
+
+  /// `Frequency`
+  String get medicationFrequency {
+    return Intl.message(
+      'Frequency',
+      name: 'medicationFrequency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily`
+  String get daily {
+    return Intl.message('Daily', name: 'daily', desc: '', args: []);
+  }
+
+  /// `Weekly`
+  String get weekly {
+    return Intl.message('Weekly', name: 'weekly', desc: '', args: []);
+  }
+
+  /// `As Needed`
+  String get asNeeded {
+    return Intl.message('As Needed', name: 'asNeeded', desc: '', args: []);
+  }
+
+  /// `Times Per Day`
+  String get timesPerDay {
+    return Intl.message(
+      'Times Per Day',
+      name: 'timesPerDay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log Dose`
+  String get logDose {
+    return Intl.message('Log Dose', name: 'logDose', desc: '', args: []);
+  }
+
+  /// `Dose Taken`
+  String get doseTaken {
+    return Intl.message('Dose Taken', name: 'doseTaken', desc: '', args: []);
+  }
+
+  /// `Dose Missed`
+  String get doseMissed {
+    return Intl.message('Dose Missed', name: 'doseMissed', desc: '', args: []);
+  }
+
+  /// `Medication Reminder`
+  String get medicationReminder {
+    return Intl.message(
+      'Medication Reminder',
+      name: 'medicationReminder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No medications added`
+  String get noMedicationsAdded {
+    return Intl.message(
+      'No medications added',
+      name: 'noMedicationsAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No medication logs for today`
+  String get noLogsToday {
+    return Intl.message(
+      'No medication logs for today',
+      name: 'noLogsToday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Medication Log`
+  String get medicationLog {
+    return Intl.message(
+      'Medication Log',
+      name: 'medicationLog',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notes`
+  String get notes {
+    return Intl.message('Notes', name: 'notes', desc: '', args: []);
+  }
+
+  /// `Blood Glucose`
+  String get bloodGlucoseTitle {
+    return Intl.message(
+      'Blood Glucose',
+      name: 'bloodGlucoseTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Entry`
+  String get addBloodGlucoseEntry {
+    return Intl.message(
+      'Add Entry',
+      name: 'addBloodGlucoseEntry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Entry`
+  String get deleteBloodGlucoseEntry {
+    return Intl.message(
+      'Delete Entry',
+      name: 'deleteBloodGlucoseEntry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Value`
+  String get bloodGlucoseValue {
+    return Intl.message('Value', name: 'bloodGlucoseValue', desc: '', args: []);
+  }
+
+  /// `Label`
+  String get bloodGlucoseLabel {
+    return Intl.message('Label', name: 'bloodGlucoseLabel', desc: '', args: []);
+  }
+
+  /// `Fasting`
+  String get fasting {
+    return Intl.message('Fasting', name: 'fasting', desc: '', args: []);
+  }
+
+  /// `Before Meal`
+  String get beforeMeal {
+    return Intl.message('Before Meal', name: 'beforeMeal', desc: '', args: []);
+  }
+
+  /// `After Meal`
+  String get afterMeal {
+    return Intl.message('After Meal', name: 'afterMeal', desc: '', args: []);
+  }
+
+  /// `Bedtime`
+  String get bedtime {
+    return Intl.message('Bedtime', name: 'bedtime', desc: '', args: []);
+  }
+
+  /// `Average`
+  String get bloodGlucoseAverage {
+    return Intl.message(
+      'Average',
+      name: 'bloodGlucoseAverage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trend`
+  String get bloodGlucoseTrend {
+    return Intl.message('Trend', name: 'bloodGlucoseTrend', desc: '', args: []);
+  }
+
+  /// `Timeline`
+  String get bloodGlucoseTimeline {
+    return Intl.message(
+      'Timeline',
+      name: 'bloodGlucoseTimeline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mg/dL`
+  String get bloodGlucoseMgdL {
+    return Intl.message('mg/dL', name: 'bloodGlucoseMgdL', desc: '', args: []);
+  }
+
+  /// `Blood Glucose Reminder`
+  String get bloodGlucoseReminder {
+    return Intl.message(
+      'Blood Glucose Reminder',
+      name: 'bloodGlucoseReminder',
+      desc: '',
+      args: [],
+    );
   }
 }
 

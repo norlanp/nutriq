@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:logging/logging.dart';
+import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
+import 'package:nutriq/core/domain/service/allergen_filter_service.dart';
+import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/presentation/widgets/meal_value_unit_text.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
 import 'package:nutriq/core/utils/locator.dart';
@@ -75,7 +78,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
       } else if (meal.isSolid) {
         _initialUnit = _usesImperialUnits
             ? UnitDropdownItem.oz.toString()
-
             : UnitDropdownItem.g.toString();
       } else {
         _initialUnit = UnitDropdownItem.gml.toString();
@@ -261,6 +263,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                     servingUnit: meal.servingUnit),
                 const SizedBox(height: 32.0),
                 MealInfoButton(url: meal.url, source: meal.source),
+                _buildAllergenWarning(context),
                 meal.source == MealSourceEntity.off
                     ? const Column(
                         children: [
@@ -295,6 +298,55 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
         curve: Curves.easeInOut,
       );
     }
+  }
+
+  Widget _buildAllergenWarning(BuildContext context) {
+    final allergenFilterService = locator<AllergenFilterService>();
+    final configUsecase = locator<GetConfigUsecase>();
+
+    return FutureBuilder<Set<AllergenType>>(
+      future: configUsecase.getConfig().then((c) => c.userAllergens),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        final matchingAllergens =
+            allergenFilterService.getMatchingAllergens(meal, snapshot.data!);
+        if (matchingAllergens.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        final allergenNames =
+            matchingAllergens.map((a) => a.displayName).join(', ');
+        return Column(
+          children: [
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.warning_amber,
+                      color: Theme.of(context).colorScheme.onErrorContainer),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '${S.of(context).allergenWarning}: $allergenNames',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onErrorContainer,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

@@ -77,6 +77,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 ListTile(
+                  leading: const Icon(Icons.warning_amber_outlined),
+                  title: Text(S.of(context).allergenSettingsLabel),
+                  onTap: () => Navigator.of(context).pushNamed(
+                    NavigationOptions.allergenSettingsRoute,
+                  ),
+                ),
+                ListTile(
                   leading: const Icon(Icons.ac_unit_outlined),
                   title: Text(S.of(context).settingsUnitsLabel),
                   onTap: () =>

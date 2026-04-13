@@ -1,17 +1,26 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/drift/tables/config_table.dart';
+import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/domain/entity/ai_model_metadata_entity.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
+import 'package:nutriq/core/domain/entity/autopilot_entity.dart';
 import 'package:nutriq/core/domain/entity/body_measurement_entity.dart';
+import 'package:nutriq/core/domain/entity/calorie_cycle_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
+import 'package:nutriq/core/domain/entity/custom_tracker_entity.dart';
+import 'package:nutriq/core/domain/entity/custom_tracker_entry_entity.dart';
+import 'package:nutriq/core/domain/entity/exercise_calorie_mode_entity.dart';
 import 'package:nutriq/core/domain/entity/fasting_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/notification_settings_entity.dart';
 import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
 import 'package:nutriq/core/domain/entity/photo_progress_entity.dart';
+import 'package:nutriq/core/domain/entity/symptom_entity.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
@@ -20,6 +29,9 @@ import 'package:nutriq/core/domain/entity/user_gender_entity.dart';
 import 'package:nutriq/core/domain/entity/user_pal_entity.dart';
 import 'package:nutriq/core/domain/entity/user_weight_goal_entity.dart';
 import 'package:nutriq/core/domain/entity/meal_plan_entity.dart';
+import 'package:nutriq/core/domain/entity/blood_glucose_entity.dart';
+import 'package:nutriq/core/domain/entity/medication_entity.dart';
+import 'package:nutriq/core/domain/entity/medication_log_entity.dart';
 import 'package:nutriq/core/domain/entity/water_entity.dart';
 import 'package:nutriq/core/domain/entity/weight_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
@@ -61,6 +73,12 @@ ConfigEntity mapConfigEntryToEntity(ConfigEntry entry) => ConfigEntity(
       userFatGoalPct: entry.userFatGoalPct,
       dailyWaterGoalMl: entry.dailyWaterGoalMl ?? 2000,
       tdeeMethod: mapTDEEMethodStringToEntity(entry.tdeeMethod),
+      exerciseCalorieMode:
+          mapExerciseCalorieModeStringToEntity(entry.exerciseCalorieMode),
+      exerciseCreditPercent: entry.exerciseCreditPercent,
+      userAllergens: mapAllergensJsonToSet(entry.allergens),
+      bloodGlucoseMinMgDl: entry.bloodGlucoseMinMgDl ?? 70,
+      bloodGlucoseMaxMgDl: entry.bloodGlucoseMaxMgDl ?? 180,
     );
 
 ConfigEntriesCompanion mapConfigEntityToCompanion(ConfigEntity entity) =>
@@ -77,7 +95,27 @@ ConfigEntriesCompanion mapConfigEntityToCompanion(ConfigEntity entity) =>
       userFatGoalPct: Value(entity.userFatGoalPct),
       dailyWaterGoalMl: Value(entity.dailyWaterGoalMl),
       tdeeMethod: Value(mapTDEEMethodEntityToString(entity.tdeeMethod)),
+      exerciseCalorieMode: Value(
+          mapExerciseCalorieModeEntityToString(entity.exerciseCalorieMode)),
+      exerciseCreditPercent: Value(entity.exerciseCreditPercent),
+      allergens: Value(mapAllergenSetToJson(entity.userAllergens)),
+      bloodGlucoseMinMgDl: Value(entity.bloodGlucoseMinMgDl),
+      bloodGlucoseMaxMgDl: Value(entity.bloodGlucoseMaxMgDl),
     );
+
+Set<AllergenType> mapAllergensJsonToSet(String allergensJson) {
+  if (allergensJson.isEmpty) return {};
+  try {
+    final decoded = jsonDecode(allergensJson) as List;
+    return decoded.map((e) => AllergenType.fromString(e as String)).toSet();
+  } catch (_) {
+    return {};
+  }
+}
+
+String mapAllergenSetToJson(Set<AllergenType> allergens) {
+  return jsonEncode(allergens.map((e) => e.name).toList());
+}
 
 UserGenderEntity mapUserGenderStringToEntity(String gender) {
   switch (gender) {
@@ -164,6 +202,32 @@ String mapTDEEMethodEntityToString(TDEEMethodEntity entity) {
       return 'iom2005';
     case TDEEMethodEntity.mifflinStJeor:
       return 'mifflinStJeor';
+  }
+}
+
+ExerciseCalorieModeEntity mapExerciseCalorieModeStringToEntity(String mode) {
+  switch (mode) {
+    case 'none':
+      return ExerciseCalorieModeEntity.none;
+    case 'full':
+      return ExerciseCalorieModeEntity.full;
+    case 'custom':
+      return ExerciseCalorieModeEntity.custom;
+    default:
+      return ExerciseCalorieModeEntity.half;
+  }
+}
+
+String mapExerciseCalorieModeEntityToString(ExerciseCalorieModeEntity entity) {
+  switch (entity) {
+    case ExerciseCalorieModeEntity.none:
+      return 'none';
+    case ExerciseCalorieModeEntity.half:
+      return 'half';
+    case ExerciseCalorieModeEntity.full:
+      return 'full';
+    case ExerciseCalorieModeEntity.custom:
+      return 'custom';
   }
 }
 
@@ -658,6 +722,26 @@ PhotoProgressEntriesCompanion mapPhotoProgressEntityToCompanion(
       note: Value(entity.note),
     );
 
+AutopilotEntity mapAutopilotToEntity(AutopilotEntry entry) => AutopilotEntity(
+      id: entry.id,
+      userId: entry.userId,
+      baselineCalorieBudget: entry.baselineCalorieBudget,
+      adjustedCalorieBudget: entry.adjustedCalorieBudget,
+      lastAdjustmentDate: entry.lastAdjustmentDate,
+      adjustmentHistoryKcal: [],
+      isEnabled: entry.isEnabled != 0,
+    );
+
+AutopilotEntriesCompanion mapAutopilotEntityToCompanion(
+        AutopilotEntity entity) =>
+    AutopilotEntriesCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      baselineCalorieBudget: Value(entity.baselineCalorieBudget),
+      adjustedCalorieBudget: Value(entity.adjustedCalorieBudget),
+      lastAdjustmentDate: Value(entity.lastAdjustmentDate),
+      isEnabled: Value(entity.isEnabled ? 1 : 0),
+    );
 BodyMeasurementEntity mapBodyMeasurementToEntity(BodyMeasurement entry) =>
     BodyMeasurementEntity(
       id: entry.id,
@@ -685,4 +769,238 @@ BodyMeasurementsCompanion mapBodyMeasurementEntityToCompanion(
       bicepCm: Value(entity.bicepCm),
       thighCm: Value(entity.thighCm),
       note: Value(entity.note),
+    );
+
+TrackerType _mapTrackerTypeStringToEntity(String type) {
+  switch (type) {
+    case 'boolean':
+      return TrackerType.boolean;
+    case 'text':
+      return TrackerType.text;
+    default:
+      return TrackerType.scale;
+  }
+}
+
+String _mapTrackerTypeEntityToString(TrackerType type) {
+  switch (type) {
+    case TrackerType.boolean:
+      return 'boolean';
+    case TrackerType.text:
+      return 'text';
+    case TrackerType.scale:
+      return 'scale';
+  }
+}
+
+CustomTrackerEntity mapCustomTrackerToEntity(CustomTracker entry) =>
+    CustomTrackerEntity(
+      id: entry.id,
+      userId: entry.userId,
+      name: entry.name,
+      type: _mapTrackerTypeStringToEntity(entry.type),
+      min: entry.min,
+      max: entry.max,
+      icon: entry.icon,
+      unit: entry.unit,
+    );
+
+CustomTrackersCompanion mapCustomTrackerEntityToCompanion(
+        CustomTrackerEntity entity) =>
+    CustomTrackersCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      name: Value(entity.name),
+      type: Value(_mapTrackerTypeEntityToString(entity.type)),
+      min: Value(entity.min),
+      max: Value(entity.max),
+      icon: Value(entity.icon),
+      unit: Value(entity.unit),
+    );
+
+CustomTrackerEntryEntity mapCustomTrackerEntryToEntity(
+        CustomTrackerEntry entry) =>
+    CustomTrackerEntryEntity(
+      id: entry.id,
+      userId: entry.userId,
+      trackerId: entry.trackerId,
+      date: entry.date,
+      value: entry.value,
+      textValue: entry.textValue,
+    );
+
+CustomTrackerEntriesCompanion mapCustomTrackerEntryEntityToCompanion(
+        CustomTrackerEntryEntity entity) =>
+    CustomTrackerEntriesCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      trackerId: Value(entity.trackerId),
+      date: Value(entity.date),
+      value: Value(entity.value),
+      textValue: Value(entity.textValue),
+    );
+
+CalorieCycleEntity mapCalorieCycleJsonToEntity(String? json, bool enabled) {
+  if (json == null || json.isEmpty) {
+    return const CalorieCycleEntity(
+      weekdayCalorieMap: {},
+      isEnabled: false,
+    );
+  }
+  final decoded = jsonDecode(json) as Map<String, dynamic>;
+  final map = <int, double>{};
+  decoded.forEach((key, value) {
+    final weekday = int.tryParse(key);
+    if (weekday != null && weekday >= 1 && weekday <= 7) {
+      map[weekday] = (value as num).toDouble();
+    }
+  });
+  return CalorieCycleEntity(
+    weekdayCalorieMap: map,
+    isEnabled: enabled,
+  );
+}
+
+String mapCalorieCycleEntityToJson(CalorieCycleEntity entity) {
+  final map = <String, dynamic>{};
+  entity.weekdayCalorieMap.forEach((key, value) {
+    map[key.toString()] = value;
+  });
+  return jsonEncode(map);
+}
+
+BloodGlucoseLabelType mapBloodGlucoseLabelStringToEntity(String label) {
+  switch (label) {
+    case 'beforeMeal':
+      return BloodGlucoseLabelType.beforeMeal;
+    case 'afterMeal':
+      return BloodGlucoseLabelType.afterMeal;
+    case 'bedtime':
+      return BloodGlucoseLabelType.bedtime;
+    default:
+      return BloodGlucoseLabelType.fasting;
+  }
+}
+
+String mapBloodGlucoseLabelEntityToString(BloodGlucoseLabelType label) {
+  switch (label) {
+    case BloodGlucoseLabelType.beforeMeal:
+      return 'beforeMeal';
+    case BloodGlucoseLabelType.afterMeal:
+      return 'afterMeal';
+    case BloodGlucoseLabelType.bedtime:
+      return 'bedtime';
+    case BloodGlucoseLabelType.fasting:
+      return 'fasting';
+  }
+}
+
+BloodGlucoseEntity mapBloodGlucoseToEntity(BloodGlucoseEntry entry) =>
+    BloodGlucoseEntity(
+      id: entry.id,
+      userId: entry.userId,
+      date: entry.date,
+      timestamp: entry.timestamp,
+      valueMgDl: entry.valueMgDl,
+      label: mapBloodGlucoseLabelStringToEntity(entry.label),
+      notes: entry.notes,
+    );
+
+BloodGlucoseEntriesCompanion mapBloodGlucoseEntityToCompanion(
+        BloodGlucoseEntity entity) =>
+    BloodGlucoseEntriesCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      date: Value(entity.date),
+      timestamp: Value(entity.timestamp),
+      valueMgDl: Value(entity.valueMgDl),
+      label: Value(mapBloodGlucoseLabelEntityToString(entity.label)),
+      notes: Value(entity.notes),
+    );
+
+SymptomEntity mapSymptomToEntity(SymptomEntry entry) => SymptomEntity(
+      id: entry.id,
+      userId: entry.userId,
+      date: entry.date,
+      timestamp: entry.timestamp,
+      type: entry.type,
+      severity: entry.severity,
+      notes: entry.notes,
+    );
+
+SymptomEntriesCompanion mapSymptomEntityToCompanion(SymptomEntity entity) =>
+    SymptomEntriesCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      date: Value(entity.date),
+      timestamp: Value(entity.timestamp),
+      type: Value(entity.type),
+      severity: Value(entity.severity),
+      notes: Value(entity.notes),
+    );
+
+MedicationFrequencyType mapMedicationFrequencyStringToEntity(String frequency) {
+  switch (frequency) {
+    case 'weekly':
+      return MedicationFrequencyType.weekly;
+    case 'asNeeded':
+      return MedicationFrequencyType.asNeeded;
+    default:
+      return MedicationFrequencyType.daily;
+  }
+}
+
+String mapMedicationFrequencyEntityToString(MedicationFrequencyType frequency) {
+  switch (frequency) {
+    case MedicationFrequencyType.weekly:
+      return 'weekly';
+    case MedicationFrequencyType.asNeeded:
+      return 'asNeeded';
+    case MedicationFrequencyType.daily:
+      return 'daily';
+  }
+}
+
+MedicationEntity mapMedicationToEntity(Medication entry) => MedicationEntity(
+      id: entry.id,
+      userId: entry.userId,
+      name: entry.name,
+      dosage: entry.dosage,
+      frequency: mapMedicationFrequencyStringToEntity(entry.frequency),
+      timesPerDay: entry.timesPerDay,
+      notes: entry.notes,
+    );
+
+MedicationsCompanion mapMedicationEntityToCompanion(MedicationEntity entity) =>
+    MedicationsCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      name: Value(entity.name),
+      dosage: Value(entity.dosage),
+      frequency: Value(mapMedicationFrequencyEntityToString(entity.frequency)),
+      timesPerDay: Value(entity.timesPerDay),
+      notes: Value(entity.notes),
+    );
+
+MedicationLogEntity mapMedicationLogToEntity(MedicationLog entry) =>
+    MedicationLogEntity(
+      id: entry.id,
+      userId: entry.userId,
+      medicationId: entry.medicationId,
+      date: entry.date,
+      timestamp: entry.timestamp,
+      doseTaken: entry.doseTaken,
+      notes: entry.notes,
+    );
+
+MedicationLogsCompanion mapMedicationLogEntityToCompanion(
+        MedicationLogEntity entity) =>
+    MedicationLogsCompanion(
+      id: Value(entity.id),
+      userId: Value(entity.userId),
+      medicationId: Value(entity.medicationId),
+      date: Value(entity.date),
+      timestamp: Value(entity.timestamp),
+      doseTaken: Value(entity.doseTaken),
+      notes: Value(entity.notes),
     );

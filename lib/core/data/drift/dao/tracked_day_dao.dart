@@ -27,17 +27,20 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     final startOfDay = DateTime(day.year, day.month, day.day);
     return await (select(
       trackedDays,
-    )..where((t) => t.day.equals(startOfDay))).getSingleOrNull();
+    )..where((t) => t.day.equals(startOfDay)))
+        .getSingleOrNull();
   }
 
   Future<List<TrackedDay>> getTrackedDaysInRange(
     DateTime start,
     DateTime end,
   ) async {
-    return await (select(trackedDays)..where(
-          (t) =>
-              t.day.isBiggerOrEqualValue(start) & t.day.isSmallerThanValue(end),
-        ))
+    return await (select(trackedDays)
+          ..where(
+            (t) =>
+                t.day.isBiggerOrEqualValue(start) &
+                t.day.isSmallerThanValue(end),
+          ))
         .get();
   }
 
@@ -45,7 +48,8 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     final startOfDay = DateTime(day.year, day.month, day.day);
     final result = await (select(
       trackedDays,
-    )..where((t) => t.day.equals(startOfDay))).getSingleOrNull();
+    )..where((t) => t.day.equals(startOfDay)))
+        .getSingleOrNull();
     return result != null;
   }
 
@@ -61,7 +65,8 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     if (existing != null) {
       await (update(
         trackedDays,
-      )..where((t) => t.day.equals(existing.day))).write(
+      )..where((t) => t.day.equals(existing.day)))
+          .write(
         TrackedDaysCompanion(calorieGoal: Value(existing.calorieGoal + amount)),
       );
     }
@@ -72,7 +77,8 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     if (existing != null) {
       await (update(
         trackedDays,
-      )..where((t) => t.day.equals(existing.day))).write(
+      )..where((t) => t.day.equals(existing.day)))
+          .write(
         TrackedDaysCompanion(calorieGoal: Value(existing.calorieGoal - amount)),
       );
     }
@@ -83,7 +89,8 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     if (existing != null) {
       await (update(
         trackedDays,
-      )..where((t) => t.day.equals(existing.day))).write(
+      )..where((t) => t.day.equals(existing.day)))
+          .write(
         TrackedDaysCompanion(
           caloriesTracked: Value(existing.caloriesTracked + calories),
         ),
@@ -96,7 +103,8 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     if (existing != null) {
       await (update(
         trackedDays,
-      )..where((t) => t.day.equals(existing.day))).write(
+      )..where((t) => t.day.equals(existing.day)))
+          .write(
         TrackedDaysCompanion(
           caloriesTracked: Value(existing.caloriesTracked - calories),
         ),
@@ -114,11 +122,11 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     if (existing != null) {
       await (update(
         trackedDays,
-      )..where((t) => t.day.equals(existing.day))).write(
+      )..where((t) => t.day.equals(existing.day)))
+          .write(
         TrackedDaysCompanion(
-          carbsGoal: carbsGoal != null
-              ? Value(carbsGoal)
-              : Value(existing.carbsGoal),
+          carbsGoal:
+              carbsGoal != null ? Value(carbsGoal) : Value(existing.carbsGoal),
           fatGoal: fatGoal != null ? Value(fatGoal) : Value(existing.fatGoal),
           proteinGoal: proteinGoal != null
               ? Value(proteinGoal)
@@ -138,7 +146,8 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     if (existing != null) {
       await (update(
         trackedDays,
-      )..where((t) => t.day.equals(existing.day))).write(
+      )..where((t) => t.day.equals(existing.day)))
+          .write(
         TrackedDaysCompanion(
           carbsGoal: carbsAmount != null
               ? Value((existing.carbsGoal ?? 0) + carbsAmount)
@@ -164,7 +173,8 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     if (existing != null) {
       await (update(
         trackedDays,
-      )..where((t) => t.day.equals(existing.day))).write(
+      )..where((t) => t.day.equals(existing.day)))
+          .write(
         TrackedDaysCompanion(
           carbsGoal: carbsAmount != null
               ? Value((existing.carbsGoal ?? 0) - carbsAmount)
@@ -190,7 +200,8 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     if (existing != null) {
       await (update(
         trackedDays,
-      )..where((t) => t.day.equals(existing.day))).write(
+      )..where((t) => t.day.equals(existing.day)))
+          .write(
         TrackedDaysCompanion(
           carbsTracked: carbsAmount != null
               ? Value((existing.carbsTracked ?? 0) + carbsAmount)
@@ -216,7 +227,8 @@ class TrackedDayDao extends DatabaseAccessor<AppDatabase>
     if (existing != null) {
       await (update(
         trackedDays,
-      )..where((t) => t.day.equals(existing.day))).write(
+      )..where((t) => t.day.equals(existing.day)))
+          .write(
         TrackedDaysCompanion(
           carbsTracked: carbsAmount != null
               ? Value((existing.carbsTracked ?? 0) - carbsAmount)

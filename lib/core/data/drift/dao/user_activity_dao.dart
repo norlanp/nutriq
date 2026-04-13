@@ -32,11 +32,12 @@ class UserActivityDao extends DatabaseAccessor<AppDatabase>
   Future<List<UserActivity>> getUserActivitiesByDate(DateTime dateTime) async {
     final startOfDay = DateTime(dateTime.year, dateTime.month, dateTime.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
-    return await (select(userActivities)..where(
-          (t) =>
-              t.date.isBiggerOrEqualValue(startOfDay) &
-              t.date.isSmallerThanValue(endOfDay),
-        ))
+    return await (select(userActivities)
+          ..where(
+            (t) =>
+                t.date.isBiggerOrEqualValue(startOfDay) &
+                t.date.isSmallerThanValue(endOfDay),
+          ))
         .get();
   }
 

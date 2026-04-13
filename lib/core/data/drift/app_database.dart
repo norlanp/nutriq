@@ -19,6 +19,14 @@ import 'package:nutriq/core/data/drift/tables/ai_model_metadata_table.dart';
 import 'package:nutriq/core/data/drift/tables/meal_plan_table.dart';
 import 'package:nutriq/core/data/drift/tables/photo_progress_table.dart';
 import 'package:nutriq/core/data/drift/tables/body_measurement_table.dart';
+import 'package:nutriq/core/data/drift/tables/daily_note_table.dart';
+import 'package:nutriq/core/data/drift/tables/autopilot_table.dart';
+import 'package:nutriq/core/data/drift/tables/custom_tracker_table.dart';
+import 'package:nutriq/core/data/drift/tables/custom_tracker_entry_table.dart';
+import 'package:nutriq/core/data/drift/tables/blood_glucose_table.dart';
+import 'package:nutriq/core/data/drift/tables/medication_table.dart';
+import 'package:nutriq/core/data/drift/tables/medication_log_table.dart';
+import 'package:nutriq/core/data/drift/tables/symptom_table.dart';
 
 import 'package:nutriq/core/data/drift/dao/config_dao.dart';
 import 'package:nutriq/core/data/drift/dao/user_dao.dart';
@@ -35,6 +43,12 @@ import 'package:nutriq/core/data/drift/dao/ai_model_metadata_dao.dart';
 import 'package:nutriq/core/data/drift/dao/meal_plan_dao.dart';
 import 'package:nutriq/core/data/drift/dao/photo_progress_dao.dart';
 import 'package:nutriq/core/data/drift/dao/body_measurement_dao.dart';
+import 'package:nutriq/core/data/drift/dao/daily_note_dao.dart';
+import 'package:nutriq/core/data/drift/dao/autopilot_dao.dart';
+import 'package:nutriq/core/data/drift/dao/custom_tracker_dao.dart';
+import 'package:nutriq/core/data/drift/dao/blood_glucose_dao.dart';
+import 'package:nutriq/core/data/drift/dao/medication_dao.dart';
+import 'package:nutriq/core/data/drift/dao/symptom_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -55,7 +69,15 @@ part 'app_database.g.dart';
     AiModelMetadataEntries,
     MealPlans,
     PhotoProgressEntries,
-    BodyMeasurements
+    BodyMeasurements,
+    DailyNotes,
+    AutopilotEntries,
+    CustomTrackers,
+    CustomTrackerEntries,
+    SymptomEntries,
+    Medications,
+    MedicationLogs,
+    BloodGlucoseEntries
   ],
   daos: [
     ConfigDao,
@@ -72,7 +94,13 @@ part 'app_database.g.dart';
     AiModelMetadataDao,
     MealPlanDao,
     PhotoProgressDao,
-    BodyMeasurementDao
+    BodyMeasurementDao,
+    DailyNoteDao,
+    AutopilotDao,
+    CustomTrackerDao,
+    SymptomDao,
+    MedicationDao,
+    BloodGlucoseDao
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -81,7 +109,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 22;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -162,6 +190,51 @@ class AppDatabase extends _$AppDatabase {
           if (from < 13) {
             await customStatement(
               'ALTER TABLE config_entries ADD COLUMN tdee_method TEXT NOT NULL DEFAULT \'iom2005\'',
+            );
+          }
+          if (from < 14) {
+            await m.createTable(dailyNotes);
+          }
+          if (from < 15) {
+            await m.createTable(autopilotEntries);
+          }
+          if (from < 17) {
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN calorie_cycle_json TEXT',
+            );
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN calorie_cycling_enabled INTEGER NOT NULL DEFAULT 0',
+            );
+          }
+          if (from < 18) {
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN exercise_calorie_mode TEXT NOT NULL DEFAULT \'half\'',
+            );
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN exercise_credit_percent REAL NOT NULL DEFAULT 0.5',
+            );
+            await m.createTable(customTrackers);
+            await m.createTable(customTrackerEntries);
+          }
+          if (from < 19) {
+            await m.createTable(symptomEntries);
+          }
+          if (from < 20) {
+            await m.createTable(medications);
+            await m.createTable(medicationLogs);
+          }
+          if (from < 21) {
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN allergens TEXT NOT NULL DEFAULT \'[]\'',
+            );
+          }
+          if (from < 22) {
+            await m.createTable(bloodGlucoseEntries);
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN blood_glucose_min_mg_dl INTEGER NOT NULL DEFAULT 70',
+            );
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN blood_glucose_max_mg_dl INTEGER NOT NULL DEFAULT 180',
             );
           }
         },

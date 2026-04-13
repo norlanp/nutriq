@@ -29,5 +29,16 @@ class NavigationOptions {
   static const cloudBackupRoute = "cloudBackup";
   static const mealTimingRoute = "mealTiming";
   static const bodyMeasurementRoute = "bodyMeasurement";
+  static const dailyNoteRoute = "dailyNote";
   static const customFoodRoute = "customFood";
+  static const foodGradeRoute = "foodGrade";
+  static const autopilotRoute = "autopilot";
+  static const calorieCyclingRoute = "calorieCycling";
+  static const customTrackersRoute = "customTrackers";
+  static const allergenSettingsRoute = "allergenSettings";
+  static const symptomTrackingRoute = "symptomTracking";
+  static const recipeImportRoute = "recipeImport";
+  static const bloodGlucoseRoute = "bloodGlucose";
+  static const medicationRoute = "medication";
+  static const medicationLogRoute = "medicationLog";
 }

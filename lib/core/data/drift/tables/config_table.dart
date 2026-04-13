@@ -20,6 +20,18 @@ class ConfigEntries extends Table {
   IntColumn get dailyWaterGoalMl =>
       integer().nullable().withDefault(const Constant(2000))();
   TextColumn get tdeeMethod => text().withDefault(const Constant('iom2005'))();
+  TextColumn get exerciseCalorieMode =>
+      text().withDefault(const Constant('half'))();
+  RealColumn get exerciseCreditPercent =>
+      real().withDefault(const Constant(0.5))();
+  TextColumn get calorieCycleJson => text().nullable()();
+  IntColumn get calorieCyclingEnabled =>
+      integer().withDefault(const Constant(0))();
+  TextColumn get allergens => text().withDefault(const Constant('[]'))();
+  IntColumn get bloodGlucoseMinMgDl =>
+      integer().nullable().withDefault(const Constant(70))();
+  IntColumn get bloodGlucoseMaxMgDl =>
+      integer().nullable().withDefault(const Constant(180))();
 
   @override
   Set<Column> get primaryKey => {id};

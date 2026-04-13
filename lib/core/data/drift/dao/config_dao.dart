@@ -125,4 +125,59 @@ class ConfigDao extends DatabaseAccessor<AppDatabase> with _$ConfigDaoMixin {
       ConfigEntriesCompanion(tdeeMethod: Value(method)),
     );
   }
+
+  Future<String?> getCalorieCycleJson() async {
+    final config = await getConfig();
+    return config.calorieCycleJson;
+  }
+
+  Future<void> setCalorieCycleJson(String json) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(calorieCycleJson: Value(json)),
+    );
+  }
+
+  Future<bool> getCalorieCyclingEnabled() async {
+    final config = await getConfig();
+    return config.calorieCyclingEnabled != 0;
+  }
+
+  Future<void> setCalorieCyclingEnabled(bool enabled) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(calorieCyclingEnabled: Value(enabled ? 1 : 0)),
+    );
+  }
+
+  Future<String> getExerciseCalorieMode() async {
+    final config = await getConfig();
+    return config.exerciseCalorieMode;
+  }
+
+  Future<void> setExerciseCalorieMode(String mode) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(exerciseCalorieMode: Value(mode)),
+    );
+  }
+
+  Future<double> getExerciseCreditPercent() async {
+    final config = await getConfig();
+    return config.exerciseCreditPercent;
+  }
+
+  Future<void> setExerciseCreditPercent(double percent) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(exerciseCreditPercent: Value(percent)),
+    );
+  }
+
+  Future<String> getAllergens() async {
+    final config = await getConfig();
+    return config.allergens;
+  }
+
+  Future<void> setAllergens(String allergensJson) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(allergens: Value(allergensJson)),
+    );
+  }
 }

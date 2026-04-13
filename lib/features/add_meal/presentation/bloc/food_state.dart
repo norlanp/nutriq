@@ -17,11 +17,15 @@ class FoodLoadingState extends FoodState {
 class FoodLoadedState extends FoodState {
   final List<MealEntity> food;
   final bool usesImperialUnits;
+  final bool allergensFiltered;
 
-  const FoodLoadedState({required this.food, this.usesImperialUnits = false});
+  const FoodLoadedState(
+      {required this.food,
+      this.usesImperialUnits = false,
+      this.allergensFiltered = false});
 
   @override
-  List<Object?> get props => [food, usesImperialUnits];
+  List<Object?> get props => [food, allergensFiltered];
 }
 
 class FoodFailedState extends FoodState {

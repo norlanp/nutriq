@@ -294,3 +294,280 @@
 [x] Show BMR breakdown in user profile/settings (BMR, TDEE, activity multiplier) @file:lib/features/
 [x] Add l10n strings for BMR display @file:l10n/
 [x] Run flutter analyze, tests
+
+## Phase 5: MyNetDiary Feature Parity
+
+### Item 20: Autopilot (Auto-Adjust Calorie Budget from Weight Trend)
+
+[x] Create AutopilotService (compare actual vs predicted weight loss, adjust daily calorie budget) @file:lib/core/domain/service/autopilot_service.dart
+[x] Add autopilotEnabled flag to UserEntity/ConfigEntity @file:lib/core/domain/entity/
+[x] Create Drift column for autopilotEnabled in user/config table @file:lib/core/data/drift/
+[x] Create GetAutopilotStatusUsecase (current budget, last adjustment, trend) @file:lib/core/domain/usecase/autopilot/
+[x] Create ToggleAutopilotUsecase @file:lib/core/domain/usecase/autopilot/
+[x] Create AdjustBudgetUsecase (recalculate budget based on weight trend deviation) @file:lib/core/domain/usecase/autopilot/
+[x] Create AutopilotBloc (Toggle, RecalculateBudget, LoadStatus) @file:lib/features/autopilot/presentation/autopilot_bloc.dart
+[x] Create AutopilotBloc event + state classes @file:lib/features/autopilot/presentation/autopilot_bloc.dart
+[x] Build autopilot settings screen (enable/disable toggle, adjustment history, current budget vs baseline) @file:lib/features/autopilot/presentation/autopilot_screen.dart
+[x] Show budget adjustment amount on home/dashboard @file:lib/features/home/
+[x] Integrate AutopilotService into weekly weigh-in flow @file:lib/features/weight_tracking/
+[x] Add autopilot route + settings entry @file:lib/main.dart
+[x] Add l10n strings for autopilot @file:l10n/
+[x] Register autopilot DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] Run flutter analyze, tests
+
+### Item 21: Advanced AutoPilot (Exercise Calorie Integration)
+
+[x] Extend AutopilotService to factor exercise calories into budget recalculation @file:lib/core/domain/service/autopilot_service.dart
+[x] Add exerciseCalorieMode to ConfigEntity (none/50%/100%/custom) @file:lib/core/domain/entity/
+[x] Create CalculateExerciseBudgetUsecase (determine how much exercise calorie credit to add) @file:lib/core/domain/usecase/autopilot/
+[x] Extend AutopilotBloc (ToggleExerciseCredit, SetExerciseCreditPercent) @file:lib/features/autopilot/presentation/autopilot_bloc.dart
+[x] Build exercise credit settings UI (percent slider, eat-back toggle) @file:lib/features/autopilot/presentation/autopilot_screen.dart
+[x] Update net calorie calculation to use exercise credit @file:lib/features/diary/
+[x] Add l10n strings for advanced autopilot @file:l10n/
+[x] Run flutter analyze, tests
+
+### Item 22: Food Grade (A-D Nutritional Rating)
+
+[x] Create FoodGradeCalculator service (score food based on nutrient density, calories, macros, sodium, sugar, fiber) @file:lib/core/domain/service/food_grade_calculator.dart
+[x] Add foodGrade field (A/B/C/D) to food search results / FoodEntity @file:lib/core/domain/entity/
+[x] Display food grade badge in food search results list @file:lib/features/add_meal/
+[x] Display food grade on food detail screen @file:lib/features/meal_detail/
+[x] Display daily food grade average on day summary @file:lib/features/home/
+[x] Add food grade filter/sort option in food search @file:lib/features/add_meal/
+[x] Add l10n strings for food grade @file:l10n/
+[x] Register food grade DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] Run flutter analyze, tests
+
+### Item 23: Calorie Cycling (Per-Weekday Calorie Targets)
+
+[x] Add calorieCycleMap to ConfigEntity (Map<int, double> weekday -> calorie target) @file:lib/core/domain/entity/
+[x] Create Drift column for calorie cycle config (JSON text) @file:lib/core/data/drift/
+[x] Create SaveCalorieCycleUsecase, GetCalorieCycleUsecase @file:lib/core/domain/usecase/calorie_cycling/
+[x] Create CalorieCyclingBloc (LoadCycle, SaveCycle, ToggleCycling) @file:lib/features/calorie_cycling/presentation/calorie_cycling_bloc.dart
+[x] Build calorie cycling screen (toggle per-day, slider/input per weekday target) @file:lib/features/calorie_cycling/presentation/calorie_cycling_screen.dart
+[x] Update daily calorie budget logic to use cycle target when enabled @file:lib/features/home/
+[x] Show cycled target on dashboard/day view @file:lib/features/home/
+[x] Add calorie_cycling route + settings entry @file:lib/main.dart
+[x] Add l10n strings for calorie cycling @file:l10n/
+[x] Register calorie cycling DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] Run flutter analyze, tests
+
+### Item 24: Custom Trackers (Hunger, Sleep, Mood, etc.)
+
+[x] Create CustomTrackerEntity (id, userId, name, type: scale/boolean/text, min, max, icon) @file:lib/core/domain/entity/custom_tracker_entity.dart
+[x] Create CustomTrackerEntryEntity (id, userId, trackerId, date, value) @file:lib/core/domain/entity/custom_tracker_entry_entity.dart
+[x] Create Drift CustomTrackerTable + CustomTrackerEntryTable @file:lib/core/data/drift/tables/custom_tracker_table.dart
+[x] Create CustomTrackerDao (addTracker, deleteTracker, addEntry, getEntries, getEntriesByDate) @file:lib/core/data/drift/dao/custom_tracker_dao.dart
+[x] Create CustomTrackerDataSource + Repository @file:lib/core/data/
+[x] Create mappers: CustomTrackerEntity / CustomTrackerEntryEntity <-> Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create CustomTrackerRepository abstract contract + impl @file:lib/core/domain/repository/ @file:lib/core/data/repository/
+[x] Create CreateCustomTrackerUsecase, DeleteCustomTrackerUsecase, LogTrackerEntryUsecase, GetTrackerEntriesUsecase @file:lib/core/domain/usecase/custom_tracker/
+[x] Create CustomTrackerBloc (LoadTrackers, CreateTracker, DeleteTracker, LogEntry, LoadEntries) @file:lib/features/custom_trackers/presentation/custom_tracker_bloc.dart
+[x] Build custom tracker management screen (create/edit tracker, choose type + icon) @file:lib/features/custom_trackers/presentation/custom_tracker_screen.dart
+[x] Build tracker logging widgets (scale slider, boolean toggle, text input) @file:lib/features/custom_trackers/presentation/widgets/
+[x] Build tracker history/trend chart per tracker @file:lib/features/custom_trackers/presentation/widgets/tracker_trend_chart.dart
+[x] Add custom tracker entries to day timeline/dashboard @file:lib/features/home/
+[x] Add custom_trackers route + nav entry @file:lib/main.dart
+[x] Add l10n strings for custom trackers @file:l10n/
+[x] Register custom tracker DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump for custom_tracker + custom_tracker_entry tables @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 25: Blood Glucose / Diabetes Tracking
+
+[x] Create BloodGlucoseEntity (id, userId, date, timestamp, valueMgDl, label: fasting/beforeMeal/afterMeal/bedtime, notes) @file:lib/core/domain/entity/blood_glucose_entity.dart
+[x] Create Drift BloodGlucoseTable (id PK, userId, date, timestamp, valueMgDl, label, notes) @file:lib/core/data/drift/tables/blood_glucose_table.dart
+[x] Create BloodGlucoseDao (addEntry, deleteEntry, getByDate, getByDateRange, getAverage) @file:lib/core/data/drift/dao/blood_glucose_dao.dart
+[x] Create BloodGlucoseDataSource + Repository @file:lib/core/data/
+[x] Create mapper: BloodGlucoseEntity <-> Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create BloodGlucoseRepository abstract contract + impl @file:lib/core/domain/repository/ @file:lib/core/data/repository/
+[x] Create AddBloodGlucoseUsecase, DeleteBloodGlucoseUsecase, GetBloodGlucoseUsecase, GetBloodGlucoseAverageUsecase @file:lib/core/domain/usecase/blood_glucose/
+[x] Add BG target range to ConfigEntity (minMgDl, maxMgDl) @file:lib/core/domain/entity/
+[x] Create BloodGlucoseBloc (AddEntry, DeleteEntry, LoadEntries, LoadAverage) @file:lib/features/blood_glucose/presentation/blood_glucose_bloc.dart
+[x] Build BG logging screen (value input, label picker, timestamp, target range highlight) @file:lib/features/blood_glucose/presentation/blood_glucose_screen.dart
+[x] Build BG trend chart (line chart with target range band overlay) @file:lib/features/blood_glucose/presentation/widgets/bg_trend_chart.dart
+[x] Build BG day timeline (entries plotted on time axis with color coding) @file:lib/features/blood_glucose/presentation/widgets/bg_day_timeline.dart
+[x] Add BG check reminders (reuse notification scheduler) @file:lib/features/blood_glucose/
+[x] Add blood_glucose route + nav entry @file:lib/main.dart
+[x] Add l10n strings for blood glucose @file:l10n/
+[x] Register blood glucose DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump for blood_glucose table @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 26: Medication Tracking + Reminders
+
+[x] Create MedicationEntity (id, userId, name, dosage, frequency: daily/weekly/asNeeded, timesPerDay, notes) @file:lib/core/domain/entity/medication_entity.dart
+[x] Create MedicationLogEntity (id, userId, medicationId, date, timestamp, doseTaken, notes) @file:lib/core/domain/entity/medication_log_entity.dart
+[x] Create Drift MedicationTable + MedicationLogTable @file:lib/core/data/drift/tables/medication_table.dart
+[x] Create MedicationDao (addMed, deleteMed, addLog, getLogs, getByDate) @file:lib/core/data/drift/dao/medication_dao.dart
+[x] Create MedicationDataSource + Repository @file:lib/core/data/
+[x] Create mappers: MedicationEntity / MedicationLogEntity <-> Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create MedicationRepository abstract contract + impl @file:lib/core/domain/repository/ @file:lib/core/data/repository/
+[x] Create AddMedicationUsecase, DeleteMedicationUsecase, LogMedicationUsecase, GetMedicationLogUsecase @file:lib/core/domain/usecase/medication/
+[x] Create MedicationBloc (AddMed, DeleteMed, LogDose, LoadMeds, LoadLog) @file:lib/features/medication/presentation/medication_bloc.dart
+[x] Build medication management screen (add/edit/delete meds) @file:lib/features/medication/presentation/medication_screen.dart
+[x] Build medication log screen (today doses, check-off taken, mark missed) @file:lib/features/medication/presentation/medication_log_screen.dart
+[x] Add medication reminders via notification scheduler (per-med time slots) @file:lib/features/medication/
+[ ] Show medication on day timeline @file:lib/features/home/
+[x] Add medication route + nav entry @file:lib/main.dart
+[x] Add l10n strings for medication @file:l10n/
+[x] Register medication DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump for medication + medication_log tables @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 27: Symptoms Tracking
+
+[x] Create SymptomEntity (id, userId, date, timestamp, type, severity: 1-5, notes) @file:lib/core/domain/entity/symptom_entity.dart
+[x] Create Drift SymptomTable (id PK, userId, date, timestamp, type, severity, notes) @file:lib/core/data/drift/tables/symptom_table.dart
+[x] Create SymptomDao (add, delete, getByDate, getByDateRange, getByType) @file:lib/core/data/drift/dao/symptom_dao.dart
+[x] Create SymptomDataSource + Repository @file:lib/core/data/
+[x] Create mapper: SymptomEntity <-> Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create SymptomRepository abstract contract + impl @file:lib/core/domain/repository/ @file:lib/core/data/repository/
+[x] Create AddSymptomUsecase, DeleteSymptomUsecase, GetSymptomsUsecase @file:lib/core/domain/usecase/symptom/
+[x] Create SymptomBloc (AddSymptom, DeleteSymptom, LoadSymptoms) @file:lib/features/symptom_tracking/presentation/symptom_bloc.dart
+[x] Build symptom logging screen (type picker, severity slider, timestamp, notes) @file:lib/features/symptom_tracking/presentation/symptom_screen.dart
+[x] Build symptom history/trend chart @file:lib/features/symptom_tracking/presentation/widgets/symptom_trend_chart.dart
+[x] Add symptom tracking route + nav entry @file:lib/main.dart
+[x] Add l10n strings for symptom tracking @file:l10n/
+[x] Register symptom DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump for symptom table @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 28: Allergen Tracking + Filtering
+
+[x] Define AllergenType enum (gluten, dairy, soy, nuts, shellfish, eggs, fish, sesame, etc.) @file:lib/core/domain/entity/allergen_type.dart
+[x] Add allergens list to UserEntity/ConfigEntity @file:lib/core/domain/entity/
+[x] Create Drift column for user allergens (JSON text) @file:lib/core/data/drift/
+[x] Create AllergenFilterService (filter food search results by user allergens) @file:lib/core/domain/service/allergen_filter_service.dart
+[x] Integrate allergen filter into food search flow @file:lib/features/add_meal/
+[x] Add allergen data to food items (tag foods with allergens) @file:lib/core/domain/entity/
+[x] Build allergen settings screen (toggle per allergen) @file:lib/features/settings/
+[x] Show allergen warnings on food detail / food entry @file:lib/features/meal_detail/
+[x] Add l10n strings for allergens @file:l10n/
+[x] Register allergen DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] Run flutter analyze, tests
+
+### Item 29: Daily Notes
+
+[x] Add note field to daily diary (per-date free text) -- extend existing entity or create DailyNoteEntity @file:lib/core/domain/entity/
+[x] Create Drift DailyNoteTable (id PK, userId, date, note TEXT) @file:lib/core/data/drift/tables/daily_note_table.dart
+[x] Create DailyNoteDao (getNote, upsertNote) @file:lib/core/data/drift/dao/daily_note_dao.dart
+[x] Create DailyNoteDataSource + Repository @file:lib/core/data/
+[x] Create mapper: DailyNoteEntity <-> Drift companion @file:lib/core/data/mapper/mappers.dart
+[x] Create GetDailyNoteUsecase, SaveDailyNoteUsecase @file:lib/core/domain/usecase/daily_note/
+[x] Create DailyNoteBloc (LoadNote, SaveNote) @file:lib/features/daily_notes/presentation/daily_note_bloc.dart
+[x] Build daily note input on diary/day view (expandable text field at bottom) @file:lib/features/home/
+[x] Show note indicator on calendar for days with notes @file:lib/features/home/
+[x] Add l10n strings for daily notes @file:l10n/
+[x] Register daily note DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] DB schema bump for daily_note table @file:lib/core/data/drift/
+[x] Run build_runner, flutter analyze, tests
+
+### Item 30: Recipe Import from Web URLs
+
+[x] Add http + html deps for scraping (if not already present) @file:pubspec.yaml
+[x] Create RecipeScraperService (fetch URL, parse structured data / schema.org Recipe JSON-LD, extract ingredients + nutrition) @file:lib/core/domain/service/recipe_scraper_service.dart
+[x] Create RecipeImportException for failure cases @file:lib/core/domain/exception/
+[x] Create ImportRecipeUsecase (URL -> parsed recipe -> save to recipe builder) @file:lib/core/domain/usecase/recipe_import/
+[x] Create RecipeImportBloc (ImportUrl, LoadPreview, ConfirmImport) @file:lib/features/recipe_import/presentation/recipe_import_bloc.dart
+[x] Build recipe import screen (URL paste, preview parsed result, edit before saving) @file:lib/features/recipe_import/presentation/recipe_import_screen.dart
+[x] Add "Import from URL" button in recipe builder @file:lib/features/recipe_builder/
+[x] Add l10n strings for recipe import @file:l10n/
+[x] Register recipe import DI entries in locator.dart @file:lib/core/di/locator.dart
+[x] Run flutter analyze, tests
+
+### Item 31: Premium Recipe Catalog (Curated Dietitian Recipes)
+
+[ ] Create RecipeCatalogService (fetch curated recipe list from bundled assets or remote API) @file:lib/core/domain/service/recipe_catalog_service.dart
+[ ] Create CatalogRecipeEntity (id, title, description, servings, prepTime, cookTime, calories, macros, ingredients, steps, tags, imageUrl) @file:lib/core/domain/entity/catalog_recipe_entity.dart
+[ ] Create RecipeCatalogBloc (LoadCatalog, SearchCatalog, FilterByTag, LoadRecipe) @file:lib/features/recipe_catalog/presentation/recipe_catalog_bloc.dart
+[ ] Build recipe catalog screen (browse/search, filter by diet tag) @file:lib/features/recipe_catalog/presentation/recipe_catalog_screen.dart
+[ ] Build recipe detail screen (full screen photo, ingredients, steps, nutrition, add-to-diary button) @file:lib/features/recipe_catalog/presentation/recipe_detail_screen.dart
+[ ] Seed initial recipe catalog as bundled JSON assets @file:assets/recipes/
+[ ] Add asset registration in pubspec.yaml @file:pubspec.yaml
+[ ] Add recipe_catalog route + nav entry @file:lib/main.dart
+[ ] Add l10n strings for recipe catalog @file:l10n/
+[ ] Register recipe catalog DI entries in locator.dart @file:lib/core/di/locator.dart
+[ ] Run flutter analyze, tests
+
+### Item 32: Net Carbs Tracking
+
+[ ] Add netCarbs field computation to food/nutrition entities (totalCarbs - fiber - sugarAlcohols) @file:lib/core/domain/entity/
+[ ] Add netCarbsEnabled toggle to ConfigEntity @file:lib/core/domain/entity/
+[ ] Create Drift column for netCarbsEnabled @file:lib/core/data/drift/
+[ ] Create NetCarbsUsecase (compute net carbs for food, meal, day) @file:lib/core/domain/usecase/net_carbs/
+[ ] Update macro display to show net carbs instead of total carbs when enabled @file:lib/features/home/
+[ ] Show net carbs in food detail + meal detail @file:lib/features/meal_detail/
+[ ] Add net carbs column in daily nutrition summary @file:lib/features/home/
+[ ] Build net carbs toggle in settings @file:lib/features/settings/
+[ ] Add l10n strings for net carbs @file:l10n/
+[ ] Register net carbs DI entries in locator.dart @file:lib/core/di/locator.dart
+[ ] Run flutter analyze, tests
+
+### Item 33: Home Screen / Lock Screen Widgets
+
+[ ] Add home_widget dep to pubspec.yaml @file:pubspec.yaml
+[ ] Create WidgetDataService (write remaining calories, macros, water to shared prefs for widget read) @file:lib/core/domain/service/widget_data_service.dart
+[ ] Build iOS Home Screen widget (remaining calories ring, macro bars) @file:ios/Runner/Widget/
+[ ] Build Android Home Screen widget (remaining calories, glance info) @file:android/app/src/main/java/.../widget/
+[ ] Build iOS Lock Screen widget (circular calorie ring) @file:ios/Runner/Widget/
+[ ] Build Android Lock Screen widget @file:android/app/src/main/java/.../widget/
+[ ] Update widget data on every food/water/activity log @file:lib/features/
+[ ] Add l10n strings for widgets @file:l10n/
+[ ] Register widget DI entries in locator.dart @file:lib/core/di/locator.dart
+[ ] Run flutter analyze, tests
+
+### Item 34: AR Grocery Check (Shopping Comparison)
+
+[ ] Extend barcode scanner to show nutrition comparison in shopping context @file:lib/features/scanner/
+[ ] Create GroceryCheckService (scan barcode -> fetch food data -> compute Food Grade -> compare) @file:lib/core/domain/service/grocery_check_service.dart
+[ ] Create GroceryCheckBloc (ScanProduct, CompareProducts, ClearList) @file:lib/features/grocery_check/presentation/grocery_check_bloc.dart
+[ ] Build grocery check screen (scanned items list, food grade badges, side-by-side nutrition compare) @file:lib/features/grocery_check/presentation/grocery_check_screen.dart
+[ ] Build product nutrition detail card (expanding card with full nutrient list) @file:lib/features/grocery_check/presentation/widgets/product_card.dart
+[ ] Add grocery_check route + nav entry @file:lib/main.dart
+[ ] Add l10n strings for grocery check @file:l10n/
+[ ] Register grocery check DI entries in locator.dart @file:lib/core/di/locator.dart
+[ ] Run flutter analyze, tests
+
+### Item 35: Step Bonus (Steps -> Calorie Credit)
+
+[ ] Add stepBonusEnabled flag to ConfigEntity @file:lib/core/domain/entity/
+[ ] Add stepBonusPercent (how much of step-derived calories to credit) @file:lib/core/domain/entity/
+[ ] Create Drift columns for step bonus config @file:lib/core/data/drift/
+[ ] Create CalculateStepBonusUsecase (steps x stride x factor -> calorie credit) @file:lib/core/domain/usecase/step_bonus/
+[ ] Create StepBonusBloc (LoadConfig, ToggleBonus, SetPercent) @file:lib/features/step_bonus/presentation/step_bonus_bloc.dart
+[ ] Build step bonus settings UI (toggle, percent slider) @file:lib/features/step_bonus/presentation/step_bonus_screen.dart
+[ ] Integrate step bonus into daily net calorie calculation @file:lib/features/home/
+[ ] Show step bonus credit on dashboard @file:lib/features/home/
+[ ] Read daily steps from HealthKit/Health Connect (reuse health_sync) @file:lib/features/health_sync/
+[ ] Add l10n strings for step bonus @file:l10n/
+[ ] Register step bonus DI entries in locator.dart @file:lib/core/di/locator.dart
+[ ] Run flutter analyze, tests
+
+### Item 36: AI Voice Food Logging
+
+[ ] Add speech_to_text dep to pubspec.yaml @file:pubspec.yaml
+[ ] Create VoiceLoggingService (listen -> transcribe -> parse food items + quantities) @file:lib/features/voice_logging/data/voice_logging_service.dart
+[ ] Create FoodParserService (parse natural language food description -> structured food entries) @file:lib/features/voice_logging/data/food_parser_service.dart
+[ ] Create VoiceLogUsecase (listen -> parse -> return food candidates) @file:lib/features/voice_logging/domain/usecase/voice_log_usecase.dart
+[ ] Create VoiceLoggingBloc (StartListening, StopListening, ParseResult, ConfirmEntries) @file:lib/features/voice_logging/presentation/voice_logging_bloc.dart
+[ ] Build voice logging screen (mic button, live transcription, parsed food list, confirm/cancel) @file:lib/features/voice_logging/presentation/voice_logging_screen.dart
+[ ] Add voice logging entry in AddItemBottomSheet (mic icon) @file:lib/core/presentation/widgets/add_item_bottom_sheet.dart
+[ ] Add voice_logging route to NavigationOptions + main.dart @file:lib/main.dart
+[ ] Add l10n strings for voice logging @file:l10n/
+[ ] Register voice logging DI entries in locator.dart @file:lib/core/di/locator.dart
+[ ] Run flutter analyze, tests
+
+### Item 37: AI Restaurant Menu Scan
+
+[ ] Add google_mlkit_text_recognition dep to pubspec.yaml @file:pubspec.yaml
+[ ] Create MenuScannerService (capture menu photo -> OCR text -> identify menu items) @file:lib/features/menu_scan/data/menu_scanner_service.dart
+[ ] Create MenuItemParserService (parsed text -> menu items with food descriptions) @file:lib/features/menu_scan/data/menu_item_parser_service.dart
+[ ] Create ScanMenuUsecase (photo -> menu items -> match against food DB -> return with nutrition) @file:lib/features/menu_scan/domain/usecase/scan_menu_usecase.dart
+[ ] Create MenuScanBloc (CaptureMenu, ParseItems, SelectItem, AddSelected) @file:lib/features/menu_scan/presentation/menu_scan_bloc.dart
+[ ] Build menu scan screen (camera/live viewfinder, OCR overlay highlighting items) @file:lib/features/menu_scan/presentation/menu_scan_screen.dart
+[ ] Build menu items list (nutrition per item, food grade, add-to-diary button) @file:lib/features/menu_scan/presentation/menu_items_screen.dart
+[ ] Add menu_scan route + nav entry @file:lib/main.dart
+[ ] Add l10n strings for menu scan @file:l10n/
+[ ] Register menu scan DI entries in locator.dart @file:lib/core/di/locator.dart
+[ ] Run flutter analyze, tests

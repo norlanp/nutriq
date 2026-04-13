@@ -64,14 +64,14 @@ class TrackedDayEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    day,
-    calorieGoal,
-    caloriesTracked,
-    carbsGoal,
-    carbsTracked,
-    fatGoal,
-    fatTracked,
-    proteinGoal,
-    proteinTracked,
-  ];
+        day,
+        calorieGoal,
+        caloriesTracked,
+        carbsGoal,
+        carbsTracked,
+        fatGoal,
+        fatTracked,
+        proteinGoal,
+        proteinTracked,
+      ];
 }

@@ -1,4 +1,5 @@
 import 'package:nutriq/core/data/data_source/body_measurement_data_source.dart';
+import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/mapper/mappers.dart';
 import 'package:nutriq/core/domain/entity/body_measurement_entity.dart';
 import 'package:nutriq/core/domain/repository/body_measurement_repository.dart'
@@ -17,15 +18,20 @@ class BodyMeasurementRepository implements domain.BodyMeasurementRepository {
 
   @override
   Future<List<BodyMeasurementEntity>> getByDate(DateTime date) async {
-    final entries = await _dataSource.getByDate(date);
-    return entries.map(mapBodyMeasurementToEntity).toList();
+    final List<BodyMeasurement> entries = await _dataSource.getByDate(date);
+    return entries
+        .map<BodyMeasurementEntity>(mapBodyMeasurementToEntity)
+        .toList();
   }
 
   @override
   Future<List<BodyMeasurementEntity>> getBetweenDates(
       DateTime startDate, DateTime endDate) async {
-    final entries = await _dataSource.getBetweenDates(startDate, endDate);
-    return entries.map(mapBodyMeasurementToEntity).toList();
+    final List<BodyMeasurement> entries =
+        await _dataSource.getBetweenDates(startDate, endDate);
+    return entries
+        .map<BodyMeasurementEntity>(mapBodyMeasurementToEntity)
+        .toList();
   }
 
   @override

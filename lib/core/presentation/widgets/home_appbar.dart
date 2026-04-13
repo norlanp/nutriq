@@ -16,8 +16,10 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
             child: RichText(
               text: TextSpan(
                 text: S.of(context).appTitle,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

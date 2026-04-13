@@ -15,7 +15,18 @@ import 'package:nutriq/core/data/data_source/ai_model_metadata_data_source.dart'
 import 'package:nutriq/core/data/data_source/meal_plan_data_source.dart';
 import 'package:nutriq/core/data/data_source/photo_progress_data_source.dart';
 import 'package:nutriq/core/data/data_source/body_measurement_data_source.dart';
+import 'package:nutriq/core/data/data_source/daily_note_data_source.dart';
+import 'package:nutriq/core/data/data_source/autopilot_data_source.dart';
+import 'package:nutriq/core/data/data_source/custom_tracker_data_source.dart';
+import 'package:nutriq/core/data/data_source/blood_glucose_data_source.dart';
+import 'package:nutriq/core/data/data_source/symptom_data_source.dart';
+import 'package:nutriq/core/data/data_source/medication_data_source.dart';
+import 'package:nutriq/core/data/data_source/blood_glucose_data_source.dart';
 import 'package:nutriq/core/data/drift/app_database.dart';
+import 'package:nutriq/core/data/drift/dao/custom_tracker_dao.dart';
+import 'package:nutriq/core/data/drift/dao/symptom_dao.dart';
+import 'package:nutriq/core/data/drift/dao/medication_dao.dart';
+import 'package:nutriq/core/data/drift/dao/blood_glucose_dao.dart';
 import 'package:nutriq/core/data/drift/dao/meal_dao.dart';
 import 'package:nutriq/core/data/drift/dao/recipe_dao.dart';
 import 'package:nutriq/core/data/drift/dao/water_dao.dart';
@@ -24,6 +35,8 @@ import 'package:nutriq/core/data/drift/dao/ai_model_metadata_dao.dart';
 import 'package:nutriq/core/data/drift/dao/meal_plan_dao.dart';
 import 'package:nutriq/core/data/drift/dao/photo_progress_dao.dart';
 import 'package:nutriq/core/data/drift/dao/body_measurement_dao.dart';
+import 'package:nutriq/core/data/drift/dao/daily_note_dao.dart';
+import 'package:nutriq/core/data/drift/dao/autopilot_dao.dart';
 import 'package:nutriq/core/data/repository/config_repository.dart' as data;
 import 'package:nutriq/core/domain/repository/config_repository.dart' as domain;
 import 'package:nutriq/core/domain/repository/water_repository.dart'
@@ -38,6 +51,18 @@ import 'package:nutriq/core/domain/repository/photo_progress_repository.dart'
     as domain_photo_progress;
 import 'package:nutriq/core/domain/repository/body_measurement_repository.dart'
     as domain_body_measurement;
+import 'package:nutriq/core/domain/repository/daily_note_repository.dart'
+    as domain_daily_note;
+import 'package:nutriq/core/domain/repository/autopilot_repository.dart'
+    as domain_autopilot;
+import 'package:nutriq/core/domain/repository/custom_tracker_repository.dart'
+    as domain_custom_tracker;
+import 'package:nutriq/core/domain/repository/symptom_repository.dart'
+    as domain_symptom;
+import 'package:nutriq/core/domain/repository/blood_glucose_repository.dart'
+    as domain_blood_glucose;
+import 'package:nutriq/core/domain/repository/medication_repository.dart'
+    as domain_medication;
 import 'package:nutriq/core/domain/repository/weight_repository.dart'
     as domain_weight;
 import 'package:nutriq/core/data/repository/intake_repository.dart';
@@ -62,6 +87,18 @@ import 'package:nutriq/core/data/repository/photo_progress_repository.dart'
     as data_photo_progress;
 import 'package:nutriq/core/data/repository/body_measurement_repository.dart'
     as data_body_measurement;
+import 'package:nutriq/core/data/repository/daily_note_repository.dart'
+    as data_daily_note;
+import 'package:nutriq/core/data/repository/autopilot_repository.dart'
+    as data_autopilot;
+import 'package:nutriq/core/data/repository/custom_tracker_repository.dart'
+    as data_custom_tracker;
+import 'package:nutriq/core/data/repository/symptom_repository.dart'
+    as data_symptom;
+import 'package:nutriq/core/data/repository/blood_glucose_repository.dart'
+    as data_blood_glucose;
+import 'package:nutriq/core/data/repository/medication_repository.dart'
+    as data_medication;
 import 'package:nutriq/core/domain/repository/notification_settings_repository.dart'
     as domain_notification;
 import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
@@ -96,6 +133,30 @@ import 'package:nutriq/core/domain/usecase/photo_progress/delete_photo_usecase.d
 import 'package:nutriq/core/domain/usecase/body_measurement/add_body_measurement_usecase.dart';
 import 'package:nutriq/core/domain/usecase/body_measurement/get_body_measurements_usecase.dart';
 import 'package:nutriq/core/domain/usecase/body_measurement/delete_body_measurement_usecase.dart';
+import 'package:nutriq/core/domain/usecase/daily_note/get_daily_note_usecase.dart';
+import 'package:nutriq/core/domain/usecase/daily_note/save_daily_note_usecase.dart';
+import 'package:nutriq/core/domain/usecase/autopilot/get_autopilot_status_usecase.dart';
+import 'package:nutriq/core/domain/usecase/autopilot/toggle_autopilot_usecase.dart';
+import 'package:nutriq/core/domain/usecase/autopilot/adjust_budget_usecase.dart';
+import 'package:nutriq/core/domain/usecase/autopilot/calculate_exercise_budget_usecase.dart';
+import 'package:nutriq/core/domain/usecase/calorie_cycling/get_calorie_cycle_usecase.dart';
+import 'package:nutriq/core/domain/usecase/calorie_cycling/save_calorie_cycle_usecase.dart';
+import 'package:nutriq/core/domain/usecase/custom_tracker/create_custom_tracker_usecase.dart';
+import 'package:nutriq/core/domain/usecase/custom_tracker/delete_custom_tracker_usecase.dart';
+import 'package:nutriq/core/domain/usecase/custom_tracker/log_tracker_entry_usecase.dart';
+import 'package:nutriq/core/domain/usecase/custom_tracker/get_tracker_entries_usecase.dart';
+import 'package:nutriq/core/domain/usecase/symptom/add_symptom_usecase.dart';
+import 'package:nutriq/core/domain/usecase/symptom/delete_symptom_usecase.dart';
+import 'package:nutriq/core/domain/usecase/symptom/get_symptoms_usecase.dart';
+import 'package:nutriq/core/domain/usecase/medication/add_medication_usecase.dart';
+import 'package:nutriq/core/domain/usecase/medication/delete_medication_usecase.dart';
+import 'package:nutriq/core/domain/usecase/medication/log_medication_usecase.dart';
+import 'package:nutriq/core/domain/usecase/medication/get_medication_log_usecase.dart';
+import 'package:nutriq/core/domain/usecase/medication/get_medications_usecase.dart';
+import 'package:nutriq/core/domain/usecase/blood_glucose/add_blood_glucose_usecase.dart';
+import 'package:nutriq/core/domain/usecase/blood_glucose/delete_blood_glucose_usecase.dart';
+import 'package:nutriq/core/domain/usecase/blood_glucose/get_blood_glucose_usecase.dart';
+import 'package:nutriq/core/domain/usecase/blood_glucose/get_blood_glucose_average_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_kcal_goal_usecase.dart';
@@ -149,6 +210,18 @@ import 'package:nutriq/features/fasting_tracker/presentation/fasting_bloc.dart';
 import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
 import 'package:nutriq/features/photo_progress/presentation/photo_progress_bloc.dart';
 import 'package:nutriq/features/body_measurements/presentation/body_measurement_bloc.dart';
+import 'package:nutriq/features/daily_notes/presentation/daily_note_bloc.dart';
+import 'package:nutriq/features/food_grade/presentation/food_grade_bloc.dart';
+import 'package:nutriq/features/autopilot/presentation/autopilot_bloc.dart';
+import 'package:nutriq/features/calorie_cycling/presentation/calorie_cycling_bloc.dart';
+import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_bloc.dart';
+import 'package:nutriq/core/data/service/recipe_scraper_service_impl.dart';
+import 'package:nutriq/core/domain/service/recipe_scraper_service.dart';
+import 'package:nutriq/core/domain/usecase/recipe_import/import_recipe_usecase.dart';
+import 'package:nutriq/features/recipe_import/presentation/recipe_import_bloc.dart';
+import 'package:nutriq/features/symptom_tracking/presentation/symptom_bloc.dart';
+import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
+import 'package:nutriq/features/blood_glucose/presentation/blood_glucose_bloc.dart';
 import 'package:nutriq/features/progress_charts/presentation/progress_charts_bloc.dart';
 import 'package:nutriq/features/health_sync/domain/health_sync_service.dart';
 import 'package:nutriq/features/health_sync/domain/usecase/sync_steps_usecase.dart';
@@ -170,6 +243,12 @@ import 'package:nutriq/core/domain/usecase/progress/get_monthly_nutrition_usecas
 import 'package:nutriq/core/domain/usecase/weight/get_weights_in_range_usecase.dart';
 import 'package:nutriq/core/domain/usecase/meal_timing/get_intakes_by_date_usecase.dart';
 import 'package:nutriq/core/domain/usecase/meal_timing/get_all_intakes_ordered_by_time_usecase.dart';
+import 'package:nutriq/core/domain/usecase/food_grade/calculate_food_grade_usecase.dart';
+import 'package:nutriq/core/domain/usecase/food_grade/filter_foods_by_grade_usecase.dart';
+import 'package:nutriq/core/domain/service/allergen_filter_service.dart';
+import 'package:nutriq/core/domain/service/food_grade_calculator.dart';
+import 'package:nutriq/core/domain/service/food_grade_filter.dart';
+import 'package:nutriq/core/domain/service/autopilot_service.dart';
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -204,6 +283,12 @@ Future<void> initLocator() async {
   final mealPlanDao = MealPlanDao(appDatabase);
   final photoProgressDao = PhotoProgressDao(appDatabase);
   final bodyMeasurementDao = BodyMeasurementDao(appDatabase);
+  final dailyNoteDao = DailyNoteDao(appDatabase);
+  final autopilotDao = AutopilotDao(appDatabase);
+  final customTrackerDao = CustomTrackerDao(appDatabase);
+  final symptomDao = SymptomDao(appDatabase);
+  final medicationDao = MedicationDao(appDatabase);
+  final bloodGlucoseDao = BloodGlucoseDao(appDatabase);
 
   locator.registerLazySingleton(
     () => ConfigDataSource(configDao),
@@ -269,6 +354,44 @@ Future<void> initLocator() async {
     () => BodyMeasurementDataSource(bodyMeasurementDao),
   );
 
+  locator.registerLazySingleton<DailyNoteDao>(() => dailyNoteDao);
+
+  locator.registerLazySingleton<DailyNoteDataSource>(
+    () => DailyNoteDataSource(dailyNoteDao),
+  );
+
+  locator.registerLazySingleton<AutopilotDao>(() => autopilotDao);
+
+  locator.registerLazySingleton<AutopilotDataSource>(
+    () => AutopilotDataSource(autopilotDao),
+  );
+
+  locator.registerLazySingleton<CustomTrackerDao>(
+    () => customTrackerDao,
+  );
+
+  locator.registerLazySingleton<CustomTrackerDataSource>(
+    () => CustomTrackerDataSource(customTrackerDao),
+  );
+
+  locator.registerLazySingleton<SymptomDao>(() => symptomDao);
+
+  locator.registerLazySingleton<SymptomDataSource>(
+    () => SymptomDataSource(symptomDao),
+  );
+
+  locator.registerLazySingleton<MedicationDao>(() => medicationDao);
+
+  locator.registerLazySingleton<MedicationDataSource>(
+    () => MedicationDataSource(medicationDao),
+  );
+
+  locator.registerLazySingleton<BloodGlucoseDao>(() => bloodGlucoseDao);
+
+  locator.registerLazySingleton<BloodGlucoseDataSource>(
+    () => BloodGlucoseDataSource(bloodGlucoseDao),
+  );
+
   // Repositories
   locator.registerLazySingleton<domain.ConfigRepository>(
     () => data.ConfigRepository(locator()),
@@ -325,6 +448,30 @@ Future<void> initLocator() async {
   locator
       .registerLazySingleton<domain_body_measurement.BodyMeasurementRepository>(
     () => data_body_measurement.BodyMeasurementRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_daily_note.DailyNoteRepository>(
+    () => data_daily_note.DailyNoteRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_autopilot.AutopilotRepository>(
+    () => data_autopilot.AutopilotRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_custom_tracker.CustomTrackerRepository>(
+    () => data_custom_tracker.CustomTrackerRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_symptom.SymptomRepository>(
+    () => data_symptom.SymptomRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_medication.MedicationRepository>(
+    () => data_medication.MedicationRepository(locator()),
+  );
+
+  locator.registerLazySingleton<domain_blood_glucose.BloodGlucoseRepository>(
+    () => data_blood_glucose.BloodGlucoseRepository(locator()),
   );
 
   // UseCases
@@ -490,12 +637,115 @@ Future<void> initLocator() async {
     () => DeleteBodyMeasurementUsecase(locator()),
   );
 
+  locator.registerLazySingleton<GetDailyNoteUsecase>(
+    () => GetDailyNoteUsecase(locator()),
+  );
+  locator.registerLazySingleton<SaveDailyNoteUsecase>(
+    () => SaveDailyNoteUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<AutopilotServiceImpl>(
+    () => AutopilotServiceImpl(),
+  );
+
+  locator.registerLazySingleton<GetAutopilotStatusUsecase>(
+    () => GetAutopilotStatusUsecase(locator()),
+  );
+  locator.registerLazySingleton<ToggleAutopilotUsecase>(
+    () => ToggleAutopilotUsecase(locator()),
+  );
+  locator.registerLazySingleton<AdjustBudgetUsecase>(
+    () => AdjustBudgetUsecase(locator(), locator(), locator()),
+  );
+  locator.registerLazySingleton<CalculateExerciseBudgetUsecase>(
+    () => CalculateExerciseBudgetUsecase(),
+  );
+
+  locator.registerLazySingleton<GetCalorieCycleUsecase>(
+    () => GetCalorieCycleUsecase(locator()),
+  );
+  locator.registerLazySingleton<SaveCalorieCycleUsecase>(
+    () => SaveCalorieCycleUsecase(locator()),
+  );
+
   locator.registerLazySingleton<FoodClassifierService>(
     () => FoodClassifierService(),
   );
 
   locator.registerLazySingleton<ClassifyFoodUsecase>(
     () => ClassifyFoodUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<FoodGradeCalculator>(
+    () => FoodGradeCalculator(),
+  );
+
+  locator.registerLazySingleton<AllergenFilterService>(
+    () => AllergenFilterService(),
+  );
+
+  locator.registerLazySingleton<FoodGradeFilter>(
+    () => FoodGradeFilter(),
+  );
+
+  locator.registerLazySingleton<CalculateFoodGradeUsecase>(
+    () => CalculateFoodGradeUsecase(),
+  );
+
+  locator.registerLazySingleton<FilterFoodsByGradeUsecase>(
+    () => FilterFoodsByGradeUsecase(),
+  );
+
+  locator.registerLazySingleton<CreateCustomTrackerUsecase>(
+    () => CreateCustomTrackerUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteCustomTrackerUsecase>(
+    () => DeleteCustomTrackerUsecase(locator()),
+  );
+  locator.registerLazySingleton<LogTrackerEntryUsecase>(
+    () => LogTrackerEntryUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetTrackerEntriesUsecase>(
+    () => GetTrackerEntriesUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<AddSymptomUsecase>(
+    () => AddSymptomUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteSymptomUsecase>(
+    () => DeleteSymptomUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetSymptomsUsecase>(
+    () => GetSymptomsUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<AddMedicationUsecase>(
+    () => AddMedicationUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteMedicationUsecase>(
+    () => DeleteMedicationUsecase(locator()),
+  );
+  locator.registerLazySingleton<LogMedicationUsecase>(
+    () => LogMedicationUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetMedicationLogUsecase>(
+    () => GetMedicationLogUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetMedicationsUsecase>(
+    () => GetMedicationsUsecase(locator()),
+  );
+
+  locator.registerLazySingleton<AddBloodGlucoseUsecase>(
+    () => AddBloodGlucoseUsecase(locator()),
+  );
+  locator.registerLazySingleton<DeleteBloodGlucoseUsecase>(
+    () => DeleteBloodGlucoseUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetBloodGlucoseUsecase>(
+    () => GetBloodGlucoseUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetBloodGlucoseAverageUsecase>(
+    () => GetBloodGlucoseAverageUsecase(locator()),
   );
 
   // BLoCs
@@ -558,9 +808,10 @@ Future<void> initLocator() async {
   locator.registerFactory<EditMealBloc>(() => EditMealBloc(locator()));
   locator.registerFactory<AddMealBloc>(() => AddMealBloc(locator()));
   locator.registerFactory<ProductsBloc>(
-    () => ProductsBloc(locator(), locator()),
+    () => ProductsBloc(locator(), locator(), locator()),
   );
-  locator.registerFactory<FoodBloc>(() => FoodBloc(locator(), locator()));
+  locator.registerFactory<FoodBloc>(
+      () => FoodBloc(locator(), locator(), locator()));
   locator.registerFactory(() => RecentMealBloc(locator(), locator()));
   locator.registerFactory<RecipeBloc>(
     () => RecipeBloc(locator(), locator(), locator()),
@@ -635,6 +886,60 @@ Future<void> initLocator() async {
     ),
   );
 
+  locator.registerFactory<FoodGradeBloc>(
+    () => FoodGradeBloc(),
+  );
+
+  locator.registerFactory<DailyNoteBloc>(
+    () => DailyNoteBloc(locator(), locator()),
+  );
+
+  locator.registerFactory<AutopilotBloc>(
+    () => AutopilotBloc(locator(), locator(), locator(), locator(), locator(),
+        locator(), locator()),
+  );
+
+  locator.registerFactory<CalorieCyclingBloc>(
+    () => CalorieCyclingBloc(locator(), locator()),
+  );
+
+  locator.registerFactory<CustomTrackerBloc>(
+    () => CustomTrackerBloc(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
+
+  locator.registerFactory<SymptomBloc>(
+    () => SymptomBloc(
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
+
+  locator.registerFactory<MedicationBloc>(
+    () => MedicationBloc(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
+
+  locator.registerFactory<BloodGlucoseBloc>(
+    () => BloodGlucoseBloc(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
+
   locator.registerLazySingleton<HealthSyncService>(
     () => health_factory.PlatformHealthServiceFactory.create(),
   );
@@ -680,6 +985,19 @@ Future<void> initLocator() async {
       locator<DataExportService>(),
       locator<DataImportService>(),
     ),
+  );
+
+  // Recipe Import
+  locator.registerLazySingleton<RecipeScraperService>(
+    () => RecipeScraperServiceImpl(),
+  );
+
+  locator.registerLazySingleton<ImportRecipeUsecase>(
+    () => ImportRecipeUsecase(locator()),
+  );
+
+  locator.registerFactory<RecipeImportBloc>(
+    () => RecipeImportBloc(locator()),
   );
 
   await _initializeConfig(locator<ConfigDataSource>());

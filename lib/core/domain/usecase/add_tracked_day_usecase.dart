@@ -60,14 +60,22 @@ class AddTrackedDayUsecase {
   }
 
   Future<void> addDayMacrosTracked(DateTime day,
-      {double? carbsTracked, double? fatTracked, double? proteinTracked}) async {
+      {double? carbsTracked,
+      double? fatTracked,
+      double? proteinTracked}) async {
     await _trackedDayRepository.addDayMacrosTracked(day,
-        carbsTracked: carbsTracked, fatTracked: fatTracked, proteinTracked: proteinTracked);
+        carbsTracked: carbsTracked,
+        fatTracked: fatTracked,
+        proteinTracked: proteinTracked);
   }
 
   Future<void> removeDayMacrosTracked(DateTime day,
-      {double? carbsTracked, double? fatTracked, double? proteinTracked}) async {
+      {double? carbsTracked,
+      double? fatTracked,
+      double? proteinTracked}) async {
     await _trackedDayRepository.removeDayMacrosTracked(day,
-        carbsTracked: carbsTracked, fatTracked: fatTracked, proteinTracked: proteinTracked);
+        carbsTracked: carbsTracked,
+        fatTracked: fatTracked,
+        proteinTracked: proteinTracked);
   }
 }

@@ -1,6 +1,8 @@
 import 'package:nutriq/core/data/repository/config_repository.dart';
+import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
+import 'package:nutriq/core/domain/entity/exercise_calorie_mode_entity.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 
 class AddConfigUsecase {
@@ -45,5 +47,22 @@ class AddConfigUsecase {
 
   Future<TDEEMethodEntity> getConfigTDEEMethod() async {
     return await _configRepository.getConfigTDEEMethod();
+  }
+
+  Future<void> setConfigExerciseCalorieMode(
+      ExerciseCalorieModeEntity mode) async {
+    await _configRepository.setConfigExerciseCalorieMode(mode);
+  }
+
+  Future<void> setConfigExerciseCreditPercent(double percent) async {
+    await _configRepository.setConfigExerciseCreditPercent(percent);
+  }
+
+  Future<void> setConfigAllergens(Set<AllergenType> allergens) async {
+    await _configRepository.setConfigAllergens(allergens);
+  }
+
+  Future<Set<AllergenType>> getConfigAllergens() async {
+    return await _configRepository.getConfigAllergens();
   }
 }

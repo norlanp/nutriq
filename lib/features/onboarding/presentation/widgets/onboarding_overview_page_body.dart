@@ -44,7 +44,8 @@ class OnboardingOverviewPageBody extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
-                            .onSurface.withValues(alpha: 0.6)))
+                            .onSurface
+                            .withValues(alpha: 0.6)))
               ],
             ),
           ),
@@ -65,7 +66,8 @@ class OnboardingOverviewPageBody extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
-                            .onSurface.withValues(alpha: 0.6))),
+                            .onSurface
+                            .withValues(alpha: 0.6))),
                 const SizedBox(height: 8.0),
                 Text('$fatGoalString g',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -74,7 +76,8 @@ class OnboardingOverviewPageBody extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
-                            .onSurface.withValues(alpha: 0.6))),
+                            .onSurface
+                            .withValues(alpha: 0.6))),
                 const SizedBox(height: 8.0),
                 Text('$proteinGoalString g',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -83,7 +86,8 @@ class OnboardingOverviewPageBody extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
-                            .onSurface.withValues(alpha: 0.6))),
+                            .onSurface
+                            .withValues(alpha: 0.6))),
               ],
             ),
           ),

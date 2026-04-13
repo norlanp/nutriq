@@ -28,6 +28,10 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       currentDay = DateTime.now();
       const yearDuration = Duration(days: 356);
 
+      // TODO: Integrate exercise calorie credit from autopilot into net calorie calculation.
+      // Use CalculateExerciseBudgetUsecase with exerciseCalorieMode from config
+      // and daily burned calories from GetDailyBurnedCaloriesUsecase.
+
       final trackedDays = await _getDayTrackedUsecase.getTrackedDaysByRange(
           currentDay.subtract(yearDuration), currentDay.add(yearDuration));
 

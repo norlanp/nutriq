@@ -45,4 +45,29 @@ class ConfigDataSource {
   Future<String> getTDEEMethod() => _dao.getTDEEMethod();
 
   Future<void> setTDEEMethod(String method) => _dao.setTDEEMethod(method);
+
+  Future<String?> getCalorieCycleJson() => _dao.getCalorieCycleJson();
+
+  Future<void> setCalorieCycleJson(String json) =>
+      _dao.setCalorieCycleJson(json);
+
+  Future<bool> getCalorieCyclingEnabled() => _dao.getCalorieCyclingEnabled();
+
+  Future<void> setCalorieCyclingEnabled(bool enabled) =>
+      _dao.setCalorieCyclingEnabled(enabled);
+
+  Future<String> getExerciseCalorieMode() => _dao.getExerciseCalorieMode();
+
+  Future<void> setExerciseCalorieMode(String mode) =>
+      _dao.setExerciseCalorieMode(mode);
+
+  Future<double> getExerciseCreditPercent() => _dao.getExerciseCreditPercent();
+
+  Future<void> setExerciseCreditPercent(double percent) =>
+      _dao.setExerciseCreditPercent(percent);
+
+  Future<String> getAllergens() => _dao.getAllergens();
+
+  Future<void> setAllergens(String allergensJson) =>
+      _dao.setAllergens(allergensJson);
 }

@@ -5,7 +5,6 @@ import 'package:nutriq/core/utils/locator.dart';
 import 'package:nutriq/features/meal_detail/presentation/widgets/meal_placeholder.dart';
 
 class ImageFullScreen extends StatefulWidget {
-
   static const fullScreenHeroTag = 'fullScreenTag';
 
   const ImageFullScreen({super.key});

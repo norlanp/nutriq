@@ -25,6 +25,7 @@ import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
 import 'package:nutriq/features/recipe_builder/presentation/recipe_builder_screen.dart';
 import 'package:nutriq/features/recipe_builder/presentation/recipe_list_screen.dart';
 import 'package:nutriq/features/settings/settings_screen.dart';
+import 'package:nutriq/features/settings/presentation/allergen_settings_screen.dart';
 import 'package:nutriq/features/weight_tracking/presentation/screen/weight_tracking_screen.dart';
 import 'package:nutriq/features/notifications/presentation/notification_settings_screen.dart';
 import 'package:nutriq/features/water_tracking/presentation/screen/water_tracker_screen.dart';
@@ -43,6 +44,11 @@ import 'package:nutriq/features/data_sync/presentation/import_screen.dart';
 import 'package:nutriq/features/data_sync/presentation/cloud_backup_settings_screen.dart';
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_screen.dart';
 import 'package:nutriq/features/body_measurements/presentation/screen/body_measurement_screen.dart';
+import 'package:nutriq/features/recipe_import/presentation/recipe_import_screen.dart';
+import 'package:nutriq/features/symptom_tracking/presentation/symptom_screen.dart';
+import 'package:nutriq/features/blood_glucose/presentation/blood_glucose_screen.dart';
+import 'package:nutriq/features/medication/presentation/medication_screen.dart';
+import 'package:nutriq/features/medication/presentation/medication_log_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -174,6 +180,18 @@ class NutriqApp extends StatelessWidget {
             const BodyMeasurementScreen(),
         NavigationOptions.customFoodRoute: (context) =>
             const CustomFoodScreen(),
+        NavigationOptions.symptomTrackingRoute: (context) =>
+            const SymptomTrackingScreen(),
+        NavigationOptions.recipeImportRoute: (context) =>
+            const RecipeImportScreen(),
+        NavigationOptions.bloodGlucoseRoute: (context) =>
+            const BloodGlucoseScreen(),
+        NavigationOptions.allergenSettingsRoute: (context) =>
+            const AllergenSettingsScreen(),
+        NavigationOptions.medicationRoute: (context) =>
+            const MedicationScreen(),
+        NavigationOptions.medicationLogRoute: (context) =>
+            const MedicationLogScreen(),
       },
     );
   }

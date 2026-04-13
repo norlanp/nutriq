@@ -1,5 +1,8 @@
+import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
+import 'package:nutriq/core/domain/entity/calorie_cycle_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
+import 'package:nutriq/core/domain/entity/exercise_calorie_mode_entity.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 
 abstract class ConfigRepository {
@@ -28,4 +31,20 @@ abstract class ConfigRepository {
   Future<TDEEMethodEntity> getConfigTDEEMethod();
 
   Future<void> setConfigTDEEMethod(TDEEMethodEntity method);
+
+  Future<CalorieCycleEntity> getCalorieCycle();
+
+  Future<void> saveCalorieCycle(CalorieCycleEntity entity);
+
+  Future<ExerciseCalorieModeEntity> getConfigExerciseCalorieMode();
+
+  Future<void> setConfigExerciseCalorieMode(ExerciseCalorieModeEntity mode);
+
+  Future<double> getConfigExerciseCreditPercent();
+
+  Future<void> setConfigExerciseCreditPercent(double percent);
+
+  Future<Set<AllergenType>> getConfigAllergens();
+
+  Future<void> setConfigAllergens(Set<AllergenType> allergens);
 }

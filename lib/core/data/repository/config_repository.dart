@@ -1,8 +1,11 @@
 import 'package:nutriq/core/data/data_source/config_data_source.dart';
 import 'package:nutriq/core/data/drift/app_database.dart';
 import 'package:nutriq/core/data/mapper/mappers.dart';
+import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
+import 'package:nutriq/core/domain/entity/calorie_cycle_entity.dart';
 import 'package:nutriq/core/domain/entity/config_entity.dart';
+import 'package:nutriq/core/domain/entity/exercise_calorie_mode_entity.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 import 'package:nutriq/core/domain/repository/config_repository.dart' as domain;
 
@@ -86,5 +89,55 @@ class ConfigRepository implements domain.ConfigRepository {
   @override
   Future<void> setConfigTDEEMethod(TDEEMethodEntity method) async {
     await _configDataSource.setTDEEMethod(mapTDEEMethodEntityToString(method));
+  }
+
+  @override
+  Future<CalorieCycleEntity> getCalorieCycle() async {
+    final json = await _configDataSource.getCalorieCycleJson();
+    final enabled = await _configDataSource.getCalorieCyclingEnabled();
+    return mapCalorieCycleJsonToEntity(json, enabled);
+  }
+
+  @override
+  Future<void> saveCalorieCycle(CalorieCycleEntity entity) async {
+    await _configDataSource.setCalorieCycleJson(
+      mapCalorieCycleEntityToJson(entity),
+    );
+    await _configDataSource.setCalorieCyclingEnabled(entity.isEnabled);
+  }
+
+  @override
+  Future<ExerciseCalorieModeEntity> getConfigExerciseCalorieMode() async {
+    final modeString = await _configDataSource.getExerciseCalorieMode();
+    return mapExerciseCalorieModeStringToEntity(modeString);
+  }
+
+  @override
+  Future<void> setConfigExerciseCalorieMode(
+      ExerciseCalorieModeEntity mode) async {
+    await _configDataSource.setExerciseCalorieMode(
+      mapExerciseCalorieModeEntityToString(mode),
+    );
+  }
+
+  @override
+  Future<double> getConfigExerciseCreditPercent() async {
+    return await _configDataSource.getExerciseCreditPercent();
+  }
+
+  @override
+  Future<void> setConfigExerciseCreditPercent(double percent) async {
+    await _configDataSource.setExerciseCreditPercent(percent);
+  }
+
+  @override
+  Future<Set<AllergenType>> getConfigAllergens() async {
+    final allergensJson = await _configDataSource.getAllergens();
+    return mapAllergensJsonToSet(allergensJson);
+  }
+
+  @override
+  Future<void> setConfigAllergens(Set<AllergenType> allergens) async {
+    await _configDataSource.setAllergens(mapAllergenSetToJson(allergens));
   }
 }

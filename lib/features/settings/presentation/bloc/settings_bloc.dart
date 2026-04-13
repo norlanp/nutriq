@@ -80,6 +80,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   void setKcalAdjustment(double kcalAdjustment) {
     _addConfigUsecase.setConfigKcalAdjustment(kcalAdjustment);
   }
+
   void setMacroGoals(
       double carbGoalPct, double proteinGoalPct, double fatGoalPct) {
     _addConfigUsecase.setConfigMacroGoalPct(carbGoalPct.toInt() / 100,
