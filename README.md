@@ -18,10 +18,6 @@
 
 Nutriq is a privacy-first, open-source nutrition tracker with all features free — no ads, no subscriptions, no cloud lock-in. All data stays on your device.
 
-Originally forked from [OpenNutriTracker](https://github.com/simonoppowa/OpenNutriTracker), Nutriq adds MyFitnessPal-inspired features while keeping your data local and private.
-
-[Website](https://simonoppowa.github.io/Nutriq-Website/)
-
 ## Screenshots
 <p align="center">
   <img alt="Logo" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" width="20%" />
@@ -32,10 +28,6 @@ Originally forked from [OpenNutriTracker](https://github.com/simonoppowa/OpenNut
   &nbsp;&nbsp;
   <img alt="Logo" src="fastlane/metadata/android/en-US/images/phoneScreenshots/4_en-US.png" width="20%" />
 </p>
-
-## Install
-[<img src="fastlane/metadata/android/en-US/images/appstore_banner.png" width="30%">](https://apps.apple.com/us/app/opennutritracker/id6451490901)
-[<img src="fastlane/metadata/android/en-US/images/playstore_banner.png" width="30%">](https://play.google.com/store/apps/details?id=com.opennutritracker.ont.opennutritracker)
 
 ## Key Features
 
@@ -73,30 +65,20 @@ Originally forked from [OpenNutriTracker](https://github.com/simonoppowa/OpenNut
 See [docs/features.md](docs/features.md) for a full feature comparison against MyFitnessPal.
 
 ## Privacy
-See [Data Protection](https://www.iubenda.com/privacy-policy/53501884)
 - **Data Encryption**: All user data is encrypted and stored locally on your device
 - **Minimal Data Collection**: Nutriq does not collect or share any personal data. No accounts, no telemetry, no analytics.
 - **Open-Source**: Nutriq is an open-source application (GPL-3.0)
-
-## TODOs
-- ~~Add serving sizes to meals~~
-- ~~Add Imperial unit support~~
-- Add support for Material You themes
-
-## Contribution
-Contributions to Nutriq are welcome! If you find any issues or have suggestions for new features, please open an issue or submit a pull request. Make sure to follow the project's code style and guidelines.
 
 ## Getting Started
 See the [Getting Started](GettingStarted.md) file for more information.
 
 ## Architecture
-See [docs/architecture.md](docs/architecture.md) for the system architecture and [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) for the implementation roadmap.
+See [docs/architecture.md](docs/architecture.md) for the system architecture and [docs/features.md](docs/features.md) for the full feature breakdown.
 
 ## Disclaimer
 Nutriq is not a medical application. All data provided is not validated and should be used with caution. Please maintain a healthy lifestyle and consult a professional if you have any problems. Use during illness, pregnancy or lactation is not recommended.
 
 ## Acknowledgments
-Nutriq is a fork of [OpenNutriTracker](https://github.com/simonoppowa/OpenNutriTracker) by Simon Oppowa.
 The food database is powered by [Open Food Facts](https://world.openfoodfacts.org/) and [Food Data Central](https://fdc.nal.usda.gov/).
 
 ## License

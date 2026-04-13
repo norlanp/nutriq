@@ -113,6 +113,56 @@
 - FR-20.1: Support English, German, Turkish
 - FR-20.2: Never hardcode strings in UI; use generated `intl` classes
 
+### FR-21: Daily Notes
+- FR-21.1: Create, edit, and delete daily text notes
+- FR-21.2: Associate notes with tracked days
+- FR-21.3: Display notes on diary screen
+
+### FR-22: Autopilot
+- FR-22.1: AI-assisted daily logging suggestions based on history
+- FR-22.2: Suggest foods based on patterns and time of day
+- FR-22.3: Allow dismissal or acceptance of suggestions
+
+### FR-23: Custom Trackers
+- FR-23.1: Create user-defined trackers with custom names and units
+- FR-23.2: Log entries against custom trackers with date and value
+- FR-23.3: Display trend charts for custom tracker entries
+
+### FR-24: Blood Glucose
+- FR-24.1: Log blood glucose readings with timestamp and context (fasting, before meal, after meal, bedtime)
+- FR-24.2: Display blood glucose trend chart over time
+- FR-24.3: Show blood glucose history list
+
+### FR-25: Medication
+- FR-25.1: Create medications with name, dosage, and frequency
+- FR-25.2: Log medication doses with date and time
+- FR-25.3: Display medication list and dose history
+
+### FR-26: Symptom Tracking
+- FR-26.1: Log symptoms with type, severity (1-10), and optional notes
+- FR-26.2: Display symptom trend chart over time
+- FR-26.3: Show symptom history list
+
+### FR-27: Calorie Cycling
+- FR-27.1: Configure calorie cycling schedule (zigzag diet pattern)
+- FR-27.2: Set different calorie targets per day of the week
+- FR-27.3: Persist cycling configuration to app config
+
+### FR-28: Food Grade
+- FR-28.1: Display nutritional quality grade (Nutri-Score style) on food entries
+- FR-28.2: Calculate grade from macro/micro profile
+- FR-28.3: Show grade badge in diary and food detail
+
+### FR-29: Allergens
+- FR-29.1: Configure personal allergen list in settings
+- FR-29.2: Flag foods containing user allergens with visual warning
+- FR-29.3: Source allergen data from Open Food Facts
+
+### FR-30: Recipe Import
+- FR-30.1: Import recipes from URLs via web scraping
+- FR-30.2: Parse ingredients, servings, and nutrition from recipe pages
+- FR-30.3: Add imported recipe to recipe builder for editing
+
 ---
 
 ## Non-Functional Requirements
@@ -145,7 +195,7 @@
 - NFR-5.4: Zero lint warnings (`flutter analyze`)
 
 ### NFR-6: Licensing
-- NFR-6.1: GPL-3.0 (inherited from OpenNutriTracker fork)
+- NFR-6.1: GPL-3.0
 - NFR-6.2: All code open-source, no proprietary dependencies
 
 ---
@@ -174,3 +224,13 @@
 | Data Sync | FR-18 | [architecture.md](architecture.md) | `lib/features/data_sync/` |
 | Onboarding | FR-19 | [architecture.md](architecture.md) | `lib/features/onboarding/` |
 | i18n | FR-20 | [architecture.md](architecture.md) | `lib/l10n/`, `lib/generated/` |
+| Daily Notes | FR-21 | [architecture.md](architecture.md) | `lib/features/daily_notes/` |
+| Autopilot | FR-22 | [architecture.md](architecture.md) | `lib/features/autopilot/` |
+| Custom Trackers | FR-23 | [architecture.md](architecture.md) | `lib/features/custom_trackers/` |
+| Blood Glucose | FR-24 | [architecture.md](architecture.md) | `lib/features/blood_glucose/` |
+| Medication | FR-25 | [architecture.md](architecture.md) | `lib/features/medication/` |
+| Symptom Tracking | FR-26 | [architecture.md](architecture.md) | `lib/features/symptom_tracking/` |
+| Calorie Cycling | FR-27 | [architecture.md](architecture.md) | `lib/features/calorie_cycling/` |
+| Food Grade | FR-28 | [architecture.md](architecture.md) | `lib/features/food_grade/` |
+| Allergens | FR-29 | [architecture.md](architecture.md) | `lib/features/allergens/` |
+| Recipe Import | FR-30 | [architecture.md](architecture.md) | `lib/features/recipe_import/` |

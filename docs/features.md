@@ -7,7 +7,7 @@
 
 ## Feature Overview
 
-```
+```text
  +-------------------------------------------------------------------+
  |                        NUTRIQ AT A GLANCE                         |
  +-------------------------------------------------------------------+
@@ -43,38 +43,52 @@
  |  [ Meal Planning ]  [ Recipes ]  [ Health Sync ]  [ Reminders ]  |
  |  [ Data Export ]   [ i18n ]     [ Onboarding ]  [ Web Support ] |
  +-------------------------------------------------------------------+
+ |  [ Autopilot ]  [ Food Grade ]  [ Allergens ]  [ Symptom Log ] |
+ |  [ Daily Notes ] [ Blood Glucose ] [ Meds ] [ Custom Trackers ] |
+ |  [ Calorie Cycling ]          [ Recipe Import ]                  |
+ +-------------------------------------------------------------------+
 ```
 
 ---
 
 ## Feature Comparison Matrix
 
-| Feature | Nutriq | OpenNutriTracker | MyFitnessPal |
-|:---|:---:|:---:|:---:|
-| **Food Diary (B/L/D/S)** | **Yes** | Yes | Yes |
-| **Barcode Scanner** | **Yes** | Yes | Yes |
-| **Food Database** | 3 sources + custom foods | 3 sources | 14M+ items |
-| **AI Food Recognition** | **Yes** (on-device, free) | -- | Premium, cloud |
-| **Custom Food Creation** | **Yes** | -- | Yes |
-| **Macro Tracking** | **Yes** (+ weekly summary) | Basic | Yes |
-| **Micronutrient Tracking** | **Yes** (with % targets) | -- | Premium |
-| **Saved Meals / Recipes** | **Yes** (full recipe builder) | Custom meals only | Yes |
-| **Weight Tracking** | **Yes** (trends + BMI) | -- | Yes |
-| **Body Measurements** | **Yes** (7 metrics + charts) | -- | Yes |
-| **Water Tracking** | **Yes** (goal ring + quick-add) | -- | Yes |
-| **Exercise / Net Calories** | **Yes** (adjusts daily budget) | Activity log only | Yes |
-| **BMR Calculator** | **Yes** (Mifflin-St Jeor + selector) | Basic | Mifflin-St Jeor |
-| **BMI Calculator** | **Yes** | -- | Yes |
-| **Intermittent Fasting** | **Yes** (presets + streaks) | -- | Premium |
-| **Meal Reminders** | **Yes** (local notifications) | -- | Premium |
-| **Progress Charts** | **Yes** (weekly/monthly/macro/weight) | -- | Premium |
-| **Photo Progress** | **Yes** (before/after + timeline) | -- | Premium |
-| **Meal Planning** | **Yes** (7-day + shopping list) | -- | Premium |
-| **Health Kit / Health Connect** | **Yes** (bidirectional sync) | -- | 35+ devices |
-| **Data Export / Import** | **Yes** (JSON/CSV + encrypted backup) | -- | Premium |
-| **Food Timestamps** | **Yes** (meal timing patterns) | -- | Yes |
-| **Onboarding Flow** | **Yes** (profile + goal setup) | Basic | Yes |
-| **Internationalization** | 3 languages (EN/DE/TR) | 3 languages | 20+ |
+| Feature | Nutriq | MyFitnessPal |
+|:---|:---:|:---:|
+| **Food Diary (B/L/D/S)** | **Yes** | Yes |
+| **Barcode Scanner** | **Yes** | Yes |
+| **Food Database** | 3 sources + custom foods | 14M+ items |
+| **AI Food Recognition** | **Yes** (on-device, free) | Premium, cloud |
+| **Custom Food Creation** | **Yes** | Yes |
+| **Macro Tracking** | **Yes** (+ weekly summary) | Yes |
+| **Micronutrient Tracking** | **Yes** (with % targets) | Premium |
+| **Saved Meals / Recipes** | **Yes** (full recipe builder) | Yes |
+| **Weight Tracking** | **Yes** (trends + BMI) | Yes |
+| **Body Measurements** | **Yes** (7 metrics + charts) | Yes |
+| **Water Tracking** | **Yes** (goal ring + quick-add) | Yes |
+| **Exercise / Net Calories** | **Yes** (adjusts daily budget) | Yes |
+| **BMR Calculator** | **Yes** (Mifflin-St Jeor + selector) | Mifflin-St Jeor |
+| **BMI Calculator** | **Yes** | Yes |
+| **Intermittent Fasting** | **Yes** (presets + streaks) | Premium |
+| **Meal Reminders** | **Yes** (local notifications) | Premium |
+| **Progress Charts** | **Yes** (weekly/monthly/macro/weight) | Premium |
+| **Photo Progress** | **Yes** (before/after + timeline) | Premium |
+| **Meal Planning** | **Yes** (7-day + shopping list) | Premium |
+| **Health Kit / Health Connect** | **Yes** (bidirectional sync) | 35+ devices |
+| **Data Export / Import** | **Yes** (JSON/CSV + encrypted backup) | Premium |
+| **Food Timestamps** | **Yes** (meal timing patterns) | Yes |
+| **Onboarding Flow** | **Yes** (profile + goal setup) | Yes |
+| **Food Grade** | **Yes** (Nutri-Score style) | -- |
+| **Allergen Warnings** | **Yes** (configurable, OFF data) | -- |
+| **Recipe Import** | **Yes** (URL scraping) | -- |
+| **Blood Glucose** | **Yes** (trends + context tags) | -- |
+| **Medication Tracking** | **Yes** (dose logging + frequency) | -- |
+| **Symptom Tracking** | **Yes** (severity + trends) | -- |
+| **Daily Notes** | **Yes** (journal per day) | -- |
+| **Calorie Cycling** | **Yes** (zigzag schedule) | -- |
+| **Custom Trackers** | **Yes** (user-defined metrics) | -- |
+| **Autopilot** | **Yes** (AI suggestions from history) | -- |
+| **Internationalization** | 3 languages (EN/DE/TR) | 20+ |
 | **Web Support** | **Yes** (iOS + Android + Web) | Mobile only | Web + Mobile |
 | **Ad-Free** | **Yes** (always) | Yes | No (freemium) |
 | **No Subscription** | **Yes** (all features free) | Yes | Premium required |
@@ -83,7 +97,7 @@
 
 ### Legend
 
-```
+```text
   Yes  =  Fully available, no paywall
    --  =  Not available
   Premium  =  Requires paid subscription (MFP)
@@ -95,7 +109,7 @@
 
 ### Food & Nutrition
 
-```
+```text
  Food Entry Flow
  ===============
 
@@ -127,7 +141,7 @@
 
 ### Diary & Tracking
 
-```
+```text
  Daily View
  ==========
 
@@ -159,9 +173,9 @@
 
 ### Weight & Body
 
-```
-  Weight          Body Measurements        Photo Progress
-  =======         =================        ==============
+```text
+   Weight          Body Measurements        Photo Progress
+   =======         =================        ==============
 
   80 |  *         Waist  ---*---           [ Before ]  [ After ]
   78 |    *       Neck   ---*---            |           |
@@ -180,9 +194,9 @@
 
 ### BMR / TDEE / Goals
 
-```
-  TDEE Calculation
-  ================
+```text
+   TDEE Calculation
+   ================
 
   BMR (Mifflin-St Jeor)
   │
@@ -211,9 +225,9 @@
 
 ### Fasting Timer
 
-```
-  +----------------------------+
-  |  16 : 8  Intermittent     |
+```text
+   +----------------------------+
+   |  16 : 8  Intermittent     |
   |                            |
   |       14:23:05            |
   |     ============          |
@@ -236,9 +250,9 @@
 
 ### Progress Charts
 
-```
-  Weekly Calories         Monthly Macro Trend     Weight Trend
-  ================        ====================    ============
+```text
+   Weekly Calories         Monthly Macro Trend     Weight Trend
+   ================        ====================    ============
 
   2200 |  _              C | ██████████           85 |  *
   2000 |_|_|_             a | ██ ██ ██ ██             |    *
@@ -256,8 +270,8 @@
 
 ### Planning & Recipes
 
-```
-  Meal Plan (7-day grid)
+```text
+   Meal Plan (7-day grid)
 
        Mon    Tue    Wed    Thu    Fri    Sat    Sun
   B  [ oat ] [ egg ] [  -  ] [  -  ] [  -  ] [  -  ] [  -  ]
@@ -276,9 +290,9 @@
 
 ### Health Integrations
 
-```
-  +--------------------+       +--------------------+
-  |   Apple HealthKit  |<----->|                    |
+```text
+   +--------------------+       +--------------------+
+   |   Apple HealthKit  |<----->|                    |
   |   (iOS)            |       |     Nutriq         |
   +--------------------+       |                    |
                                |  - Weight sync     |
@@ -295,9 +309,9 @@
 
 ### Data & Privacy
 
-```
-  Data Ownership
-  ==============
+```text
+   Data Ownership
+   ==============
 
   +----------+     +----------+     +-----------+
   | Local DB |---->| Export   |---->| JSON/CSV  |
@@ -319,6 +333,39 @@
 - **Optional**: iCloud / Google Drive backup
 - **No telemetry. No analytics. No account required.**
 
+### Health Monitoring
+
+```text
+  Blood Glucose          Medications             Symptoms
+  ==============         ============            =========
+
+  110 | * fasting       Name: Metformin         Severity: 7/10
+  100 |   * before      Dose: 500mg             Type: Headache
+   90 |     * after      Freq: 2x daily          Notes: After lunch
+      --------          Log: 8:00 AM, 8:00 PM    Trend: ▼ improving
+      Mon Tue Wed
+```
+
+- **Blood glucose tracking**: log readings with context tags (fasting, before/after meal, bedtime)
+- **Blood glucose trends**: chart over time with context filtering
+- **Medication logging**: name, dosage, frequency, notes
+- **Medication history**: dose log with timestamps
+- **Symptom tracking**: log type, severity (1-10), notes
+- **Symptom trends**: chart severity over time
+
+### Smart Features
+
+- **Autopilot**: AI-assisted daily logging suggestions based on eating patterns and time of day
+- **Food grade**: Nutri-Score-style quality rating on food entries derived from macro/micro profile
+- **Recipe import**: paste a URL, scrape ingredients and nutrition, add to recipe builder
+
+### Customization
+
+- **Custom trackers**: user-defined metrics with custom names and units
+- **Calorie cycling**: zigzag diet scheduling with per-day-of-week calorie targets
+- **Allergen warnings**: configure personal allergen list; foods flagged from OFF data
+- **Daily notes**: journal entries attached to tracked days
+
 ---
 
 ## Technical Summary
@@ -328,7 +375,7 @@
 | **Framework** | Flutter / Dart |
 | **State Management** | flutter_bloc |
 | **Local DB** | Drift (SQLite) |
-| **Schema Version** | 13 (15 tables) |
+| **Schema Version** | 22 (23 tables) |
 | **DI** | GetIt |
 | **i18n** | flutter_intl (EN / DE / TR) |
 | **Platforms** | iOS, Android, Web |
@@ -336,15 +383,14 @@
 | **AI Model** | TensorFlow Lite (on-device) |
 | **Health APIs** | HealthKit, Health Connect |
 | **License** | GPL-3.0 |
-| **Upstream** | [OpenNutriTracker](https://github.com/simonoppowa/OpenNutriTracker) |
-| **Use Cases** | 48 |
-| **Feature Modules** | 24 |
+| **Use Cases** | 75 |
+| **Feature Modules** | 33 |
 
 ---
 
 ## Nutriq vs MyFitnessPal: Quick Verdict
 
-```
+```text
   What you gain with Nutriq:
   ==========================
   + All features free (no premium paywall)
@@ -355,6 +401,16 @@
   + Photo progress (free, MFP = premium)
   + Meal planning (free, MFP = premium)
   + Full data export (free, MFP = premium)
+  + Blood glucose tracking (MFP = not available)
+  + Medication tracking (MFP = not available)
+  + Symptom tracking (MFP = not available)
+  + Custom trackers (MFP = not available)
+  + Calorie cycling (MFP = not available)
+  + Food quality grading (MFP = not available)
+  + Allergen warnings (MFP = not available)
+  + Daily notes (MFP = not available)
+  + Recipe import from URLs (MFP = not available)
+  + Autopilot smart suggestions (MFP = not available)
   + Ad-free (always)
 
   What you trade off:

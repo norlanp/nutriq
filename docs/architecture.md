@@ -43,45 +43,55 @@ The implementation of data retrieval and persistence.
 
 | Layer | Component | Count |
 |:---|:---|:---|
-| **Data** | Drift tables | 15 |
-| **Data** | DAOs | 15 |
-| **Data** | Data sources | 15 |
-| **Data** | Repository implementations | 15 |
-| **Domain** | Entities | 22 |
-| **Domain** | Repository interfaces | 14 |
-| **Domain** | Use cases | 48 |
-| **Presentation** | Feature modules | 24 |
-| **Presentation** | Core shared widgets | 28 |
-| **Infrastructure** | DB schema version | 13 |
+| **Data** | Drift tables | 23 |
+| **Data** | DAOs | 42 |
+| **Data** | Data sources | 21 |
+| **Data** | Repository implementations | 21 |
+| **Domain** | Entities | 35 |
+| **Domain** | Repository interfaces | 20 |
+| **Domain** | Use cases | 75 |
+| **Presentation** | Feature modules | 33 |
+| **Presentation** | BLoCs | 39 |
+| **Infrastructure** | DB schema version | 22 |
 | **Infrastructure** | Languages (i18n) | 3 |
 | **Infrastructure** | Platforms | 3 (iOS, Android, Web) |
 
 ## Feature Modules
 
-```
+```text
 lib/features/
 ├── activity_detail/       Activity detail bottom sheet
 ├── add_activity/          Exercise/activity logging
 ├── add_meal/              Food search, barcode, custom food
 ├── ai_food_scanner/       On-device TF Lite food classification
+├── allergens/             Allergen detection and settings
+├── autopilot/             AI-assisted daily logging
+├── blood_glucose/         Blood glucose tracking + trends
 ├── body_measurements/     Body metric logging + trends
+├── calorie_cycling/       Calorie cycling (zigzag diet)
+├── custom_trackers/       User-defined metric trackers
+├── daily_notes/           Daily journal/notes
 ├── data_sync/             Export/import, cloud backup
 ├── diary/                 4-slot food diary + calendar
 ├── edit_meal/             Edit existing food entries
 ├── fasting_tracker/       Intermittent fasting timer + history
+├── food_grade/            Food quality grading (Nutri-Score)
 ├── health_sync/           HealthKit / Health Connect
 ├── home/                  Dashboard, macros, daily summary
 ├── meal_detail/           Food detail bottom sheet
 ├── meal_planning/         7-day planner + shopping list
 ├── meal_timing/           Meal timing pattern analysis
+├── medication/             Medication tracking + logging
 ├── notifications/         Reminder settings
 ├── onboarding/            First-run setup flow
 ├── photo_progress/        Before/after photo comparison
 ├── profile/               User profile, BMR/BMI, goal setup
 ├── progress_charts/       Weekly/monthly trend charts
 ├── recipe_builder/        Multi-ingredient recipe builder
+├── recipe_import/         Import recipes from URLs
 ├── scanner/               Barcode scanner
 ├── settings/              App settings, calculations dialog
+├── symptom_tracking/      Symptom logging + trend charts
 ├── water_tracking/        Water tracker + goal ring
 └── weight_tracking/       Weight log + trends + BMI
 ```
@@ -90,7 +100,7 @@ lib/features/
 
 | Table | Purpose |
 |:---|:---|
-| `config_entries` | App configuration, goals, TDEE method |
+| `config_entries` | App configuration, goals, TDEE method, calorie cycling, exercise mode |
 | `users` | User profile (gender, height, weight, PAL) |
 | `meals` | Food entries with nutrition data |
 | `intakes` | Meal-to-slot assignments (B/L/D/S) |
@@ -106,8 +116,16 @@ lib/features/
 | `meal_plans` | Meal plan entries |
 | `photo_progress_entries` | Progress photo records |
 | `body_measurements` | Body metric entries |
+| `daily_notes` | Daily journal entries |
+| `symptoms` | Symptom tracking entries |
+| `medications` | Medication definitions |
+| `medication_logs` | Medication dose records |
+| `blood_glucose_entries` | Blood glucose readings |
+| `custom_trackers` | User-defined tracker definitions |
+| `custom_tracker_entries` | User-defined tracker values |
+| `autopilot_entries` | AI-assisted daily log suggestions |
 
 ## See Also
-- [Feature Comparison](features.md) — Nutriq vs OpenNutriTracker vs MyFitnessPal
+- [Feature Comparison](features.md) — Nutriq vs MyFitnessPal
 - [Requirements](requirements.md) — Functional and non-functional requirements
-- [Implementation Plan](IMPLEMENTATION_PLAN.md) — Phase-by-phase feature roadmap
+- [Features](features.md) — Full feature breakdown and comparison
