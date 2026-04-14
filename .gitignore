@@ -38,6 +38,10 @@ migrate_working_dir/
 *.env
 env.g.dart
 
+# Xcode export artifacts
+build/ios/ipa/
+build/ios/archive/
+
 # Symbolication related
 app.*.symbols
 
@@ -72,3 +76,9 @@ build/
 
 # TFLite model binaries
 assets/models/*.tflite
+
+# SQL.js WASM binary
+web/sql-wasm.wasm
+
+# Playwright MCP artifacts
+.playwright-mcp/

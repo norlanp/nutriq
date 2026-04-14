@@ -32,12 +32,22 @@
   <title>nutriq</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- sql.js for Drift web database support -->
+  <script>
+    // Fix: some environments (e.g. headless Chromium) report navigator.language
+    // as "undefined", which causes Flutter's intl initialization to crash.
+    if (navigator.language === 'undefined' || navigator.language === undefined) {
+      Object.defineProperty(navigator, 'language', { value: 'en', configurable: true });
+    }
+    if (navigator.languages && navigator.languages[0] === 'undefined') {
+      Object.defineProperty(navigator, 'languages', { value: ['en'], configurable: true });
+    }
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+
 </head>
 <body>
+  <!-- sql.js for Drift web database support -->
   <script>
-    // Expose sql.js database for Drift's WebDatabase
     var sqlite3InitModule = function() {
       return initSqlJs({
         locateFile: function(filename) {

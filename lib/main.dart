@@ -9,6 +9,19 @@ import 'package:nutriq/core/presentation/main_screen.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
 import 'package:nutriq/core/styles/color_schemes.dart';
 import 'package:nutriq/core/styles/fonts.dart';
+import 'dart:async';
+import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logging/logging.dart';
+import 'package:nutriq/core/data/data_source/user_data_source.dart';
+import 'package:nutriq/core/data/repository/config_repository.dart';
+import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
+import 'package:nutriq/core/presentation/main_screen.dart';
+import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
+import 'package:nutriq/core/styles/color_schemes.dart';
+import 'package:nutriq/core/styles/fonts.dart';
 import 'package:nutriq/core/utils/env.dart';
 import 'package:nutriq/core/utils/locator.dart';
 import 'package:nutriq/core/utils/logger_config.dart';
@@ -54,25 +67,40 @@ import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  LoggerConfig.intiLogger();
-  await initLocator();
-  final isUserInitialized = await locator<UserDataSource>().hasUserData();
-  final configRepo = locator<ConfigRepository>();
-  final hasAcceptedAnonymousData =
-      await configRepo.getConfigHasAcceptedAnonymousData();
-  final savedAppTheme = await configRepo.getConfigAppTheme();
-  final log = Logger('main');
+  await runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    LoggerConfig.intiLogger();
+    final log = Logger('main');
 
-  // If the user has accepted anonymous data collection, run the app with
-  // sentry enabled, else run without it
-  if (kReleaseMode && hasAcceptedAnonymousData) {
-    log.info('Starting App with Sentry enabled ...');
-    _runAppWithSentryReporting(isUserInitialized, savedAppTheme);
-  } else {
-    log.info('Starting App ...');
-    runAppWithChangeNotifiers(isUserInitialized, savedAppTheme);
-  }
+    FlutterError.onError = (details) {
+      log.severe('FlutterError', details.exception, details.stack);
+      FlutterError.presentError(details);
+    };
+
+    try {
+      await initLocator();
+    } catch (e, st) {
+      log.severe('initLocator failed', e, st);
+    }
+    final isUserInitialized = await locator<UserDataSource>().hasUserData();
+    final configRepo = locator<ConfigRepository>();
+    final hasAcceptedAnonymousData =
+        await configRepo.getConfigHasAcceptedAnonymousData();
+    final savedAppTheme = await configRepo.getConfigAppTheme();
+
+    // If the user has accepted anonymous data collection, run the app with
+    // sentry enabled, else run without it
+    if (kReleaseMode && hasAcceptedAnonymousData) {
+      log.info('Starting App with Sentry enabled ...');
+      _runAppWithSentryReporting(isUserInitialized, savedAppTheme);
+    } else {
+      log.info('Starting App ...');
+      runAppWithChangeNotifiers(isUserInitialized, savedAppTheme);
+    }
+  }, (error, stack) {
+    print('UNCAUGHT ERROR: $error');
+    print('STACK: $stack');
+  });
 }
 
 void _runAppWithSentryReporting(
@@ -98,7 +126,13 @@ class NutriqApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final platformLocale = ui.PlatformDispatcher.instance.locale;
+    final locale = (platformLocale.languageCode == 'undefined' ||
+            platformLocale.toString() == 'undefined')
+        ? const Locale('en')
+        : platformLocale;
     return MaterialApp(
+      locale: locale,
       onGenerateTitle: (context) => S.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -117,6 +151,19 @@ class NutriqApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
+      localeResolutionCallback: (locale, supported) {
+        if (locale == null ||
+            locale.languageCode == 'undefined' ||
+            locale.toString() == 'undefined') {
+          return const Locale('en');
+        }
+        for (final supportedLocale in supported) {
+          if (supportedLocale.languageCode == locale.languageCode) {
+            return supportedLocale;
+          }
+        }
+        return const Locale('en');
+      },
       initialRoute: userInitialized
           ? NavigationOptions.mainRoute
           : NavigationOptions.onboardingRoute,
