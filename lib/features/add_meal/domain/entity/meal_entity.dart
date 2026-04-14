@@ -6,7 +6,7 @@ import 'package:nutriq/core/utils/id_generator.dart';
 import 'package:nutriq/core/utils/supported_language.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_const.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_food_dto.dart';
-import 'package:nutriq/features/add_meal/data/dto/fdc_sp/sp_fdc_food_dto.dart';
+
 import 'package:nutriq/features/add_meal/data/dto/off/off_product_dto.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 
@@ -104,28 +104,6 @@ class MealEntity extends Equatable {
       servingUnit: fdcFood.servingSizeUnit,
       servingSize: fdcFood.servingSizeUnit,
       nutriments: MealNutrimentsEntity.fromFDCNutriments(fdcFood.foodNutrients),
-      source: MealSourceEntity.fdc,
-    );
-  }
-
-  factory MealEntity.fromSpFDCFood(SpFdcFoodDTO foodItem) {
-    final fdcId = foodItem.fdcId?.toInt().toString();
-
-    return MealEntity(
-      code: fdcId,
-      name: foodItem.getLocaleDescription(
-        SupportedLanguage.fromCode(
-            ui.PlatformDispatcher.instance.locale.toString()),
-      ),
-      brands: null,
-      url: FDCConst.getFoodDetailUrlString(fdcId),
-      mealQuantity: null,
-      mealUnit: FDCConst.fdcDefaultUnit,
-      servingQuantity: foodItem.servingSize,
-      servingUnit: FDCConst.fdcDefaultUnit,
-      servingSize:
-          "${(foodItem.servingAmount ?? 1).toInt()} ${foodItem.servingSizeUnit}",
-      nutriments: MealNutrimentsEntity.fromFDCNutriments(foodItem.nutrients),
       source: MealSourceEntity.fdc,
     );
   }

@@ -571,3 +571,5 @@
 [ ] Add l10n strings for menu scan @file:l10n/
 [ ] Register menu scan DI entries in locator.dart @file:lib/core/di/locator.dart
 [ ] Run flutter analyze, tests
+
+[x] Research if supabase dependency + related code (SpFdcDataSource, env vars) can be removed — removed supabase_flutter, SpFdcDataSource, fdc_sp DTOs, SPConst; redirected searchFDCFoodByString to use FDC API

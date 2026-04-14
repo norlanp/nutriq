@@ -14,8 +14,7 @@ class SearchProductsUseCase {
   }
 
   Future<List<MealEntity>> searchFDCFoodByString(String searchString) async {
-    final foods =
-        await _productsRepository.getSupabaseFDCFoodsByString(searchString);
+    final foods = await _productsRepository.getFDCFoodsByString(searchString);
     return foods;
   }
 }

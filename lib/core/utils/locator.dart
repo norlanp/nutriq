@@ -1,5 +1,6 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logging/logging.dart';
 import 'package:nutriq/core/data/data_source/config_data_source.dart';
 import 'package:nutriq/core/data/data_source/fasting_data_source.dart';
 import 'package:nutriq/core/data/data_source/intake_data_source.dart';
@@ -168,14 +169,14 @@ import 'package:nutriq/core/domain/usecase/get_user_usecase.dart';
 import 'package:nutriq/core/domain/usecase/exercise/get_daily_burned_calories_usecase.dart';
 import 'package:nutriq/core/domain/usecase/exercise/net_calories_usecase.dart';
 import 'package:nutriq/core/domain/usecase/update_intake_usecase.dart';
-import 'package:nutriq/core/utils/env.dart';
+
 import 'package:nutriq/core/utils/ont_image_cache_manager.dart';
 import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
 import 'package:nutriq/features/add_activity/presentation/bloc/activities_bloc.dart';
 import 'package:nutriq/features/add_activity/presentation/bloc/recent_activities_bloc.dart';
 import 'package:nutriq/features/add_meal/data/data_sources/fdc_data_source.dart';
 import 'package:nutriq/features/add_meal/data/data_sources/off_data_source.dart';
-import 'package:nutriq/features/add_meal/data/data_sources/sp_fdc_data_source.dart';
+
 import 'package:nutriq/features/add_meal/data/repository/products_repository.dart';
 import 'package:nutriq/features/add_meal/domain/usecase/search_products_usecase.dart';
 import 'package:nutriq/features/add_meal/presentation/bloc/add_meal_bloc.dart';
@@ -250,18 +251,18 @@ import 'package:nutriq/core/domain/service/food_grade_calculator.dart';
 import 'package:nutriq/core/domain/service/food_grade_filter.dart';
 import 'package:nutriq/core/domain/service/autopilot_service.dart';
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 final locator = GetIt.instance;
 
 Future<void> initLocator() async {
-  final appDatabase = AppDatabase();
-
-  await Supabase.initialize(
-    url: Env.supabaseProjectUrl,
-    anonKey: Env.supabaseProjectAnonKey,
-  );
-  locator.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
+  final log = Logger('locator');
+  AppDatabase appDatabase;
+  try {
+    appDatabase = AppDatabase();
+  } catch (e, st) {
+    log.severe('Failed to create AppDatabase', e, st);
+    rethrow;
+  }
 
   locator.registerLazySingleton<CacheManager>(
     () => OntImageCacheManager.instance,
@@ -307,7 +308,6 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<OFFDataSource>(() => OFFDataSource());
   locator.registerLazySingleton<FDCDataSource>(() => FDCDataSource());
-  locator.registerLazySingleton<SpFdcDataSource>(() => SpFdcDataSource());
   locator.registerLazySingleton(
     () => TrackedDayDataSource(trackedDayDao),
   );
@@ -403,7 +403,7 @@ Future<void> initLocator() async {
     () => IntakeRepository(locator(), locator()),
   );
   locator.registerLazySingleton<ProductsRepository>(
-    () => ProductsRepository(locator(), locator(), locator()),
+    () => ProductsRepository(locator(), locator()),
   );
   locator.registerLazySingleton<UserActivityRepository>(
     () => UserActivityRepository(locator()),
