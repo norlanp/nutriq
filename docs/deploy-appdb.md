@@ -8,6 +8,17 @@ appdb.to is an independent marketplace for iOS/iPadOS/macOS apps. It distributes
 2. **appdb Developer Account** — register at https://appdb.to/developers (free)
 3. **Provisioning Profile** — ad-hoc distribution profile from Apple Developer portal
 
+## Firebase Config
+
+Firebase requires platform-specific config files that are **not committed** to version control (they contain API keys). Place them manually:
+
+| Platform | File | Path |
+|----------|------|------|
+| Android | `google-services.json` | `android/app/google-services.json` |
+| iOS | `GoogleService-Info.plist` | `ios/Runner/GoogleService-Info.plist` |
+
+Download these from the Firebase Console → Project Settings → Your Apps → Config files.
+
 ## Build IPA for appdb
 
 ```bash
