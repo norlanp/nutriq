@@ -82,3 +82,7 @@ web/sql-wasm.wasm
 
 # Playwright MCP artifacts
 .playwright-mcp/
+
+# Signing secrets
+android/keystore/
+android/key.properties

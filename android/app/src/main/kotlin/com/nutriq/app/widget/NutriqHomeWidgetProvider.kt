@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.view.View
 import android.widget.RemoteViews
+import com.nutriq.app.R
 
 class NutriqHomeWidgetProvider : AppWidgetProvider() {
 
@@ -50,24 +51,24 @@ class NutriqHomeWidgetProvider : AppWidgetProvider() {
             views.setTextViewText(R.id.tv_proteins, "P: $proteinsConsumed / $proteinsGoal")
 
             val kcalProgress = if (kcalGoal > 0) {
-                ((kcalConsumed.toFloat() / kcalGoal.toFloat()) * 100).coerceAtMost(100)
+                ((kcalConsumed.toFloat() / kcalGoal.toFloat()) * 100).coerceAtMost(100f)
             } else 0f
-            views.setProgressBar(R.id.progress_kcal, 100, kcalProgress.toInt(), 0)
+            views.setProgressBar(R.id.progress_kcal, 100, kcalProgress.toInt(), false)
 
             val carbsProgress = if (carbsGoal > 0) {
-                ((carbsConsumed.toFloat() / carbsGoal.toFloat()) * 100).coerceAtMost(100)
+                ((carbsConsumed.toFloat() / carbsGoal.toFloat()) * 100).coerceAtMost(100f)
             } else 0f
-            views.setProgressBar(R.id.progress_carbs, 100, carbsProgress.toInt(), 0)
+            views.setProgressBar(R.id.progress_carbs, 100, carbsProgress.toInt(), false)
 
             val fatsProgress = if (fatsGoal > 0) {
-                ((fatsConsumed.toFloat() / fatsGoal.toFloat()) * 100).coerceAtMost(100)
+                ((fatsConsumed.toFloat() / fatsGoal.toFloat()) * 100).coerceAtMost(100f)
             } else 0f
-            views.setProgressBar(R.id.progress_fats, 100, fatsProgress.toInt(), 0)
+            views.setProgressBar(R.id.progress_fats, 100, fatsProgress.toInt(), false)
 
             val proteinsProgress = if (proteinsGoal > 0) {
-                ((proteinsConsumed.toFloat() / proteinsGoal.toFloat()) * 100).coerceAtMost(100)
+                ((proteinsConsumed.toFloat() / proteinsGoal.toFloat()) * 100).coerceAtMost(100f)
             } else 0f
-            views.setProgressBar(R.id.progress_proteins, 100, proteinsProgress.toInt(), 0)
+            views.setProgressBar(R.id.progress_proteins, 100, proteinsProgress.toInt(), false)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }

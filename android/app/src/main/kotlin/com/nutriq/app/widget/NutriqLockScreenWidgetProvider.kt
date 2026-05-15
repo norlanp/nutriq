@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
+import com.nutriq.app.R
 
 class NutriqLockScreenWidgetProvider : AppWidgetProvider() {
 
@@ -37,9 +38,9 @@ class NutriqLockScreenWidgetProvider : AppWidgetProvider() {
             views.setTextViewText(R.id.tv_lock_kcal_label, "kcal left")
 
             val progress = if (kcalGoal > 0) {
-                ((kcalConsumed.toFloat() / kcalGoal.toFloat()) * 100).coerceAtMost(100)
+                ((kcalConsumed.toFloat() / kcalGoal.toFloat()) * 100).coerceAtMost(100f)
             } else 0f
-            views.setProgressBar(R.id.progress_lock_kcal, 100, progress.toInt(), 0)
+            views.setProgressBar(R.id.progress_lock_kcal, 100, progress.toInt(), false)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }

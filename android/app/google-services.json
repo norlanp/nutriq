@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "504626750451",
+    "project_id": "nutriq-f6be6",
+    "storage_bucket": "nutriq-f6be6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504626750451:android:9bcd988ad4a6c3a311a886",
+        "android_client_info": {
+          "package_name": "com.nutriq.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLVFf2zJuL41sacM3Jpe27F6hXQbE3NX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

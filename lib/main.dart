@@ -1,14 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:logging/logging.dart';
-import 'package:nutriq/core/data/data_source/user_data_source.dart';
-import 'package:nutriq/core/data/repository/config_repository.dart';
-import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
-import 'package:nutriq/core/presentation/main_screen.dart';
-import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
-import 'package:nutriq/core/styles/color_schemes.dart';
-import 'package:nutriq/core/styles/fonts.dart';
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
@@ -71,15 +60,21 @@ import 'package:nutriq/features/grocery_check/presentation/grocery_check_screen.
 import 'package:nutriq/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     LoggerConfig.intiLogger();
     final log = Logger('main');
 
     FlutterError.onError = (details) {
       log.severe('FlutterError', details.exception, details.stack);
+      FirebaseCrashlytics.instance.recordFlutterFatalError(details);
       FlutterError.presentError(details);
     };
 
@@ -109,6 +104,7 @@ Future<void> main() async {
       runAppWithChangeNotifiers(isUserInitialized, savedAppTheme);
     }
   }, (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     print('UNCAUGHT ERROR: $error');
     print('STACK: $stack');
   });

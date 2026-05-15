@@ -1,5 +1,5 @@
 .PHONY: run run-web run-ios run-android \
-       build-web build-apk build-ios \
+       build-web build-apk build-apk-debug build-ios build-android build-mobile \
        codegen codegen-watch l10n \
        analyze test format format-check lint \
        clean \
@@ -30,11 +30,16 @@ build-web:
 build-apk:
 	flutter build apk
 
-build-ios:
-	flutter build ios
+build-apk-debug:
+	flutter build apk --debug
 
-build-ipa:
+build-android:
+	flutter build apk --release
+
+build-ios:
 	flutter build ipa --export-method ad-hoc
+
+build-mobile: build-android build-ios
 
 # ── Code Generation ─────────────────────────────────────────────────
 
