@@ -86,3 +86,6 @@ web/sql-wasm.wasm
 # Signing secrets
 android/keystore/
 android/key.properties
+
+# Firebase config
+android/app/google-services.json
