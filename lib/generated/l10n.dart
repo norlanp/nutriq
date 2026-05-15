@@ -6618,6 +6618,26 @@ class S {
     );
   }
 
+  /// `Medications`
+  String get medicationSummaryTitle {
+    return Intl.message(
+      'Medications',
+      name: 'medicationSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{taken} / {total} doses taken`
+  String medicationProgress(String taken, String total) {
+    return Intl.message(
+      '$taken / $total doses taken',
+      name: 'medicationProgress',
+      desc: '',
+      args: [taken, total],
+    );
+  }
+
   /// `Notes`
   String get notes {
     return Intl.message('Notes', name: 'notes', desc: '', args: []);
@@ -6721,6 +6741,721 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `net carbs`
+  String get netCarbsLabel {
+    return Intl.message('net carbs', name: 'netCarbsLabel', desc: '', args: []);
+  }
+
+  /// `Net Carbs`
+  String get netCarbsSettingsLabel {
+    return Intl.message(
+      'Net Carbs',
+      name: 'netCarbsSettingsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show net carbs (total carbs minus fiber) instead of total carbs in macros and summaries.`
+  String get netCarbsDescription {
+    return Intl.message(
+      'Show net carbs (total carbs minus fiber) instead of total carbs in macros and summaries.',
+      name: 'netCarbsDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable Net Carbs`
+  String get netCarbsEnabledLabel {
+    return Intl.message(
+      'Enable Net Carbs',
+      name: 'netCarbsEnabledLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipe Catalog`
+  String get recipeCatalogTitle {
+    return Intl.message(
+      'Recipe Catalog',
+      name: 'recipeCatalogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipe Details`
+  String get recipeCatalogDetailTitle {
+    return Intl.message(
+      'Recipe Details',
+      name: 'recipeCatalogDetailTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search recipes`
+  String get recipeCatalogSearch {
+    return Intl.message(
+      'Search recipes',
+      name: 'recipeCatalogSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search by name, ingredient...`
+  String get recipeCatalogSearchHint {
+    return Intl.message(
+      'Search by name, ingredient...',
+      name: 'recipeCatalogSearchHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No recipes found`
+  String get recipeCatalogEmpty {
+    return Intl.message(
+      'No recipes found',
+      name: 'recipeCatalogEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `min`
+  String get recipeCatalogMin {
+    return Intl.message('min', name: 'recipeCatalogMin', desc: '', args: []);
+  }
+
+  /// `Nutrition`
+  String get recipeCatalogNutrition {
+    return Intl.message(
+      'Nutrition',
+      name: 'recipeCatalogNutrition',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add to Diary`
+  String get recipeCatalogAddToDiary {
+    return Intl.message(
+      'Add to Diary',
+      name: 'recipeCatalogAddToDiary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grocery Check`
+  String get groceryCheckTitle {
+    return Intl.message(
+      'Grocery Check',
+      name: 'groceryCheckTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan barcodes to compare nutrition grades while shopping`
+  String get groceryCheckSubtitle {
+    return Intl.message(
+      'Scan barcodes to compare nutrition grades while shopping',
+      name: 'groceryCheckSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan Barcode`
+  String get groceryCheckScanButton {
+    return Intl.message(
+      'Scan Barcode',
+      name: 'groceryCheckScanButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No products scanned yet. Tap the scan button to start comparing.`
+  String get groceryCheckEmptyList {
+    return Intl.message(
+      'No products scanned yet. Tap the scan button to start comparing.',
+      name: 'groceryCheckEmptyList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Compare`
+  String get groceryCheckCompareButton {
+    return Intl.message(
+      'Compare',
+      name: 'groceryCheckCompareButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select two products to compare`
+  String get groceryCheckSelectTwoHint {
+    return Intl.message(
+      'Select two products to compare',
+      name: 'groceryCheckSelectTwoHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nutrition Comparison`
+  String get groceryCheckComparisonTitle {
+    return Intl.message(
+      'Nutrition Comparison',
+      name: 'groceryCheckComparisonTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `per 100 g/ml`
+  String get groceryCheckPer100gml {
+    return Intl.message(
+      'per 100 g/ml',
+      name: 'groceryCheckPer100gml',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Better Choice`
+  String get groceryCheckWinner {
+    return Intl.message(
+      'Better Choice',
+      name: 'groceryCheckWinner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear All`
+  String get groceryCheckClearAll {
+    return Intl.message(
+      'Clear All',
+      name: 'groceryCheckClearAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product not found. Try scanning again.`
+  String get groceryCheckProductNotFound {
+    return Intl.message(
+      'Product not found. Try scanning again.',
+      name: 'groceryCheckProductNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scanning...`
+  String get groceryCheckScanning {
+    return Intl.message(
+      'Scanning...',
+      name: 'groceryCheckScanning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product added to comparison list`
+  String get groceryCheckItemAdded {
+    return Intl.message(
+      'Product added to comparison list',
+      name: 'groceryCheckItemAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove`
+  String get groceryCheckRemoveItem {
+    return Intl.message(
+      'Remove',
+      name: 'groceryCheckRemoveItem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nutrition data not available`
+  String get groceryCheckNoNutritionData {
+    return Intl.message(
+      'Nutrition data not available',
+      name: 'groceryCheckNoNutritionData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show nutrition details`
+  String get showNutritionLabel {
+    return Intl.message(
+      'Show nutrition details',
+      name: 'showNutritionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hide nutrition details`
+  String get hideNutritionLabel {
+    return Intl.message(
+      'Hide nutrition details',
+      name: 'hideNutritionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sodium`
+  String get sodiumLabel {
+    return Intl.message('Sodium', name: 'sodiumLabel', desc: '', args: []);
+  }
+
+  /// `Protein`
+  String get proteinLabelShort {
+    return Intl.message(
+      'Protein',
+      name: 'proteinLabelShort',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Compare`
+  String get compareLabel {
+    return Intl.message('Compare', name: 'compareLabel', desc: '', args: []);
+  }
+
+  /// `Voice Food Logging`
+  String get voiceLoggingTitle {
+    return Intl.message(
+      'Voice Food Logging',
+      name: 'voiceLoggingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap the microphone and describe what you ate`
+  String get voiceLoggingSubtitle {
+    return Intl.message(
+      'Tap the microphone and describe what you ate',
+      name: 'voiceLoggingSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Recording`
+  String get voiceLoggingStartButton {
+    return Intl.message(
+      'Start Recording',
+      name: 'voiceLoggingStartButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stop Recording`
+  String get voiceLoggingStopButton {
+    return Intl.message(
+      'Stop Recording',
+      name: 'voiceLoggingStopButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Listening...`
+  String get voiceLoggingListening {
+    return Intl.message(
+      'Listening...',
+      name: 'voiceLoggingListening',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Identifying food items...`
+  String get voiceLoggingParsing {
+    return Intl.message(
+      'Identifying food items...',
+      name: 'voiceLoggingParsing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recognized Food Items`
+  String get voiceLoggingResultsTitle {
+    return Intl.message(
+      'Recognized Food Items',
+      name: 'voiceLoggingResultsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm`
+  String get voiceLoggingConfirmButton {
+    return Intl.message(
+      'Confirm',
+      name: 'voiceLoggingConfirmButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get voiceLoggingRetryButton {
+    return Intl.message(
+      'Retry',
+      name: 'voiceLoggingRetryButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No matching products found`
+  String get voiceLoggingNoMatches {
+    return Intl.message(
+      'No matching products found',
+      name: 'voiceLoggingNoMatches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Voice Log`
+  String get voiceLoggingLabel {
+    return Intl.message(
+      'Voice Log',
+      name: 'voiceLoggingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log food by speaking`
+  String get voiceLoggingExample {
+    return Intl.message(
+      'Log food by speaking',
+      name: 'voiceLoggingExample',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Menu Scanner`
+  String get menuScanTitle {
+    return Intl.message(
+      'Menu Scanner',
+      name: 'menuScanTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan a restaurant menu to see nutrition info`
+  String get menuScanSubtitle {
+    return Intl.message(
+      'Scan a restaurant menu to see nutrition info',
+      name: 'menuScanSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take a photo of a menu and we'll identify dishes with nutrition data.`
+  String get menuScanDescription {
+    return Intl.message(
+      'Take a photo of a menu and we\'ll identify dishes with nutrition data.',
+      name: 'menuScanDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan Menu`
+  String get menuScanCaptureButton {
+    return Intl.message(
+      'Scan Menu',
+      name: 'menuScanCaptureButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick from Gallery`
+  String get menuScanGalleryButton {
+    return Intl.message(
+      'Pick from Gallery',
+      name: 'menuScanGalleryButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search manually`
+  String get menuScanSearchManually {
+    return Intl.message(
+      'Search manually',
+      name: 'menuScanSearchManually',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Menu Items`
+  String get menuScanResultsTitle {
+    return Intl.message(
+      'Menu Items',
+      name: 'menuScanResultsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Processing menu...`
+  String get menuScanProcessing {
+    return Intl.message(
+      'Processing menu...',
+      name: 'menuScanProcessing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Adding items to diary...`
+  String get menuScanAddingItems {
+    return Intl.message(
+      'Adding items to diary...',
+      name: 'menuScanAddingItems',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} item(s) added to diary`
+  String menuScanAddedCount(Object count) {
+    return Intl.message(
+      '$count item(s) added to diary',
+      name: 'menuScanAddedCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} items found`
+  String menuScanItemCount(Object count) {
+    return Intl.message(
+      '$count items found',
+      name: 'menuScanItemCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Add {count} to diary`
+  String menuScanAddSelected(Object count) {
+    return Intl.message(
+      'Add $count to diary',
+      name: 'menuScanAddSelected',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Nutrition info not available`
+  String get menuScanNoNutritionInfo {
+    return Intl.message(
+      'Nutrition info not available',
+      name: 'menuScanNoNutritionInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cal`
+  String get menuScanCalories {
+    return Intl.message('Cal', name: 'menuScanCalories', desc: '', args: []);
+  }
+
+  /// `Protein`
+  String get menuScanProtein {
+    return Intl.message('Protein', name: 'menuScanProtein', desc: '', args: []);
+  }
+
+  /// `Carbs`
+  String get menuScanCarbs {
+    return Intl.message('Carbs', name: 'menuScanCarbs', desc: '', args: []);
+  }
+
+  /// `Fat`
+  String get menuScanFat {
+    return Intl.message('Fat', name: 'menuScanFat', desc: '', args: []);
+  }
+
+  /// `Step Bonus`
+  String get stepBonusLabel {
+    return Intl.message(
+      'Step Bonus',
+      name: 'stepBonusLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn calorie credits from your daily step count. The more you walk, the more calories you get back.`
+  String get stepBonusDescription {
+    return Intl.message(
+      'Earn calorie credits from your daily step count. The more you walk, the more calories you get back.',
+      name: 'stepBonusDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable Step Bonus`
+  String get stepBonusEnableLabel {
+    return Intl.message(
+      'Enable Step Bonus',
+      name: 'stepBonusEnableLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Credit Percentage`
+  String get stepBonusPercentLabel {
+    return Intl.message(
+      'Credit Percentage',
+      name: 'stepBonusPercentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today's Step Bonus`
+  String get stepBonusTodaySummary {
+    return Intl.message(
+      'Today\'s Step Bonus',
+      name: 'stepBonusTodaySummary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Steps today`
+  String get stepBonusStepsLabel {
+    return Intl.message(
+      'Steps today',
+      name: 'stepBonusStepsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Step credit`
+  String get stepBonusCreditLabel {
+    return Intl.message(
+      'Step credit',
+      name: 'stepBonusCreditLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refresh`
+  String get stepBonusRefreshLabel {
+    return Intl.message(
+      'Refresh',
+      name: 'stepBonusRefreshLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nutriq Home`
+  String get widgetHomeTitle {
+    return Intl.message(
+      'Nutriq Home',
+      name: 'widgetHomeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show remaining calories and macros on your home screen.`
+  String get widgetHomeDescription {
+    return Intl.message(
+      'Show remaining calories and macros on your home screen.',
+      name: 'widgetHomeDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nutriq Calories`
+  String get widgetLockTitle {
+    return Intl.message(
+      'Nutriq Calories',
+      name: 'widgetLockTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show remaining calories on your lock screen.`
+  String get widgetLockDescription {
+    return Intl.message(
+      'Show remaining calories on your lock screen.',
+      name: 'widgetLockDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `kcal left`
+  String get widgetKcalLeft {
+    return Intl.message(
+      'kcal left',
+      name: 'widgetKcalLeft',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `C`
+  String get widgetCarbsShort {
+    return Intl.message('C', name: 'widgetCarbsShort', desc: '', args: []);
+  }
+
+  /// `F`
+  String get widgetFatsShort {
+    return Intl.message('F', name: 'widgetFatsShort', desc: '', args: []);
+  }
+
+  /// `P`
+  String get widgetProteinsShort {
+    return Intl.message('P', name: 'widgetProteinsShort', desc: '', args: []);
   }
 }
 

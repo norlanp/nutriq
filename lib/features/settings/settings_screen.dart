@@ -90,6 +90,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _showUnitsDialog(context, state.usesImperialUnits),
                 ),
                 ListTile(
+                  leading: const Icon(Icons.grain_outlined),
+                  title: Text(S.of(context).netCarbsSettingsLabel),
+                  subtitle: Text(S.of(context).netCarbsDescription),
+                  onTap: () =>
+                      _showNetCarbsDialog(context, state.netCarbsEnabled),
+                ),
+                ListTile(
                   leading: const Icon(Icons.calculate_outlined),
                   title: Text(S.of(context).settingsCalculationsLabel),
                   onTap: () => _showCalculationsDialog(context),
@@ -185,6 +192,56 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       // Update blocs
       _profileBloc.add(LoadProfileEvent());
+      _homeBloc.add(LoadItemsEvent());
+      _diaryBloc.add(const LoadDiaryYearEvent());
+    }
+  }
+
+  void _showNetCarbsDialog(BuildContext context, bool netCarbsEnabled) async {
+    bool switchActive = netCarbsEnabled;
+    final shouldUpdate = await showDialog<bool?>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: Text(S.of(context).netCarbsSettingsLabel),
+              content: StatefulBuilder(
+                builder: (BuildContext context,
+                    void Function(void Function()) setState) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(S.of(context).netCarbsDescription),
+                      const SizedBox(height: 16),
+                      SwitchListTile(
+                        title: Text(S.of(context).netCarbsEnabledLabel),
+                        value: switchActive,
+                        onChanged: (bool value) {
+                          setState(() {
+                            switchActive = value;
+                          });
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: Text(S.of(context).dialogCancelLabel)),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    child: Text(S.of(context).dialogOKLabel))
+              ]);
+        });
+    if (shouldUpdate == true) {
+      _settingsBloc.setNetCarbsEnabled(switchActive);
+      _settingsBloc.add(LoadSettingsEvent());
+
       _homeBloc.add(LoadItemsEvent());
       _diaryBloc.add(const LoadDiaryYearEvent());
     }

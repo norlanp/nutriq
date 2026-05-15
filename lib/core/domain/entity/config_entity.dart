@@ -21,6 +21,9 @@ class ConfigEntity extends Equatable {
   final Set<AllergenType> userAllergens;
   final int? bloodGlucoseMinMgDl;
   final int? bloodGlucoseMaxMgDl;
+  final bool netCarbsEnabled;
+  final bool stepBonusEnabled;
+  final double stepBonusPercent;
 
   const ConfigEntity(
     this.hasAcceptedDisclaimer,
@@ -39,6 +42,9 @@ class ConfigEntity extends Equatable {
     this.userAllergens = const {},
     this.bloodGlucoseMinMgDl = 70,
     this.bloodGlucoseMaxMgDl = 180,
+    this.netCarbsEnabled = false,
+    this.stepBonusEnabled = false,
+    this.stepBonusPercent = 0.5,
   });
 
   @override
@@ -58,5 +64,8 @@ class ConfigEntity extends Equatable {
         userAllergens,
         bloodGlucoseMinMgDl,
         bloodGlucoseMaxMgDl,
+        netCarbsEnabled,
+        stepBonusEnabled,
+        stepBonusPercent,
       ];
 }

@@ -12,7 +12,10 @@ import 'package:nutriq/core/domain/usecase/get_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_kcal_goal_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_macro_goal_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_user_activity_usecase.dart';
+import 'package:nutriq/core/domain/usecase/net_carbs/net_carbs_usecase.dart';
+import 'package:nutriq/core/domain/usecase/step_bonus/calculate_step_bonus_usecase.dart';
 import 'package:nutriq/core/domain/usecase/update_intake_usecase.dart';
+import 'package:nutriq/core/domain/usecase/widget/update_widget_data_usecase.dart';
 import 'package:nutriq/core/utils/calc/calorie_goal_calc.dart';
 import 'package:nutriq/core/utils/calc/macro_calc.dart';
 import 'package:nutriq/core/utils/locator.dart';
@@ -34,6 +37,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final AddTrackedDayUsecase _addTrackedDayUseCase;
   final GetKcalGoalUsecase _getKcalGoalUsecase;
   final GetMacroGoalUsecase _getMacroGoalUsecase;
+  final NetCarbsUsecase _netCarbsUsecase;
+  final CalculateStepBonusUsecase _calculateStepBonusUsecase;
+  final UpdateWidgetDataUsecase _updateWidgetDataUsecase;
 
   DateTime currentDay = DateTime.now();
 
@@ -47,7 +53,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       this._deleteUserActivityUsecase,
       this._addTrackedDayUseCase,
       this._getKcalGoalUsecase,
-      this._getMacroGoalUsecase)
+      this._getMacroGoalUsecase,
+      this._netCarbsUsecase,
+      this._calculateStepBonusUsecase,
+      this._updateWidgetDataUsecase)
       : super(HomeInitial()) {
     on<LoadItemsEvent>((event, emit) async {
       emit(HomeLoadingState());
@@ -90,6 +99,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           totalLunchCarbs +
           totalDinnerCarbs +
           totalSnackCarbs;
+      final totalNetCarbsIntake = getTotalNetCarbs(breakfastIntakeList) +
+          getTotalNetCarbs(lunchIntakeList) +
+          getTotalNetCarbs(dinnerIntakeList) +
+          getTotalNetCarbs(snackIntakeList);
       final totalFatsIntake = totalBreakfastFats +
           totalLunchFats +
           totalDinnerFats +
@@ -115,13 +128,27 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final totalKcalLeft =
           CalorieGoalCalc.getDailyKcalLeft(totalKcalGoal, totalKcalIntake);
 
+      double stepBonusCredit = 0;
+      if (configData.stepBonusEnabled) {
+        final steps = await _calculateStepBonusUsecase
+            .readTodaySteps()
+            .catchError((_) => 0);
+        stepBonusCredit = await _calculateStepBonusUsecase(
+          steps: steps,
+          percent: configData.stepBonusPercent,
+        );
+      }
+
+      final adjustedKcalLeft = totalKcalLeft + stepBonusCredit;
+
       emit(HomeLoadedState(
           showDisclaimerDialog: showDisclaimerDialog,
           totalKcalDaily: totalKcalGoal,
-          totalKcalLeft: totalKcalLeft,
+          totalKcalLeft: adjustedKcalLeft,
           totalKcalSupplied: totalKcalIntake,
           totalKcalBurned: totalKcalActivities,
           totalCarbsIntake: totalCarbsIntake,
+          totalNetCarbsIntake: totalNetCarbsIntake,
           totalFatsIntake: totalFatsIntake,
           totalCarbsGoal: totalCarbsGoal,
           totalFatsGoal: totalFatsGoal,
@@ -132,7 +159,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           dinnerIntakeList: dinnerIntakeList,
           snackIntakeList: snackIntakeList,
           userActivityList: userActivities,
-          usesImperialUnits: usesImperialUnits));
+          usesImperialUnits: usesImperialUnits,
+          netCarbsEnabled: configData.netCarbsEnabled,
+          stepBonusCredit: stepBonusCredit));
+
+      _updateWidgetDataUsecase();
     });
   }
 
@@ -141,6 +172,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   double getTotalCarbs(List<IntakeEntity> intakeList) =>
       intakeList.map((intake) => intake.totalCarbsGram).toList().sum;
+
+  double getTotalNetCarbs(List<IntakeEntity> intakeList) =>
+      _netCarbsUsecase.getNetCarbsForIntakeList(intakeList);
 
   double getTotalFats(List<IntakeEntity> intakeList) =>
       intakeList.map((intake) => intake.totalFatsGram).toList().sum;

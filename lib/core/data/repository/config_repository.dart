@@ -140,4 +140,34 @@ class ConfigRepository implements domain.ConfigRepository {
   Future<void> setConfigAllergens(Set<AllergenType> allergens) async {
     await _configDataSource.setAllergens(mapAllergenSetToJson(allergens));
   }
+
+  @override
+  Future<bool> getNetCarbsEnabled() async {
+    return await _configDataSource.getNetCarbsEnabled();
+  }
+
+  @override
+  Future<void> setNetCarbsEnabled(bool enabled) async {
+    await _configDataSource.setNetCarbsEnabled(enabled);
+  }
+
+  @override
+  Future<bool> getStepBonusEnabled() async {
+    return await _configDataSource.getStepBonusEnabled();
+  }
+
+  @override
+  Future<void> setStepBonusEnabled(bool enabled) async {
+    await _configDataSource.setStepBonusEnabled(enabled);
+  }
+
+  @override
+  Future<double> getStepBonusPercent() async {
+    return await _configDataSource.getStepBonusPercent();
+  }
+
+  @override
+  Future<void> setStepBonusPercent(double percent) async {
+    await _configDataSource.setStepBonusPercent(percent);
+  }
 }

@@ -180,4 +180,37 @@ class ConfigDao extends DatabaseAccessor<AppDatabase> with _$ConfigDaoMixin {
       ConfigEntriesCompanion(allergens: Value(allergensJson)),
     );
   }
+
+  Future<bool> getNetCarbsEnabled() async {
+    final config = await getConfig();
+    return config.netCarbsEnabled != 0;
+  }
+
+  Future<void> setNetCarbsEnabled(bool enabled) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(netCarbsEnabled: Value(enabled ? 1 : 0)),
+    );
+  }
+
+  Future<bool> getStepBonusEnabled() async {
+    final config = await getConfig();
+    return config.stepBonusEnabled != 0;
+  }
+
+  Future<void> setStepBonusEnabled(bool enabled) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(stepBonusEnabled: Value(enabled ? 1 : 0)),
+    );
+  }
+
+  Future<double> getStepBonusPercent() async {
+    final config = await getConfig();
+    return config.stepBonusPercent;
+  }
+
+  Future<void> setStepBonusPercent(double percent) async {
+    await (update(configEntries)..where((t) => t.id.equals(_configId))).write(
+      ConfigEntriesCompanion(stepBonusPercent: Value(percent)),
+    );
+  }
 }

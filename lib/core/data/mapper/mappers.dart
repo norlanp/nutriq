@@ -79,6 +79,9 @@ ConfigEntity mapConfigEntryToEntity(ConfigEntry entry) => ConfigEntity(
       userAllergens: mapAllergensJsonToSet(entry.allergens),
       bloodGlucoseMinMgDl: entry.bloodGlucoseMinMgDl ?? 70,
       bloodGlucoseMaxMgDl: entry.bloodGlucoseMaxMgDl ?? 180,
+      netCarbsEnabled: entry.netCarbsEnabled != 0,
+      stepBonusEnabled: entry.stepBonusEnabled != 0,
+      stepBonusPercent: entry.stepBonusPercent,
     );
 
 ConfigEntriesCompanion mapConfigEntityToCompanion(ConfigEntity entity) =>
@@ -101,6 +104,9 @@ ConfigEntriesCompanion mapConfigEntityToCompanion(ConfigEntity entity) =>
       allergens: Value(mapAllergenSetToJson(entity.userAllergens)),
       bloodGlucoseMinMgDl: Value(entity.bloodGlucoseMinMgDl),
       bloodGlucoseMaxMgDl: Value(entity.bloodGlucoseMaxMgDl),
+      netCarbsEnabled: Value(entity.netCarbsEnabled ? 1 : 0),
+      stepBonusEnabled: Value(entity.stepBonusEnabled ? 1 : 0),
+      stepBonusPercent: Value(entity.stepBonusPercent),
     );
 
 Set<AllergenType> mapAllergensJsonToSet(String allergensJson) {

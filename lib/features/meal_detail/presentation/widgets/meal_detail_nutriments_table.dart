@@ -8,13 +8,15 @@ class MealDetailNutrimentsTable extends StatelessWidget {
   final bool usesImperialUnits;
   final double? servingQuantity;
   final String? servingUnit;
+  final bool netCarbsEnabled;
 
   const MealDetailNutrimentsTable(
       {super.key,
       required this.product,
       required this.usesImperialUnits,
       this.servingQuantity,
-      this.servingUnit});
+      this.servingUnit,
+      this.netCarbsEnabled = false});
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,11 @@ class MealDetailNutrimentsTable extends StatelessWidget {
                 S.of(context).carbohydrateLabel,
                 "${_adjustValueForServing(product.nutriments.carbohydrates100 ?? 0).roundToPrecision(2)}g",
                 textStyleNormal),
+            if (netCarbsEnabled)
+              _getNutrimentsTableRow(
+                  S.of(context).netCarbsLabel,
+                  "${_adjustValueForServing((product.nutriments.carbohydrates100 ?? 0) - (product.nutriments.fiber100 ?? 0)).roundToPrecision(2)}g",
+                  textStyleNormal),
             _getNutrimentsTableRow(
                 '    ${S.of(context).sugarLabel}',
                 "${_adjustValueForServing(product.nutriments.sugars100 ?? 0).roundToPrecision(2)}g",

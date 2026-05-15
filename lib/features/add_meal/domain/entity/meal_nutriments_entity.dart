@@ -42,9 +42,21 @@ class MealNutrimentsEntity extends Equatable {
 
   double? get carbohydratesPerUnit => _getValuePerUnit(carbohydrates100);
 
+  double? get netCarbsPerUnit =>
+      _getNetCarbsPerUnit(carbohydrates100, fiber100, null);
+
   double? get fatPerUnit => _getValuePerUnit(fat100);
 
   double? get proteinsPerUnit => _getValuePerUnit(proteins100);
+
+  static double? _getNetCarbsPerUnit(
+      double? carbs100, double? fiber100, double? sugarAlcohols100) {
+    if (carbs100 == null) return null;
+    final fiber = fiber100 ?? 0;
+    final sugarAlcohols = sugarAlcohols100 ?? 0;
+    final net = carbs100 - fiber - sugarAlcohols;
+    return net < 0 ? 0 : net / 100;
+  }
 
   const MealNutrimentsEntity({
     required this.energyKcal100,

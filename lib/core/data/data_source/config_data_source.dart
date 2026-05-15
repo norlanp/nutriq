@@ -70,4 +70,19 @@ class ConfigDataSource {
 
   Future<void> setAllergens(String allergensJson) =>
       _dao.setAllergens(allergensJson);
+
+  Future<bool> getNetCarbsEnabled() => _dao.getNetCarbsEnabled();
+
+  Future<void> setNetCarbsEnabled(bool enabled) =>
+      _dao.setNetCarbsEnabled(enabled);
+
+  Future<bool> getStepBonusEnabled() => _dao.getStepBonusEnabled();
+
+  Future<void> setStepBonusEnabled(bool enabled) =>
+      _dao.setStepBonusEnabled(enabled);
+
+  Future<double> getStepBonusPercent() => _dao.getStepBonusPercent();
+
+  Future<void> setStepBonusPercent(double percent) =>
+      _dao.setStepBonusPercent(percent);
 }

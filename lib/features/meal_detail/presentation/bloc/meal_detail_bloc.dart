@@ -41,6 +41,7 @@ class MealDetailBloc extends Bloc<MealDetailEvent, MealDetailState> {
 
         final energyPerUnit = (event.meal.nutriments.energyPerUnit ?? 0);
         final carbsPerUnit = (event.meal.nutriments.carbohydratesPerUnit ?? 0);
+        final netCarbsPerUnit = (event.meal.nutriments.netCarbsPerUnit ?? 0);
         final fatPerUnit = (event.meal.nutriments.fatPerUnit ?? 0);
         final proteinPerUnit = (event.meal.nutriments.proteinsPerUnit ?? 0);
 
@@ -64,6 +65,7 @@ class MealDetailBloc extends Bloc<MealDetailEvent, MealDetailState> {
             totalQuantityConverted: convertedQuantity.toString(),
             totalKcal: convertedQuantity * energyPerUnit,
             totalCarbs: convertedQuantity * carbsPerUnit,
+            totalNetCarbs: convertedQuantity * netCarbsPerUnit,
             totalFat: convertedQuantity * fatPerUnit,
             totalProtein: convertedQuantity * proteinPerUnit,
             selectedUnit: selectedUnit));

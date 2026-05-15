@@ -14,6 +14,7 @@ import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/features/home/presentation/widgets/dashboard_widget.dart';
 import 'package:nutriq/features/home/presentation/widgets/intake_vertical_list.dart';
+import 'package:nutriq/features/home/presentation/widgets/medication_summary_widget.dart';
 import 'package:nutriq/features/water_tracking/presentation/widgets/water_tracker_summary_widget.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -62,6 +63,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               state.totalKcalSupplied,
               state.totalKcalBurned,
               state.totalCarbsIntake,
+              state.totalNetCarbsIntake,
               state.totalFatsIntake,
               state.totalProteinsIntake,
               state.totalCarbsGoal,
@@ -72,7 +74,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               state.dinnerIntakeList,
               state.snackIntakeList,
               state.userActivityList,
-              state.usesImperialUnits);
+              state.usesImperialUnits,
+              state.netCarbsEnabled,
+              state.stepBonusCredit);
         } else {
           return _getLoadingContent();
         }
@@ -103,6 +107,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       double totalKcalSupplied,
       double totalKcalBurned,
       double totalCarbsIntake,
+      double totalNetCarbsIntake,
       double totalFatsIntake,
       double totalProteinsIntake,
       double totalCarbsGoal,
@@ -113,7 +118,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       List<IntakeEntity> dinnerIntakeList,
       List<IntakeEntity> snackIntakeList,
       List<UserActivityEntity> userActivities,
-      bool usesImperialUnits) {
+      bool usesImperialUnits,
+      bool netCarbsEnabled,
+      double stepBonusCredit) {
     if (showDisclaimerDialog) {
       _showDisclaimerDialog(context);
     }
@@ -125,13 +132,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           totalKcalSupplied: totalKcalSupplied,
           totalKcalBurned: totalKcalBurned,
           totalCarbsIntake: totalCarbsIntake,
+          totalNetCarbsIntake: totalNetCarbsIntake,
           totalFatsIntake: totalFatsIntake,
           totalProteinsIntake: totalProteinsIntake,
           totalCarbsGoal: totalCarbsGoal,
           totalFatsGoal: totalFatsGoal,
           totalProteinsGoal: totalProteinsGoal,
+          netCarbsEnabled: netCarbsEnabled,
+          stepBonusCredit: stepBonusCredit,
         ),
         const WaterTrackerSummaryWidget(),
+        const MedicationSummaryWidget(),
         ActivityVerticalList(
           day: DateTime.now(),
           title: S.of(context).activityLabel,

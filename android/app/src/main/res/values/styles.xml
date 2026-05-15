@@ -15,4 +15,7 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+
+    <string name="widget_home_description">Show remaining calories and macros on your home screen.</string>
+    <string name="widget_lock_description">Show remaining calories on your lock screen.</string>
 </resources>

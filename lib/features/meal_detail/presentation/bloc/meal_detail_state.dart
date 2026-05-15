@@ -4,6 +4,7 @@ abstract class MealDetailState extends Equatable {
   final String totalQuantityConverted;
   final double totalKcal;
   final double totalCarbs;
+  final double totalNetCarbs;
   final double totalFat;
   final double totalProtein;
 
@@ -13,6 +14,7 @@ abstract class MealDetailState extends Equatable {
       {required this.totalQuantityConverted,
       this.totalKcal = 0,
       this.totalCarbs = 0,
+      this.totalNetCarbs = 0,
       this.totalFat = 0,
       this.totalProtein = 0,
       required this.selectedUnit});
@@ -22,6 +24,7 @@ abstract class MealDetailState extends Equatable {
         totalQuantityConverted,
         totalKcal,
         totalCarbs,
+        totalNetCarbs,
         totalFat,
         totalProtein,
         selectedUnit
@@ -31,6 +34,7 @@ abstract class MealDetailState extends Equatable {
     String? totalQuantityConverted,
     double? totalKcal,
     double? totalCarbs,
+    double? totalNetCarbs,
     double? totalFat,
     double? totalProtein,
     String? selectedUnit,
@@ -40,6 +44,7 @@ abstract class MealDetailState extends Equatable {
           totalQuantityConverted ?? this.totalQuantityConverted,
       totalKcal: totalKcal ?? this.totalKcal,
       totalCarbs: totalCarbs ?? this.totalCarbs,
+      totalNetCarbs: totalNetCarbs ?? this.totalNetCarbs,
       totalFat: totalFat ?? this.totalFat,
       totalProtein: totalProtein ?? this.totalProtein,
       selectedUnit: selectedUnit ?? this.selectedUnit,
@@ -52,6 +57,7 @@ class MealDetailInitial extends MealDetailState {
       {required super.totalQuantityConverted,
       super.totalKcal,
       super.totalCarbs,
+      super.totalNetCarbs,
       super.totalFat,
       super.totalProtein,
       required super.selectedUnit});

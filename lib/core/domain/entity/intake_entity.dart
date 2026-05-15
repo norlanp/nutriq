@@ -29,6 +29,9 @@ class IntakeEntity extends Equatable {
   double get totalCarbsGram =>
       amount * (meal.nutriments.carbohydratesPerUnit ?? 0);
 
+  double get totalNetCarbsGram =>
+      amount * (meal.nutriments.netCarbsPerUnit ?? 0);
+
   double get totalFatsGram => amount * (meal.nutriments.fatPerUnit ?? 0);
 
   double get totalProteinsGram =>

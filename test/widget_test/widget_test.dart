@@ -23,11 +23,13 @@ void main() {
         totalKcalDaily: 2000,
         totalKcalLeft: 1000,
         totalCarbsIntake: 200,
+        totalNetCarbsIntake: 150,
         totalFatsIntake: 50,
         totalProteinsIntake: 100,
         totalCarbsGoal: 250,
         totalFatsGoal: 60,
         totalProteinsGoal: 120,
+        netCarbsEnabled: false,
       ),
     ));
     await tester.pumpAndSettle();

@@ -1,0 +1,362 @@
+[
+  {
+    "id": "grilled-chicken-salad",
+    "title": "Grilled Chicken Salad",
+    "description": "A fresh and protein-packed salad with grilled chicken breast, mixed greens, and a light vinaigrette.",
+    "servings": 2,
+    "prepTime": 10,
+    "cookTime": 15,
+    "calories": 350,
+    "macros": {
+      "proteinG": 42,
+      "carbsG": 12,
+      "fatG": 14,
+      "fiberG": 4
+    },
+    "ingredients": [
+      "300g chicken breast",
+      "4 cups mixed salad greens",
+      "1 cup cherry tomatoes, halved",
+      "1/2 cucumber, sliced",
+      "1/4 red onion, thinly sliced",
+      "2 tbsp olive oil",
+      "1 tbsp lemon juice",
+      "1 tsp Dijon mustard",
+      "Salt and pepper to taste"
+    ],
+    "steps": [
+      "Season chicken breast with salt and pepper.",
+      "Grill chicken over medium-high heat for 6-7 minutes per side until cooked through.",
+      "Let chicken rest for 5 minutes, then slice.",
+      "Combine salad greens, cherry tomatoes, cucumber, and red onion in a large bowl.",
+      "Whisk together olive oil, lemon juice, and Dijon mustard for the dressing.",
+      "Arrange salad on plates, top with sliced chicken, and drizzle with dressing."
+    ],
+    "tags": ["high-protein", "low-carb", "gluten-free", "quick"],
+    "imageUrl": ""
+  },
+  {
+    "id": "overnight-oats",
+    "title": "Overnight Oats with Berries",
+    "description": "Creamy overnight oats topped with fresh berries and a drizzle of honey. Perfect make-ahead breakfast.",
+    "servings": 1,
+    "prepTime": 5,
+    "cookTime": 0,
+    "calories": 380,
+    "macros": {
+      "proteinG": 14,
+      "carbsG": 58,
+      "fatG": 10,
+      "fiberG": 6
+    },
+    "ingredients": [
+      "1/2 cup rolled oats",
+      "1/2 cup milk (or plant-based milk)",
+      "1/4 cup Greek yogurt",
+      "1 tbsp chia seeds",
+      "1 tbsp honey",
+      "1/2 cup mixed berries",
+      "Pinch of cinnamon"
+    ],
+    "steps": [
+      "Combine oats, milk, yogurt, chia seeds, and cinnamon in a jar.",
+      "Stir well, seal the jar, and refrigerate overnight (at least 6 hours).",
+      "In the morning, top with fresh berries and a drizzle of honey.",
+      "Enjoy cold or microwave for 1-2 minutes if you prefer warm oats."
+    ],
+    "tags": ["vegetarian", "breakfast", "meal-prep", "quick"],
+    "imageUrl": ""
+  },
+  {
+    "id": "lentil-soup",
+    "title": "Hearty Lentil Soup",
+    "description": "A warming, fiber-rich lentil soup with carrots, celery, and aromatic spices.",
+    "servings": 4,
+    "prepTime": 10,
+    "cookTime": 30,
+    "calories": 280,
+    "macros": {
+      "proteinG": 18,
+      "carbsG": 40,
+      "fatG": 5,
+      "fiberG": 16
+    },
+    "ingredients": [
+      "1 cup red lentils, rinsed",
+      "1 tbsp olive oil",
+      "1 onion, diced",
+      "2 carrots, diced",
+      "2 celery stalks, diced",
+      "3 cloves garlic, minced",
+      "1 tsp cumin",
+      "1 tsp paprika",
+      "6 cups vegetable broth",
+      "1 can (400g) diced tomatoes",
+      "Salt and pepper to taste",
+      "Juice of 1 lemon"
+    ],
+    "steps": [
+      "Heat olive oil in a large pot over medium heat.",
+      "Sauté onion, carrots, and celery for 5 minutes.",
+      "Add garlic, cumin, and paprika; cook for 1 minute.",
+      "Add lentils, broth, and diced tomatoes.",
+      "Bring to a boil, then reduce heat and simmer for 25 minutes until lentils are tender.",
+      "Season with salt, pepper, and lemon juice before serving."
+    ],
+    "tags": ["vegan", "high-fiber", "gluten-free", "meal-prep"],
+    "imageUrl": ""
+  },
+  {
+    "id": "salmon-quinoa-bowl",
+    "title": "Salmon & Quinoa Power Bowl",
+    "description": "A nutrient-dense bowl with baked salmon, fluffy quinoa, roasted vegetables, and a tahini drizzle.",
+    "servings": 2,
+    "prepTime": 10,
+    "cookTime": 20,
+    "calories": 520,
+    "macros": {
+      "proteinG": 38,
+      "carbsG": 42,
+      "fatG": 22,
+      "fiberG": 7
+    },
+    "ingredients": [
+      "2 salmon fillets (150g each)",
+      "1 cup quinoa, rinsed",
+      "2 cups broccoli florets",
+      "1 medium sweet potato, cubed",
+      "2 tbsp olive oil",
+      "2 tbsp tahini",
+      "1 tbsp lemon juice",
+      "1 tsp maple syrup",
+      "Salt, pepper, and paprika to taste"
+    ],
+    "steps": [
+      "Preheat oven to 200°C (400°F).",
+      "Toss sweet potato and broccoli with 1 tbsp olive oil, salt, and pepper. Roast for 20 minutes.",
+      "Cook quinoa according to package instructions.",
+      "Season salmon with paprika, salt, and pepper. Bake for 12-15 minutes.",
+      "Whisk together tahini, lemon juice, maple syrup, and 2 tbsp water for the drizzle.",
+      "Assemble bowls: quinoa base, roasted veggies, salmon on top, drizzle with tahini sauce."
+    ],
+    "tags": ["high-protein", "gluten-free", "dinner", "omega-3"],
+    "imageUrl": ""
+  },
+  {
+    "id": "banana-pancakes",
+    "title": "3-Ingredient Banana Pancakes",
+    "description": "Fluffy pancakes made with just banana, eggs, and oats. A simple, healthy breakfast treat.",
+    "servings": 2,
+    "prepTime": 5,
+    "cookTime": 10,
+    "calories": 220,
+    "macros": {
+      "proteinG": 12,
+      "carbsG": 26,
+      "fatG": 8,
+      "fiberG": 3
+    },
+    "ingredients": [
+      "2 ripe bananas",
+      "2 eggs",
+      "1/2 cup rolled oats",
+      "Pinch of cinnamon (optional)",
+      "Coconut oil or spray for cooking"
+    ],
+    "steps": [
+      "Mash bananas in a bowl.",
+      "Add eggs and oats (and cinnamon if using), then mix well.",
+      "Heat a non-stick pan over medium heat with a little coconut oil.",
+      "Pour small rounds of batter (about 2 tbsp each).",
+      "Cook for 2-3 minutes until bubbles form, then flip and cook 1-2 more minutes.",
+      "Serve with fresh fruit or a drizzle of honey."
+    ],
+    "tags": ["vegetarian", "breakfast", "quick", "gluten-free"],
+    "imageUrl": ""
+  },
+  {
+    "id": "chickpea-curry",
+    "title": "Coconut Chickpea Curry",
+    "description": "A rich and creamy curry with chickpeas, coconut milk, and aromatic spices. Vegan comfort food at its best.",
+    "servings": 4,
+    "prepTime": 10,
+    "cookTime": 25,
+    "calories": 340,
+    "macros": {
+      "proteinG": 14,
+      "carbsG": 38,
+      "fatG": 16,
+      "fiberG": 10
+    },
+    "ingredients": [
+      "2 cans (400g each) chickpeas, drained",
+      "1 can (400ml) coconut milk",
+      "1 tbsp coconut oil",
+      "1 onion, diced",
+      "3 cloves garlic, minced",
+      "1 tbsp ginger, grated",
+      "2 tbsp curry powder",
+      "1 tsp turmeric",
+      "1 can (400g) diced tomatoes",
+      "2 cups spinach",
+      "Salt and pepper to taste",
+      "Fresh cilantro for garnish"
+    ],
+    "steps": [
+      "Heat coconut oil in a large pan over medium heat.",
+      "Sauté onion for 3-4 minutes until softened.",
+      "Add garlic and ginger; cook for 1 minute.",
+      "Add curry powder and turmeric; stir for 30 seconds.",
+      "Pour in diced tomatoes and coconut milk; stir to combine.",
+      "Add chickpeas and simmer for 20 minutes.",
+      "Stir in spinach until wilted. Season with salt and pepper.",
+      "Serve over rice, garnished with fresh cilantro."
+    ],
+    "tags": ["vegan", "gluten-free", "dinner", "meal-prep", "high-fiber"],
+    "imageUrl": ""
+  },
+  {
+    "id": "greek-yogurt-bowl",
+    "title": "Greek Yogurt Protein Bowl",
+    "description": "A creamy, high-protein breakfast bowl loaded with toppings for crunch and flavor.",
+    "servings": 1,
+    "prepTime": 5,
+    "cookTime": 0,
+    "calories": 310,
+    "macros": {
+      "proteinG": 28,
+      "carbsG": 30,
+      "fatG": 10,
+      "fiberG": 5
+    },
+    "ingredients": [
+      "200g Greek yogurt (2%)",
+      "1/4 cup granola",
+      "1/2 banana, sliced",
+      "1/4 cup blueberries",
+      "1 tbsp honey",
+      "1 tbsp chia seeds"
+    ],
+    "steps": [
+      "Spoon Greek yogurt into a bowl.",
+      "Top with granola, banana slices, and blueberries.",
+      "Sprinkle with chia seeds.",
+      "Drizzle with honey and serve immediately."
+    ],
+    "tags": ["breakfast", "high-protein", "quick", "vegetarian"],
+    "imageUrl": ""
+  },
+  {
+    "id": "turkey-stuffed-peppers",
+    "title": "Turkey-Stuffed Bell Peppers",
+    "description": "Colorful bell peppers stuffed with lean ground turkey, rice, and veggies — a balanced meal in a pepper.",
+    "servings": 4,
+    "prepTime": 15,
+    "cookTime": 35,
+    "calories": 390,
+    "macros": {
+      "proteinG": 30,
+      "carbsG": 35,
+      "fatG": 12,
+      "fiberG": 5
+    },
+    "ingredients": [
+      "4 large bell peppers",
+      "400g lean ground turkey",
+      "1 cup cooked brown rice",
+      "1 small onion, diced",
+      "2 cloves garlic, minced",
+      "1 can (400g) diced tomatoes, divided",
+      "1 tsp Italian seasoning",
+      "1/2 cup shredded mozzarella cheese",
+      "1 tbsp olive oil",
+      "Salt and pepper to taste"
+    ],
+    "steps": [
+      "Preheat oven to 190°C (375°F).",
+      "Cut the tops off peppers and remove seeds. Place in a baking dish.",
+      "Heat olive oil in a skillet. Cook onion and garlic for 2 minutes.",
+      "Add ground turkey, cook until browned. Season with salt, pepper, and Italian seasoning.",
+      "Stir in cooked rice and half the diced tomatoes.",
+      "Fill each pepper with the turkey mixture.",
+      "Pour remaining tomatoes around the peppers in the dish.",
+      "Top peppers with mozzarella, cover with foil, and bake for 30 minutes.",
+      "Uncover and bake 5 more minutes until cheese is golden."
+    ],
+    "tags": ["high-protein", "dinner", "gluten-free", "meal-prep"],
+    "imageUrl": ""
+  },
+  {
+    "id": "avocado-toast-eggs",
+    "title": "Avocado Toast with Poached Eggs",
+    "description": "Classic avocado toast elevated with perfectly poached eggs. A satisfying and nutritious breakfast.",
+    "servings": 2,
+    "prepTime": 5,
+    "cookTime": 8,
+    "calories": 340,
+    "macros": {
+      "proteinG": 15,
+      "carbsG": 28,
+      "fatG": 20,
+      "fiberG": 7
+    },
+    "ingredients": [
+      "2 slices whole-grain bread",
+      "1 ripe avocado",
+      "2 eggs",
+      "1 tbsp white vinegar",
+      "Red pepper flakes (optional)",
+      "Salt and pepper to taste",
+      "Fresh microgreens for garnish"
+    ],
+    "steps": [
+      "Toast the bread slices until golden.",
+      "Mash avocado with a fork and season with salt and pepper.",
+      "Bring a pot of water to a gentle simmer, add vinegar.",
+      "Create a swirl and gently drop each egg into the water. Poach for 3-4 minutes.",
+      "Spread mashed avocado on each toast.",
+      "Place a poached egg on each toast. Season with salt, pepper, and red pepper flakes.",
+      "Garnish with microgreens and serve immediately."
+    ],
+    "tags": ["breakfast", "vegetarian", "quick", "high-protein"],
+    "imageUrl": ""
+  },
+  {
+    "id": "black-bean-tacos",
+    "title": "Quick Black Bean Tacos",
+    "description": "Simple, flavorful tacos loaded with spiced black beans, fresh salsa, and creamy avocado.",
+    "servings": 4,
+    "prepTime": 10,
+    "cookTime": 10,
+    "calories": 290,
+    "macros": {
+      "proteinG": 12,
+      "carbsG": 38,
+      "fatG": 11,
+      "fiberG": 9
+    },
+    "ingredients": [
+      "8 small corn tortillas",
+      "2 cans (400g each) black beans, drained",
+      "1 tsp cumin",
+      "1 tsp chili powder",
+      "1/2 tsp garlic powder",
+      "1 avocado, sliced",
+      "1 cup salsa",
+      "1/4 cup fresh cilantro",
+      "1 lime, cut into wedges",
+      "1 tbsp olive oil"
+    ],
+    "steps": [
+      "Heat olive oil in a skillet over medium heat.",
+      "Add black beans, cumin, chili powder, and garlic powder.",
+      "Cook for 5 minutes, mashing slightly with a fork.",
+      "Warm tortillas in a dry skillet or directly over a gas flame.",
+      "Fill each tortilla with spiced black beans.",
+      "Top with avocado slices, salsa, and fresh cilantro.",
+      "Serve with lime wedges."
+    ],
+    "tags": ["vegan", "quick", "dinner", "gluten-free", "high-fiber"],
+    "imageUrl": ""
+  }
+]

@@ -65,4 +65,28 @@ class AddConfigUsecase {
   Future<Set<AllergenType>> getConfigAllergens() async {
     return await _configRepository.getConfigAllergens();
   }
+
+  Future<bool> getNetCarbsEnabled() async {
+    return await _configRepository.getNetCarbsEnabled();
+  }
+
+  Future<void> setNetCarbsEnabled(bool enabled) async {
+    await _configRepository.setNetCarbsEnabled(enabled);
+  }
+
+  Future<bool> getStepBonusEnabled() async {
+    return await _configRepository.getStepBonusEnabled();
+  }
+
+  Future<void> setStepBonusEnabled(bool enabled) async {
+    await _configRepository.setStepBonusEnabled(enabled);
+  }
+
+  Future<double> getStepBonusPercent() async {
+    return await _configRepository.getStepBonusPercent();
+  }
+
+  Future<void> setStepBonusPercent(double percent) async {
+    await _configRepository.setStepBonusPercent(percent);
+  }
 }

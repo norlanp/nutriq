@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/service/allergen_filter_service.dart';
+import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/presentation/widgets/meal_value_unit_text.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
@@ -47,6 +48,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
   final quantityTextController = TextEditingController();
   late bool _usesImperialUnits;
+  bool _netCarbsEnabled = false;
 
   String _initialUnit = "";
   String _initialQuantity = "";
@@ -54,8 +56,18 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
   @override
   void initState() {
     _mealDetailBloc = locator<MealDetailBloc>();
+    _loadNetCarbsConfig();
 
     super.initState();
+  }
+
+  void _loadNetCarbsConfig() async {
+    final config = await locator<GetConfigUsecase>().getConfig();
+    if (mounted) {
+      setState(() {
+        _netCarbsEnabled = config.netCarbsEnabled;
+      });
+    }
   }
 
   @override
@@ -118,6 +130,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 state.totalQuantityConverted,
                 state.totalKcal,
                 state.totalCarbs,
+                state.totalNetCarbs,
                 state.totalFat,
                 state.totalProtein,
                 state.selectedUnit,
@@ -147,6 +160,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
       String totalQuantity,
       double totalKcal,
       double totalCarbs,
+      double totalNetCarbs,
       double totalFat,
       double totalProtein,
       String selectedUnit) {
@@ -245,8 +259,10 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     MealDetailMacroNutrients(
-                        typeString: S.of(context).carbsLabel,
-                        value: totalCarbs),
+                        typeString: _netCarbsEnabled
+                            ? S.of(context).netCarbsLabel
+                            : S.of(context).carbsLabel,
+                        value: _netCarbsEnabled ? totalNetCarbs : totalCarbs),
                     MealDetailMacroNutrients(
                         typeString: S.of(context).fatLabel, value: totalFat),
                     MealDetailMacroNutrients(
@@ -260,7 +276,8 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                     product: meal,
                     usesImperialUnits: _usesImperialUnits,
                     servingQuantity: meal.servingQuantity,
-                    servingUnit: meal.servingUnit),
+                    servingUnit: meal.servingUnit,
+                    netCarbsEnabled: _netCarbsEnabled),
                 const SizedBox(height: 32.0),
                 MealInfoButton(url: meal.url, source: meal.source),
                 _buildAllergenWarning(context),

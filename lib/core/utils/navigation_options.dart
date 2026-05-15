@@ -41,4 +41,9 @@ class NavigationOptions {
   static const bloodGlucoseRoute = "bloodGlucose";
   static const medicationRoute = "medication";
   static const medicationLogRoute = "medicationLog";
+  static const recipeCatalogRoute = "recipeCatalog";
+  static const recipeCatalogDetailRoute = "recipeCatalogDetail";
+  static const menuScanRoute = "menuScan";
+  static const voiceLoggingRoute = "voiceLogging";
+  static const groceryCheckRoute = "groceryCheck";
 }

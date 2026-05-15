@@ -109,7 +109,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 22;
+  int get schemaVersion => 23;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -235,6 +235,14 @@ class AppDatabase extends _$AppDatabase {
             );
             await customStatement(
               'ALTER TABLE config_entries ADD COLUMN blood_glucose_max_mg_dl INTEGER NOT NULL DEFAULT 180',
+            );
+          }
+          if (from < 23) {
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN step_bonus_enabled INTEGER NOT NULL DEFAULT 0',
+            );
+            await customStatement(
+              'ALTER TABLE config_entries ADD COLUMN step_bonus_percent REAL NOT NULL DEFAULT 0.5',
             );
           }
         },

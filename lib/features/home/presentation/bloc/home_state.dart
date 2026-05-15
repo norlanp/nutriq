@@ -21,6 +21,7 @@ class HomeLoadedState extends HomeState {
   final double totalKcalSupplied;
   final double totalKcalBurned;
   final double totalCarbsIntake;
+  final double totalNetCarbsIntake;
   final double totalFatsIntake;
   final double totalProteinsIntake;
   final double totalCarbsGoal;
@@ -32,6 +33,8 @@ class HomeLoadedState extends HomeState {
   final List<IntakeEntity> dinnerIntakeList;
   final List<IntakeEntity> snackIntakeList;
   final bool usesImperialUnits;
+  final bool netCarbsEnabled;
+  final double stepBonusCredit;
 
   const HomeLoadedState({
     required this.showDisclaimerDialog,
@@ -40,6 +43,7 @@ class HomeLoadedState extends HomeState {
     required this.totalKcalSupplied,
     required this.totalKcalBurned,
     required this.totalCarbsIntake,
+    required this.totalNetCarbsIntake,
     required this.totalFatsIntake,
     required this.totalProteinsIntake,
     required this.totalCarbsGoal,
@@ -51,7 +55,15 @@ class HomeLoadedState extends HomeState {
     required this.dinnerIntakeList,
     required this.snackIntakeList,
     required this.usesImperialUnits,
+    required this.netCarbsEnabled,
+    this.stepBonusCredit = 0,
   });
+
+  double get displayedCarbsIntake =>
+      netCarbsEnabled ? totalNetCarbsIntake : totalCarbsIntake;
+
+  String get displayedCarbsLabel =>
+      netCarbsEnabled ? 'netCarbsLabel' : 'carbsLabel';
 
   @override
   List<Object?> get props => [
@@ -59,6 +71,8 @@ class HomeLoadedState extends HomeState {
         lunchIntakeList,
         dinnerIntakeList,
         snackIntakeList,
-        usesImperialUnits
+        usesImperialUnits,
+        netCarbsEnabled,
+        stepBonusCredit,
       ];
 }

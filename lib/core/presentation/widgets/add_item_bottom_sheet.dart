@@ -180,6 +180,32 @@ class AddItemBottomSheet extends StatelessWidget {
           ),
           ListTile(
             title: Text(
+              S.of(context).voiceLoggingLabel,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            subtitle: Text(
+              S.of(context).voiceLoggingExample,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7)),
+            ),
+            leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.mic_outlined,
+                    color: Theme.of(context).colorScheme.onSurface)),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .pushNamed(NavigationOptions.voiceLoggingRoute);
+            },
+          ),
+          ListTile(
+            title: Text(
               S.of(context).myMealsLabel,
               style: Theme.of(context)
                   .textTheme

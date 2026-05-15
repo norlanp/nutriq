@@ -40,7 +40,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           appVersion,
           userConfig.hasAcceptedSendAnonymousData,
           userConfig.appTheme,
-          usesImperialUnits));
+          usesImperialUnits,
+          userConfig.netCarbsEnabled));
     });
   }
 
@@ -55,6 +56,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   void setUsesImperialUnits(bool usesImperialUnits) {
     _addConfigUsecase.setConfigUsesImperialUnits(usesImperialUnits);
+  }
+
+  void setNetCarbsEnabled(bool enabled) {
+    _addConfigUsecase.setNetCarbsEnabled(enabled);
   }
 
   Future<double> getKcalAdjustment() async {

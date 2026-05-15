@@ -159,6 +159,30 @@ class $ConfigEntriesTable extends ConfigEntries
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultValue: const Constant(180));
+  static const VerificationMeta _netCarbsEnabledMeta =
+      const VerificationMeta('netCarbsEnabled');
+  @override
+  late final GeneratedColumn<int> netCarbsEnabled = GeneratedColumn<int>(
+      'net_carbs_enabled', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _stepBonusEnabledMeta =
+      const VerificationMeta('stepBonusEnabled');
+  @override
+  late final GeneratedColumn<int> stepBonusEnabled = GeneratedColumn<int>(
+      'step_bonus_enabled', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _stepBonusPercentMeta =
+      const VerificationMeta('stepBonusPercent');
+  @override
+  late final GeneratedColumn<double> stepBonusPercent = GeneratedColumn<double>(
+      'step_bonus_percent', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.5));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -179,7 +203,10 @@ class $ConfigEntriesTable extends ConfigEntries
         calorieCyclingEnabled,
         allergens,
         bloodGlucoseMinMgDl,
-        bloodGlucoseMaxMgDl
+        bloodGlucoseMaxMgDl,
+        netCarbsEnabled,
+        stepBonusEnabled,
+        stepBonusPercent
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -301,6 +328,24 @@ class $ConfigEntriesTable extends ConfigEntries
           bloodGlucoseMaxMgDl.isAcceptableOrUnknown(
               data['blood_glucose_max_mg_dl']!, _bloodGlucoseMaxMgDlMeta));
     }
+    if (data.containsKey('net_carbs_enabled')) {
+      context.handle(
+          _netCarbsEnabledMeta,
+          netCarbsEnabled.isAcceptableOrUnknown(
+              data['net_carbs_enabled']!, _netCarbsEnabledMeta));
+    }
+    if (data.containsKey('step_bonus_enabled')) {
+      context.handle(
+          _stepBonusEnabledMeta,
+          stepBonusEnabled.isAcceptableOrUnknown(
+              data['step_bonus_enabled']!, _stepBonusEnabledMeta));
+    }
+    if (data.containsKey('step_bonus_percent')) {
+      context.handle(
+          _stepBonusPercentMeta,
+          stepBonusPercent.isAcceptableOrUnknown(
+              data['step_bonus_percent']!, _stepBonusPercentMeta));
+    }
     return context;
   }
 
@@ -352,6 +397,12 @@ class $ConfigEntriesTable extends ConfigEntries
           DriftSqlType.int, data['${effectivePrefix}blood_glucose_min_mg_dl']),
       bloodGlucoseMaxMgDl: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}blood_glucose_max_mg_dl']),
+      netCarbsEnabled: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}net_carbs_enabled'])!,
+      stepBonusEnabled: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}step_bonus_enabled'])!,
+      stepBonusPercent: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}step_bonus_percent'])!,
     );
   }
 
@@ -381,6 +432,9 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
   final String allergens;
   final int? bloodGlucoseMinMgDl;
   final int? bloodGlucoseMaxMgDl;
+  final int netCarbsEnabled;
+  final int stepBonusEnabled;
+  final double stepBonusPercent;
   const ConfigEntry(
       {required this.id,
       required this.hasAcceptedDisclaimer,
@@ -400,7 +454,10 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
       required this.calorieCyclingEnabled,
       required this.allergens,
       this.bloodGlucoseMinMgDl,
-      this.bloodGlucoseMaxMgDl});
+      this.bloodGlucoseMaxMgDl,
+      required this.netCarbsEnabled,
+      required this.stepBonusEnabled,
+      required this.stepBonusPercent});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -442,6 +499,9 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
     if (!nullToAbsent || bloodGlucoseMaxMgDl != null) {
       map['blood_glucose_max_mg_dl'] = Variable<int>(bloodGlucoseMaxMgDl);
     }
+    map['net_carbs_enabled'] = Variable<int>(netCarbsEnabled);
+    map['step_bonus_enabled'] = Variable<int>(stepBonusEnabled);
+    map['step_bonus_percent'] = Variable<double>(stepBonusPercent);
     return map;
   }
 
@@ -484,6 +544,9 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
       bloodGlucoseMaxMgDl: bloodGlucoseMaxMgDl == null && nullToAbsent
           ? const Value.absent()
           : Value(bloodGlucoseMaxMgDl),
+      netCarbsEnabled: Value(netCarbsEnabled),
+      stepBonusEnabled: Value(stepBonusEnabled),
+      stepBonusPercent: Value(stepBonusPercent),
     );
   }
 
@@ -519,6 +582,9 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
           serializer.fromJson<int?>(json['bloodGlucoseMinMgDl']),
       bloodGlucoseMaxMgDl:
           serializer.fromJson<int?>(json['bloodGlucoseMaxMgDl']),
+      netCarbsEnabled: serializer.fromJson<int>(json['netCarbsEnabled']),
+      stepBonusEnabled: serializer.fromJson<int>(json['stepBonusEnabled']),
+      stepBonusPercent: serializer.fromJson<double>(json['stepBonusPercent']),
     );
   }
   @override
@@ -545,6 +611,9 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
       'allergens': serializer.toJson<String>(allergens),
       'bloodGlucoseMinMgDl': serializer.toJson<int?>(bloodGlucoseMinMgDl),
       'bloodGlucoseMaxMgDl': serializer.toJson<int?>(bloodGlucoseMaxMgDl),
+      'netCarbsEnabled': serializer.toJson<int>(netCarbsEnabled),
+      'stepBonusEnabled': serializer.toJson<int>(stepBonusEnabled),
+      'stepBonusPercent': serializer.toJson<double>(stepBonusPercent),
     };
   }
 
@@ -567,7 +636,10 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
           int? calorieCyclingEnabled,
           String? allergens,
           Value<int?> bloodGlucoseMinMgDl = const Value.absent(),
-          Value<int?> bloodGlucoseMaxMgDl = const Value.absent()}) =>
+          Value<int?> bloodGlucoseMaxMgDl = const Value.absent(),
+          int? netCarbsEnabled,
+          int? stepBonusEnabled,
+          double? stepBonusPercent}) =>
       ConfigEntry(
         id: id ?? this.id,
         hasAcceptedDisclaimer:
@@ -609,6 +681,9 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
         bloodGlucoseMaxMgDl: bloodGlucoseMaxMgDl.present
             ? bloodGlucoseMaxMgDl.value
             : this.bloodGlucoseMaxMgDl,
+        netCarbsEnabled: netCarbsEnabled ?? this.netCarbsEnabled,
+        stepBonusEnabled: stepBonusEnabled ?? this.stepBonusEnabled,
+        stepBonusPercent: stepBonusPercent ?? this.stepBonusPercent,
       );
   ConfigEntry copyWithCompanion(ConfigEntriesCompanion data) {
     return ConfigEntry(
@@ -664,6 +739,15 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
       bloodGlucoseMaxMgDl: data.bloodGlucoseMaxMgDl.present
           ? data.bloodGlucoseMaxMgDl.value
           : this.bloodGlucoseMaxMgDl,
+      netCarbsEnabled: data.netCarbsEnabled.present
+          ? data.netCarbsEnabled.value
+          : this.netCarbsEnabled,
+      stepBonusEnabled: data.stepBonusEnabled.present
+          ? data.stepBonusEnabled.value
+          : this.stepBonusEnabled,
+      stepBonusPercent: data.stepBonusPercent.present
+          ? data.stepBonusPercent.value
+          : this.stepBonusPercent,
     );
   }
 
@@ -689,32 +773,39 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
           ..write('calorieCyclingEnabled: $calorieCyclingEnabled, ')
           ..write('allergens: $allergens, ')
           ..write('bloodGlucoseMinMgDl: $bloodGlucoseMinMgDl, ')
-          ..write('bloodGlucoseMaxMgDl: $bloodGlucoseMaxMgDl')
+          ..write('bloodGlucoseMaxMgDl: $bloodGlucoseMaxMgDl, ')
+          ..write('netCarbsEnabled: $netCarbsEnabled, ')
+          ..write('stepBonusEnabled: $stepBonusEnabled, ')
+          ..write('stepBonusPercent: $stepBonusPercent')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      hasAcceptedDisclaimer,
-      hasAcceptedPolicy,
-      hasAcceptedSendAnonymousData,
-      selectedAppTheme,
-      usesImperialUnits,
-      userKcalAdjustment,
-      userCarbGoalPct,
-      userProteinGoalPct,
-      userFatGoalPct,
-      dailyWaterGoalMl,
-      tdeeMethod,
-      exerciseCalorieMode,
-      exerciseCreditPercent,
-      calorieCycleJson,
-      calorieCyclingEnabled,
-      allergens,
-      bloodGlucoseMinMgDl,
-      bloodGlucoseMaxMgDl);
+  int get hashCode => Object.hashAll([
+        id,
+        hasAcceptedDisclaimer,
+        hasAcceptedPolicy,
+        hasAcceptedSendAnonymousData,
+        selectedAppTheme,
+        usesImperialUnits,
+        userKcalAdjustment,
+        userCarbGoalPct,
+        userProteinGoalPct,
+        userFatGoalPct,
+        dailyWaterGoalMl,
+        tdeeMethod,
+        exerciseCalorieMode,
+        exerciseCreditPercent,
+        calorieCycleJson,
+        calorieCyclingEnabled,
+        allergens,
+        bloodGlucoseMinMgDl,
+        bloodGlucoseMaxMgDl,
+        netCarbsEnabled,
+        stepBonusEnabled,
+        stepBonusPercent
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -738,7 +829,10 @@ class ConfigEntry extends DataClass implements Insertable<ConfigEntry> {
           other.calorieCyclingEnabled == this.calorieCyclingEnabled &&
           other.allergens == this.allergens &&
           other.bloodGlucoseMinMgDl == this.bloodGlucoseMinMgDl &&
-          other.bloodGlucoseMaxMgDl == this.bloodGlucoseMaxMgDl);
+          other.bloodGlucoseMaxMgDl == this.bloodGlucoseMaxMgDl &&
+          other.netCarbsEnabled == this.netCarbsEnabled &&
+          other.stepBonusEnabled == this.stepBonusEnabled &&
+          other.stepBonusPercent == this.stepBonusPercent);
 }
 
 class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
@@ -761,6 +855,9 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
   final Value<String> allergens;
   final Value<int?> bloodGlucoseMinMgDl;
   final Value<int?> bloodGlucoseMaxMgDl;
+  final Value<int> netCarbsEnabled;
+  final Value<int> stepBonusEnabled;
+  final Value<double> stepBonusPercent;
   const ConfigEntriesCompanion({
     this.id = const Value.absent(),
     this.hasAcceptedDisclaimer = const Value.absent(),
@@ -781,6 +878,9 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
     this.allergens = const Value.absent(),
     this.bloodGlucoseMinMgDl = const Value.absent(),
     this.bloodGlucoseMaxMgDl = const Value.absent(),
+    this.netCarbsEnabled = const Value.absent(),
+    this.stepBonusEnabled = const Value.absent(),
+    this.stepBonusPercent = const Value.absent(),
   });
   ConfigEntriesCompanion.insert({
     this.id = const Value.absent(),
@@ -802,6 +902,9 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
     this.allergens = const Value.absent(),
     this.bloodGlucoseMinMgDl = const Value.absent(),
     this.bloodGlucoseMaxMgDl = const Value.absent(),
+    this.netCarbsEnabled = const Value.absent(),
+    this.stepBonusEnabled = const Value.absent(),
+    this.stepBonusPercent = const Value.absent(),
   });
   static Insertable<ConfigEntry> custom({
     Expression<int>? id,
@@ -823,6 +926,9 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
     Expression<String>? allergens,
     Expression<int>? bloodGlucoseMinMgDl,
     Expression<int>? bloodGlucoseMaxMgDl,
+    Expression<int>? netCarbsEnabled,
+    Expression<int>? stepBonusEnabled,
+    Expression<double>? stepBonusPercent,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -853,6 +959,9 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
         'blood_glucose_min_mg_dl': bloodGlucoseMinMgDl,
       if (bloodGlucoseMaxMgDl != null)
         'blood_glucose_max_mg_dl': bloodGlucoseMaxMgDl,
+      if (netCarbsEnabled != null) 'net_carbs_enabled': netCarbsEnabled,
+      if (stepBonusEnabled != null) 'step_bonus_enabled': stepBonusEnabled,
+      if (stepBonusPercent != null) 'step_bonus_percent': stepBonusPercent,
     });
   }
 
@@ -875,7 +984,10 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
       Value<int>? calorieCyclingEnabled,
       Value<String>? allergens,
       Value<int?>? bloodGlucoseMinMgDl,
-      Value<int?>? bloodGlucoseMaxMgDl}) {
+      Value<int?>? bloodGlucoseMaxMgDl,
+      Value<int>? netCarbsEnabled,
+      Value<int>? stepBonusEnabled,
+      Value<double>? stepBonusPercent}) {
     return ConfigEntriesCompanion(
       id: id ?? this.id,
       hasAcceptedDisclaimer:
@@ -900,6 +1012,9 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
       allergens: allergens ?? this.allergens,
       bloodGlucoseMinMgDl: bloodGlucoseMinMgDl ?? this.bloodGlucoseMinMgDl,
       bloodGlucoseMaxMgDl: bloodGlucoseMaxMgDl ?? this.bloodGlucoseMaxMgDl,
+      netCarbsEnabled: netCarbsEnabled ?? this.netCarbsEnabled,
+      stepBonusEnabled: stepBonusEnabled ?? this.stepBonusEnabled,
+      stepBonusPercent: stepBonusPercent ?? this.stepBonusPercent,
     );
   }
 
@@ -968,6 +1083,15 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
     if (bloodGlucoseMaxMgDl.present) {
       map['blood_glucose_max_mg_dl'] = Variable<int>(bloodGlucoseMaxMgDl.value);
     }
+    if (netCarbsEnabled.present) {
+      map['net_carbs_enabled'] = Variable<int>(netCarbsEnabled.value);
+    }
+    if (stepBonusEnabled.present) {
+      map['step_bonus_enabled'] = Variable<int>(stepBonusEnabled.value);
+    }
+    if (stepBonusPercent.present) {
+      map['step_bonus_percent'] = Variable<double>(stepBonusPercent.value);
+    }
     return map;
   }
 
@@ -993,7 +1117,10 @@ class ConfigEntriesCompanion extends UpdateCompanion<ConfigEntry> {
           ..write('calorieCyclingEnabled: $calorieCyclingEnabled, ')
           ..write('allergens: $allergens, ')
           ..write('bloodGlucoseMinMgDl: $bloodGlucoseMinMgDl, ')
-          ..write('bloodGlucoseMaxMgDl: $bloodGlucoseMaxMgDl')
+          ..write('bloodGlucoseMaxMgDl: $bloodGlucoseMaxMgDl, ')
+          ..write('netCarbsEnabled: $netCarbsEnabled, ')
+          ..write('stepBonusEnabled: $stepBonusEnabled, ')
+          ..write('stepBonusPercent: $stepBonusPercent')
           ..write(')'))
         .toString();
   }
@@ -10296,6 +10423,9 @@ typedef $$ConfigEntriesTableCreateCompanionBuilder = ConfigEntriesCompanion
   Value<String> allergens,
   Value<int?> bloodGlucoseMinMgDl,
   Value<int?> bloodGlucoseMaxMgDl,
+  Value<int> netCarbsEnabled,
+  Value<int> stepBonusEnabled,
+  Value<double> stepBonusPercent,
 });
 typedef $$ConfigEntriesTableUpdateCompanionBuilder = ConfigEntriesCompanion
     Function({
@@ -10318,6 +10448,9 @@ typedef $$ConfigEntriesTableUpdateCompanionBuilder = ConfigEntriesCompanion
   Value<String> allergens,
   Value<int?> bloodGlucoseMinMgDl,
   Value<int?> bloodGlucoseMaxMgDl,
+  Value<int> netCarbsEnabled,
+  Value<int> stepBonusEnabled,
+  Value<double> stepBonusPercent,
 });
 
 class $$ConfigEntriesTableFilterComposer
@@ -10400,6 +10533,18 @@ class $$ConfigEntriesTableFilterComposer
 
   ColumnFilters<int> get bloodGlucoseMaxMgDl => $composableBuilder(
       column: $table.bloodGlucoseMaxMgDl,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get netCarbsEnabled => $composableBuilder(
+      column: $table.netCarbsEnabled,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get stepBonusEnabled => $composableBuilder(
+      column: $table.stepBonusEnabled,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get stepBonusPercent => $composableBuilder(
+      column: $table.stepBonusPercent,
       builder: (column) => ColumnFilters(column));
 }
 
@@ -10484,6 +10629,18 @@ class $$ConfigEntriesTableOrderingComposer
   ColumnOrderings<int> get bloodGlucoseMaxMgDl => $composableBuilder(
       column: $table.bloodGlucoseMaxMgDl,
       builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get netCarbsEnabled => $composableBuilder(
+      column: $table.netCarbsEnabled,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get stepBonusEnabled => $composableBuilder(
+      column: $table.stepBonusEnabled,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get stepBonusPercent => $composableBuilder(
+      column: $table.stepBonusPercent,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$ConfigEntriesTableAnnotationComposer
@@ -10551,6 +10708,15 @@ class $$ConfigEntriesTableAnnotationComposer
 
   GeneratedColumn<int> get bloodGlucoseMaxMgDl => $composableBuilder(
       column: $table.bloodGlucoseMaxMgDl, builder: (column) => column);
+
+  GeneratedColumn<int> get netCarbsEnabled => $composableBuilder(
+      column: $table.netCarbsEnabled, builder: (column) => column);
+
+  GeneratedColumn<int> get stepBonusEnabled => $composableBuilder(
+      column: $table.stepBonusEnabled, builder: (column) => column);
+
+  GeneratedColumn<double> get stepBonusPercent => $composableBuilder(
+      column: $table.stepBonusPercent, builder: (column) => column);
 }
 
 class $$ConfigEntriesTableTableManager extends RootTableManager<
@@ -10598,6 +10764,9 @@ class $$ConfigEntriesTableTableManager extends RootTableManager<
             Value<String> allergens = const Value.absent(),
             Value<int?> bloodGlucoseMinMgDl = const Value.absent(),
             Value<int?> bloodGlucoseMaxMgDl = const Value.absent(),
+            Value<int> netCarbsEnabled = const Value.absent(),
+            Value<int> stepBonusEnabled = const Value.absent(),
+            Value<double> stepBonusPercent = const Value.absent(),
           }) =>
               ConfigEntriesCompanion(
             id: id,
@@ -10619,6 +10788,9 @@ class $$ConfigEntriesTableTableManager extends RootTableManager<
             allergens: allergens,
             bloodGlucoseMinMgDl: bloodGlucoseMinMgDl,
             bloodGlucoseMaxMgDl: bloodGlucoseMaxMgDl,
+            netCarbsEnabled: netCarbsEnabled,
+            stepBonusEnabled: stepBonusEnabled,
+            stepBonusPercent: stepBonusPercent,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -10640,6 +10812,9 @@ class $$ConfigEntriesTableTableManager extends RootTableManager<
             Value<String> allergens = const Value.absent(),
             Value<int?> bloodGlucoseMinMgDl = const Value.absent(),
             Value<int?> bloodGlucoseMaxMgDl = const Value.absent(),
+            Value<int> netCarbsEnabled = const Value.absent(),
+            Value<int> stepBonusEnabled = const Value.absent(),
+            Value<double> stepBonusPercent = const Value.absent(),
           }) =>
               ConfigEntriesCompanion.insert(
             id: id,
@@ -10661,6 +10836,9 @@ class $$ConfigEntriesTableTableManager extends RootTableManager<
             allergens: allergens,
             bloodGlucoseMinMgDl: bloodGlucoseMinMgDl,
             bloodGlucoseMaxMgDl: bloodGlucoseMaxMgDl,
+            netCarbsEnabled: netCarbsEnabled,
+            stepBonusEnabled: stepBonusEnabled,
+            stepBonusPercent: stepBonusPercent,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

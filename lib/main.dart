@@ -27,6 +27,7 @@ import 'package:nutriq/core/utils/locator.dart';
 import 'package:nutriq/core/utils/logger_config.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/core/utils/theme_mode_provider.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:nutriq/features/activity_detail/activity_detail_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/custom_food_screen.dart';
@@ -62,6 +63,11 @@ import 'package:nutriq/features/symptom_tracking/presentation/symptom_screen.dar
 import 'package:nutriq/features/blood_glucose/presentation/blood_glucose_screen.dart';
 import 'package:nutriq/features/medication/presentation/medication_screen.dart';
 import 'package:nutriq/features/medication/presentation/medication_log_screen.dart';
+import 'package:nutriq/features/recipe_catalog/presentation/recipe_catalog_screen.dart';
+import 'package:nutriq/features/recipe_catalog/presentation/recipe_detail_screen.dart';
+import 'package:nutriq/features/menu_scan/presentation/menu_scan_screen.dart';
+import 'package:nutriq/features/voice_logging/presentation/voice_logging_screen.dart';
+import 'package:nutriq/features/grocery_check/presentation/grocery_check_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -82,6 +88,11 @@ Future<void> main() async {
     } catch (e, st) {
       log.severe('initLocator failed', e, st);
     }
+
+    try {
+      await HomeWidget.setAppGroupId('group.com.nutriq.app');
+    } catch (_) {}
+
     final isUserInitialized = await locator<UserDataSource>().hasUserData();
     final configRepo = locator<ConfigRepository>();
     final hasAcceptedAnonymousData =
@@ -239,6 +250,17 @@ class NutriqApp extends StatelessWidget {
             const MedicationScreen(),
         NavigationOptions.medicationLogRoute: (context) =>
             const MedicationLogScreen(),
+        NavigationOptions.recipeCatalogRoute: (context) =>
+            const RecipeCatalogScreen(),
+        NavigationOptions.recipeCatalogDetailRoute: (context) {
+          final recipeId = ModalRoute.of(context)!.settings.arguments as String;
+          return RecipeDetailScreen(recipeId: recipeId);
+        },
+        NavigationOptions.menuScanRoute: (context) => const MenuScanScreen(),
+        NavigationOptions.voiceLoggingRoute: (context) =>
+            const VoiceLoggingScreen(),
+        NavigationOptions.groceryCheckRoute: (context) =>
+            const GroceryCheckScreen(),
       },
     );
   }

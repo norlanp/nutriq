@@ -47,4 +47,16 @@ abstract class ConfigRepository {
   Future<Set<AllergenType>> getConfigAllergens();
 
   Future<void> setConfigAllergens(Set<AllergenType> allergens);
+
+  Future<bool> getNetCarbsEnabled();
+
+  Future<void> setNetCarbsEnabled(bool enabled);
+
+  Future<bool> getStepBonusEnabled();
+
+  Future<void> setStepBonusEnabled(bool enabled);
+
+  Future<double> getStepBonusPercent();
+
+  Future<void> setStepBonusPercent(double percent);
 }

@@ -32,6 +32,9 @@ class ConfigEntries extends Table {
       integer().nullable().withDefault(const Constant(70))();
   IntColumn get bloodGlucoseMaxMgDl =>
       integer().nullable().withDefault(const Constant(180))();
+  IntColumn get netCarbsEnabled => integer().withDefault(const Constant(0))();
+  IntColumn get stepBonusEnabled => integer().withDefault(const Constant(0))();
+  RealColumn get stepBonusPercent => real().withDefault(const Constant(0.5))();
 
   @override
   Set<Column> get primaryKey => {id};

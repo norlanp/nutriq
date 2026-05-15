@@ -492,17 +492,16 @@
 
 ### Item 32: Net Carbs Tracking
 
-[ ] Add netCarbs field computation to food/nutrition entities (totalCarbs - fiber - sugarAlcohols) @file:lib/core/domain/entity/
-[ ] Add netCarbsEnabled toggle to ConfigEntity @file:lib/core/domain/entity/
-[ ] Create Drift column for netCarbsEnabled @file:lib/core/data/drift/
-[ ] Create NetCarbsUsecase (compute net carbs for food, meal, day) @file:lib/core/domain/usecase/net_carbs/
-[ ] Update macro display to show net carbs instead of total carbs when enabled @file:lib/features/home/
-[ ] Show net carbs in food detail + meal detail @file:lib/features/meal_detail/
-[ ] Add net carbs column in daily nutrition summary @file:lib/features/home/
-[ ] Build net carbs toggle in settings @file:lib/features/settings/
-[ ] Add l10n strings for net carbs @file:l10n/
-[ ] Register net carbs DI entries in locator.dart @file:lib/core/di/locator.dart
-[ ] Run flutter analyze, tests
+[x] Add netCarbs field computation to food/nutrition entities (totalCarbs - fiber - sugarAlcohols) @file:lib/core/domain/entity/
+[x] Add netCarbsEnabled toggle to ConfigEntity @file:lib/core/domain/entity/
+[x] Create Drift column for netCarbsEnabled @file:lib/core/data/drift/
+[x] Create NetCarbsUsecase (compute net carbs for food, meal, day) @file:lib/core/domain/usecase/net_carbs/
+[x] Update macro display to show net carbs instead of total carbs when enabled @file:lib/features/home/
+[x] Show net carbs in food detail + meal detail @file:lib/features/meal_detail/
+[x] Add net carbs column in daily nutrition summary @file:lib/features/home/
+[x] Build net carbs toggle in settings @file:lib/features/settings/
+[x] Add l10n strings for net carbs @file:l10n/
+[x] Register net carbs DI entries in locator.dart @file:lib/core/utils/locator.dart
 
 ### Item 33: Home Screen / Lock Screen Widgets
 

@@ -168,6 +168,7 @@ import 'package:nutriq/core/domain/usecase/get_user_activity_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_user_usecase.dart';
 import 'package:nutriq/core/domain/usecase/exercise/get_daily_burned_calories_usecase.dart';
 import 'package:nutriq/core/domain/usecase/exercise/net_calories_usecase.dart';
+import 'package:nutriq/core/domain/usecase/net_carbs/net_carbs_usecase.dart';
 import 'package:nutriq/core/domain/usecase/update_intake_usecase.dart';
 
 import 'package:nutriq/core/utils/ont_image_cache_manager.dart';
@@ -218,9 +219,13 @@ import 'package:nutriq/features/calorie_cycling/presentation/calorie_cycling_blo
 import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_bloc.dart';
 import 'package:nutriq/core/data/service/recipe_scraper_service_impl.dart';
 import 'package:nutriq/core/domain/service/recipe_scraper_service.dart';
+import 'package:nutriq/core/domain/service/recipe_catalog_service.dart';
+import 'package:nutriq/core/domain/service/widget_data_service.dart';
+import 'package:nutriq/core/domain/usecase/widget/update_widget_data_usecase.dart';
 import 'package:nutriq/core/domain/usecase/recipe_import/import_recipe_usecase.dart';
 import 'package:nutriq/features/recipe_import/presentation/recipe_import_bloc.dart';
 import 'package:nutriq/features/symptom_tracking/presentation/symptom_bloc.dart';
+import 'package:nutriq/features/recipe_catalog/presentation/recipe_catalog_bloc.dart';
 import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
 import 'package:nutriq/features/blood_glucose/presentation/blood_glucose_bloc.dart';
 import 'package:nutriq/features/progress_charts/presentation/progress_charts_bloc.dart';
@@ -235,6 +240,14 @@ import 'package:nutriq/features/health_sync/presentation/health_sync_bloc.dart';
 import 'package:nutriq/features/ai_food_scanner/data/food_classifier_service.dart';
 import 'package:nutriq/features/ai_food_scanner/domain/usecase/classify_food_usecase.dart';
 import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
+import 'package:nutriq/features/voice_logging/data/food_parser_service.dart';
+import 'package:nutriq/features/voice_logging/data/voice_logging_service.dart';
+import 'package:nutriq/features/voice_logging/domain/usecase/voice_log_usecase.dart';
+import 'package:nutriq/features/voice_logging/presentation/voice_logging_bloc.dart';
+import 'package:nutriq/features/menu_scan/data/menu_scanner_service.dart';
+import 'package:nutriq/features/menu_scan/data/menu_item_parser_service.dart';
+import 'package:nutriq/features/menu_scan/domain/usecase/scan_menu_usecase.dart';
+import 'package:nutriq/features/menu_scan/presentation/menu_scan_bloc.dart';
 import 'package:nutriq/features/photo_progress/data/photo_storage_service.dart';
 import 'package:nutriq/core/data/data_export_service.dart';
 import 'package:nutriq/core/data/data_import_service.dart';
@@ -251,6 +264,10 @@ import 'package:nutriq/core/domain/service/food_grade_calculator.dart';
 import 'package:nutriq/core/domain/service/food_grade_filter.dart';
 import 'package:nutriq/core/domain/service/autopilot_service.dart';
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
+import 'package:nutriq/core/domain/usecase/step_bonus/calculate_step_bonus_usecase.dart';
+import 'package:nutriq/features/step_bonus/presentation/step_bonus_bloc.dart';
+import 'package:nutriq/core/domain/service/grocery_check_service.dart';
+import 'package:nutriq/features/grocery_check/presentation/grocery_check_bloc.dart';
 
 final locator = GetIt.instance;
 
@@ -600,6 +617,10 @@ Future<void> initLocator() async {
     () => NetCaloriesUsecase(locator()),
   );
 
+  locator.registerLazySingleton<NetCarbsUsecase>(
+    () => NetCarbsUsecase(locator()),
+  );
+
   locator.registerLazySingleton<CalculateBMRUsecase>(
     () => CalculateBMRUsecase(),
   );
@@ -754,6 +775,9 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<HomeBloc>(
     () => HomeBloc(
+      locator(),
+      locator(),
+      locator(),
       locator(),
       locator(),
       locator(),
@@ -968,6 +992,26 @@ Future<void> initLocator() async {
     () => AiScannerBloc(locator()),
   );
 
+  locator.registerLazySingleton<MenuScannerService>(
+    () => MenuScannerService(),
+  );
+
+  locator.registerLazySingleton<MenuItemParserService>(
+    () => MenuItemParserService(),
+  );
+
+  locator.registerLazySingleton<ScanMenuUsecase>(
+    () => ScanMenuUsecase(
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
+
+  locator.registerFactory<MenuScanBloc>(
+    () => MenuScanBloc(locator(), locator()),
+  );
+
   locator.registerLazySingleton<PhotoStorageService>(
     () => PhotoStorageService(),
   );
@@ -1000,7 +1044,64 @@ Future<void> initLocator() async {
     () => RecipeImportBloc(locator()),
   );
 
+  locator.registerLazySingleton<RecipeCatalogService>(
+    () => RecipeCatalogServiceImpl(),
+  );
+
+  locator.registerFactory<RecipeCatalogBloc>(
+    () => RecipeCatalogBloc(locator()),
+  );
+
+  // Voice Logging
+  locator.registerLazySingleton<VoiceLoggingService>(
+    () => VoiceLoggingService(),
+  );
+
+  locator.registerLazySingleton<FoodParserService>(
+    () => FoodParserService(locator()),
+  );
+
+  locator.registerLazySingleton<VoiceLogUsecase>(
+    () => VoiceLogUsecase(locator(), locator()),
+  );
+
+  locator.registerFactory<VoiceLoggingBloc>(
+    () => VoiceLoggingBloc(locator()),
+  );
+
+  // Grocery Check
+  locator.registerLazySingleton<GroceryCheckService>(
+    () => GroceryCheckService(locator()),
+  );
+
+  locator.registerFactory<GroceryCheckBloc>(
+    () => GroceryCheckBloc(locator()),
+  );
+
+  // Step Bonus
+  locator.registerLazySingleton<CalculateStepBonusUsecase>(
+    () => CalculateStepBonusUsecase(locator()),
+  );
+
+  locator.registerFactory<StepBonusBloc>(
+    () => StepBonusBloc(locator(), locator(), locator()),
+  );
+
   await _initializeConfig(locator<ConfigDataSource>());
+
+  locator.registerLazySingleton<WidgetDataService>(
+    () => WidgetDataService(),
+  );
+
+  locator.registerLazySingleton<UpdateWidgetDataUsecase>(
+    () => UpdateWidgetDataUsecase(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+    ),
+  );
 }
 
 Future<void> _initializeConfig(ConfigDataSource configDataSource) async {

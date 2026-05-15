@@ -9,6 +9,7 @@ class MacroNutrientsView extends StatefulWidget {
   final double totalCarbsGoal;
   final double totalFatsGoal;
   final double totalProteinsGoal;
+  final bool netCarbsEnabled;
 
   const MacroNutrientsView(
       {super.key,
@@ -17,7 +18,8 @@ class MacroNutrientsView extends StatefulWidget {
       required this.totalProteinsIntake,
       required this.totalCarbsGoal,
       required this.totalFatsGoal,
-      required this.totalProteinsGoal});
+      required this.totalProteinsGoal,
+      this.netCarbsEnabled = false});
 
   @override
   State<MacroNutrientsView> createState() => _MacroNutrientsViewState();
@@ -52,7 +54,9 @@ class _MacroNutrientsViewState extends State<MacroNutrientsView> {
                         color: Theme.of(context).colorScheme.onSurface),
                   ),
                   Text(
-                    S.of(context).carbsLabel,
+                    widget.netCarbsEnabled
+                        ? S.of(context).netCarbsLabel
+                        : S.of(context).carbsLabel,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
                   )

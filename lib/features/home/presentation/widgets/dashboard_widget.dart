@@ -15,6 +15,9 @@ class DashboardWidget extends StatefulWidget {
   final double totalCarbsGoal;
   final double totalFatsGoal;
   final double totalProteinsGoal;
+  final bool netCarbsEnabled;
+  final double totalNetCarbsIntake;
+  final double stepBonusCredit;
 
   const DashboardWidget(
       {super.key,
@@ -27,7 +30,10 @@ class DashboardWidget extends StatefulWidget {
       required this.totalProteinsIntake,
       required this.totalCarbsGoal,
       required this.totalFatsGoal,
-      required this.totalProteinsGoal});
+      required this.totalProteinsGoal,
+      required this.netCarbsEnabled,
+      required this.totalNetCarbsIntake,
+      this.stepBonusCredit = 0});
 
   @override
   State<DashboardWidget> createState() => _DashboardWidgetState();
@@ -141,13 +147,33 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                   ),
                 ],
               ),
+              if (widget.stepBonusCredit > 0) ...[
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.directions_walk,
+                        size: 16, color: Theme.of(context).colorScheme.primary),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${S.of(context).stepBonusCreditLabel}: +${widget.stepBonusCredit.round()} kcal',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    ),
+                  ],
+                ),
+              ],
               MacroNutrientsView(
-                  totalCarbsIntake: widget.totalCarbsIntake,
+                  totalCarbsIntake: widget.netCarbsEnabled
+                      ? widget.totalNetCarbsIntake
+                      : widget.totalCarbsIntake,
                   totalFatsIntake: widget.totalFatsIntake,
                   totalProteinsIntake: widget.totalProteinsIntake,
                   totalCarbsGoal: widget.totalCarbsGoal,
                   totalFatsGoal: widget.totalFatsGoal,
-                  totalProteinsGoal: widget.totalProteinsGoal),
+                  totalProteinsGoal: widget.totalProteinsGoal,
+                  netCarbsEnabled: widget.netCarbsEnabled),
             ],
           ),
         ),
