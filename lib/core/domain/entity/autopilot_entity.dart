@@ -1,32 +1,18 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class AutopilotEntity extends Equatable {
-  final int id;
-  final int userId;
-  final int baselineCalorieBudget;
-  final int adjustedCalorieBudget;
-  final DateTime lastAdjustmentDate;
-  final List<int> adjustmentHistoryKcal;
-  final bool isEnabled;
+part 'autopilot_entity.freezed.dart';
 
-  const AutopilotEntity({
-    required this.id,
-    required this.userId,
-    required this.baselineCalorieBudget,
-    required this.adjustedCalorieBudget,
-    required this.lastAdjustmentDate,
-    required this.adjustmentHistoryKcal,
-    required this.isEnabled,
-  });
+@freezed
+class AutopilotEntity with _$AutopilotEntity {
+  const factory AutopilotEntity({
+    required int id,
+    required int userId,
+    required int baselineCalorieBudget,
+    required int adjustedCalorieBudget,
+    required DateTime lastAdjustmentDate,
+    required List<int> adjustmentHistoryKcal,
+    required bool isEnabled,
+  }) = _AutopilotEntity;
 
-  @override
-  List<Object?> get props => [
-        id,
-        userId,
-        baselineCalorieBudget,
-        adjustedCalorieBudget,
-        lastAdjustmentDate,
-        adjustmentHistoryKcal,
-        isEnabled,
-      ];
+  const AutopilotEntity._();
 }

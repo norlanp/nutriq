@@ -1,29 +1,35 @@
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_const.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_food_nutriment_dto.dart';
 import 'package:nutriq/features/add_meal/data/dto/off/off_product_nutriments_dto.dart';
 
-class MealNutrimentsEntity extends Equatable {
-  // Macronutrients
-  final double? energyKcal100;
-  final double? carbohydrates100;
-  final double? fat100;
-  final double? proteins100;
-  final double? sugars100;
-  final double? saturatedFat100;
-  final double? fiber100;
+part 'meal_nutriments_entity.freezed.dart';
 
+@freezed
+class MealNutrimentsEntity with _$MealNutrimentsEntity {
+  // Macronutrients
   // Micronutrients
-  final double? sodium100;
-  final double? potassium100;
-  final double? cholesterol100;
-  final double? vitaminA100;
-  final double? vitaminC100;
-  final double? vitaminD100;
-  final double? calcium100;
-  final double? iron100;
+  const factory MealNutrimentsEntity({
+    required double? energyKcal100,
+    required double? carbohydrates100,
+    required double? fat100,
+    required double? proteins100,
+    required double? sugars100,
+    required double? saturatedFat100,
+    required double? fiber100,
+    double? sodium100,
+    double? potassium100,
+    double? cholesterol100,
+    double? vitaminA100,
+    double? vitaminC100,
+    double? vitaminD100,
+    double? calcium100,
+    double? iron100,
+  }) = _MealNutrimentsEntity;
+
+  const MealNutrimentsEntity._();
 
   // Daily reference values for micro % calculation
   static const double fiberDV = 25;
@@ -56,24 +62,6 @@ class MealNutrimentsEntity extends Equatable {
     final net = carbs100 - fiber - sugarAlcohols;
     return net < 0 ? 0 : net / 100;
   }
-
-  const MealNutrimentsEntity({
-    required this.energyKcal100,
-    required this.carbohydrates100,
-    required this.fat100,
-    required this.proteins100,
-    required this.sugars100,
-    required this.saturatedFat100,
-    required this.fiber100,
-    this.sodium100,
-    this.potassium100,
-    this.cholesterol100,
-    this.vitaminA100,
-    this.vitaminC100,
-    this.vitaminD100,
-    this.calcium100,
-    this.iron100,
-  });
 
   factory MealNutrimentsEntity.empty() => const MealNutrimentsEntity(
         energyKcal100: null,
@@ -110,8 +98,6 @@ class MealNutrimentsEntity extends Equatable {
   factory MealNutrimentsEntity.fromFDCNutriments(
     List<FDCFoodNutrimentDTO> fdcNutriment,
   ) {
-    // FDC Food nutriments can have different values for Energy [Energy,
-    // Energy (Atwater General Factors), Energy (Atwater Specific Factors)]
     final energyTotal = fdcNutriment
             .firstWhereOrNull(
               (nutriment) => nutriment.nutrientId == FDCConst.fdcTotalKcalId,
@@ -267,23 +253,4 @@ class MealNutrimentsEntity extends Equatable {
       return null;
     }
   }
-
-  @override
-  List<Object?> get props => [
-        energyKcal100,
-        carbohydrates100,
-        fat100,
-        proteins100,
-        sugars100,
-        saturatedFat100,
-        fiber100,
-        sodium100,
-        potassium100,
-        cholesterol100,
-        vitaminA100,
-        vitaminC100,
-        vitaminD100,
-        calcium100,
-        iron100,
-      ];
 }

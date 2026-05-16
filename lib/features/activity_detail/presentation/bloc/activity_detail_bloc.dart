@@ -57,8 +57,12 @@ class ActivityDetailBloc
       DateTime day) async {
     final duration = double.parse(durationText);
 
-    final userActivityEntity = UserActivityEntity(IdGenerator.getUniqueID(),
-        duration, totalKcalBurned, day, activityEntity);
+    final userActivityEntity = UserActivityEntity(
+        id: IdGenerator.getUniqueID(),
+        duration: duration,
+        burnedKcal: totalKcalBurned,
+        date: day,
+        physicalActivityEntity: activityEntity);
 
     await _addUserActivityUsecase.addUserActivity(userActivityEntity);
     _updateTrackedDay(day, totalKcalBurned);

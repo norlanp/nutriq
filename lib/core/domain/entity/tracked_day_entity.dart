@@ -1,31 +1,26 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/material.dart';
 
-class TrackedDayEntity extends Equatable {
+part 'tracked_day_entity.freezed.dart';
+
+@freezed
+class TrackedDayEntity with _$TrackedDayEntity {
   static const maxKcalDifferenceOverGoal = 500;
   static const maxKcalDifferenceUnderGoal = 1000;
 
-  final DateTime day;
-  final double calorieGoal;
-  final double caloriesTracked;
-  final double? carbsGoal;
-  final double? carbsTracked;
-  final double? fatGoal;
-  final double? fatTracked;
-  final double? proteinGoal;
-  final double? proteinTracked;
+  const factory TrackedDayEntity({
+    required DateTime day,
+    required double calorieGoal,
+    required double caloriesTracked,
+    double? carbsGoal,
+    double? carbsTracked,
+    double? fatGoal,
+    double? fatTracked,
+    double? proteinGoal,
+    double? proteinTracked,
+  }) = _TrackedDayEntity;
 
-  const TrackedDayEntity({
-    required this.day,
-    required this.calorieGoal,
-    required this.caloriesTracked,
-    this.carbsGoal,
-    this.carbsTracked,
-    this.fatGoal,
-    this.fatTracked,
-    this.proteinGoal,
-    this.proteinTracked,
-  });
+  const TrackedDayEntity._();
 
   // TODO: make enum class for rating
   Color getCalendarDayRatingColor(BuildContext context) {
@@ -52,7 +47,8 @@ class TrackedDayEntity extends Equatable {
     }
   }
 
-  bool _hasExceededMaxKcalDifferenceGoal(double calorieGoal, caloriesTracked) {
+  bool _hasExceededMaxKcalDifferenceGoal(
+      double calorieGoal, double caloriesTracked) {
     double difference = calorieGoal - caloriesTracked;
 
     if (calorieGoal < caloriesTracked) {
@@ -61,17 +57,4 @@ class TrackedDayEntity extends Equatable {
       return difference < maxKcalDifferenceUnderGoal;
     }
   }
-
-  @override
-  List<Object?> get props => [
-        day,
-        calorieGoal,
-        caloriesTracked,
-        carbsGoal,
-        carbsTracked,
-        fatGoal,
-        fatTracked,
-        proteinGoal,
-        proteinTracked,
-      ];
 }

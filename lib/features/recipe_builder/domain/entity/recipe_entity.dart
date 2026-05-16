@@ -1,22 +1,20 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:nutriq/features/recipe_builder/domain/entity/recipe_item_entity.dart';
 
-class RecipeEntity extends Equatable {
-  final String id;
-  final String name;
-  final String servings;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<RecipeItemEntity> items;
+part 'recipe_entity.freezed.dart';
 
-  const RecipeEntity({
-    required this.id,
-    required this.name,
-    required this.servings,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.items,
-  });
+@freezed
+class RecipeEntity with _$RecipeEntity {
+  const factory RecipeEntity({
+    required String id,
+    required String name,
+    required String servings,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required List<RecipeItemEntity> items,
+  }) = _RecipeEntity;
+
+  const RecipeEntity._();
 
   double get totalKcal => items.fold(0, (sum, item) => sum + item.totalKcal);
   double get totalCarbsGram =>
@@ -25,7 +23,4 @@ class RecipeEntity extends Equatable {
       items.fold(0, (sum, item) => sum + item.totalFatsGram);
   double get totalProteinsGram =>
       items.fold(0, (sum, item) => sum + item.totalProteinsGram);
-
-  @override
-  List<Object?> get props => [id, name, servings, items];
 }

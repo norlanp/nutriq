@@ -1,14 +1,13 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class FoodCandidateEntity extends Equatable {
-  final String name;
-  final double confidence;
+part 'food_candidate_entity.freezed.dart';
 
-  const FoodCandidateEntity({
-    required this.name,
-    required this.confidence,
-  });
+@freezed
+class FoodCandidateEntity with _$FoodCandidateEntity {
+  const FoodCandidateEntity._();
 
-  @override
-  List<Object?> get props => [name, confidence];
+  const factory FoodCandidateEntity({
+    required String name,
+    required double confidence,
+  }) = _FoodCandidateEntity;
 }

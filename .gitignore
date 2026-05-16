@@ -71,8 +71,9 @@ build/
 **/xcuserdata/
 *.xcworkspace/xcuserdata/
 
-# Generated Drift files (regenerated via build_runner)
+# Generated files (regenerated via build_runner)
 *.g.dart
+*.freezed.dart
 
 # Playwright MCP artifacts
 .playwright-mcp/

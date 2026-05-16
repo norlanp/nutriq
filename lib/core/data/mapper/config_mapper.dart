@@ -34,10 +34,10 @@ String mapAppThemeEntityToString(AppThemeEntity entity) {
 }
 
 ConfigEntity mapConfigEntryToEntity(ConfigEntry entry) => ConfigEntity(
-      entry.hasAcceptedDisclaimer,
-      entry.hasAcceptedPolicy,
-      entry.hasAcceptedSendAnonymousData,
-      mapAppThemeStringToEntity(entry.selectedAppTheme),
+      hasAcceptedDisclaimer: entry.hasAcceptedDisclaimer,
+      hasAcceptedPolicy: entry.hasAcceptedPolicy,
+      hasAcceptedSendAnonymousData: entry.hasAcceptedSendAnonymousData,
+      appTheme: mapAppThemeStringToEntity(entry.selectedAppTheme),
       usesImperialUnits: entry.usesImperialUnits ?? false,
       userKcalAdjustment: entry.userKcalAdjustment,
       userCarbGoalPct: entry.userCarbGoalPct,

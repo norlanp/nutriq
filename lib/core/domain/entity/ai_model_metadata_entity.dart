@@ -1,18 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class AiModelMetadataEntity extends Equatable {
-  final int id;
-  final String modelVersion;
-  final String assetPath;
-  final DateTime lastUpdated;
+part 'ai_model_metadata_entity.freezed.dart';
 
-  const AiModelMetadataEntity({
-    required this.id,
-    required this.modelVersion,
-    required this.assetPath,
-    required this.lastUpdated,
-  });
+@freezed
+class AiModelMetadataEntity with _$AiModelMetadataEntity {
+  const AiModelMetadataEntity._();
 
-  @override
-  List<Object?> get props => [id, modelVersion, assetPath, lastUpdated];
+  const factory AiModelMetadataEntity({
+    required int id,
+    required String modelVersion,
+    required String assetPath,
+    required DateTime lastUpdated,
+  }) = _AiModelMetadataEntity;
 }

@@ -33,7 +33,12 @@ void main() {
       'emits [DiaryLoadingState, DiaryLoadedState] when LoadDiaryYearEvent succeeds',
       build: () {
         when(() => mockConfigRepo.getConfig()).thenAnswer(
-          (_) async => ConfigEntity(false, false, false, AppThemeEntity.system),
+          (_) async => ConfigEntity(
+            hasAcceptedDisclaimer: false,
+            hasAcceptedPolicy: false,
+            hasAcceptedSendAnonymousData: false,
+            appTheme: AppThemeEntity.system,
+          ),
         );
         when(() => mockTrackedDayRepo.getTrackedDayByRange(any(), any()))
             .thenAnswer((_) async => []);
@@ -57,8 +62,13 @@ void main() {
           ),
         ];
         when(() => mockConfigRepo.getConfig()).thenAnswer(
-          (_) async => ConfigEntity(false, false, false, AppThemeEntity.system,
-              usesImperialUnits: true),
+          (_) async => ConfigEntity(
+            hasAcceptedDisclaimer: false,
+            hasAcceptedPolicy: false,
+            hasAcceptedSendAnonymousData: false,
+            appTheme: AppThemeEntity.system,
+            usesImperialUnits: true,
+          ),
         );
         when(() => mockTrackedDayRepo.getTrackedDayByRange(any(), any()))
             .thenAnswer((_) async => trackedDays);
@@ -77,7 +87,12 @@ void main() {
     test('updateHomePage calls refresh callback', () {
       var callbackCalled = false;
       when(() => mockConfigRepo.getConfig()).thenAnswer(
-        (_) async => ConfigEntity(false, false, false, AppThemeEntity.system),
+        (_) async => ConfigEntity(
+          hasAcceptedDisclaimer: false,
+          hasAcceptedPolicy: false,
+          hasAcceptedSendAnonymousData: false,
+          appTheme: AppThemeEntity.system,
+        ),
       );
       when(() => mockTrackedDayRepo.getTrackedDayByRange(any(), any()))
           .thenAnswer((_) async => []);

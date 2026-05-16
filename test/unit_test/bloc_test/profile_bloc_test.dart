@@ -81,8 +81,13 @@ void main() {
         when(() => mockUserRepo.getUserData())
             .thenAnswer((_) async => testUser);
         when(() => mockConfigRepo.getConfig()).thenAnswer(
-          (_) async => ConfigEntity(true, true, true, AppThemeEntity.system,
-              tdeeMethod: TDEEMethodEntity.mifflinStJeor),
+          (_) async => ConfigEntity(
+            hasAcceptedDisclaimer: true,
+            hasAcceptedPolicy: true,
+            hasAcceptedSendAnonymousData: true,
+            appTheme: AppThemeEntity.system,
+            tdeeMethod: TDEEMethodEntity.mifflinStJeor,
+          ),
         );
         return ProfileBloc(
           getUserUsecase,
@@ -116,9 +121,14 @@ void main() {
         when(() => mockUserRepo.getUserData())
             .thenAnswer((_) async => testUser);
         when(() => mockConfigRepo.getConfig()).thenAnswer(
-          (_) async => ConfigEntity(true, true, true, AppThemeEntity.dark,
-              usesImperialUnits: true,
-              tdeeMethod: TDEEMethodEntity.iom2005),
+          (_) async => ConfigEntity(
+            hasAcceptedDisclaimer: true,
+            hasAcceptedPolicy: true,
+            hasAcceptedSendAnonymousData: true,
+            appTheme: AppThemeEntity.dark,
+            usesImperialUnits: true,
+            tdeeMethod: TDEEMethodEntity.iom2005,
+          ),
         );
         return ProfileBloc(
           getUserUsecase,

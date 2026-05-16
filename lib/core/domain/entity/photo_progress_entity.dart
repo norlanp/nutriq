@@ -1,22 +1,17 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class PhotoProgressEntity extends Equatable {
-  final int id;
-  final int userId;
-  final String filePath;
-  final DateTime date;
-  final String tags;
-  final String? note;
+part 'photo_progress_entity.freezed.dart';
 
-  const PhotoProgressEntity({
-    required this.id,
-    required this.userId,
-    required this.filePath,
-    required this.date,
-    required this.tags,
-    this.note,
-  });
+@freezed
+class PhotoProgressEntity with _$PhotoProgressEntity {
+  const factory PhotoProgressEntity({
+    required int id,
+    required int userId,
+    required String filePath,
+    required DateTime date,
+    required String tags,
+    String? note,
+  }) = _PhotoProgressEntity;
 
-  @override
-  List<Object?> get props => [id, userId, filePath, date, tags, note];
+  const PhotoProgressEntity._();
 }

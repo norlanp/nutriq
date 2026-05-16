@@ -1,28 +1,21 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'custom_tracker_entity.freezed.dart';
 
 enum TrackerType { scale, boolean, text }
 
-class CustomTrackerEntity extends Equatable {
-  final int id;
-  final int userId;
-  final String name;
-  final TrackerType type;
-  final double min;
-  final double max;
-  final String icon;
-  final String? unit;
+@freezed
+class CustomTrackerEntity with _$CustomTrackerEntity {
+  const factory CustomTrackerEntity({
+    required int id,
+    required int userId,
+    required String name,
+    required TrackerType type,
+    required double min,
+    required double max,
+    required String icon,
+    String? unit,
+  }) = _CustomTrackerEntity;
 
-  const CustomTrackerEntity({
-    required this.id,
-    required this.userId,
-    required this.name,
-    required this.type,
-    required this.min,
-    required this.max,
-    required this.icon,
-    this.unit,
-  });
-
-  @override
-  List<Object?> get props => [id, userId, name, type, min, max, icon, unit];
+  const CustomTrackerEntity._();
 }

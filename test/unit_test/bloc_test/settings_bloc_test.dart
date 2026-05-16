@@ -108,8 +108,13 @@ void main() {
 
     test('getKcalAdjustment returns adjustment from config', () async {
       when(() => mockConfigRepo.getConfig()).thenAnswer(
-        (_) async => ConfigEntity(true, true, true, AppThemeEntity.system,
-            userKcalAdjustment: 250),
+        (_) async => ConfigEntity(
+          hasAcceptedDisclaimer: true,
+          hasAcceptedPolicy: true,
+          hasAcceptedSendAnonymousData: true,
+          appTheme: AppThemeEntity.system,
+          userKcalAdjustment: 250,
+        ),
       );
       final bloc = createBloc();
       final result = await bloc.getKcalAdjustment();
@@ -118,7 +123,12 @@ void main() {
 
     test('getKcalAdjustment returns 0 when adjustment is null', () async {
       when(() => mockConfigRepo.getConfig()).thenAnswer(
-        (_) async => ConfigEntity(true, true, true, AppThemeEntity.system),
+        (_) async => ConfigEntity(
+          hasAcceptedDisclaimer: true,
+          hasAcceptedPolicy: true,
+          hasAcceptedSendAnonymousData: true,
+          appTheme: AppThemeEntity.system,
+        ),
       );
       final bloc = createBloc();
       final result = await bloc.getKcalAdjustment();

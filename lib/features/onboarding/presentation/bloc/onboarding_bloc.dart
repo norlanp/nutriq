@@ -13,7 +13,7 @@ part 'onboarding_event.dart';
 part 'onboarding_state.dart';
 
 class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
-  final userSelection = UserDataMaskEntity();
+  var userSelection = UserDataMaskEntity();
   final AddUserUsecase _addUserUsecase;
   final AddConfigUsecase _addConfigUsecase;
 
@@ -26,12 +26,12 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     });
   }
 
-  void saveOnboardingData(BuildContext context, UserEntity userEntity,
+  Future<void> saveOnboardingData(BuildContext context, UserEntity userEntity,
       bool hasAcceptedDataCollection, bool usesImperialUnits) async {
-    _addUserUsecase.addUser(userEntity);
-    _addConfigUsecase
+    await _addUserUsecase.addUser(userEntity);
+    await _addConfigUsecase
         .setConfigHasAcceptedAnonymousData(hasAcceptedDataCollection);
-    _addConfigUsecase.setConfigUsesImperialUnits(usesImperialUnits);
+    await _addConfigUsecase.setConfigUsesImperialUnits(usesImperialUnits);
   }
 
   double? getOverviewCalorieGoal() {

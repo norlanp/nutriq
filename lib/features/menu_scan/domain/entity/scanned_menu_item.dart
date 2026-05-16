@@ -1,41 +1,21 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:nutriq/core/domain/entity/food_grade.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 
-class ScannedMenuItem extends Equatable {
-  final String name;
-  final double? menuPrice;
-  final MealEntity? mealMatch;
-  final FoodGrade? foodGrade;
-  final double matchConfidence;
-  final bool isSelected;
+part 'scanned_menu_item.freezed.dart';
 
-  const ScannedMenuItem({
-    required this.name,
-    this.menuPrice,
-    this.mealMatch,
-    this.foodGrade,
-    this.matchConfidence = 0.0,
-    this.isSelected = false,
-  });
-
-  ScannedMenuItem copyWith({
-    String? name,
+@freezed
+class ScannedMenuItem with _$ScannedMenuItem {
+  const factory ScannedMenuItem({
+    required String name,
     double? menuPrice,
     MealEntity? mealMatch,
     FoodGrade? foodGrade,
-    double? matchConfidence,
-    bool? isSelected,
-  }) {
-    return ScannedMenuItem(
-      name: name ?? this.name,
-      menuPrice: menuPrice ?? this.menuPrice,
-      mealMatch: mealMatch ?? this.mealMatch,
-      foodGrade: foodGrade ?? this.foodGrade,
-      matchConfidence: matchConfidence ?? this.matchConfidence,
-      isSelected: isSelected ?? this.isSelected,
-    );
-  }
+    @Default(0.0) double matchConfidence,
+    @Default(false) bool isSelected,
+  }) = _ScannedMenuItem;
+
+  const ScannedMenuItem._();
 
   bool get hasNutritionInfo => mealMatch != null;
 
@@ -47,14 +27,4 @@ class ScannedMenuItem extends Equatable {
   double? get sugar => mealMatch?.nutriments.sugars100;
   double? get saturatedFat => mealMatch?.nutriments.saturatedFat100;
   double? get sodium => mealMatch?.nutriments.sodium100;
-
-  @override
-  List<Object?> get props => [
-        name,
-        menuPrice,
-        mealMatch,
-        foodGrade,
-        matchConfidence,
-        isSelected,
-      ];
 }

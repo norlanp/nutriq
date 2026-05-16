@@ -1,24 +1,19 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:nutriq/core/domain/entity/user_pal_entity.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 
-class BMRCalculationEntity extends Equatable {
-  final double bmr;
-  final double tdee;
-  final double activityMultiplier;
-  final UserPALEntity activityLevel;
-  final TDEEMethodEntity method;
+part 'bmr_calculation_entity.freezed.dart';
 
-  const BMRCalculationEntity({
-    required this.bmr,
-    required this.tdee,
-    required this.activityMultiplier,
-    required this.activityLevel,
-    required this.method,
-  });
+@freezed
+class BMRCalculationEntity with _$BMRCalculationEntity {
+  const factory BMRCalculationEntity({
+    required double bmr,
+    required double tdee,
+    required double activityMultiplier,
+    required UserPALEntity activityLevel,
+    required TDEEMethodEntity method,
+  }) = _BMRCalculationEntity;
 
-  @override
-  List<Object?> get props =>
-      [bmr, tdee, activityMultiplier, activityLevel, method];
+  const BMRCalculationEntity._();
 }

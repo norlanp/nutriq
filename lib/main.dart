@@ -74,7 +74,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 Future<void> main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    LoggerConfig.intiLogger();
+    LoggerConfig.initLogger();
     final log = Logger('main');
 
     final container = ProviderContainer();

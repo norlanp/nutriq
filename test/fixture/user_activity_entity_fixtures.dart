@@ -4,26 +4,26 @@ import 'physical_activity_entity_fixtures.dart';
 
 class UserActivityEntityFixtures {
   static UserActivityEntity activityOne = UserActivityEntity(
-    "act-1",
-    60,
-    400,
-    DateTime.utc(2024, 1, 1),
-    PhysicalActivityFixtures.moderateBicycling,
+    id: "act-1",
+    duration: 60,
+    burnedKcal: 400,
+    date: DateTime.utc(2024, 1, 1),
+    physicalActivityEntity: PhysicalActivityFixtures.moderateBicycling,
   );
 
   static UserActivityEntity activityTwo = UserActivityEntity(
-    "act-2",
-    30,
-    150,
-    DateTime.utc(2024, 1, 1),
-    PhysicalActivityFixtures.lightDancing,
+    id: "act-2",
+    duration: 30,
+    burnedKcal: 150,
+    date: DateTime.utc(2024, 1, 1),
+    physicalActivityEntity: PhysicalActivityFixtures.lightDancing,
   );
 
   static UserActivityEntity activityThree = UserActivityEntity(
-    "act-3",
-    45,
-    675,
-    DateTime.utc(2024, 1, 2),
-    PhysicalActivityFixtures.vigorousRunning,
+    id: "act-3",
+    duration: 45,
+    burnedKcal: 675,
+    date: DateTime.utc(2024, 1, 2),
+    physicalActivityEntity: PhysicalActivityFixtures.vigorousRunning,
   );
 }

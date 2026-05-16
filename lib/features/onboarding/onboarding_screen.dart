@@ -199,8 +199,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   void _setIntroPageData(bool active, bool acceptedDataCollection) {
     setState(() {
-      _onboardingBloc.userSelection.acceptDataCollection =
-          acceptedDataCollection;
+      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
+          acceptDataCollection: acceptedDataCollection);
 
       _introPageButtonActive = active;
     });
@@ -209,8 +209,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _setFirstPageData(bool active, UserGenderSelectionEntity? selectedGender,
       DateTime? selectedBirthday) {
     setState(() {
-      _onboardingBloc.userSelection.gender = selectedGender;
-      _onboardingBloc.userSelection.birthday = selectedBirthday;
+      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
+          gender: selectedGender, birthday: selectedBirthday);
 
       _firstPageButtonActive = active;
     });
@@ -219,9 +219,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _setSecondPageData(bool active, double? selectedHeight,
       double? selectedWeight, bool usesImperial) {
     setState(() {
-      _onboardingBloc.userSelection.height = selectedHeight;
-      _onboardingBloc.userSelection.weight = selectedWeight;
-      _onboardingBloc.userSelection.usesImperialUnits = usesImperial;
+      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
+          height: selectedHeight,
+          weight: selectedWeight,
+          usesImperialUnits: usesImperial);
 
       _secondPageButtonActive = active;
     });
@@ -230,7 +231,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _setThirdPageButton(
       bool active, UserActivitySelectionEntity? selectedActivity) {
     setState(() {
-      _onboardingBloc.userSelection.activity = selectedActivity;
+      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
+          activity: selectedActivity);
 
       _thirdPageButtonActive = active;
     });
@@ -239,7 +241,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _setFourthPageButton(
       bool active, UserGoalSelectionEntity? selectedGoal) {
     setState(() {
-      _onboardingBloc.userSelection.goal = selectedGoal;
+      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
+          goal: selectedGoal);
 
       _fourthPageButtonActive = active;
     });

@@ -1,28 +1,24 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 
-class IntakeEntity extends Equatable {
-  final String id;
-  final String unit;
-  final double amount;
-  final IntakeTypeEntity type;
-  final DateTime dateTime;
-  final TimeOfDay? time;
+part 'intake_entity.freezed.dart';
 
-  final MealEntity meal;
+@freezed
+class IntakeEntity with _$IntakeEntity {
+  const factory IntakeEntity({
+    required String id,
+    required String unit,
+    required double amount,
+    required IntakeTypeEntity type,
+    required MealEntity meal,
+    required DateTime dateTime,
+    TimeOfDay? time,
+  }) = _IntakeEntity;
 
-  const IntakeEntity({
-    required this.id,
-    required this.unit,
-    required this.amount,
-    required this.type,
-    required this.meal,
-    required this.dateTime,
-    this.time,
-  });
+  const IntakeEntity._();
 
   double get totalKcal => amount * (meal.nutriments.energyPerUnit ?? 0);
 
@@ -36,7 +32,4 @@ class IntakeEntity extends Equatable {
 
   double get totalProteinsGram =>
       amount * (meal.nutriments.proteinsPerUnit ?? 0);
-
-  @override
-  List<Object?> get props => [id, unit, amount, type, dateTime, time];
 }

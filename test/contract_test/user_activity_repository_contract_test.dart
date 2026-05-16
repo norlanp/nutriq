@@ -12,20 +12,20 @@ void main() {
   late UserActivityRepository repo;
 
   final testActivity = PhysicalActivityEntity(
-    '01015',
-    'Bicycling, moderate speed',
-    'Bicycling at moderate speed',
-    8.0,
-    [],
-    PhysicalActivityTypeEntity.bicycling,
+    code: '01015',
+    specificActivity: 'Bicycling, moderate speed',
+    description: 'Bicycling at moderate speed',
+    mets: 8.0,
+    tags: const <String>[],
+    type: PhysicalActivityTypeEntity.bicycling,
   );
 
   final testUserActivity = UserActivityEntity(
-    'ua-1',
-    60,
-    400,
-    DateTime(2024, 6, 15),
-    testActivity,
+    id: 'ua-1',
+    duration: 60,
+    burnedKcal: 400,
+    date: DateTime(2024, 6, 15),
+    physicalActivityEntity: testActivity,
   );
 
   setUp(() async {
@@ -59,11 +59,11 @@ void main() {
   test('getAllUserActivityByDate returns only matching date', () async {
     await repo.addUserActivity(testUserActivity);
     final otherActivity = UserActivityEntity(
-      'ua-2',
-      30,
-      200,
-      DateTime(2024, 6, 16),
-      testActivity,
+      id: 'ua-2',
+      duration: 30,
+      burnedKcal: 200,
+      date: DateTime(2024, 6, 16),
+      physicalActivityEntity: testActivity,
     );
     await repo.addUserActivity(otherActivity);
 

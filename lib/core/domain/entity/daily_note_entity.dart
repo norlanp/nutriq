@@ -1,18 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class DailyNoteEntity extends Equatable {
-  final int id;
-  final int userId;
-  final DateTime date;
-  final String note;
+part 'daily_note_entity.freezed.dart';
 
-  const DailyNoteEntity({
-    required this.id,
-    required this.userId,
-    required this.date,
-    required this.note,
-  });
+@freezed
+class DailyNoteEntity with _$DailyNoteEntity {
+  const factory DailyNoteEntity({
+    required int id,
+    required int userId,
+    required DateTime date,
+    required String note,
+  }) = _DailyNoteEntity;
 
-  @override
-  List<Object?> get props => [id, userId, date, note];
+  const DailyNoteEntity._();
 }

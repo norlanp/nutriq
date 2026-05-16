@@ -24,10 +24,10 @@ void main() {
       build: () {
         when(() => mockConfigRepo.getConfig()).thenAnswer(
           (_) async => ConfigEntity(
-            true,
-            true,
-            true,
-            AppThemeEntity.dark,
+            hasAcceptedDisclaimer: true,
+            hasAcceptedPolicy: true,
+            hasAcceptedSendAnonymousData: true,
+            appTheme: AppThemeEntity.dark,
             usesImperialUnits: true,
           ),
         );
@@ -44,7 +44,12 @@ void main() {
       'emits loaded state with usesImperialUnits false by default',
       build: () {
         when(() => mockConfigRepo.getConfig()).thenAnswer(
-          (_) async => ConfigEntity(false, false, false, AppThemeEntity.system),
+          (_) async => ConfigEntity(
+            hasAcceptedDisclaimer: false,
+            hasAcceptedPolicy: false,
+            hasAcceptedSendAnonymousData: false,
+            appTheme: AppThemeEntity.system,
+          ),
         );
         return AddMealBloc(getConfigUsecase);
       },

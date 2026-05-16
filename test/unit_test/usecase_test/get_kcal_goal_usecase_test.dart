@@ -43,8 +43,13 @@ void main() {
         () async {
       when(() => mockUserRepo.getUserData()).thenAnswer((_) async => testUser);
       when(() => mockConfigRepo.getConfig()).thenAnswer(
-        (_) async => ConfigEntity(true, true, true, AppThemeEntity.system,
-            tdeeMethod: TDEEMethodEntity.iom2005),
+        (_) async => ConfigEntity(
+          hasAcceptedDisclaimer: true,
+          hasAcceptedPolicy: true,
+          hasAcceptedSendAnonymousData: true,
+          appTheme: AppThemeEntity.system,
+          tdeeMethod: TDEEMethodEntity.iom2005,
+        ),
       );
       when(() => mockActivityRepo.getAllUserActivityByDate(any()))
           .thenAnswer((_) async => []);
@@ -70,8 +75,13 @@ void main() {
       when(() => mockUserRepo.getUserData())
           .thenAnswer((_) async => loseWeightUser);
       when(() => mockConfigRepo.getConfig()).thenAnswer(
-        (_) async => ConfigEntity(true, true, true, AppThemeEntity.system,
-            tdeeMethod: TDEEMethodEntity.iom2005),
+        (_) async => ConfigEntity(
+          hasAcceptedDisclaimer: true,
+          hasAcceptedPolicy: true,
+          hasAcceptedSendAnonymousData: true,
+          appTheme: AppThemeEntity.system,
+          tdeeMethod: TDEEMethodEntity.iom2005,
+        ),
       );
       when(() => mockActivityRepo.getAllUserActivityByDate(any()))
           .thenAnswer((_) async => []);
@@ -85,22 +95,27 @@ void main() {
     test('adds activity calories to goal', () async {
       when(() => mockUserRepo.getUserData()).thenAnswer((_) async => testUser);
       when(() => mockConfigRepo.getConfig()).thenAnswer(
-        (_) async => ConfigEntity(true, true, true, AppThemeEntity.system,
-            tdeeMethod: TDEEMethodEntity.iom2005),
+        (_) async => ConfigEntity(
+          hasAcceptedDisclaimer: true,
+          hasAcceptedPolicy: true,
+          hasAcceptedSendAnonymousData: true,
+          appTheme: AppThemeEntity.system,
+          tdeeMethod: TDEEMethodEntity.iom2005,
+        ),
       );
       final activities = [
         UserActivityEntity(
-          '1',
-          30.0,
-          200.0,
-          DateTime.now(),
-          PhysicalActivityEntity(
-            '01015',
-            'Running',
-            'Running',
-            8.0,
-            [],
-            PhysicalActivityTypeEntity.running,
+          id: '1',
+          duration: 30.0,
+          burnedKcal: 200.0,
+          date: DateTime.now(),
+          physicalActivityEntity: PhysicalActivityEntity(
+            code: '01015',
+            specificActivity: 'Running',
+            description: 'Running',
+            mets: 8.0,
+            tags: const <String>[],
+            type: PhysicalActivityTypeEntity.running,
           ),
         ),
       ];
@@ -115,9 +130,14 @@ void main() {
 
     test('uses provided user and activities when passed directly', () async {
       when(() => mockConfigRepo.getConfig()).thenAnswer(
-        (_) async => ConfigEntity(true, true, true, AppThemeEntity.system,
-            tdeeMethod: TDEEMethodEntity.iom2005,
-            userKcalAdjustment: 100),
+        (_) async => ConfigEntity(
+          hasAcceptedDisclaimer: true,
+          hasAcceptedPolicy: true,
+          hasAcceptedSendAnonymousData: true,
+          appTheme: AppThemeEntity.system,
+          tdeeMethod: TDEEMethodEntity.iom2005,
+          userKcalAdjustment: 100,
+        ),
       );
 
       final result = await usecase.getKcalGoal(
@@ -133,7 +153,10 @@ void main() {
       when(() => mockUserRepo.getUserData()).thenAnswer((_) async => testUser);
       when(() => mockConfigRepo.getConfig()).thenAnswer(
         (_) async => ConfigEntity(
-            true, true, true, AppThemeEntity.system,
+            hasAcceptedDisclaimer: true,
+            hasAcceptedPolicy: true,
+            hasAcceptedSendAnonymousData: true,
+            appTheme: AppThemeEntity.system,
             tdeeMethod: TDEEMethodEntity.mifflinStJeor),
       );
       when(() => mockActivityRepo.getAllUserActivityByDate(any()))

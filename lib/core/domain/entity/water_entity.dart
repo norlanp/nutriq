@@ -1,20 +1,16 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class WaterEntity extends Equatable {
-  final int id;
-  final int userId;
-  final int amountMl;
-  final DateTime date;
-  final DateTime timestamp;
+part 'water_entity.freezed.dart';
 
-  const WaterEntity({
-    required this.id,
-    required this.userId,
-    required this.amountMl,
-    required this.date,
-    required this.timestamp,
-  });
+@freezed
+class WaterEntity with _$WaterEntity {
+  const WaterEntity._();
 
-  @override
-  List<Object?> get props => [id, userId, amountMl, date, timestamp];
+  const factory WaterEntity({
+    required int id,
+    required int userId,
+    required int amountMl,
+    required DateTime date,
+    required DateTime timestamp,
+  }) = _WaterEntity;
 }

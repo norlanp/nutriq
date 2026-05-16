@@ -9,7 +9,7 @@ void main() {
       'Total Burned Kcal calculation for a young sedentary male doing moderate bicycling',
       () {
     final user = UserEntityFixtures.youngSedentaryMaleWantingToMaintainWeight;
-    const activity = PhysicalActivityFixtures.moderateBicycling;
+    final activity = PhysicalActivityFixtures.moderateBicycling;
 
     // Assuming the user did bicycling for 1 hour
     double duration = 60;
@@ -27,7 +27,7 @@ void main() {
       'Total Burned Kcal calculation for a middle aged sedentary female doing light dancing',
       () {
     final user = UserEntityFixtures.middleAgedActiveFemaleWantingToLoseWeight;
-    const activity = PhysicalActivityFixtures.lightDancing;
+    final activity = PhysicalActivityFixtures.lightDancing;
 
     // Assuming the user did bicycling for 1/2 hour
     double duration = 30;

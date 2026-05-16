@@ -1,16 +1,17 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class UserBMIEntity extends Equatable {
-  final double bmiValue;
-  final UserNutritionalStatus nutritionalStatus;
+part 'user_bmi_entity.freezed.dart';
 
-  const UserBMIEntity(
-      {required this.bmiValue, required this.nutritionalStatus});
+@freezed
+class UserBMIEntity with _$UserBMIEntity {
+  const UserBMIEntity._();
 
-  @override
-  List<Object?> get props => [bmiValue, nutritionalStatus];
+  const factory UserBMIEntity({
+    required double bmiValue,
+    required UserNutritionalStatus nutritionalStatus,
+  }) = _UserBMIEntity;
 }
 
 /// Nutritional Status by WHO

@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:nutriq/core/utils/id_generator.dart';
 import 'package:nutriq/core/utils/supported_language.dart';
@@ -10,51 +10,38 @@ import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_food_dto.dart';
 import 'package:nutriq/features/add_meal/data/dto/off/off_product_dto.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 
-class MealEntity extends Equatable {
+part 'meal_entity.freezed.dart';
+
+enum MealSourceEntity { unknown, custom, off, fdc }
+
+@freezed
+class MealEntity with _$MealEntity {
   static const liquidUnits = {'ml', 'l', 'dl', 'cl', 'fl oz', 'fl.oz'};
   static const solidUnits = {'kg', 'g', 'mg', 'µg', 'oz'};
 
-  final String? code;
-  final String? name;
+  const factory MealEntity({
+    required String? code,
+    required String? name,
+    String? brands,
+    String? thumbnailImageUrl,
+    String? mainImageUrl,
+    required String? url,
+    required String? mealQuantity,
+    required String? mealUnit,
+    required double? servingQuantity,
+    required String? servingUnit,
+    required String? servingSize,
+    required MealNutrimentsEntity nutriments,
+    required MealSourceEntity source,
+  }) = _MealEntity;
 
-  final String? brands;
+  const MealEntity._();
 
-  final String? thumbnailImageUrl;
-  final String? mainImageUrl;
-
-  final String? url;
-
-  final String? mealQuantity;
-  final String? mealUnit;
-  final double? servingQuantity;
-  final String? servingUnit;
-  final String? servingSize;
-
-  get hasServingValues => servingQuantity != null && servingUnit != null;
-
-  final MealSourceEntity source;
-
-  final MealNutrimentsEntity nutriments;
+  bool get hasServingValues => servingQuantity != null && servingUnit != null;
 
   bool get isLiquid => liquidUnits.contains(mealUnit);
 
   bool get isSolid => solidUnits.contains(mealUnit);
-
-  const MealEntity({
-    required this.code,
-    required this.name,
-    this.brands,
-    this.thumbnailImageUrl,
-    this.mainImageUrl,
-    required this.url,
-    required this.mealQuantity,
-    required this.mealUnit,
-    required this.servingQuantity,
-    required this.servingUnit,
-    required this.servingSize,
-    required this.nutriments,
-    required this.source,
-  });
 
   factory MealEntity.empty() => MealEntity(
         code: IdGenerator.getUniqueID(),
@@ -108,7 +95,6 @@ class MealEntity extends Equatable {
     );
   }
 
-  /// TODO extract correct unit
   /// Unit can either be 100g or 100ml
   static String? _tryGetUnit(String? quantityString) {
     if (quantityString == null) return null;
@@ -121,9 +107,4 @@ class MealEntity extends Equatable {
       return "g";
     }
   }
-
-  @override
-  List<Object?> get props => [code, name];
 }
-
-enum MealSourceEntity { unknown, custom, off, fdc }

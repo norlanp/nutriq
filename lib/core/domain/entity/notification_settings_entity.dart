@@ -1,27 +1,17 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 
-class NotificationSettingsEntity extends Equatable {
-  final int id;
-  final int userId;
-  final Map<IntakeTypeEntity, int> mealReminderMinutes;
-  final bool dailySummaryEnabled;
-  final int dailySummaryMinutes;
+part 'notification_settings_entity.freezed.dart';
 
-  const NotificationSettingsEntity({
-    required this.id,
-    required this.userId,
-    required this.mealReminderMinutes,
-    required this.dailySummaryEnabled,
-    required this.dailySummaryMinutes,
-  });
+@freezed
+class NotificationSettingsEntity with _$NotificationSettingsEntity {
+  const NotificationSettingsEntity._();
 
-  @override
-  List<Object?> get props => [
-        id,
-        userId,
-        mealReminderMinutes,
-        dailySummaryEnabled,
-        dailySummaryMinutes,
-      ];
+  const factory NotificationSettingsEntity({
+    required int id,
+    required int userId,
+    required Map<IntakeTypeEntity, int> mealReminderMinutes,
+    required bool dailySummaryEnabled,
+    required int dailySummaryMinutes,
+  }) = _NotificationSettingsEntity;
 }

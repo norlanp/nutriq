@@ -1,27 +1,20 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'medication_entity.freezed.dart';
 
 enum MedicationFrequencyType { daily, weekly, asNeeded }
 
-class MedicationEntity extends Equatable {
-  final int id;
-  final int userId;
-  final String name;
-  final String dosage;
-  final MedicationFrequencyType frequency;
-  final int timesPerDay;
-  final String? notes;
+@freezed
+class MedicationEntity with _$MedicationEntity {
+  const factory MedicationEntity({
+    required int id,
+    required int userId,
+    required String name,
+    required String dosage,
+    required MedicationFrequencyType frequency,
+    required int timesPerDay,
+    String? notes,
+  }) = _MedicationEntity;
 
-  const MedicationEntity({
-    required this.id,
-    required this.userId,
-    required this.name,
-    required this.dosage,
-    required this.frequency,
-    required this.timesPerDay,
-    this.notes,
-  });
-
-  @override
-  List<Object?> get props =>
-      [id, userId, name, dosage, frequency, timesPerDay, notes];
+  const MedicationEntity._();
 }

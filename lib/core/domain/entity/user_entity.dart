@@ -1,23 +1,23 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:nutriq/core/domain/entity/user_gender_entity.dart';
 import 'package:nutriq/core/domain/entity/user_pal_entity.dart';
 import 'package:nutriq/core/domain/entity/user_weight_goal_entity.dart';
 
-class UserEntity {
-  DateTime birthday;
-  double heightCM;
-  double weightKG;
-  UserGenderEntity gender;
-  UserWeightGoalEntity goal;
-  UserPALEntity pal;
+part 'user_entity.freezed.dart';
 
-  UserEntity({
-    required this.birthday,
-    required this.heightCM,
-    required this.weightKG,
-    required this.gender,
-    required this.goal,
-    required this.pal,
-  });
+@freezed
+class UserEntity with _$UserEntity {
+  const factory UserEntity({
+    required DateTime birthday,
+    required double heightCM,
+    required double weightKG,
+    required UserGenderEntity gender,
+    required UserWeightGoalEntity goal,
+    required UserPALEntity pal,
+  }) = _UserEntity;
+
+  const UserEntity._();
 
   int get age => DateTime.now().difference(birthday).inDays ~/ 365;
 }

@@ -1,41 +1,21 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class BodyMeasurementEntity extends Equatable {
-  final int id;
-  final int userId;
-  final DateTime date;
-  final double? waistCm;
-  final double? neckCm;
-  final double? hipCm;
-  final double? chestCm;
-  final double? bicepCm;
-  final double? thighCm;
-  final String? note;
+part 'body_measurement_entity.freezed.dart';
 
-  const BodyMeasurementEntity({
-    required this.id,
-    required this.userId,
-    required this.date,
-    this.waistCm,
-    this.neckCm,
-    this.hipCm,
-    this.chestCm,
-    this.bicepCm,
-    this.thighCm,
-    this.note,
-  });
+@freezed
+class BodyMeasurementEntity with _$BodyMeasurementEntity {
+  const factory BodyMeasurementEntity({
+    required int id,
+    required int userId,
+    required DateTime date,
+    double? waistCm,
+    double? neckCm,
+    double? hipCm,
+    double? chestCm,
+    double? bicepCm,
+    double? thighCm,
+    String? note,
+  }) = _BodyMeasurementEntity;
 
-  @override
-  List<Object?> get props => [
-        id,
-        userId,
-        date,
-        waistCm,
-        neckCm,
-        hipCm,
-        chestCm,
-        bicepCm,
-        thighCm,
-        note
-      ];
+  const BodyMeasurementEntity._();
 }

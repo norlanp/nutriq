@@ -48,7 +48,7 @@ class SetWeightDialog extends StatelessWidget {
             child: Text(S.of(context).dialogCancelLabel)),
         TextButton(
             onPressed: () {
-              // TODO validate selected weight
+              if (selectedWeight <= 0) return;
               Navigator.pop(context, selectedWeight);
             },
             child: Text(S.of(context).dialogOKLabel)),

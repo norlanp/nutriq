@@ -1,36 +1,29 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:nutriq/core/utils/custom_icons.dart';
 import 'package:nutriq/generated/l10n.dart';
 
+part 'physical_activity_entity.freezed.dart';
+
 /// A physical activity with it's measured MET value by the
 /// '2011 Compendium of Physical Activities'
 /// https://pubmed.ncbi.nlm.nih.gov/21681120/
 /// by Ainsworth et al.
-class PhysicalActivityEntity extends Equatable {
-  final String code;
-  final String specificActivity;
-  final String description;
-  final double mets;
+@freezed
+class PhysicalActivityEntity with _$PhysicalActivityEntity {
+  const factory PhysicalActivityEntity({
+    required String code,
+    required String specificActivity,
+    required String description,
+    required double mets,
+    required List<String> tags,
+    required PhysicalActivityTypeEntity type,
+  }) = _PhysicalActivityEntity;
 
-  get displayIcon => getDisplayIcon();
+  const PhysicalActivityEntity._();
 
-  final List<String> tags;
-
-  final PhysicalActivityTypeEntity type;
-
-  const PhysicalActivityEntity(
-    this.code,
-    this.specificActivity,
-    this.description,
-    this.mets,
-    this.tags,
-    this.type,
-  );
-
-  @override
-  List<Object?> get props => [code, specificActivity, description, mets];
+  IconData get displayIcon => getDisplayIcon();
 
   String getName(BuildContext context) {
     final physicalActivityMap = {

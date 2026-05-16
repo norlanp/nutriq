@@ -1,20 +1,19 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 
-class RecipeItemEntity extends Equatable {
-  final String id;
-  final String recipeId;
-  final MealEntity meal;
-  final double amount;
-  final String unit;
+part 'recipe_item_entity.freezed.dart';
 
-  const RecipeItemEntity({
-    required this.id,
-    required this.recipeId,
-    required this.meal,
-    required this.amount,
-    required this.unit,
-  });
+@freezed
+class RecipeItemEntity with _$RecipeItemEntity {
+  const factory RecipeItemEntity({
+    required String id,
+    required String recipeId,
+    required MealEntity meal,
+    required double amount,
+    required String unit,
+  }) = _RecipeItemEntity;
+
+  const RecipeItemEntity._();
 
   double get totalKcal => amount * (meal.nutriments.energyPerUnit ?? 0);
   double get totalCarbsGram =>
@@ -22,7 +21,4 @@ class RecipeItemEntity extends Equatable {
   double get totalFatsGram => amount * (meal.nutriments.fatPerUnit ?? 0);
   double get totalProteinsGram =>
       amount * (meal.nutriments.proteinsPerUnit ?? 0);
-
-  @override
-  List<Object?> get props => [id, recipeId, amount, unit];
 }

@@ -52,29 +52,29 @@ PhysicalActivityEntity mapPhysicalActivityToEntity(
   String type,
 ) =>
     PhysicalActivityEntity(
-      code,
-      specificActivity,
-      description,
-      mets,
-      tags,
-      mapPhysicalActivityTypeStringToEntity(type),
+      code: code,
+      specificActivity: specificActivity,
+      description: description,
+      mets: mets,
+      tags: tags,
+      type: mapPhysicalActivityTypeStringToEntity(type),
     );
 
 UserActivityEntity mapUserActivityToEntity(UserActivity ua) {
   final paEntity = PhysicalActivityEntity(
-    ua.physicalActivityCode,
-    '',
-    '',
-    0,
-    [],
-    PhysicalActivityTypeEntity.sport,
+    code: ua.physicalActivityCode,
+    specificActivity: '',
+    description: '',
+    mets: 0,
+    tags: [],
+    type: PhysicalActivityTypeEntity.sport,
   );
   return UserActivityEntity(
-    ua.id,
-    ua.duration,
-    ua.burnedKcal,
-    ua.date,
-    paEntity,
+    id: ua.id,
+    duration: ua.duration,
+    burnedKcal: ua.burnedKcal,
+    date: ua.date,
+    physicalActivityEntity: paEntity,
   );
 }
 

@@ -1,24 +1,13 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class CalorieCycleEntity extends Equatable {
-  final Map<int, double> weekdayCalorieMap;
-  final bool isEnabled;
+part 'calorie_cycle_entity.freezed.dart';
 
-  const CalorieCycleEntity({
-    required this.weekdayCalorieMap,
-    this.isEnabled = false,
-  });
+@freezed
+class CalorieCycleEntity with _$CalorieCycleEntity {
+  const factory CalorieCycleEntity({
+    required Map<int, double> weekdayCalorieMap,
+    @Default(false) bool isEnabled,
+  }) = _CalorieCycleEntity;
 
-  @override
-  List<Object?> get props => [weekdayCalorieMap, isEnabled];
-
-  CalorieCycleEntity copyWith({
-    Map<int, double>? weekdayCalorieMap,
-    bool? isEnabled,
-  }) {
-    return CalorieCycleEntity(
-      weekdayCalorieMap: weekdayCalorieMap ?? this.weekdayCalorieMap,
-      isEnabled: isEnabled ?? this.isEnabled,
-    );
-  }
+  const CalorieCycleEntity._();
 }

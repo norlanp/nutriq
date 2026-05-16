@@ -1,16 +1,14 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class VoiceFoodEntryEntity extends Equatable {
-  final String description;
-  final double? quantity;
-  final String? unit;
+part 'voice_food_entry_entity.freezed.dart';
 
-  const VoiceFoodEntryEntity({
-    required this.description,
-    this.quantity,
-    this.unit,
-  });
+@freezed
+class VoiceFoodEntryEntity with _$VoiceFoodEntryEntity {
+  const VoiceFoodEntryEntity._();
 
-  @override
-  List<Object?> get props => [description, quantity, unit];
+  const factory VoiceFoodEntryEntity({
+    required String description,
+    double? quantity,
+    String? unit,
+  }) = _VoiceFoodEntryEntity;
 }

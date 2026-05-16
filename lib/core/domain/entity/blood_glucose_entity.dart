@@ -1,4 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'blood_glucose_entity.freezed.dart';
 
 enum BloodGlucoseLabelType {
   fasting,
@@ -7,26 +9,17 @@ enum BloodGlucoseLabelType {
   bedtime,
 }
 
-class BloodGlucoseEntity extends Equatable {
-  final int id;
-  final int userId;
-  final DateTime date;
-  final DateTime timestamp;
-  final int valueMgDl;
-  final BloodGlucoseLabelType label;
-  final String? notes;
+@freezed
+class BloodGlucoseEntity with _$BloodGlucoseEntity {
+  const factory BloodGlucoseEntity({
+    required int id,
+    required int userId,
+    required DateTime date,
+    required DateTime timestamp,
+    required int valueMgDl,
+    required BloodGlucoseLabelType label,
+    String? notes,
+  }) = _BloodGlucoseEntity;
 
-  const BloodGlucoseEntity({
-    required this.id,
-    required this.userId,
-    required this.date,
-    required this.timestamp,
-    required this.valueMgDl,
-    required this.label,
-    this.notes,
-  });
-
-  @override
-  List<Object?> get props =>
-      [id, userId, date, timestamp, valueMgDl, label, notes];
+  const BloodGlucoseEntity._();
 }

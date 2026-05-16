@@ -74,10 +74,10 @@ void main() {
 
   test('updateConfig writes full config', () async {
     final entity = ConfigEntity(
-      true,
-      true,
-      true,
-      AppThemeEntity.light,
+      hasAcceptedDisclaimer: true,
+      hasAcceptedPolicy: true,
+      hasAcceptedSendAnonymousData: true,
+      appTheme: AppThemeEntity.light,
       usesImperialUnits: true,
     );
     await repo.updateConfig(entity);

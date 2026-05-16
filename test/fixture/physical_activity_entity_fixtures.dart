@@ -3,26 +3,26 @@ import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
 class PhysicalActivityFixtures {
   static const PhysicalActivityEntity moderateBicycling =
       PhysicalActivityEntity(
-          "01015",
-          "Bicycling, moderate speed",
-          "Bicycling at a moderate speed on flat terrain",
-          8.0,
-          [],
-          PhysicalActivityTypeEntity.bicycling);
+          code: "01015",
+          specificActivity: "Bicycling, moderate speed",
+          description: "Bicycling at a moderate speed on flat terrain",
+          mets: 8.0,
+          tags: [],
+          type: PhysicalActivityTypeEntity.bicycling);
 
   static const PhysicalActivityEntity lightDancing = PhysicalActivityEntity(
-      "03015",
-      "Dancing, light effort",
-      "Dancing with light effort, e.g., slow ballroom dancing",
-      4.0,
-      [],
-      PhysicalActivityTypeEntity.dancing);
+      code: "03015",
+      specificActivity: "Dancing, light effort",
+      description: "Dancing with light effort, e.g., slow ballroom dancing",
+      mets: 4.0,
+      tags: [],
+      type: PhysicalActivityTypeEntity.dancing);
 
   static const PhysicalActivityEntity vigorousRunning = PhysicalActivityEntity(
-      "12150",
-      "Running, vigorous effort",
-      "Running at a fast pace",
-      12.0,
-      [],
-      PhysicalActivityTypeEntity.running);
+      code: "12150",
+      specificActivity: "Running, vigorous effort",
+      description: "Running at a fast pace",
+      mets: 12.0,
+      tags: [],
+      type: PhysicalActivityTypeEntity.running);
 }

@@ -13,5 +13,7 @@ class UserActivityDaoManager {
   UserActivityDaoManager(this._db);
   $$UserActivitiesTableTableManager get userActivities =>
       $$UserActivitiesTableTableManager(
-          _db.attachedDatabase, _db.userActivities);
+        _db.attachedDatabase,
+        _db.userActivities,
+      );
 }

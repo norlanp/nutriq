@@ -1,4 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'fasting_entity.freezed.dart';
 
 enum FastingPresetType {
   sixteenEight,
@@ -8,22 +10,18 @@ enum FastingPresetType {
   custom,
 }
 
-class FastingEntity extends Equatable {
-  final int id;
-  final int userId;
-  final DateTime startTime;
-  final DateTime? endTime;
-  final int targetDurationMinutes;
-  final FastingPresetType presetType;
+@freezed
+class FastingEntity with _$FastingEntity {
+  const factory FastingEntity({
+    required int id,
+    required int userId,
+    required DateTime startTime,
+    DateTime? endTime,
+    required int targetDurationMinutes,
+    required FastingPresetType presetType,
+  }) = _FastingEntity;
 
-  const FastingEntity({
-    required this.id,
-    required this.userId,
-    required this.startTime,
-    this.endTime,
-    required this.targetDurationMinutes,
-    required this.presetType,
-  });
+  const FastingEntity._();
 
   bool get isActive => endTime == null;
 
@@ -36,8 +34,4 @@ class FastingEntity extends Equatable {
     final progress = elapsedMinutes / target;
     return progress.clamp(0.0, 1.0);
   }
-
-  @override
-  List<Object?> get props =>
-      [id, userId, startTime, endTime, targetDurationMinutes, presetType];
 }

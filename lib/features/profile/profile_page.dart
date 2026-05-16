@@ -193,8 +193,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         context: context,
         builder: (BuildContext context) => const SetPALCategoryDialog());
     if (selectedPalCategory != null) {
-      userEntity.pal = selectedPalCategory;
-      _profileBloc.updateUser(userEntity);
+      final updated = userEntity.copyWith(pal: selectedPalCategory);
+      _profileBloc.updateUser(updated);
     }
   }
 
@@ -204,8 +204,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         context: context,
         builder: (BuildContext context) => const SetWeightGoalDialog());
     if (selectedGoal != null) {
-      userEntity.goal = selectedGoal;
-      _profileBloc.updateUser(userEntity);
+      final updated = userEntity.copyWith(goal: selectedGoal);
+      _profileBloc.updateUser(updated);
     }
   }
 
@@ -220,13 +220,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               usesImperialUnits: usesImperialUnits,
             ));
     if (selectedHeight != null) {
-      if (usesImperialUnits) {
-        userEntity.heightCM = UnitCalc.feetToCm(selectedHeight);
-      } else {
-        userEntity.heightCM = selectedHeight;
-      }
-
-      _profileBloc.updateUser(userEntity);
+      final heightCm = usesImperialUnits
+          ? UnitCalc.feetToCm(selectedHeight)
+          : selectedHeight;
+      final updated = userEntity.copyWith(heightCM: heightCm);
+      _profileBloc.updateUser(updated);
     }
   }
 
@@ -241,12 +239,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               usesImperialUnits: usesImperialSystem,
             ));
     if (selectedWeight != null) {
-      if (usesImperialSystem) {
-        userEntity.weightKG = UnitCalc.lbsToKg(selectedWeight);
-      } else {
-        userEntity.weightKG = selectedWeight;
-      }
-      _profileBloc.updateUser(userEntity);
+      final weightKg = usesImperialSystem
+          ? UnitCalc.lbsToKg(selectedWeight)
+          : selectedWeight;
+      final updated = userEntity.copyWith(weightKG: weightKg);
+      _profileBloc.updateUser(updated);
     }
   }
 
@@ -258,8 +255,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         firstDate: DateTime(1900),
         lastDate: DateTime(2100));
     if (selectedDate != null) {
-      userEntity.birthday = selectedDate;
-      _profileBloc.updateUser(userEntity);
+      final updated = userEntity.copyWith(birthday: selectedDate);
+      _profileBloc.updateUser(updated);
     }
   }
 
@@ -269,9 +266,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         context: context,
         builder: (BuildContext context) => const SetGenderDialog());
     if (selectedGender != null) {
-      userEntity.gender = selectedGender;
-
-      _profileBloc.updateUser(userEntity);
+      final updated = userEntity.copyWith(gender: selectedGender);
+      _profileBloc.updateUser(updated);
     }
   }
 }

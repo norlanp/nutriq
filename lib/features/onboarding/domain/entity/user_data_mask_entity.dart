@@ -1,3 +1,4 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
 import 'package:nutriq/core/domain/entity/user_gender_entity.dart';
 import 'package:nutriq/core/domain/entity/user_pal_entity.dart';
@@ -6,27 +7,22 @@ import 'package:nutriq/features/onboarding/domain/entity/user_activity_selection
 import 'package:nutriq/features/onboarding/domain/entity/user_gender_selection_entity.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_goal_selection_entity.dart';
 
-class UserDataMaskEntity {
-  UserGenderSelectionEntity? gender;
-  DateTime? birthday;
-  double? height;
-  double? weight;
-  UserActivitySelectionEntity? activity;
-  UserGoalSelectionEntity? goal;
+part 'user_data_mask_entity.freezed.dart';
 
-  bool acceptDataCollection = false;
+@freezed
+class UserDataMaskEntity with _$UserDataMaskEntity {
+  const factory UserDataMaskEntity({
+    UserGenderSelectionEntity? gender,
+    DateTime? birthday,
+    double? height,
+    double? weight,
+    UserActivitySelectionEntity? activity,
+    UserGoalSelectionEntity? goal,
+    @Default(false) bool acceptDataCollection,
+    @Default(false) bool usesImperialUnits,
+  }) = _UserDataMaskEntity;
 
-  bool usesImperialUnits = false;
-
-  UserDataMaskEntity(
-      {this.gender,
-      this.birthday,
-      this.height,
-      this.weight,
-      this.activity,
-      this.goal,
-      this.acceptDataCollection = false,
-      this.usesImperialUnits = false});
+  const UserDataMaskEntity._();
 
   bool checkDataProvided() {
     if (gender != null &&
@@ -45,7 +41,7 @@ class UserDataMaskEntity {
     if (!checkDataProvided()) {
       return null;
     }
-    final userBirthday = birthday ?? DateTime.now(); // TODO
+    final userBirthday = birthday ?? DateTime.now();
     final userHeight = height ?? 180;
     final userWeight = weight ?? 70;
     UserGenderEntity userGender;

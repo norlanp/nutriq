@@ -1,20 +1,16 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class WeightEntity extends Equatable {
-  final int id;
-  final int userId;
-  final double weightKg;
-  final DateTime date;
-  final String? note;
+part 'weight_entity.freezed.dart';
 
-  const WeightEntity({
-    required this.id,
-    required this.userId,
-    required this.weightKg,
-    required this.date,
-    this.note,
-  });
+@freezed
+class WeightEntity with _$WeightEntity {
+  const WeightEntity._();
 
-  @override
-  List<Object?> get props => [id, userId, weightKg, date, note];
+  const factory WeightEntity({
+    required int id,
+    required int userId,
+    required double weightKg,
+    required DateTime date,
+    String? note,
+  }) = _WeightEntity;
 }

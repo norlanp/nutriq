@@ -3,14 +3,14 @@ Nutriq Improvement Plan
 
 Phase 1: Foundation (no breaking changes, additive only)
 ---------------------------------------------------------
-[ ] Add `freezed` + `freezed_annotation` to pubspec.yaml dev_dependencies
-[ ] Convert 36 domain entities to `freezed` immutable classes (start with core entities, then per-feature)
-[ ] Add `formz` to pubspec.yaml dependencies
-[ ] Add `go_router` to pubspec.yaml dependencies
+[x] Add `freezed` + `freezed_annotation` to pubspec.yaml dev_dependencies
+[x] Convert 36 domain entities to `freezed` immutable classes (start with core entities, then per-feature)
+[x] Add `formz` to pubspec.yaml dependencies
+[x] Add `go_router` to pubspec.yaml dependencies
 [ ] Replace `provider` package ThemeModeProvider with Riverpod-based theme provider
-[ ] Fix `LoggerConfig.intiLogger()` typo in main.dart → `initLogger`
-[ ] Fix `OnboardingBloc.saveOnboardingData()` — currently void, should return `Future<void>` and await persistence before navigation
-[ ] Fix validation gaps: weight/height dialogs have TODO validate comments
+[x] Fix `LoggerConfig.intiLogger()` typo in main.dart → `initLogger`
+[x] Fix `OnboardingBloc.saveOnboardingData()` — currently void, should return `Future<void>` and await persistence before navigation
+[x] Fix validation gaps: weight/height dialogs have TODO validate comments
 [ ] Rotate FDC_API_KEY and SENTRY_DNS (manual action, not code)
 
 Phase 2: BLoC → Riverpod Migration (systematic, feature-by-feature)
@@ -111,7 +111,7 @@ Phase 6: Testing Infrastructure
 
 Phase 7: Entity Quality & Code Quality
 ----------------------------------------
-[ ] Convert mutable entities to `freezed` immutable classes (UserEntity, UserDataMaskEntity, etc.)
+[x] Convert mutable entities to `freezed` immutable classes (UserEntity, UserDataMaskEntity, etc.)
 [ ] Fix `TrackedDayEntity.rating` — convert `int` to enum (TODO comment)
 [ ] Fix `PhysicalActivityEntity` — group activities into effort categories (TODO comment)
 [ ] Fix `FDC_CONST` — convert hardcoded strings to translation keys (TODO comment)

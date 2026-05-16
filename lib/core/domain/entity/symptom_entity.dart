@@ -1,25 +1,18 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class SymptomEntity extends Equatable {
-  final int id;
-  final int userId;
-  final DateTime date;
-  final DateTime timestamp;
-  final String type;
-  final int severity;
-  final String? notes;
+part 'symptom_entity.freezed.dart';
 
-  const SymptomEntity({
-    required this.id,
-    required this.userId,
-    required this.date,
-    required this.timestamp,
-    required this.type,
-    required this.severity,
-    this.notes,
-  });
+@freezed
+class SymptomEntity with _$SymptomEntity {
+  const factory SymptomEntity({
+    required int id,
+    required int userId,
+    required DateTime date,
+    required DateTime timestamp,
+    required String type,
+    required int severity,
+    String? notes,
+  }) = _SymptomEntity;
 
-  @override
-  List<Object?> get props =>
-      [id, userId, date, timestamp, type, severity, notes];
+  const SymptomEntity._();
 }
