@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/water_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/features/water_tracking/presentation/water_bloc.dart';
+import 'package:nutriq/features/water_tracking/presentation/notifier/water_notifier.dart';
+
 import 'package:nutriq/generated/l10n.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -16,22 +15,14 @@ class WaterTrackerSummaryWidget extends ConsumerStatefulWidget {
       _WaterTrackerSummaryWidgetState();
 }
 
-class _WaterTrackerSummaryWidgetState extends ConsumerState<WaterTrackerSummaryWidget> {
-  late WaterBloc _waterBloc;
+class _WaterTrackerSummaryWidgetState
+    extends ConsumerState<WaterTrackerSummaryWidget> {
   static const int _defaultDailyGoal = 2000;
+  bool _initialLoadDone = false;
 
   @override
   void initState() {
     super.initState();
-    _waterBloc = ref.read(waterBlocProvider);
-    _waterBloc
-        .add(LoadWater(date: DateTime.now(), dailyGoal: _defaultDailyGoal));
-  }
-
-  @override
-  void dispose() {
-    _waterBloc.close();
-    super.dispose();
   }
 
   void _addWater(int amountMl) {
@@ -43,45 +34,46 @@ class _WaterTrackerSummaryWidgetState extends ConsumerState<WaterTrackerSummaryW
       date: DateTime(now.year, now.month, now.day),
       timestamp: now,
     );
-    _waterBloc.add(
-        AddWater(entry: entry, date: entry.date, dailyGoal: _defaultDailyGoal));
+    ref.read(waterNotifierProvider.notifier).addWater(
+        entry, entry.date, dailyGoal: _defaultDailyGoal);
   }
 
   void _navigateToWaterTracker() async {
     await Navigator.of(context).pushNamed(NavigationOptions.waterTrackingRoute);
     if (mounted) {
-      _waterBloc
-          .add(LoadWater(date: DateTime.now(), dailyGoal: _defaultDailyGoal));
+      ref.read(waterNotifierProvider.notifier).loadWater(DateTime.now(), dailyGoal: _defaultDailyGoal);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WaterBloc, WaterState>(
-      bloc: _waterBloc,
-      builder: (context, state) {
-        if (state is WaterLoading || state is WaterInitial) {
-          return const Card(
-            elevation: 1,
-            child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-          );
-        }
-        if (state is WaterError) {
-          return const SizedBox.shrink();
-        }
-        if (state is WaterLoaded) {
-          return _WaterSummaryContent(
-            dailyTotal: state.dailyTotal,
-            dailyGoal: state.dailyGoal,
-            onAddWater: _addWater,
-            onTap: _navigateToWaterTracker,
-          );
-        }
-        return const SizedBox.shrink();
-      },
+    final waterState = ref.watch(waterNotifierProvider);
+
+    if (!_initialLoadDone) {
+      _initialLoadDone = true;
+      Future.microtask(() => ref
+          .read(waterNotifierProvider.notifier)
+          .loadWater(DateTime.now(), dailyGoal: _defaultDailyGoal));
+    }
+
+    if (waterState.isLoading) {
+      return const Card(
+        elevation: 1,
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
+    if (waterState.hasError) {
+      return const SizedBox.shrink();
+    }
+
+    return _WaterSummaryContent(
+      dailyTotal: waterState.dailyTotal,
+      dailyGoal: waterState.dailyGoal,
+      onAddWater: _addWater,
+      onTap: _navigateToWaterTracker,
     );
   }
 }

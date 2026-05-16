@@ -3,8 +3,7 @@ import 'package:nutriq/core/providers/repository_providers.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
-import 'package:nutriq/features/add_activity/presentation/bloc/activities_bloc.dart';
-import 'package:nutriq/features/add_activity/presentation/bloc/recent_activities_bloc.dart';
+
 import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
 import 'package:nutriq/features/autopilot/presentation/autopilot_bloc.dart';
 import 'package:nutriq/features/blood_glucose/presentation/blood_glucose_bloc.dart';
@@ -25,12 +24,12 @@ import 'package:nutriq/features/photo_progress/presentation/photo_progress_bloc.
 import 'package:nutriq/features/recipe_builder/presentation/bloc/recipe_bloc.dart';
 import 'package:nutriq/features/recipe_catalog/presentation/recipe_catalog_bloc.dart';
 import 'package:nutriq/features/recipe_import/presentation/recipe_import_bloc.dart';
-import 'package:nutriq/features/scanner/presentation/scanner_bloc.dart';
+
 import 'package:nutriq/features/step_bonus/presentation/step_bonus_bloc.dart';
 import 'package:nutriq/features/symptom_tracking/presentation/symptom_bloc.dart';
 import 'package:nutriq/features/voice_logging/presentation/voice_logging_bloc.dart';
-import 'package:nutriq/features/water_tracking/presentation/water_bloc.dart';
-import 'package:nutriq/features/weight_tracking/presentation/bloc/weight_bloc.dart';
+
+
 import 'package:nutriq/features/progress_charts/presentation/progress_charts_bloc.dart';
 
 class _BlocCrossRefs {
@@ -47,13 +46,6 @@ final _blocCrossRefsProvider = Provider<_BlocCrossRefs>((ref) => _BlocCrossRefs(
 
 // --- Factory BLoC providers (were registerFactory) ---
 
-final activitiesBlocProvider = Provider((ref) {
-  return ActivitiesBloc(ref.watch(getPhysicalActivityUsecaseProvider));
-});
-
-final recentActivitiesBlocProvider = Provider((ref) {
-  return RecentActivitiesBloc(ref.watch(getUserActivityUsecaseProvider));
-});
 
 final activityDetailBlocProvider = Provider((ref) {
   return ActivityDetailBloc(
@@ -74,12 +66,7 @@ final mealDetailBlocProvider = Provider((ref) {
   );
 });
 
-final scannerBlocProvider = Provider((ref) {
-  return ScannerBloc(
-    ref.watch(searchProductByBarcodeUseCaseProvider),
-    ref.watch(getConfigUsecaseProvider),
-  );
-});
+
 
 final editMealBlocProvider = Provider((ref) {
   return EditMealBloc(ref.watch(getConfigUsecaseProvider));
@@ -93,13 +80,7 @@ final recipeBlocProvider = Provider((ref) {
   );
 });
 
-final weightBlocProvider = Provider((ref) {
-  return WeightBloc(
-    ref.watch(getWeightsUsecaseProvider),
-    ref.watch(addWeightUsecaseProvider),
-    ref.watch(deleteWeightUsecaseProvider),
-  );
-});
+
 
 final notificationBlocProvider = Provider((ref) {
   return NotificationBloc(
@@ -108,14 +89,7 @@ final notificationBlocProvider = Provider((ref) {
   );
 });
 
-final waterBlocProvider = Provider((ref) {
-  return WaterBloc(
-    ref.watch(getWaterUsecaseProvider),
-    ref.watch(addWaterUsecaseProvider),
-    ref.watch(deleteWaterUsecaseProvider),
-    ref.watch(getDailyWaterTotalUsecaseProvider),
-  );
-});
+
 
 final progressChartsBlocProvider = Provider((ref) {
   return ProgressChartsBloc(
@@ -125,16 +99,7 @@ final progressChartsBlocProvider = Provider((ref) {
   );
 });
 
-final fastingBlocProvider = Provider((ref) {
-  return FastingBloc(
-    ref.watch(startFastingUsecaseProvider),
-    ref.watch(endFastingUsecaseProvider),
-    ref.watch(getActiveFastingUsecaseProvider),
-    ref.watch(getCurrentStreakUsecaseProvider),
-    ref.watch(getFastingHistoryUsecaseProvider),
-    null,
-  );
-});
+
 
 final mealPlanBlocProvider = Provider((ref) {
   return MealPlanBloc(

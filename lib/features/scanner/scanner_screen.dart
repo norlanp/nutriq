@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/presentation/widgets/error_dialog.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
-import 'package:nutriq/features/scanner/presentation/scanner_bloc.dart';
+import 'package:nutriq/features/scanner/presentation/notifier/scanner_notifier.dart';
+import 'package:nutriq/features/scanner/presentation/notifier/scanner_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class ScannerScreen extends ConsumerStatefulWidget {
@@ -25,14 +24,6 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
   late IntakeTypeEntity _intakeTypeEntity;
   late DateTime _day;
 
-  late ScannerBloc _scannerBloc;
-
-  @override
-  void initState() {
-    _scannerBloc = ref.read(scannerBlocProvider);
-    super.initState();
-  }
-
   @override
   void didChangeDependencies() {
     final args =
@@ -44,41 +35,41 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ScannerBloc, ScannerState>(
-      bloc: _scannerBloc,
-      builder: (context, state) {
-        if (state is ScannerInitial) {
-          return _getScannerContent(context);
-        } else if (state is ScannerLoadingState) {
-          return Scaffold(
-              appBar: AppBar(),
-              body: const Center(child: CircularProgressIndicator()));
-        } else if (state is ScannerLoadedState) {
-          // Push new route after build
-          Future.microtask(() {
-            if (context.mounted) {
-              return Navigator.of(context).pushReplacementNamed(
-                  NavigationOptions.mealDetailRoute,
-                  arguments: MealDetailScreenArguments(state.product,
-                      _intakeTypeEntity, _day, state.usesImperialUnits));
-            }
-          });
-        } else if (state is ScannerFailedState) {
-          return Scaffold(
-              appBar: AppBar(),
-              body: Center(
-                child: ErrorDialog(
-                  errorText:
-                      state.type == ScannerFailedStateType.productNotFound
-                          ? S.of(context).errorProductNotFound
-                          : S.of(context).errorFetchingProductData,
-                  onRefreshPressed: _onRefreshButtonPressed,
-                ),
-              ));
+    final scannerState = ref.watch(scannerNotifierProvider);
+
+    if (scannerState.isLoading) {
+      return Scaffold(
+          appBar: AppBar(),
+          body: const Center(child: CircularProgressIndicator()));
+    }
+
+    if (scannerState.isLoaded && scannerState.product != null) {
+      final product = scannerState.product!;
+      Future.microtask(() {
+        if (context.mounted) {
+          return Navigator.of(context).pushReplacementNamed(
+              NavigationOptions.mealDetailRoute,
+              arguments: MealDetailScreenArguments(
+                  product, _intakeTypeEntity, _day, scannerState.usesImperialUnits));
         }
-        return const SizedBox();
-      },
-    );
+      });
+    }
+
+    if (scannerState.hasError) {
+      return Scaffold(
+          appBar: AppBar(),
+          body: Center(
+            child: ErrorDialog(
+              errorText: scannerState.errorType ==
+                      ScannerFailedStateType.productNotFound
+                  ? S.of(context).errorProductNotFound
+                  : S.of(context).errorFetchingProductData,
+              onRefreshPressed: _onRefreshButtonPressed,
+            ),
+          ));
+    }
+
+    return _getScannerContent(context);
   }
 
   Scaffold _getScannerContent(BuildContext context) {
@@ -119,8 +110,9 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                 if (barcodeResult != null) {
                   _scannedBarcode = barcodeResult;
                   log.fine('Barcode found: $barcodeResult');
-                  _scannerBloc
-                      .add(ScannerLoadProductEvent(barcode: barcodeResult));
+                  ref
+                      .read(scannerNotifierProvider.notifier)
+                      .loadProduct(barcodeResult);
                 }
               }
             }
@@ -131,7 +123,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
   void _onRefreshButtonPressed() {
     final barcode = _scannedBarcode;
     if (barcode != null) {
-      _scannerBloc.add(ScannerLoadProductEvent(barcode: barcode));
+      ref.read(scannerNotifierProvider.notifier).loadProduct(barcode);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.of(context).errorFetchingProductData)));

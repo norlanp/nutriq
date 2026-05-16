@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/domain/entity/fasting_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/fasting_tracker/presentation/fasting_bloc.dart';
+import 'package:nutriq/core/domain/entity/fasting_entity.dart';
+import 'package:nutriq/features/fasting_tracker/presentation/notifier/fasting_notifier.dart';
+import 'package:nutriq/features/fasting_tracker/presentation/notifier/fasting_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class FastingHistoryScreen extends ConsumerStatefulWidget {
@@ -14,22 +13,7 @@ class FastingHistoryScreen extends ConsumerStatefulWidget {
 }
 
 class _FastingHistoryScreenState extends ConsumerState<FastingHistoryScreen> {
-  late FastingBloc _fastingBloc;
-
-  @override
-  void initState() {
-    _fastingBloc = ref.read(fastingBlocProvider);
-    final now = DateTime.now();
-    final startOfMonth = DateTime(now.year, now.month, 1);
-    _fastingBloc.add(LoadHistory(startDate: startOfMonth, endDate: now));
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _fastingBloc.close();
-    super.dispose();
-  }
+  bool _initialLoadDone = false;
 
   String _formatDuration(Duration d) {
     final hours = d.inHours;
@@ -54,46 +38,54 @@ class _FastingHistoryScreenState extends ConsumerState<FastingHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final fastingState = ref.watch(fastingNotifierProvider);
+
+    if (!_initialLoadDone) {
+      _initialLoadDone = true;
+      final now = DateTime.now();
+      final startOfMonth = DateTime(now.year, now.month, 1);
+      Future.microtask(() =>
+          ref.read(fastingNotifierProvider.notifier).loadHistory(startOfMonth, now));
+    }
+
     final l10n = S.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.fastingHistoryLabel),
       ),
-      body: BlocBuilder<FastingBloc, FastingState>(
-        bloc: _fastingBloc,
-        builder: (context, state) {
-          if (state is FastingHistoryLoaded) {
-            if (state.fasts.isEmpty) {
-              return Center(
-                child: Text(l10n.inactiveFastLabel),
-              );
-            }
-            return ListView.builder(
-              itemCount: state.fasts.length,
-              itemBuilder: (context, index) {
-                final fast = state.fasts[index];
-                final duration = fast.endTime != null
-                    ? fast.endTime!.difference(fast.startTime)
-                    : Duration.zero;
-                final completed = fast.endTime != null &&
-                    duration.inMinutes >= fast.targetDurationMinutes;
+      body: _buildBody(context, fastingState, l10n),
+    );
+  }
 
-                return ListTile(
-                  leading: Icon(
-                    completed ? Icons.check_circle : Icons.cancel_outlined,
-                    color: completed ? Colors.green : Colors.red,
-                  ),
-                  title: Text(_presetLabel(fast.presetType, l10n)),
-                  subtitle: Text(
-                    '${_formatDuration(duration)} • ${fast.startTime.day}/${fast.startTime.month}/${fast.startTime.year}',
-                  ),
-                );
-              },
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+  Widget _buildBody(BuildContext context, FastingNotifierState state, S l10n) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.history.isEmpty) {
+      return Center(child: Text(l10n.inactiveFastLabel));
+    }
+
+    return ListView.builder(
+      itemCount: state.history.length,
+      itemBuilder: (context, index) {
+        final fast = state.history[index];
+        final duration = fast.endTime != null
+            ? fast.endTime!.difference(fast.startTime)
+            : Duration.zero;
+        final completed = fast.endTime != null &&
+            duration.inMinutes >= fast.targetDurationMinutes;
+
+        return ListTile(
+          leading: Icon(
+            completed ? Icons.check_circle : Icons.cancel_outlined,
+            color: completed ? Colors.green : Colors.red,
+          ),
+          title: Text(_presetLabel(fast.presetType, l10n)),
+          subtitle: Text(
+            '${_formatDuration(duration)} • ${fast.startTime.day}/${fast.startTime.month}/${fast.startTime.year}',
+          ),
+        );
+      },
     );
   }
 }

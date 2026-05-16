@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/domain/entity/weight_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/weight_tracking/presentation/bloc/weight_bloc.dart';
+import 'package:nutriq/core/domain/entity/weight_entity.dart';
+import 'package:nutriq/features/weight_tracking/presentation/notifier/weight_notifier.dart';
+import 'package:nutriq/features/weight_tracking/presentation/notifier/weight_state.dart';
 import 'package:nutriq/features/weight_tracking/presentation/widgets/bmi_display.dart';
 import 'package:nutriq/features/weight_tracking/presentation/widgets/goal_progress_widget.dart';
 import 'package:nutriq/features/weight_tracking/presentation/widgets/weight_trend_chart.dart';
@@ -17,15 +16,13 @@ class WeightTrackingScreen extends ConsumerStatefulWidget {
 }
 
 class _WeightTrackingScreenState extends ConsumerState<WeightTrackingScreen> {
-  late WeightBloc _weightBloc;
   final _weightController = TextEditingController();
   final _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
+  bool _initialLoadDone = false;
 
   @override
   void initState() {
-    _weightBloc = ref.read(weightBlocProvider);
-    _weightBloc.add(const LoadWeights());
     super.initState();
   }
 
@@ -38,67 +35,71 @@ class _WeightTrackingScreenState extends ConsumerState<WeightTrackingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final weightState = ref.watch(weightNotifierProvider);
+
+    if (!_initialLoadDone) {
+      _initialLoadDone = true;
+      Future.microtask(() => ref.read(weightNotifierProvider.notifier).loadWeights());
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).weightTracking)),
-      body: BlocBuilder<WeightBloc, WeightState>(
-        bloc: _weightBloc,
-        builder: (context, state) {
-          if (state is WeightsLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is WeightError) {
-            return Center(child: Text(state.message));
-          }
-          if (state is WeightsLoaded) {
-            return ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                _buildInputForm(context, state),
-                const SizedBox(height: 16.0),
-                if (state.latestWeight != null) ...[
-                  BMIDisplay(latestWeightKg: state.latestWeight!.weightKg),
-                  const SizedBox(height: 16.0),
-                ],
-                const GoalProgressWidget(),
-                const SizedBox(height: 16.0),
-                if (state.weights.length >= 2) ...[
-                  WeightTrendChart(weights: state.weights),
-                  const SizedBox(height: 16.0),
-                ],
-                Text(
-                  S.of(context).weightTrend,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8.0),
-                if (state.weights.isEmpty)
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: Text(
-                        S.of(context).noWeightEntries,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.7)),
-                      ),
-                    ),
-                  )
-                else
-                  ...state.weights.map((w) => _WeightListTile(
-                        weight: w,
-                        onDelete: () => _weightBloc.add(DeleteWeight(w)),
-                      )),
-              ],
-            );
-          }
-          return const SizedBox();
-        },
-      ),
+      body: _buildBody(context, weightState),
     );
   }
 
-  Widget _buildInputForm(BuildContext context, WeightsLoaded state) {
+  Widget _buildBody(BuildContext context, WeightNotifierState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(16.0),
+      children: [
+        _buildInputForm(context),
+        const SizedBox(height: 16.0),
+        if (state.latestWeight != null) ...[
+          BMIDisplay(latestWeightKg: state.latestWeight!.weightKg),
+          const SizedBox(height: 16.0),
+        ],
+        const GoalProgressWidget(),
+        const SizedBox(height: 16.0),
+        if (state.weights.length >= 2) ...[
+          WeightTrendChart(weights: state.weights),
+          const SizedBox(height: 16.0),
+        ],
+        Text(
+          S.of(context).weightTrend,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 8.0),
+        if (state.weights.isEmpty)
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Text(
+                S.of(context).noWeightEntries,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.7)),
+              ),
+            ),
+          )
+        else
+          ...state.weights.map((w) => _WeightListTile(
+                weight: w,
+                onDelete: () => ref.read(weightNotifierProvider.notifier).deleteWeight(w),
+              )),
+      ],
+    );
+  }
+
+  Widget _buildInputForm(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -172,7 +173,7 @@ class _WeightTrackingScreenState extends ConsumerState<WeightTrackingScreen> {
           : _noteController.text.trim(),
     );
 
-    _weightBloc.add(AddWeight(weight));
+    ref.read(weightNotifierProvider.notifier).addWeight(weight);
     _weightController.clear();
     _noteController.clear();
     setState(() => _selectedDate = DateTime.now());

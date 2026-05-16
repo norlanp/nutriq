@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/domain/entity/fasting_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
+import 'package:nutriq/core/domain/entity/fasting_entity.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/features/fasting_tracker/presentation/fasting_bloc.dart';
+import 'package:nutriq/features/fasting_tracker/presentation/notifier/fasting_notifier.dart';
+import 'package:nutriq/features/fasting_tracker/presentation/notifier/fasting_state.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/widgets/preset_selector.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/widgets/streak_display.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -17,8 +16,7 @@ class FastingTimerScreen extends ConsumerStatefulWidget {
 }
 
 class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
-  late FastingBloc _fastingBloc;
-  int _currentStreak = 0;
+  bool _initialLoadDone = false;
 
   static const Map<FastingPresetType, int> _presetDurations = {
     FastingPresetType.sixteenEight: 960,
@@ -29,17 +27,47 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
   };
 
   @override
-  void initState() {
-    _fastingBloc = ref.read(fastingBlocProvider);
-    _fastingBloc.add(const LoadActive());
-    _fastingBloc.add(const LoadStreak());
-    super.initState();
+  Widget build(BuildContext context) {
+    final fastingState = ref.watch(fastingNotifierProvider);
+
+    if (!_initialLoadDone) {
+      _initialLoadDone = true;
+      Future.microtask(() {
+        ref.read(fastingNotifierProvider.notifier).loadActive();
+        ref.read(fastingNotifierProvider.notifier).loadStreak();
+      });
+    }
+
+    final l10n = S.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.fastingTrackerLabel),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            tooltip: l10n.fastingHistoryLabel,
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamed(NavigationOptions.fastingHistoryRoute);
+            },
+          ),
+        ],
+      ),
+      body: _buildBody(context, fastingState, l10n),
+    );
   }
 
-  @override
-  void dispose() {
-    _fastingBloc.close();
-    super.dispose();
+  Widget _buildBody(BuildContext context, FastingNotifierState state, S l10n) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    if (state.isActive) {
+      return _buildActiveView(context, state, l10n);
+    }
+    return _buildInactiveView(context, l10n, state);
   }
 
   void _onPresetSelected(FastingPresetType type) {
@@ -55,7 +83,7 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
       targetDurationMinutes: duration,
       presetType: type,
     );
-    _fastingBloc.add(StartFast(entity: entity));
+    ref.read(fastingNotifierProvider.notifier).startFast(entity);
   }
 
   void _showCustomDurationDialog() {
@@ -93,7 +121,7 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
                 targetDurationMinutes: hours * 60,
                 presetType: FastingPresetType.custom,
               );
-              _fastingBloc.add(StartFast(entity: entity));
+              ref.read(fastingNotifierProvider.notifier).startFast(entity);
             },
             child: Text(S.of(context).startFastLabel),
           ),
@@ -114,53 +142,12 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
     return '$hours:$minutes:$seconds';
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final l10n = S.of(context);
-    return BlocProvider.value(
-      value: _fastingBloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.fastingTrackerLabel),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.history),
-              tooltip: l10n.fastingHistoryLabel,
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(NavigationOptions.fastingHistoryRoute);
-              },
-            ),
-          ],
-        ),
-        body: BlocBuilder<FastingBloc, FastingState>(
-          bloc: _fastingBloc,
-          builder: (context, state) {
-            if (state is FastingStreakLoaded) {
-              _currentStreak = state.streak;
-            }
-            if (state is FastingLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is FastingError) {
-              return Center(child: Text(state.message));
-            }
-            if (state is FastingActive) {
-              return _buildActiveView(context, state, l10n);
-            }
-            return _buildInactiveView(context, l10n);
-          },
-        ),
-      ),
-    );
-  }
-
   Widget _buildActiveView(
     BuildContext context,
-    FastingActive state,
+    FastingNotifierState state,
     S l10n,
   ) {
-    final fast = state.fast;
+    final fast = state.activeFast!;
     final elapsed = state.elapsed;
     final target = Duration(minutes: fast.targetDurationMinutes);
     final remaining = target - elapsed;
@@ -231,21 +218,22 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
           const SizedBox(height: 32),
           FilledButton.icon(
             onPressed: () {
-              _fastingBloc.add(
-                EndFast(id: fast.id, endTime: DateTime.now()),
-              );
+              ref.read(fastingNotifierProvider.notifier).endFast(
+                    fast.id,
+                    DateTime.now(),
+                  );
             },
             icon: const Icon(Icons.stop),
             label: Text(l10n.endFastLabel),
           ),
           const SizedBox(height: 24),
-          StreakDisplay(streak: _currentStreak),
+          StreakDisplay(streak: state.streak),
         ],
       ),
     );
   }
 
-  Widget _buildInactiveView(BuildContext context, S l10n) {
+  Widget _buildInactiveView(BuildContext context, S l10n, FastingNotifierState state) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -265,7 +253,7 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
             onPresetSelected: _onPresetSelected,
           ),
           const SizedBox(height: 24),
-          StreakDisplay(streak: _currentStreak),
+          StreakDisplay(streak: state.streak),
         ],
       ),
     );

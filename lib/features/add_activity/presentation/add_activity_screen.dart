@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/presentation/widgets/error_dialog.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/add_activity/presentation/bloc/activities_bloc.dart';
-import 'package:nutriq/features/add_activity/presentation/bloc/recent_activities_bloc.dart';
+import 'package:nutriq/features/add_activity/presentation/notifier/activities_notifier.dart';
+import 'package:nutriq/features/add_activity/presentation/notifier/activities_state.dart';
+import 'package:nutriq/features/add_activity/presentation/notifier/recent_activities_notifier.dart';
+import 'package:nutriq/features/add_activity/presentation/notifier/recent_activities_state.dart';
 import 'package:nutriq/features/add_activity/presentation/widgets/activity_item_card.dart';
 import 'package:nutriq/features/add_meal/presentation/widgets/no_results_widget.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -19,16 +19,12 @@ class AddActivityScreen extends ConsumerStatefulWidget {
 class _AddActivityScreenState extends ConsumerState<AddActivityScreen>
     with SingleTickerProviderStateMixin {
   late DateTime _day;
-
-  late ActivitiesBloc _activitiesBloc;
-  late RecentActivitiesBloc _recentActivitiesBloc;
-
   late TabController _tabController;
+  bool _activitiesLoaded = false;
+  bool _recentLoaded = false;
 
   @override
   void initState() {
-    _activitiesBloc = ref.read(activitiesBlocProvider);
-    _recentActivitiesBloc = ref.read(recentActivitiesBlocProvider);
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
@@ -49,6 +45,18 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen>
 
   @override
   Widget build(BuildContext context) {
+    final activitiesState = ref.watch(activitiesNotifierProvider);
+    final recentState = ref.watch(recentActivitiesNotifierProvider);
+
+    if (!_activitiesLoaded) {
+      _activitiesLoaded = true;
+      Future.microtask(() => ref.read(activitiesNotifierProvider.notifier).loadActivities());
+    }
+    if (!_recentLoaded) {
+      _recentLoaded = true;
+      Future.microtask(() => ref.read(recentActivitiesNotifierProvider.notifier).loadRecentActivities());
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: Text(S.of(context).activityLabel),
@@ -65,8 +73,9 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen>
                       borderRadius: BorderRadius.circular(10),
                     )),
                 onChanged: (String searchString) {
-                  _activitiesBloc.add(SearchActivitiesEvent(
-                      context: context, searchString: searchString));
+                  ref
+                      .read(activitiesNotifierProvider.notifier)
+                      .searchActivities(context, searchString);
                 },
               ),
               const SizedBox(height: 16.0),
@@ -82,91 +91,8 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen>
                   child: TabBarView(
                 controller: _tabController,
                 children: [
-                  Column(
-                    children: [
-                      BlocBuilder<ActivitiesBloc, ActivitiesState>(
-                        bloc: _activitiesBloc,
-                        builder: (context, state) {
-                          if (state is ActivitiesInitial) {
-                            _activitiesBloc
-                                .add(LoadActivitiesEvent(context: context));
-                            return const SizedBox();
-                          }
-                          if (state is ActivitiesLoadingState) {
-                            return const Padding(
-                              padding: EdgeInsets.only(top: 32),
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          if (state is ActivitiesLoadedState) {
-                            final physicalActivities = state.activities;
-                            return Flexible(
-                              child: ListView.builder(
-                                  itemCount: physicalActivities.length,
-                                  itemBuilder: (context, index) {
-                                    return ActivityItemCard(
-                                        physicalActivityEntity:
-                                            physicalActivities[index],
-                                        day: _day);
-                                  }),
-                            );
-                          }
-                          if (state is ActivitiesFailedState) {
-                            return ErrorDialog(
-                              errorText: S.of(context).errorLoadingActivities,
-                              onRefreshPressed:
-                                  _onActivitiesRefreshButtonPressed,
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      BlocBuilder<RecentActivitiesBloc, RecentActivitiesState>(
-                        bloc: _recentActivitiesBloc,
-                        builder: (context, state) {
-                          if (state is RecentActivitiesInitial) {
-                            _recentActivitiesBloc.add(
-                                LoadRecentActivitiesEvent(context: context));
-                            return const SizedBox();
-                          }
-                          if (state is RecentActivitiesLoadingState) {
-                            return const Padding(
-                              padding: EdgeInsets.only(top: 32),
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          if (state is RecentActivitiesLoadedState) {
-                            final recentActivities = state.recentActivities;
-                            return state.recentActivities.isNotEmpty
-                                ? Flexible(
-                                    child: ListView.builder(
-                                        itemCount: recentActivities.length,
-                                        itemBuilder: (context, index) {
-                                          return ActivityItemCard(
-                                            physicalActivityEntity:
-                                                recentActivities[index],
-                                            day: _day,
-                                          );
-                                        }),
-                                  )
-                                : const NoResultsWidget();
-                          }
-                          if (state is RecentActivitiesFailedState) {
-                            return ErrorDialog(
-                              errorText: S.of(context).errorLoadingActivities,
-                              onRefreshPressed:
-                                  _onRecentActivitiesRefreshButtonPressed,
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                      ),
-                    ],
-                  ),
+                  _buildActivitiesTab(activitiesState),
+                  _buildRecentTab(recentState),
                 ],
               )),
             ],
@@ -174,12 +100,57 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen>
         ));
   }
 
-  void _onActivitiesRefreshButtonPressed() {
-    _activitiesBloc.add(LoadActivitiesEvent(context: context));
+  Widget _buildActivitiesTab(ActivitiesState state) {
+    if (state.isLoading) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 32),
+        child: CircularProgressIndicator(),
+      );
+    }
+    if (state.hasError) {
+      return ErrorDialog(
+        errorText: S.of(context).errorLoadingActivities,
+        onRefreshPressed: () =>
+            ref.read(activitiesNotifierProvider.notifier).loadActivities(),
+      );
+    }
+    return Flexible(
+      child: ListView.builder(
+          itemCount: state.activities.length,
+          itemBuilder: (context, index) {
+            return ActivityItemCard(
+                physicalActivityEntity: state.activities[index], day: _day);
+          }),
+    );
   }
 
-  void _onRecentActivitiesRefreshButtonPressed() {
-    _recentActivitiesBloc.add(LoadRecentActivitiesEvent(context: context));
+  Widget _buildRecentTab(RecentActivitiesState state) {
+    if (state.isLoading) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 32),
+        child: CircularProgressIndicator(),
+      );
+    }
+    if (state.hasError) {
+      return ErrorDialog(
+        errorText: S.of(context).errorLoadingActivities,
+        onRefreshPressed: () =>
+            ref.read(recentActivitiesNotifierProvider.notifier).loadRecentActivities(),
+      );
+    }
+    if (state.recentActivities.isEmpty) {
+      return const NoResultsWidget();
+    }
+    return Flexible(
+      child: ListView.builder(
+          itemCount: state.recentActivities.length,
+          itemBuilder: (context, index) {
+            return ActivityItemCard(
+              physicalActivityEntity: state.recentActivities[index],
+              day: _day,
+            );
+          }),
+    );
   }
 }
 
