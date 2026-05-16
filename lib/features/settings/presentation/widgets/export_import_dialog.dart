@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/features/settings/presentation/bloc/export_import_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -14,7 +14,6 @@ class ExportImportDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final exportImportBloc = ref.read(exportImportBlocProvider);
-    final homeBloc = ref.read(homeBlocProvider);
     final diaryBloc = ref.read(diaryBlocProvider);
     final calendarDayBloc = ref.read(calendarDayBlocProvider);
     return AlertDialog(
@@ -35,7 +34,7 @@ class ExportImportDialog extends ConsumerWidget {
                   } else if (state is ExportImportLoadingState) {
                     return const LinearProgressIndicator();
                   } else if (state is ExportImportSuccess) {
-                    _refreshScreens(homeBloc, diaryBloc, calendarDayBloc);
+                    _refreshScreens(ref, diaryBloc, calendarDayBloc);
                     return Row(
                       children: [
                         Icon(Icons.check_circle,
@@ -81,8 +80,8 @@ class ExportImportDialog extends ConsumerWidget {
   }
 
   void _refreshScreens(
-      HomeBloc homeBloc, DiaryBloc diaryBloc, CalendarDayBloc calendarDayBloc) {
-    homeBloc.add(const LoadItemsEvent());
+      WidgetRef ref, DiaryBloc diaryBloc, CalendarDayBloc calendarDayBloc) {
+    ref.read(homeNotifierProvider.notifier).loadItems();
     diaryBloc.add(const LoadDiaryYearEvent());
     calendarDayBloc.add(RefreshCalendarDayEvent());
   }

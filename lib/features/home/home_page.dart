@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
@@ -7,12 +6,12 @@ import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
 import 'package:nutriq/core/presentation/widgets/activity_vertial_list.dart';
-import 'package:nutriq/core/presentation/widgets/edit_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/delete_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/disclaimer_dialog.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/core/presentation/widgets/edit_dialog.dart';
+import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
+import 'package:nutriq/features/home/presentation/notifier/home_state.dart';
 import 'package:nutriq/features/home/presentation/widgets/dashboard_widget.dart';
 import 'package:nutriq/features/home/presentation/widgets/intake_vertical_list.dart';
 import 'package:nutriq/features/home/presentation/widgets/medication_summary_widget.dart';
@@ -28,14 +27,11 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver {
   final log = Logger('HomePage');
-
-  late HomeBloc _homeBloc;
   bool _isDragging = false;
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    _homeBloc = ref.read(homeBlocProvider);
     super.initState();
   }
 
@@ -47,41 +43,12 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      bloc: _homeBloc,
-      builder: (context, state) {
-        if (state is HomeInitial) {
-          _homeBloc.add(const LoadItemsEvent());
-          return _getLoadingContent();
-        } else if (state is HomeLoadingState) {
-          return _getLoadingContent();
-        } else if (state is HomeLoadedState) {
-          return _getLoadedContent(
-              context,
-              state.showDisclaimerDialog,
-              state.totalKcalDaily,
-              state.totalKcalLeft,
-              state.totalKcalSupplied,
-              state.totalKcalBurned,
-              state.totalCarbsIntake,
-              state.totalNetCarbsIntake,
-              state.totalFatsIntake,
-              state.totalProteinsIntake,
-              state.totalCarbsGoal,
-              state.totalFatsGoal,
-              state.totalProteinsGoal,
-              state.breakfastIntakeList,
-              state.lunchIntakeList,
-              state.dinnerIntakeList,
-              state.snackIntakeList,
-              state.userActivityList,
-              state.usesImperialUnits,
-              state.netCarbsEnabled,
-              state.stepBonusCredit);
-        } else {
-          return _getLoadingContent();
-        }
-      },
+    final homeAsync = ref.watch(homeNotifierProvider);
+
+    return homeAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => const Center(child: CircularProgressIndicator()),
+      data: (state) => _buildLoadedContent(context, state),
     );
   }
 
@@ -89,65 +56,38 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       log.info('App resumed');
-      _refreshPageOnDayChange();
+      ref.read(homeNotifierProvider.notifier).loadItems();
     }
     super.didChangeAppLifecycleState(state);
   }
 
-  Widget _getLoadingContent() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-  Widget _getLoadedContent(
-      BuildContext context,
-      bool showDisclaimerDialog,
-      double totalKcalDaily,
-      double totalKcalLeft,
-      double totalKcalSupplied,
-      double totalKcalBurned,
-      double totalCarbsIntake,
-      double totalNetCarbsIntake,
-      double totalFatsIntake,
-      double totalProteinsIntake,
-      double totalCarbsGoal,
-      double totalFatsGoal,
-      double totalProteinsGoal,
-      List<IntakeEntity> breakfastIntakeList,
-      List<IntakeEntity> lunchIntakeList,
-      List<IntakeEntity> dinnerIntakeList,
-      List<IntakeEntity> snackIntakeList,
-      List<UserActivityEntity> userActivities,
-      bool usesImperialUnits,
-      bool netCarbsEnabled,
-      double stepBonusCredit) {
-    if (showDisclaimerDialog) {
+  Widget _buildLoadedContent(BuildContext context, HomeState state) {
+    if (state.showDisclaimerDialog) {
       _showDisclaimerDialog(context);
     }
     return Stack(children: [
       ListView(children: [
         DashboardWidget(
-          totalKcalDaily: totalKcalDaily,
-          totalKcalLeft: totalKcalLeft,
-          totalKcalSupplied: totalKcalSupplied,
-          totalKcalBurned: totalKcalBurned,
-          totalCarbsIntake: totalCarbsIntake,
-          totalNetCarbsIntake: totalNetCarbsIntake,
-          totalFatsIntake: totalFatsIntake,
-          totalProteinsIntake: totalProteinsIntake,
-          totalCarbsGoal: totalCarbsGoal,
-          totalFatsGoal: totalFatsGoal,
-          totalProteinsGoal: totalProteinsGoal,
-          netCarbsEnabled: netCarbsEnabled,
-          stepBonusCredit: stepBonusCredit,
+          totalKcalDaily: state.totalKcalDaily,
+          totalKcalLeft: state.totalKcalLeft,
+          totalKcalSupplied: state.totalKcalSupplied,
+          totalKcalBurned: state.totalKcalBurned,
+          totalCarbsIntake: state.totalCarbsIntake,
+          totalNetCarbsIntake: state.totalNetCarbsIntake,
+          totalFatsIntake: state.totalFatsIntake,
+          totalProteinsIntake: state.totalProteinsIntake,
+          totalCarbsGoal: state.totalCarbsGoal,
+          totalFatsGoal: state.totalFatsGoal,
+          totalProteinsGoal: state.totalProteinsGoal,
+          netCarbsEnabled: state.netCarbsEnabled,
+          stepBonusCredit: state.stepBonusCredit,
         ),
         const WaterTrackerSummaryWidget(),
         const MedicationSummaryWidget(),
         ActivityVerticalList(
           day: DateTime.now(),
           title: S.of(context).activityLabel,
-          userActivityList: userActivities,
+          userActivityList: state.userActivityList,
           onItemLongPressedCallback: onActivityItemLongPressed,
         ),
         IntakeVerticalList(
@@ -155,44 +95,44 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
           title: S.of(context).breakfastLabel,
           listIcon: IntakeTypeEntity.breakfast.getIconData(),
           addMealType: AddMealType.breakfastType,
-          intakeList: breakfastIntakeList,
+          intakeList: state.breakfastIntakeList,
           onDeleteIntakeCallback: onDeleteIntake,
           onItemDragCallback: onIntakeItemDrag,
           onItemTappedCallback: onIntakeItemTapped,
-          usesImperialUnits: usesImperialUnits,
+          usesImperialUnits: state.usesImperialUnits,
         ),
         IntakeVerticalList(
           day: DateTime.now(),
           title: S.of(context).lunchLabel,
           listIcon: IntakeTypeEntity.lunch.getIconData(),
           addMealType: AddMealType.lunchType,
-          intakeList: lunchIntakeList,
+          intakeList: state.lunchIntakeList,
           onDeleteIntakeCallback: onDeleteIntake,
           onItemDragCallback: onIntakeItemDrag,
           onItemTappedCallback: onIntakeItemTapped,
-          usesImperialUnits: usesImperialUnits,
+          usesImperialUnits: state.usesImperialUnits,
         ),
         IntakeVerticalList(
           day: DateTime.now(),
           title: S.of(context).dinnerLabel,
           addMealType: AddMealType.dinnerType,
           listIcon: IntakeTypeEntity.dinner.getIconData(),
-          intakeList: dinnerIntakeList,
+          intakeList: state.dinnerIntakeList,
           onDeleteIntakeCallback: onDeleteIntake,
           onItemDragCallback: onIntakeItemDrag,
           onItemTappedCallback: onIntakeItemTapped,
-          usesImperialUnits: usesImperialUnits,
+          usesImperialUnits: state.usesImperialUnits,
         ),
         IntakeVerticalList(
           day: DateTime.now(),
           title: S.of(context).snackLabel,
           listIcon: IntakeTypeEntity.snack.getIconData(),
           addMealType: AddMealType.snackType,
-          intakeList: snackIntakeList,
+          intakeList: state.snackIntakeList,
           onDeleteIntakeCallback: onDeleteIntake,
           onItemDragCallback: onIntakeItemDrag,
           onItemTappedCallback: onIntakeItemTapped,
-          usesImperialUnits: usesImperialUnits,
+          usesImperialUnits: state.usesImperialUnits,
         ),
         const SizedBox(height: 48.0)
       ]),
@@ -233,8 +173,7 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
         context: context, builder: (context) => const DeleteDialog());
 
     if (deleteIntake != null) {
-      _homeBloc.deleteUserActivityItem(activityEntity);
-      _homeBloc.add(const LoadItemsEvent());
+      ref.read(homeNotifierProvider.notifier).deleteUserActivityItem(activityEntity);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).itemDeletedSnackbar)));
@@ -248,8 +187,7 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
         context: context, builder: (context) => const DeleteDialog());
 
     if (deleteIntake != null) {
-      _homeBloc.deleteIntakeItem(intakeEntity);
-      _homeBloc.add(const LoadItemsEvent());
+      ref.read(homeNotifierProvider.notifier).deleteIntakeItem(intakeEntity);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).itemDeletedSnackbar)));
@@ -272,9 +210,9 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
         builder: (context) => EditDialog(
             intakeEntity: intakeEntity, usesImperialUnits: usesImperialUnits));
     if (changeIntakeAmount != null) {
-      _homeBloc
+      ref
+          .read(homeNotifierProvider.notifier)
           .updateIntakeItem(intakeEntity.id, {'amount': changeIntakeAmount});
-      _homeBloc.add(const LoadItemsEvent());
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).itemUpdatedSnackbar)));
@@ -283,8 +221,7 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
   }
 
   void onDeleteIntake(IntakeEntity intake, TrackedDayEntity? trackedDayEntity) {
-    _homeBloc.deleteIntakeItem(intake);
-    _homeBloc.add(const LoadItemsEvent());
+    ref.read(homeNotifierProvider.notifier).deleteIntakeItem(intake);
   }
 
   void _confirmDelete(BuildContext context, IntakeEntity intake) async {
@@ -299,7 +236,6 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
     });
   }
 
-  /// Show disclaimer dialog after build method
   void _showDisclaimerDialog(BuildContext context) async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final dialogConfirmed = await showDialog<bool>(
@@ -308,16 +244,9 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
             return const DisclaimerDialog();
           });
       if (dialogConfirmed != null) {
-        _homeBloc.saveConfigData(dialogConfirmed);
-        _homeBloc.add(const LoadItemsEvent());
+        ref.read(homeNotifierProvider.notifier).saveConfigData(dialogConfirmed);
+        ref.read(homeNotifierProvider.notifier).loadItems();
       }
     });
-  }
-
-  /// Refresh page when day changes
-  void _refreshPageOnDayChange() {
-    if (!DateUtils.isSameDay(_homeBloc.currentDay, DateTime.now())) {
-      _homeBloc.add(const LoadItemsEvent());
-    }
   }
 }

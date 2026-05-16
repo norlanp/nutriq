@@ -4,7 +4,7 @@ import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -12,7 +12,6 @@ import 'package:nutriq/generated/l10n.dart';
 class CalculationsDialog extends ConsumerStatefulWidget {
   final SettingsBloc settingsBloc;
   final ProfileBloc profileBloc;
-  final HomeBloc homeBloc;
   final DiaryBloc diaryBloc;
   final CalendarDayBloc calendarDayBloc;
 
@@ -20,7 +19,6 @@ class CalculationsDialog extends ConsumerStatefulWidget {
     super.key,
     required this.settingsBloc,
     required this.profileBloc,
-    required this.homeBloc,
     required this.diaryBloc,
     required this.calendarDayBloc,
   });
@@ -358,7 +356,7 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
 
     widget.settingsBloc.add(LoadSettingsEvent());
     widget.profileBloc.add(LoadProfileEvent());
-    widget.homeBloc.add(LoadItemsEvent());
+    ref.read(homeNotifierProvider.notifier).loadItems();
 
     widget.settingsBloc.updateTrackedDay(DateTime.now());
     widget.diaryBloc.add(LoadDiaryYearEvent());

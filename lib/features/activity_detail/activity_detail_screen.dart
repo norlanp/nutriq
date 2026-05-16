@@ -12,7 +12,7 @@ import 'package:nutriq/features/activity_detail/presentation/widget/activity_inf
 import 'package:nutriq/features/activity_detail/presentation/widget/activity_title_expanded.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class ActivityDetailScreen extends ConsumerStatefulWidget {
@@ -194,7 +194,7 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
         context, quantityTextController.text, totalKcal, activityEntity, _day);
 
     // Refresh Home Page
-    ref.read(homeBlocProvider).add(const LoadItemsEvent());
+    ref.read(homeNotifierProvider.notifier).loadItems();
 
     // Refresh Diary Page
     ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());

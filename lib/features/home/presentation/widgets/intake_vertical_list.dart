@@ -13,7 +13,7 @@ import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -55,12 +55,10 @@ class IntakeVerticalList extends ConsumerStatefulWidget {
 
 class _IntakeVerticalListState extends ConsumerState<IntakeVerticalList> {
   late MealDetailBloc _mealDetailBloc;
-  late HomeBloc _homeBloc;
 
   @override
   void initState() {
     _mealDetailBloc = ref.read(mealDetailBlocProvider);
-    _homeBloc = ref.read(homeBlocProvider);
     super.initState();
   }
 
@@ -228,10 +226,7 @@ class _IntakeVerticalListState extends ConsumerState<IntakeVerticalList> {
     _mealDetailBloc.addIntake(context, entity.unit, entity.amount.toString(),
         widget.addMealType.getIntakeType(), entity.meal, entity.dateTime,
         time: entity.time);
-    _homeBloc.deleteIntakeItem(entity);
-
-    // Refresh Home Page
-    ref.read(homeBlocProvider).add(const LoadItemsEvent());
+    ref.read(homeNotifierProvider.notifier).deleteIntakeItem(entity);
 
     // Refresh Diary Page
     ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());

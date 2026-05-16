@@ -7,7 +7,7 @@ import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -217,7 +217,7 @@ class _MealDetailBottomSheetState extends ConsumerState<MealDetailBottomSheet> {
         time: _selectedTime);
 
     // Refresh Home Page
-    ref.read(homeBlocProvider).add(const LoadItemsEvent());
+    ref.read(homeNotifierProvider.notifier).loadItems();
 
     // Refresh Diary Page
     ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());

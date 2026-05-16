@@ -1,0 +1,66 @@
+import 'package:equatable/equatable.dart';
+import 'package:nutriq/core/domain/entity/intake_entity.dart';
+import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
+
+class HomeState extends Equatable {
+  final bool showDisclaimerDialog;
+  final double totalKcalDaily;
+  final double totalKcalLeft;
+  final double totalKcalSupplied;
+  final double totalKcalBurned;
+  final double totalCarbsIntake;
+  final double totalNetCarbsIntake;
+  final double totalFatsIntake;
+  final double totalProteinsIntake;
+  final double totalCarbsGoal;
+  final double totalFatsGoal;
+  final double totalProteinsGoal;
+  final List<UserActivityEntity> userActivityList;
+  final List<IntakeEntity> breakfastIntakeList;
+  final List<IntakeEntity> lunchIntakeList;
+  final List<IntakeEntity> dinnerIntakeList;
+  final List<IntakeEntity> snackIntakeList;
+  final bool usesImperialUnits;
+  final bool netCarbsEnabled;
+  final double stepBonusCredit;
+
+  const HomeState({
+    required this.showDisclaimerDialog,
+    required this.totalKcalDaily,
+    required this.totalKcalLeft,
+    required this.totalKcalSupplied,
+    required this.totalKcalBurned,
+    required this.totalCarbsIntake,
+    required this.totalNetCarbsIntake,
+    required this.totalFatsIntake,
+    required this.totalProteinsIntake,
+    required this.totalCarbsGoal,
+    required this.totalFatsGoal,
+    required this.totalProteinsGoal,
+    required this.userActivityList,
+    required this.breakfastIntakeList,
+    required this.lunchIntakeList,
+    required this.dinnerIntakeList,
+    required this.snackIntakeList,
+    required this.usesImperialUnits,
+    required this.netCarbsEnabled,
+    this.stepBonusCredit = 0,
+  });
+
+  double get displayedCarbsIntake =>
+      netCarbsEnabled ? totalNetCarbsIntake : totalCarbsIntake;
+
+  String get displayedCarbsLabel =>
+      netCarbsEnabled ? 'netCarbsLabel' : 'carbsLabel';
+
+  @override
+  List<Object?> get props => [
+        breakfastIntakeList,
+        lunchIntakeList,
+        dinnerIntakeList,
+        snackIntakeList,
+        usesImperialUnits,
+        netCarbsEnabled,
+        stepBonusCredit,
+      ];
+}

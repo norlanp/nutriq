@@ -7,7 +7,7 @@ Phase 1: Foundation (no breaking changes, additive only)
 [x] Convert 36 domain entities to `freezed` immutable classes (start with core entities, then per-feature)
 [x] Add `formz` to pubspec.yaml dependencies
 [x] Add `go_router` to pubspec.yaml dependencies
-[ ] Replace `provider` package ThemeModeProvider with Riverpod-based theme provider
+[x] Replace `provider` package ThemeModeProvider with Riverpod-based theme provider
 [x] Fix `LoggerConfig.intiLogger()` typo in main.dart → `initLogger`
 [x] Fix `OnboardingBloc.saveOnboardingData()` — currently void, should return `Future<void>` and await persistence before navigation
 [x] Fix validation gaps: weight/height dialogs have TODO validate comments
@@ -21,10 +21,10 @@ committed. All 44 BLoCs and 132 BLoC files remain. 215+ screen usages.
 
 Strategy: migrate one feature at a time, verify each, then delete BLoC files.
 
-[ ] Create `lib/core/providers/notifier_providers.dart` (central Riverpod notifier registry)
-[ ] Convert `ThemeModeProvider` from ChangeNotifier to Riverpod `Notifier`
-[ ] Update `main.dart`: change `NutriqApp` from `StatelessWidget` to `ConsumerWidget`, remove `provider` package import, wrap with `ProviderScope`
-[ ] Migrate home feature (home_bloc → home_notifier, screens, providers)
+[x] Create `lib/core/providers/notifier_providers.dart` (central Riverpod notifier registry)
+[x] Convert `ThemeModeProvider` from ChangeNotifier to Riverpod `Notifier`
+[x] Update `main.dart`: change `NutriqApp` from `StatelessWidget` to `ConsumerWidget`, remove `provider` package import, wrap with `ProviderScope`
+[x] Migrate home feature (home_bloc → home_notifier, screens, providers)
 [ ] Migrate diary feature
 [ ] Migrate profile feature
 [ ] Migrate settings feature

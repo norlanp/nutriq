@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
-import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
+
 import 'package:nutriq/core/presentation/main_screen.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
 import 'package:nutriq/core/styles/color_schemes.dart';
@@ -12,7 +12,7 @@ import 'package:nutriq/core/styles/fonts.dart';
 import 'package:nutriq/core/utils/env.dart';
 import 'package:nutriq/core/utils/logger_config.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/core/utils/theme_mode_provider.dart';
+
 import 'package:home_widget/home_widget.dart';
 import 'package:nutriq/features/activity_detail/activity_detail_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
@@ -61,11 +61,10 @@ import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_scre
 import 'package:nutriq/features/food_grade/presentation/food_grade_info_screen.dart';
 import 'package:nutriq/features/step_bonus/presentation/step_bonus_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'
-    hide ChangeNotifierProvider, Provider;
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/providers/data_source_providers.dart';
 import 'package:nutriq/core/providers/database_provider.dart';
+import 'package:nutriq/core/providers/notifier_providers.dart';
 import 'package:nutriq/core/providers/repository_providers.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -106,12 +105,14 @@ Future<void> main() async {
     final isUserInitialized = await container.read(userDataSourceProvider).hasUserData();
     final savedAppTheme = await container.read(configRepositoryProvider).getConfigAppTheme();
 
+    container.read(themeModeProvider.notifier).initFromSaved(savedAppTheme);
+
     if (kReleaseMode && hasAcceptedAnonymousData) {
       log.info('Starting App with Sentry enabled ...');
-      _runAppWithSentryReporting(isUserInitialized, savedAppTheme, container);
+      _runAppWithSentryReporting(isUserInitialized, container);
     } else {
       log.info('Starting App ...');
-      runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, container);
+      runAppWithChangeNotifiers(isUserInitialized, container);
     }
   }, (error, stack) {
     final log = Logger('main');
@@ -120,32 +121,31 @@ Future<void> main() async {
 }
 
 void _runAppWithSentryReporting(
-    bool isUserInitialized, AppThemeEntity savedAppTheme,
+    bool isUserInitialized,
     [ProviderContainer? container]) async {
   await SentryFlutter.init((options) {
     options.dsn = Env.sentryDns;
     options.tracesSampleRate = 0.1;
   },
       appRunner: () =>
-          runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, container));
+          runAppWithChangeNotifiers(isUserInitialized, container));
 }
 
 void runAppWithChangeNotifiers(
-        bool userInitialized, AppThemeEntity savedAppTheme,
+        bool userInitialized,
         [ProviderContainer? container]) =>
     runApp(UncontrolledProviderScope(
         container: container ?? ProviderContainer(),
-        child: ChangeNotifierProvider(
-            create: (_) => ThemeModeProvider(appTheme: savedAppTheme),
-            child: NutriqApp(userInitialized: userInitialized))));
+        child: NutriqApp(userInitialized: userInitialized)));
 
-class NutriqApp extends StatelessWidget {
+class NutriqApp extends ConsumerWidget {
   final bool userInitialized;
 
   const NutriqApp({super.key, required this.userInitialized});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
     final platformLocale = ui.PlatformDispatcher.instance.locale;
     final locale = (platformLocale.languageCode == 'undefined' ||
             platformLocale.toString() == 'undefined')
@@ -163,7 +163,7 @@ class NutriqApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: darkColorScheme,
           textTheme: appTextTheme),
-      themeMode: Provider.of<ThemeModeProvider>(context).themeMode,
+      themeMode: themeMode,
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

@@ -7,17 +7,18 @@ import 'package:nutriq/core/presentation/widgets/disclaimer_dialog.dart';
 import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/app_const.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/core/utils/theme_mode_provider.dart';
+import 'package:nutriq/core/providers/notifier_providers.dart';
+import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/core/utils/url_const.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
+
 import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:nutriq/features/settings/presentation/widgets/export_import_dialog.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provider/provider.dart' as provider;
+
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:nutriq/features/settings/presentation/widgets/calculations_dialog.dart';
@@ -32,7 +33,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   late SettingsBloc _settingsBloc;
   late ProfileBloc _profileBloc;
-  late HomeBloc _homeBloc;
   late DiaryBloc _diaryBloc;
   late CalendarDayBloc _calendarDayBloc;
 
@@ -40,7 +40,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void initState() {
     _settingsBloc = ref.read(settingsBlocProvider);
     _profileBloc = ref.read(profileBlocProvider);
-    _homeBloc = ref.read(homeBlocProvider);
     _diaryBloc = ref.read(diaryBlocProvider);
     _calendarDayBloc = ref.read(calendarDayBlocProvider);
     super.initState();
@@ -193,7 +192,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
       // Update blocs
       _profileBloc.add(LoadProfileEvent());
-      _homeBloc.add(LoadItemsEvent());
+      ref.read(homeNotifierProvider.notifier).loadItems();
       _diaryBloc.add(const LoadDiaryYearEvent());
     }
   }
@@ -243,7 +242,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       _settingsBloc.setNetCarbsEnabled(switchActive);
       _settingsBloc.add(LoadSettingsEvent());
 
-      _homeBloc.add(LoadItemsEvent());
+      ref.read(homeNotifierProvider.notifier).loadItems();
       _diaryBloc.add(const LoadDiaryYearEvent());
     }
   }
@@ -254,7 +253,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (context) => CalculationsDialog(
         settingsBloc: _settingsBloc,
         profileBloc: _profileBloc,
-        homeBloc: _homeBloc,
         diaryBloc: _diaryBloc,
         calendarDayBloc: _calendarDayBloc,
       ),
@@ -329,8 +327,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _settingsBloc.add(LoadSettingsEvent());
                     setState(() {
                       // Update Theme
-                      provider.Provider.of<ThemeModeProvider>(context, listen: false)
-                          .updateTheme(selectedTheme);
+                    ref.read(themeModeProvider.notifier).setTheme(selectedTheme);
                     });
                     Navigator.of(context).pop();
                   },

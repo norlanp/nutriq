@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/providers/repository_providers.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
+import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
 import 'package:nutriq/features/add_activity/presentation/bloc/activities_bloc.dart';
 import 'package:nutriq/features/add_activity/presentation/bloc/recent_activities_bloc.dart';
@@ -18,11 +19,6 @@ import 'package:nutriq/features/daily_notes/presentation/daily_note_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:nutriq/features/edit_meal/presentation/bloc/edit_meal_bloc.dart';
-import 'package:nutriq/features/fasting_tracker/presentation/fasting_bloc.dart';
-import 'package:nutriq/features/food_grade/presentation/food_grade_bloc.dart';
-import 'package:nutriq/features/grocery_check/presentation/grocery_check_bloc.dart';
-import 'package:nutriq/features/health_sync/presentation/health_sync_bloc.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
@@ -51,7 +47,7 @@ class _BlocCrossRefs {
 
   void refreshDiary() => _ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());
   void refreshCalendarDay() => _ref.read(calendarDayBlocProvider).add(const RefreshCalendarDayEvent());
-  void refreshHome() => _ref.read(homeBlocProvider).add(const LoadItemsEvent());
+  void refreshHome() => _ref.read(homeNotifierProvider.notifier).loadItems();
   void loadCalendarDay(DateTime day) => _ref.read(calendarDayBlocProvider).add(LoadCalendarDayEvent(day));
 }
 
@@ -63,27 +59,6 @@ final onboardingBlocProvider = Provider((ref) {
   return OnboardingBloc(
     ref.watch(addUserUsecaseProvider),
     ref.watch(addConfigUsecaseProvider),
-  );
-});
-
-final homeBlocProvider = Provider<HomeBloc>((ref) {
-  final crossRefs = ref.watch(_blocCrossRefsProvider);
-  return HomeBloc(
-    ref.watch(getConfigUsecaseProvider),
-    ref.watch(addConfigUsecaseProvider),
-    ref.watch(getIntakeUsecaseProvider),
-    ref.watch(deleteIntakeUsecaseProvider),
-    ref.watch(updateIntakeUsecaseProvider),
-    ref.watch(getUserActivityUsecaseProvider),
-    ref.watch(deleteUserActivityUsecaseProvider),
-    ref.watch(addTrackedDayUsecaseProvider),
-    ref.watch(getKcalGoalUsecaseProvider),
-    ref.watch(getMacroGoalUsecaseProvider),
-    ref.watch(netCarbsUsecaseProvider),
-    ref.watch(calculateStepBonusUsecaseProvider),
-    ref.watch(updateWidgetDataUsecaseProvider),
-    crossRefs.refreshDiary,
-    crossRefs.refreshCalendarDay,
   );
 });
 
