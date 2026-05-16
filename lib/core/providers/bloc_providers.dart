@@ -134,16 +134,6 @@ final bloodGlucoseBlocProvider = Provider((ref) {
   );
 });
 
-final healthSyncBlocProvider = Provider((ref) {
-  return HealthSyncBloc(
-    ref.watch(healthSyncServiceProvider),
-    ref.watch(syncStepsUsecaseProvider),
-    ref.watch(syncWorkoutsUsecaseProvider),
-    ref.watch(syncWeightUsecaseProvider),
-    ref.watch(weightRepositoryProvider),
-  );
-});
-
 final aiScannerBlocProvider = Provider((ref) {
   return AiScannerBloc(ref.watch(classifyFoodUsecaseProvider));
 });

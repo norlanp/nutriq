@@ -44,7 +44,7 @@ Strategy: migrate one feature at a time, verify each, then delete BLoC files.
 [x] Migrate progress_charts feature
 [x] Migrate photo_progress feature
 [x] Migrate meal_planning feature
-[ ] Migrate health_sync feature
+[x] Migrate health_sync feature
 [ ] Migrate body_measurements feature
 [ ] Migrate blood_glucose feature
 [ ] Migrate medication feature
