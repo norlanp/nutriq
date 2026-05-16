@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:go_router/go_router.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/recipe_builder/domain/entity/recipe_entity.dart';
 import 'package:nutriq/features/recipe_builder/presentation/notifier/recipe_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -37,7 +38,7 @@ class RecipeListScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
-            Navigator.pushNamed(context, NavigationOptions.recipeBuilderRoute),
+            context.push(AppRoutes.recipeBuilder),
         child: const Icon(Icons.add),
       ),
     );

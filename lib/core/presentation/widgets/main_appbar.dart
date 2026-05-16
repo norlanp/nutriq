@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:go_router/go_router.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 
 class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -15,7 +16,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(NavigationOptions.settingsRoute);
+              context.push(AppRoutes.settings);
             },
             icon: const Icon(Icons.settings_outlined))
       ],

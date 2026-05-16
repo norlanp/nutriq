@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 import 'package:nutriq/core/presentation/widgets/copy_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/delete_all_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/intake_card.dart';
 import 'package:nutriq/core/presentation/widgets/placeholder_card.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/core/utils/vertical_list_popup_menu_selections.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
@@ -214,8 +215,8 @@ class _IntakeVerticalListState extends ConsumerState<IntakeVerticalList> {
   }
 
   void _onPlaceholderCardTapped(BuildContext context) {
-    Navigator.pushNamed(context, NavigationOptions.addMealRoute,
-        arguments: AddMealScreenArguments(widget.addMealType, widget.day));
+    context.push(AppRoutes.addMeal,
+        extra: AddMealScreenArguments(widget.addMealType, widget.day));
   }
 
   void _onItemDropped(IntakeEntity entity) {

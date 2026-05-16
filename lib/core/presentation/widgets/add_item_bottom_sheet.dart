@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/add_activity/presentation/add_activity_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
@@ -159,7 +160,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(NavigationOptions.aiScannerRoute);
+              context.push(AppRoutes.aiScanner);
             },
           ),
           ListTile(
@@ -182,8 +183,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.voiceLoggingRoute);
+              context.push(AppRoutes.voiceLogging);
             },
           ),
           ListTile(
@@ -198,8 +198,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.recipeListRoute);
+              context.push(AppRoutes.recipeList);
             },
           ),
           const Divider(indent: 16, endIndent: 16),
@@ -223,8 +222,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.weightTrackingRoute);
+              context.push(AppRoutes.weightTracking);
             },
           ),
           ListTile(
@@ -239,8 +237,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.bodyMeasurementRoute);
+              context.push(AppRoutes.bodyMeasurements);
             },
           ),
           ListTile(
@@ -255,8 +252,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.progressChartsRoute);
+              context.push(AppRoutes.progressCharts);
             },
           ),
           ListTile(
@@ -271,8 +267,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.fastingTrackerRoute);
+              context.push(AppRoutes.fastingTracker);
             },
           ),
           const Divider(indent: 16, endIndent: 16),
@@ -296,7 +291,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(NavigationOptions.mealPlanRoute);
+              context.push(AppRoutes.mealPlan);
             },
           ),
           ListTile(
@@ -319,8 +314,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.photoProgressRoute);
+              context.push(AppRoutes.photoProgress);
             },
           ),
           ListTile(
@@ -335,8 +329,7 @@ class AddItemBottomSheet extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.mealTimingRoute);
+              context.push(AppRoutes.mealTiming);
             },
           ),
         ],
@@ -346,17 +339,15 @@ class AddItemBottomSheet extends StatelessWidget {
   }
 
   void _showAddItemScreen(BuildContext context, AddMealType itemType) {
-    Navigator.of(context).pop(); // Close bottom sheet
-    Navigator.of(context).pushNamed(NavigationOptions.addMealRoute,
-        arguments: AddMealScreenArguments(
-          itemType,
-          day,
-        ));
+    Navigator.of(context).pop();
+    context.push(AppRoutes.addMeal, extra: AddMealScreenArguments(
+      itemType,
+      day,
+    ));
   }
 
   void _showAddActivityScreen(BuildContext context) {
     Navigator.of(context).pop();
-    Navigator.of(context).pushNamed(NavigationOptions.addActivityRoute,
-        arguments: AddActivityScreenArguments(day: day));
+    context.push(AppRoutes.addActivity, extra: AddActivityScreenArguments(day: day));
   }
 }

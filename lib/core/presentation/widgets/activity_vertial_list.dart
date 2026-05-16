@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
 import 'package:nutriq/core/presentation/widgets/activity_card.dart';
 import 'package:nutriq/core/presentation/widgets/placeholder_card.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/add_activity/presentation/add_activity_screen.dart';
 
 class ActivityVerticalList extends StatelessWidget {
@@ -69,7 +70,6 @@ class ActivityVerticalList extends StatelessWidget {
   }
 
   void _onPlaceholderCardTapped(BuildContext context) {
-    Navigator.of(context).pushNamed(NavigationOptions.addActivityRoute,
-        arguments: AddActivityScreenArguments(day: day));
+    context.push(AppRoutes.addActivity, extra: AddActivityScreenArguments(day: day));
   }
 }

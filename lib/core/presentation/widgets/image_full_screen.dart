@@ -6,8 +6,9 @@ import 'package:nutriq/features/meal_detail/presentation/widgets/meal_placeholde
 
 class ImageFullScreen extends ConsumerStatefulWidget {
   static const fullScreenHeroTag = 'fullScreenTag';
+  final ImageFullScreenArguments arguments;
 
-  const ImageFullScreen({super.key});
+  const ImageFullScreen({super.key, required this.arguments});
 
   @override
   ConsumerState<ImageFullScreen> createState() => _ImageFullScreenState();
@@ -17,11 +18,9 @@ class _ImageFullScreenState extends ConsumerState<ImageFullScreen> {
   late String imageUrl;
 
   @override
-  void didChangeDependencies() {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as ImageFullScreenArguments;
-    imageUrl = args.imageUrl;
-    super.didChangeDependencies();
+  void initState() {
+    imageUrl = widget.arguments.imageUrl;
+    super.initState();
   }
 
   @override

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/catalog_recipe_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/recipe_catalog/presentation/notifier/recipe_catalog_notifier.dart';
 import 'package:nutriq/features/recipe_catalog/presentation/notifier/recipe_catalog_state.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -147,11 +148,7 @@ class _RecipeCard extends ConsumerWidget {
       child: InkWell(
         onTap: () {
           ref.read(recipeCatalogNotifierProvider.notifier).loadRecipe(recipe.id);
-          Navigator.pushNamed(
-            context,
-            NavigationOptions.recipeCatalogDetailRoute,
-            arguments: recipe.id,
-          );
+          context.push('${AppRoutes.recipeCatalogDetail}/${recipe.id}');
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

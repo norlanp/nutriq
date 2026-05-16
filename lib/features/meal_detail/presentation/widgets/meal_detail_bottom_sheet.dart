@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
@@ -219,8 +220,7 @@ class _MealDetailBottomSheetState extends ConsumerState<MealDetailBottomSheet> {
 
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.of(context).infoAddedIntakeLabel)));
-    Navigator.of(context)
-        .popUntil(ModalRoute.withName(NavigationOptions.mainRoute));
+    context.go(AppRoutes.main);
   }
 
   DropdownMenuItem<String> _getServingDropdownItem(BuildContext context) {

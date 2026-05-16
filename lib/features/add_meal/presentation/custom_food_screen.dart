@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/core/utils/custom_text_input_formatter.dart';
 import 'package:nutriq/core/utils/extensions.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 import 'package:nutriq/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class CustomFoodScreen extends StatefulWidget {
-  const CustomFoodScreen({super.key});
+  final CustomFoodScreenArguments arguments;
+
+  const CustomFoodScreen({super.key, required this.arguments});
 
   @override
   State<CustomFoodScreen> createState() => _CustomFoodScreenState();
@@ -34,13 +37,11 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  void didChangeDependencies() {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as CustomFoodScreenArguments;
-    _day = args.day;
-    _intakeTypeEntity = args.intakeTypeEntity;
-    _usesImperialUnits = args.usesImperialUnits;
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    _day = widget.arguments.day;
+    _intakeTypeEntity = widget.arguments.intakeTypeEntity;
+    _usesImperialUnits = widget.arguments.usesImperialUnits;
   }
 
   @override
@@ -258,9 +259,8 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
       source: MealSourceEntity.custom,
     );
 
-    Navigator.of(context).pushReplacementNamed(
-      NavigationOptions.editMealRoute,
-      arguments: EditMealScreenArguments(
+    context.go(AppRoutes.editMeal,
+      extra: EditMealScreenArguments(
         _day,
         mealEntity,
         _intakeTypeEntity,

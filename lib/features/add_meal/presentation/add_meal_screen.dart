@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:go_router/go_router.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/add_meal/presentation/notifier/add_meal_notifier.dart';
 import 'package:nutriq/features/add_meal/presentation/notifier/products_food_notifier.dart';
@@ -17,7 +18,9 @@ import 'package:nutriq/features/scanner/scanner_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class AddMealScreen extends ConsumerStatefulWidget {
-  const AddMealScreen({super.key});
+  final AddMealScreenArguments arguments;
+
+  const AddMealScreen({super.key, required this.arguments});
 
   @override
   ConsumerState<AddMealScreen> createState() => _AddMealScreenState();
@@ -34,20 +37,13 @@ class _AddMealScreenState extends ConsumerState<AddMealScreen>
 
   @override
   void initState() {
+    _mealType = widget.arguments.mealType;
+    _day = widget.arguments.day;
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       _onSearchSubmit(_searchStringListener.value);
     });
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as AddMealScreenArguments;
-    _mealType = args.mealType;
-    _day = args.day;
-    super.didChangeDependencies();
   }
 
   @override
@@ -251,13 +247,13 @@ class _AddMealScreenState extends ConsumerState<AddMealScreen>
   }
 
   void _onBarcodeIconPressed() {
-    Navigator.of(context).pushNamed(NavigationOptions.scannerRoute,
-        arguments: ScannerScreenArguments(_day, _mealType.getIntakeType()));
+    context.push(AppRoutes.scanner,
+        extra: ScannerScreenArguments(_day, _mealType.getIntakeType()));
   }
 
   void _onCustomAddButtonPressed(bool usesImperialUnits) {
-    Navigator.of(context).pushNamed(NavigationOptions.customFoodRoute,
-        arguments: CustomFoodScreenArguments(
+    context.push(AppRoutes.customFood,
+        extra: CustomFoodScreenArguments(
           _day,
           _mealType.getIntakeType(),
           usesImperialUnits,

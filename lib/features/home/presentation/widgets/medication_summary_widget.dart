@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/medication_entity.dart';
 import 'package:nutriq/core/domain/entity/medication_log_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/medication/presentation/notifier/medication_notifier.dart';
 
 import 'package:nutriq/generated/l10n.dart';
@@ -51,7 +52,7 @@ class _MedicationSummaryWidgetState extends ConsumerState<MedicationSummaryWidge
   }
 
   void _navigateToMedication() async {
-    await Navigator.of(context).pushNamed(NavigationOptions.medicationRoute);
+    await context.push(AppRoutes.medication);
     if (mounted) {
       final notifier = ref.read(medicationNotifierProvider.notifier);
       notifier.loadMedications(0);

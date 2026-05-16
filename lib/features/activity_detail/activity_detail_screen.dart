@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/activity_detail/presentation/notifier/activity_detail_notifier.dart';
 import 'package:nutriq/features/activity_detail/presentation/notifier/activity_detail_state.dart';
 import 'package:nutriq/features/activity_detail/presentation/widget/activity_detail_bottom_sheet.dart';
@@ -15,7 +16,9 @@ import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class ActivityDetailScreen extends ConsumerStatefulWidget {
-  const ActivityDetailScreen({super.key});
+  final ActivityDetailScreenArguments arguments;
+
+  const ActivityDetailScreen({super.key, required this.arguments});
 
   @override
   ConsumerState<ActivityDetailScreen> createState() => _ActivityDetailScreenState();
@@ -36,22 +39,13 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
 
   @override
   void initState() {
+    activityEntity = widget.arguments.activityEntity;
+    _day = widget.arguments.day;
     quantityTextController = TextEditingController();
     quantityTextController.text = "0";
     totalQuantity = 0;
     totalKcal = 0;
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    final args = ModalRoute.of(context)?.settings.arguments
-        as ActivityDetailScreenArguments;
-    activityEntity = args.activityEntity;
-    _day = args.day;
-    quantityTextController.addListener(() {});
-    ref.read(activityDetailNotifierProvider.notifier).loadActivityDetail(activityEntity);
-    super.didChangeDependencies();
   }
 
   @override
@@ -191,8 +185,7 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.of(context).infoAddedActivityLabel)));
-    Navigator.of(context)
-        .popUntil(ModalRoute.withName(NavigationOptions.mainRoute));
+    context.go(AppRoutes.main);
   }
 }
 

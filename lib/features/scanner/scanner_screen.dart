@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/presentation/widgets/error_dialog.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
 import 'package:nutriq/features/scanner/presentation/notifier/scanner_notifier.dart';
 import 'package:nutriq/features/scanner/presentation/notifier/scanner_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class ScannerScreen extends ConsumerStatefulWidget {
-  const ScannerScreen({super.key});
+  final ScannerScreenArguments arguments;
+
+  const ScannerScreen({super.key, required this.arguments});
 
   @override
   ConsumerState<ScannerScreen> createState() => _ScannerScreenState();
@@ -25,12 +28,10 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
   late DateTime _day;
 
   @override
-  void didChangeDependencies() {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as ScannerScreenArguments;
-    _intakeTypeEntity = args.intakeTypeEntity;
-    _day = args.day;
-    super.didChangeDependencies();
+  void initState() {
+    _intakeTypeEntity = widget.arguments.intakeTypeEntity;
+    _day = widget.arguments.day;
+    super.initState();
   }
 
   @override
@@ -47,9 +48,8 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
       final product = scannerState.product!;
       Future.microtask(() {
         if (context.mounted) {
-          return Navigator.of(context).pushReplacementNamed(
-              NavigationOptions.mealDetailRoute,
-              arguments: MealDetailScreenArguments(
+          return context.pushReplacement(AppRoutes.mealDetail,
+              extra: MealDetailScreenArguments(
                   product, _intakeTypeEntity, _day, scannerState.usesImperialUnits));
         }
       });

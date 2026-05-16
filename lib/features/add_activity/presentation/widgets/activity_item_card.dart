@@ -1,7 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/activity_detail/activity_detail_screen.dart';
 
 class ActivityItemCard extends StatelessWidget {
@@ -64,7 +65,6 @@ class ActivityItemCard extends StatelessWidget {
   }
 
   void _onItemPressed(BuildContext context) {
-    Navigator.of(context).pushNamed(NavigationOptions.activityDetailRoute,
-        arguments: ActivityDetailScreenArguments(physicalActivityEntity, day));
+    context.push(AppRoutes.activityDetail, extra: ActivityDetailScreenArguments(physicalActivityEntity, day));
   }
 }

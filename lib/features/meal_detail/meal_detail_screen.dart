@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
@@ -8,7 +9,7 @@ import 'package:nutriq/core/presentation/widgets/meal_value_unit_text.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
 import 'package:nutriq/core/providers/service_providers.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:nutriq/features/meal_detail/presentation/notifier/meal_detail_notifier.dart';
@@ -22,7 +23,9 @@ import 'package:nutriq/features/meal_detail/presentation/widgets/off_disclaimer.
 import 'package:nutriq/generated/l10n.dart';
 
 class MealDetailScreen extends ConsumerStatefulWidget {
-  const MealDetailScreen({super.key});
+  final MealDetailScreenArguments arguments;
+
+  const MealDetailScreen({super.key, required this.arguments});
 
   @override
   ConsumerState<MealDetailScreen> createState() => _MealDetailScreenState();
@@ -47,12 +50,42 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
   bool _netCarbsEnabled = false;
 
   String _initialUnit = "";
-  String _initialQuantity = "";
 
   @override
   void initState() {
+    meal = widget.arguments.mealEntity;
+    _day = widget.arguments.day;
+    intakeTypeEntity = widget.arguments.intakeTypeEntity;
+    _usesImperialUnits = widget.arguments.usesImperialUnits;
+    _initUnitAndQuantity();
     _loadNetCarbsConfig();
     super.initState();
+  }
+
+  void _initUnitAndQuantity() {
+    if (meal.hasServingValues) {
+      _initialUnit = UnitDropdownItem.serving.toString();
+    } else if (meal.isLiquid) {
+      _initialUnit = _usesImperialUnits
+          ? UnitDropdownItem.flOz.toString()
+          : UnitDropdownItem.ml.toString();
+    } else if (meal.isSolid) {
+      _initialUnit = _usesImperialUnits
+          ? UnitDropdownItem.oz.toString()
+          : UnitDropdownItem.g.toString();
+    } else {
+      _initialUnit = UnitDropdownItem.gml.toString();
+    }
+    ref.read(mealDetailNotifierProvider.notifier).updateKcal(meal, selectedUnit: _initialUnit);
+
+    if (meal.hasServingValues) {
+      quantityTextController.text = "1";
+    } else if (_usesImperialUnits) {
+      quantityTextController.text = _initialQuantityImperial;
+    } else {
+      quantityTextController.text = _initialQuantityMetric;
+    }
+    ref.read(mealDetailNotifierProvider.notifier).updateKcal(meal, totalQuantity: quantityTextController.text);
   }
 
   void _loadNetCarbsConfig() async {
@@ -62,52 +95,6 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
         _netCarbsEnabled = config.netCarbsEnabled;
       });
     }
-  }
-
-  @override
-  void didChangeDependencies() {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as MealDetailScreenArguments;
-    meal = args.mealEntity;
-    _day = args.day;
-    intakeTypeEntity = args.intakeTypeEntity;
-    _usesImperialUnits = args.usesImperialUnits;
-
-    if (_initialUnit == "") {
-      if (meal.hasServingValues) {
-        _initialUnit = UnitDropdownItem.serving.toString();
-      } else if (meal.isLiquid) {
-        _initialUnit = _usesImperialUnits
-            ? UnitDropdownItem.flOz.toString()
-            : UnitDropdownItem.ml.toString();
-      } else if (meal.isSolid) {
-        _initialUnit = _usesImperialUnits
-            ? UnitDropdownItem.oz.toString()
-            : UnitDropdownItem.g.toString();
-      } else {
-        _initialUnit = UnitDropdownItem.gml.toString();
-      }
-      ref
-          .read(mealDetailNotifierProvider.notifier)
-          .updateKcal(meal, selectedUnit: _initialUnit);
-    }
-
-    if (_initialQuantity == "") {
-      if (meal.hasServingValues) {
-        _initialQuantity = "1";
-        quantityTextController.text = "1";
-      } else if (_usesImperialUnits) {
-        _initialQuantity = _initialQuantityImperial;
-        quantityTextController.text = _initialQuantityImperial;
-      } else {
-        _initialQuantity = _initialQuantityMetric;
-        quantityTextController.text = _initialQuantityMetric;
-      }
-      ref.read(mealDetailNotifierProvider.notifier).updateKcal(
-          meal, totalQuantity: quantityTextController.text);
-    }
-
-    super.didChangeDependencies();
   }
 
   @override
@@ -172,20 +159,19 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
                                 overflow: TextOverflow.ellipsis)
                             : const SizedBox()));
           }),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(NavigationOptions.editMealRoute,
-                          arguments: EditMealScreenArguments(
-                            _day,
-                            meal,
-                            intakeTypeEntity,
-                            _usesImperialUnits,
-                          ));
-                },
-                icon: const Icon(Icons.edit_outlined))
-          ],
+            actions: [
+             IconButton(
+                 onPressed: () {
+                   context.push(AppRoutes.editMeal,
+                       extra: EditMealScreenArguments(
+                         _day,
+                         meal,
+                         intakeTypeEntity,
+                         _usesImperialUnits,
+                       ));
+                 },
+                 icon: const Icon(Icons.edit_outlined))
+           ],
         ),
         SliverList(
             delegate: SliverChildListDelegate([
@@ -208,11 +194,9 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.of(context).pushNamed(
-                        NavigationOptions.imageFullScreenRoute,
-                        arguments:
-                            ImageFullScreenArguments(meal.mainImageUrl ?? ""));
-                  }),
+                     context.push(AppRoutes.imageFullscreen,
+                         extra: ImageFullScreenArguments(meal.mainImageUrl ?? ""));
+                   }),
             ),
           ),
           Padding(

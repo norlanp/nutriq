@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/presentation/widgets/app_banner_version.dart';
 import 'package:nutriq/core/presentation/widgets/disclaimer_dialog.dart';
 import 'package:nutriq/core/utils/app_const.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/core/providers/notifier_providers.dart';
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
@@ -46,22 +47,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ListTile(
               leading: const Icon(Icons.notifications_outlined),
               title: Text(S.of(context).notificationSettingsLabel),
-              onTap: () => Navigator.of(context).pushNamed(
-                NavigationOptions.notificationSettingsRoute,
+              onTap: () => context.push(
+                AppRoutes.notificationSettings,
               ),
             ),
             ListTile(
               leading: const Icon(Icons.health_and_safety_outlined),
               title: Text(S.of(context).healthSyncTitle),
-              onTap: () => Navigator.of(context).pushNamed(
-                NavigationOptions.healthSyncRoute,
+              onTap: () => context.push(
+                AppRoutes.healthSync,
               ),
             ),
             ListTile(
               leading: const Icon(Icons.warning_amber_outlined),
               title: Text(S.of(context).allergenSettingsLabel),
-              onTap: () => Navigator.of(context).pushNamed(
-                NavigationOptions.allergenSettingsRoute,
+              onTap: () => context.push(
+                AppRoutes.allergenSettings,
               ),
             ),
             ListTile(

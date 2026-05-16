@@ -2,11 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/presentation/widgets/meal_value_unit_text.dart';
 import 'package:nutriq/core/providers/service_providers.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
@@ -118,9 +119,8 @@ class MealItemCard extends ConsumerWidget {
   }
 
   void _onItemPressed(BuildContext context) {
-    Navigator.of(context).pushNamed(NavigationOptions.mealDetailRoute,
-        arguments: MealDetailScreenArguments(
-            mealEntity, addMealType.getIntakeType(), day, usesImperialUnits));
+    context.push(AppRoutes.mealDetail, extra: MealDetailScreenArguments(
+        mealEntity, addMealType.getIntakeType(), day, usesImperialUnits));
   }
 }
 

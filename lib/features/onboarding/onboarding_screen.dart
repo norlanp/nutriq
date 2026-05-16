@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_activity_selection_entity.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_gender_selection_entity.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_goal_selection_entity.dart';
@@ -239,7 +240,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     if (userEntity != null) {
       ref.read(onboardingNotifierProvider.notifier).saveOnboardingData(
           userEntity, hasAcceptedDataCollection, usesImperialUnits);
-      Navigator.pushReplacementNamed(context, NavigationOptions.mainRoute);
+      context.go(AppRoutes.main);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.of(context).onboardingSaveUserError)));

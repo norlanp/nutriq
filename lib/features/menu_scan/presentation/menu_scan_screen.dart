@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:go_router/go_router.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/menu_scan/presentation/menu_items_screen.dart';
 import 'package:nutriq/features/menu_scan/presentation/notifier/menu_scan_notifier.dart';
 import 'package:nutriq/features/menu_scan/presentation/notifier/menu_scan_state.dart';
@@ -99,7 +100,7 @@ class _MenuScanScreenState extends ConsumerState<MenuScanScreen> {
           const SizedBox(height: 24),
           TextButton.icon(
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed(NavigationOptions.addMealRoute);
+              context.go(AppRoutes.addMeal);
             },
             icon: const Icon(Icons.search),
             label: Text(l10n.menuScanSearchManually),

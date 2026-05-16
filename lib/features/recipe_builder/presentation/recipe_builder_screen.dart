@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/core/utils/id_generator.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
@@ -132,10 +133,9 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
       0, (sum, e) => sum + e.amount * (e.meal.nutriments.energyPerUnit ?? 0));
 
   void _addIngredient() async {
-    final result = await Navigator.pushNamed(
-      context,
-      NavigationOptions.addMealRoute,
-      arguments: AddMealScreenArguments(AddMealType.snackType, DateTime.now()),
+    final result = await context.push<MealEntity>(
+      AppRoutes.addMeal,
+      extra: AddMealScreenArguments(AddMealType.snackType, DateTime.now()),
     );
     if (result is MealEntity) {
       setState(() {
@@ -150,10 +150,7 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
   }
 
   void _navigateToImport() {
-    Navigator.pushNamed(
-      context,
-      NavigationOptions.recipeImportRoute,
-    );
+    context.push(AppRoutes.recipeImport);
   }
 
   void _saveRecipe() {
@@ -181,7 +178,7 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
     );
 
     ref.read(recipeNotifierProvider.notifier).addRecipe(recipe);
-    Navigator.pop(context);
+    context.pop();
   }
 }
 

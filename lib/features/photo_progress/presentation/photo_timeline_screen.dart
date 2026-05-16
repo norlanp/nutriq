@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/photo_progress_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/photo_progress/data/photo_storage_service.dart';
 import 'package:nutriq/features/photo_progress/presentation/notifier/photo_progress_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -35,8 +37,8 @@ class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).photoProgressTitle)),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed(
-          NavigationOptions.photoCaptureRoute,
+        onPressed: () => context.push(
+          AppRoutes.photoCapture,
         ),
         child: const Icon(Icons.add_a_photo),
       ),
@@ -129,7 +131,7 @@ class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
   void _viewPhoto(BuildContext context, PhotoProgressEntity photo) async {
     final fullPath = await _photoStorageService.getFullPath(photo.filePath);
     if (!mounted) return;
-    Navigator.of(context).pushNamed(NavigationOptions.imageFullScreenRoute, arguments: fullPath);
+    context.push(AppRoutes.imageFullscreen, extra: ImageFullScreenArguments(fullPath));
   }
 
   void _confirmDelete(BuildContext context, PhotoProgressEntity photo) {

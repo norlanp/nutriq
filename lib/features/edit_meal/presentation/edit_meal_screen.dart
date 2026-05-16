@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/core/utils/calc/unit_calc.dart';
 import 'package:nutriq/core/utils/custom_text_input_formatter.dart';
 import 'package:nutriq/core/utils/extensions.dart';
 import 'package:nutriq/core/providers/service_providers.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/edit_meal/domain/meal_entity_builder.dart';
 import 'package:nutriq/features/edit_meal/presentation/notifier/edit_meal_notifier.dart';
@@ -17,7 +18,9 @@ import 'package:nutriq/generated/l10n.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class EditMealScreen extends ConsumerStatefulWidget {
-  const EditMealScreen({super.key});
+  final EditMealScreenArguments arguments;
+
+  const EditMealScreen({super.key, required this.arguments});
 
   @override
   ConsumerState<EditMealScreen> createState() => _EditMealScreenState();
@@ -60,22 +63,10 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
   @override
   void initState() {
     super.initState();
-
-    _baseQuantityTextController.addListener(() {
-      setState(() {
-        baseQuantity = _baseQuantityTextController.text;
-      });
-    });
-  }
-
-  @override
-  void didChangeDependencies() {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as EditMealScreenArguments;
-    _mealEntity = args.mealEntity;
-    _day = args.day;
-    _intakeTypeEntity = args.intakeTypeEntity;
-    _usesImperialUnits = args.usesImperialUnits;
+    _mealEntity = widget.arguments.mealEntity;
+    _day = widget.arguments.day;
+    _intakeTypeEntity = widget.arguments.intakeTypeEntity;
+    _usesImperialUnits = widget.arguments.usesImperialUnits;
 
     _nameTextController.text = _mealEntity.name ?? "";
     _brandsTextController.text = _mealEntity.brands ?? "";
@@ -108,6 +99,15 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
           _servingQuantityTextController.text, _mealEntity.mealUnit ?? "0");
     }
 
+    _baseQuantityTextController.addListener(() {
+      setState(() {
+        baseQuantity = _baseQuantityTextController.text;
+      });
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
     _mealUnitButtonSegment = [
       ButtonSegment(
         value: _units[0],
@@ -125,7 +125,6 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
         label: Text(S.of(context).gramMilliliterUnit),
       ),
     ];
-
     super.didChangeDependencies();
   }
 
@@ -367,10 +366,8 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
           sodiumText: _sodiumTextController.text,
           potassiumText: _potassiumTextController.text);
 
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          NavigationOptions.mealDetailRoute,
-          ModalRoute.withName(NavigationOptions.addMealRoute),
-          arguments: MealDetailScreenArguments(
+      context.go(AppRoutes.mealDetail,
+          extra: MealDetailScreenArguments(
               newMealEntity, _intakeTypeEntity, _day, usesImperialUnits));
     } catch (exception, stacktrace) {
       log.warning("Error while creating new meal entity");

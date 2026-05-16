@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/fasting_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/notifier/fasting_notifier.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/notifier/fasting_state.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/widgets/preset_selector.dart';
@@ -47,8 +48,7 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
             icon: const Icon(Icons.history),
             tooltip: l10n.fastingHistoryLabel,
             onPressed: () {
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.fastingHistoryRoute);
+              context.push(AppRoutes.fastingHistory);
             },
           ),
         ],

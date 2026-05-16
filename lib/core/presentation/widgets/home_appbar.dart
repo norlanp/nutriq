@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/presentation/widgets/dynamic_ont_logo.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
@@ -33,7 +34,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
               color: Theme.of(context).colorScheme.onSurface),
           tooltip: S.of(context).settingsLabel,
           onPressed: () {
-            Navigator.of(context).pushNamed(NavigationOptions.settingsRoute);
+            context.push(AppRoutes.settings);
           },
         )
       ],

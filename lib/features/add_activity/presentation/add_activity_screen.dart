@@ -10,7 +10,9 @@ import 'package:nutriq/features/add_meal/presentation/widgets/no_results_widget.
 import 'package:nutriq/generated/l10n.dart';
 
 class AddActivityScreen extends ConsumerStatefulWidget {
-  const AddActivityScreen({super.key});
+  final AddActivityScreenArguments arguments;
+
+  const AddActivityScreen({super.key, required this.arguments});
 
   @override
   ConsumerState<AddActivityScreen> createState() => _AddActivityScreenState();
@@ -25,16 +27,9 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen>
 
   @override
   void initState() {
+    _day = widget.arguments.day;
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    final args = ModalRoute.of(context)!.settings.arguments
-        as AddActivityScreenArguments;
-    _day = args.day;
-    super.didChangeDependencies();
   }
 
   @override

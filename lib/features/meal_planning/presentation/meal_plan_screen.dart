@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/meal_plan_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/meal_planning/presentation/notifier/meal_plan_notifier.dart';
 import 'package:nutriq/features/meal_planning/presentation/widgets/meal_slot_widget.dart';
 import 'package:nutriq/features/meal_planning/presentation/widgets/nutrition_preview.dart';
@@ -58,8 +59,7 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
             icon: const Icon(Icons.shopping_cart_outlined),
             tooltip: S.of(context).shoppingListLabel,
             onPressed: () {
-              Navigator.of(context)
-                  .pushNamed(NavigationOptions.shoppingListRoute);
+              context.push(AppRoutes.shoppingList);
             },
           ),
         ],

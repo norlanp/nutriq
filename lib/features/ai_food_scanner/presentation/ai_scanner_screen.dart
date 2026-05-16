@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:go_router/go_router.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/ai_food_scanner/presentation/notifier/ai_scanner_notifier.dart';
 import 'package:nutriq/features/ai_food_scanner/presentation/notifier/ai_scanner_state.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -24,7 +25,7 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
         Navigator.of(context).pop(next.selectedCandidate);
       }
       if (next.status == AiScannerStatus.manualSearch) {
-        Navigator.of(context).pushReplacementNamed(NavigationOptions.addMealRoute);
+        context.go(AppRoutes.addMeal);
       }
     });
 

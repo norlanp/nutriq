@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:go_router/go_router.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/add_activity/presentation/add_activity_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -21,10 +22,9 @@ class ExerciseQuickAddButton extends StatelessWidget {
   }
 
   void _onAddExerciseTapped(BuildContext context) {
-    // Reuse the existing add activity navigation
-    Navigator.of(context).pushNamed(
-      NavigationOptions.addActivityRoute,
-      arguments: AddActivityScreenArguments(day: day),
+    context.push(
+      AppRoutes.addActivity,
+      extra: AddActivityScreenArguments(day: day),
     );
   }
 }

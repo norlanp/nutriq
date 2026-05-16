@@ -72,12 +72,12 @@ deleted. Old BLoC files and `test/unit_test/bloc_test/` removed.
 
 Phase 3: Routing Overhaul
 --------------------------
-[ ] Replace `MaterialApp.routes` (48 named routes) with `go_router`
-[ ] Convert `NavigationOptions` string constants to type-safe `GoRoute` definitions
-[ ] Convert `ModalRoute.of(context)!.settings.arguments` to go_router typed path/query params
-[ ] Add deep linking support
-[ ] Delete `NavigationOptions` after full migration
-[ ] Run `flutter analyze` — zero errors/warnings
+[x] Replace `MaterialApp.routes` (48 named routes) with `go_router`
+[x] Convert `NavigationOptions` string constants to type-safe `GoRoute` definitions
+[x] Convert `ModalRoute.of(context)!.settings.arguments` to go_router typed path/query params
+[x] Add deep linking support
+[x] Delete `NavigationOptions` after full migration
+[x] Run `flutter analyze` — zero errors/warnings
 
 Phase 4: HTTP Layer Hardening
 ------------------------------

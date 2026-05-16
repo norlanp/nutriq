@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/water_entity.dart';
-import 'package:nutriq/core/utils/navigation_options.dart';
+import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/features/water_tracking/presentation/notifier/water_notifier.dart';
 
 import 'package:nutriq/generated/l10n.dart';
@@ -39,7 +40,7 @@ class _WaterTrackerSummaryWidgetState
   }
 
   void _navigateToWaterTracker() async {
-    await Navigator.of(context).pushNamed(NavigationOptions.waterTrackingRoute);
+    await context.push(AppRoutes.waterTracking);
     if (mounted) {
       ref.read(waterNotifierProvider.notifier).loadWater(DateTime.now(), dailyGoal: _defaultDailyGoal);
     }
