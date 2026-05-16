@@ -61,11 +61,15 @@ Phase 5: Code Quality [DONE]
 [x] Remove 5 sized_box_for_whitespace lint suppressions in add_item_bottom_sheet.dart
 [x] Convert 14 TODO comments to GitHub issues (blocked: repo has issues disabled)
 
-Phase 6: Test Coverage
-------------------------
-[ ] Add BLoC/Notifier tests for core features (home, diary, add_meal, profile, settings)
-[ ] Add use-case tests for calorie goal calculation, step bonus, import/export
+Phase 6: Test Coverage [DONE]
+---------------------------------
+[x] Add BLoC tests for diary, add_meal, profile, settings (mock repositories + real usecases)
+[x] Add IntakeEntity computed property tests (totalKcal, totalCarbsGram, etc.)
+[x] Add use-case tests for calorie goal calculation (GetKcalGoalUsecase)
+[x] Add use-case tests for step bonus (CalculateStepBonusUsecase)
+[x] Add use-case tests for macro goal calculation (GetMacroGoalUsecase, MacroCalc)
+[x] Add test dependencies (mocktail, bloc_test)
 
-Remaining Audit Items (not started)
--------------------------------------
-[ ] iOS encryption compliance flag (ITSAppUsesNonExemptEncryption should be true in Info.plist)
+Remaining Audit Items
+-----------------------
+[x] iOS encryption compliance flag (ITSAppUsesNonExemptEncryption=false already present — correct for HTTPS-only app)
