@@ -81,14 +81,16 @@ Phase 3: Routing Overhaul
 
 Phase 4: HTTP Layer Hardening
 ------------------------------
-[ ] Add `dio` to pubspec.yaml dependencies
-[ ] Add `retrofit` + `retrofit_generator` to dev_dependencies
-[ ] Create typed API client for Open Food Facts (OFF) — replace raw `http` calls in `off_data_source.dart`
-[ ] Create typed API client for USDA FDC — replace raw `http` calls in `fdc_data_source.dart`
-[ ] Add request interceptor for error handling, retry, and user-agent
-[ ] Add response logging in debug mode via `dio` logger
-[ ] Update `RecipeScraperServiceImpl` to use `dio` if needed
-[ ] Run `flutter analyze` — zero errors/warnings
+[x] Add `dio` to pubspec.yaml dependencies
+[x] Add `retrofit` + `retrofit_generator` to dev_dependencies (removed — not needed, used Dio directly)
+[x] Create typed API client for Open Food Facts (OFF) — replace raw `http` calls in `off_data_source.dart`
+[x] Create typed API client for USDA FDC — replace raw `http` calls in `fdc_data_source.dart`
+[x] Add request interceptor for error handling, retry, and user-agent
+[x] Add response logging in debug mode via `dio` logger
+[x] Update `RecipeScraperServiceImpl` to use `dio` if needed
+[x] Remove `ONTHttpClient` (replaced by Dio interceptors)
+[x] Remove `http` from direct dependencies (still transitive)
+[x] Run `flutter analyze` — zero errors/warnings ✅
 
 Phase 5: Form Validation
 --------------------------

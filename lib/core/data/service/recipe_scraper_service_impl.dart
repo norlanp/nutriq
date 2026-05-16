@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:nutriq/core/domain/entity/scraped_recipe_entity.dart';
 import 'package:nutriq/core/domain/exception/recipe_import_exception.dart';
 import 'package:nutriq/core/domain/service/recipe_scraper_service.dart';
@@ -35,10 +35,9 @@ class RecipeScraperServiceImpl implements RecipeScraperService {
     '192.168.',
   ];
 
-  final http.Client _client;
+  final Dio _dio;
 
-  RecipeScraperServiceImpl([http.Client? client])
-      : _client = client ?? http.Client();
+  RecipeScraperServiceImpl(this._dio);
 
   @override
   Future<ScrapedRecipeEntity?> scrapeRecipe(String url) async {
@@ -60,24 +59,17 @@ class RecipeScraperServiceImpl implements RecipeScraperService {
       );
     }
 
-    http.Response response;
+    String html;
     try {
-      response = await _client.get(uri);
-    } catch (e) {
+      final response = await _dio.get<String>(url);
+      html = response.data!;
+    } on DioException catch (e) {
       throw RecipeImportException(
-        'Failed to fetch URL: $e',
+        'Failed to fetch URL: ${e.message}',
         RecipeImportErrorType.networkError,
       );
     }
 
-    if (response.statusCode != 200) {
-      throw RecipeImportException(
-        'HTTP error: ${response.statusCode}',
-        RecipeImportErrorType.networkError,
-      );
-    }
-
-    final html = response.body;
     return _parseRecipeFromHtml(html, url);
   }
 
@@ -265,7 +257,6 @@ class RecipeScraperServiceImpl implements RecipeScraperService {
       }
       searchStart = closeIndex + closeTag.length;
     }
-    // Also check for single-quoted variant
     final openTagAlt = "<script type='application/ld+json'>";
     searchStart = 0;
     while (true) {

@@ -6,6 +6,7 @@ import 'package:nutriq/core/domain/service/food_grade_calculator.dart';
 import 'package:nutriq/core/domain/service/food_grade_filter.dart';
 import 'package:nutriq/core/domain/service/recipe_scraper_service.dart';
 import 'package:nutriq/core/domain/service/widget_data_service.dart';
+import 'package:nutriq/core/network/dio_provider.dart';
 import 'package:nutriq/core/providers/repository_providers.dart';
 import 'package:nutriq/core/data/service/recipe_scraper_service_impl.dart';
 import 'package:nutriq/features/ai_food_scanner/data/food_classifier_service.dart';
@@ -24,7 +25,7 @@ final cacheManagerProvider = Provider<CacheManager>((ref) {
 });
 
 final recipeScraperServiceProvider = Provider<RecipeScraperService>((ref) {
-  return RecipeScraperServiceImpl();
+  return RecipeScraperServiceImpl(ref.watch(dioProvider));
 });
 
 final autopilotServiceProvider = Provider<AutopilotServiceImpl>((ref) {
