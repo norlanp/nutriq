@@ -179,4 +179,18 @@ class TrackedDayRepository implements domain.TrackedDayRepository {
       proteinAmount: proteinTracked,
     );
   }
+
+  @override
+  Future<void> importAllFromJson(List<Map<String, dynamic>> jsonList) async {
+    final companions = jsonList
+        .map((json) => TrackedDay.fromJson(json).toCompanion(false))
+        .toList();
+    await _trackedDayDataSource.saveAllTrackedDays(companions);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> exportAllToJson() async {
+    final data = await _trackedDayDataSource.getAllTrackedDays();
+    return data.map((item) => item.toJson()).toList();
+  }
 }

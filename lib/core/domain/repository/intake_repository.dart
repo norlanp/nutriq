@@ -23,4 +23,8 @@ abstract class IntakeRepository {
   Future<List<IntakeEntity>> getIntakesByDate(DateTime date);
 
   Future<List<IntakeEntity>> getAllIntakesOrderedByTime();
+
+  Future<void> importAllFromJson(List<Map<String, dynamic>> jsonList);
+
+  Future<List<Map<String, dynamic>>> exportAllToJson();
 }

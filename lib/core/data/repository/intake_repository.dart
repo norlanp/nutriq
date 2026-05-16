@@ -93,4 +93,18 @@ class IntakeRepository implements domain.IntakeRepository {
     }
     return mapIntakeToEntity(intake, meal);
   }
+
+  @override
+  Future<void> importAllFromJson(List<Map<String, dynamic>> jsonList) async {
+    final companions = jsonList
+        .map((json) => Intake.fromJson(json).toCompanion(false))
+        .toList();
+    await _intakeDataSource.addAllIntakes(companions);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> exportAllToJson() async {
+    final data = await _intakeDataSource.getAllIntakes();
+    return data.map((item) => item.toJson()).toList();
+  }
 }

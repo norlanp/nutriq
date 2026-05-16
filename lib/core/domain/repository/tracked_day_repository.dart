@@ -62,4 +62,8 @@ abstract class TrackedDayRepository {
     double? fatTracked,
     double? proteinTracked,
   });
+
+  Future<void> importAllFromJson(List<Map<String, dynamic>> jsonList);
+
+  Future<List<Map<String, dynamic>>> exportAllToJson();
 }

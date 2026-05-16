@@ -47,4 +47,18 @@ class UserActivityRepository implements domain.UserActivityRepository {
         await _userActivityDataSource.getRecentlyAddedUserActivity();
     return userActivities.map((ua) => mapUserActivityToEntity(ua)).toList();
   }
+
+  @override
+  Future<void> importAllFromJson(List<Map<String, dynamic>> jsonList) async {
+    final companions = jsonList
+        .map((json) => UserActivity.fromJson(json).toCompanion(false))
+        .toList();
+    await _userActivityDataSource.addAllUserActivities(companions);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> exportAllToJson() async {
+    final data = await _userActivityDataSource.getAllUserActivities();
+    return data.map((item) => item.toJson()).toList();
+  }
 }

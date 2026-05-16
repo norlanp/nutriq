@@ -41,11 +41,11 @@
 
 ### Phase 3: Handle Import/Export Data-Layer Dependencies
 
-[ ] Refactor ImportDataUsecase to accept domain repository types (add bulk-import methods to domain interfaces or accept raw JSON) @file:lib/features/settings/domain/usecase/import_data_usecase.dart
-[ ] Refactor ExportDataUsecase to accept domain repository types (add bulk-export methods to domain interfaces or accept raw JSON) @file:lib/features/settings/domain/usecase/export_data_usecase.dart
-[ ] Remove data-layer repository type aliases from locator.dart @file:lib/core/utils/locator.dart
-[ ] Remove data-layer repo registrations from locator.dart @file:lib/core/utils/locator.dart
-[ ] Run flutter analyze — zero new errors @file:lib/
+[x] Refactor ImportDataUsecase to accept domain repository types (add bulk-import methods to domain interfaces or accept raw JSON) @file:lib/features/settings/domain/usecase/import_data_usecase.dart
+[x] Refactor ExportDataUsecase to accept domain repository types (add bulk-export methods to domain interfaces or accept raw JSON) @file:lib/features/settings/domain/usecase/export_data_usecase.dart
+[x] Remove data-layer repository type aliases from locator.dart @file:lib/core/utils/locator.dart
+[x] Remove data-layer repo registrations from locator.dart @file:lib/core/utils/locator.dart
+[x] Run flutter analyze — zero new errors @file:lib/
 
 ### Phase 4: Remove GetIt
 

@@ -76,19 +76,11 @@ import 'package:nutriq/core/domain/repository/user_activity_repository.dart'
     as domain_user_activity;
 import 'package:nutriq/core/domain/repository/user_repository.dart'
     as domain_user;
-import 'package:nutriq/core/data/repository/intake_repository.dart'
-    as data_intake;
 import 'package:nutriq/core/data/repository/physical_activity_repository.dart'
     as data_physical_activity;
 import 'package:nutriq/core/data/repository/recipe_repository.dart';
-import 'package:nutriq/core/data/repository/tracked_day_repository.dart'
-    as data_tracked_day;
-import 'package:nutriq/core/data/repository/user_activity_repository.dart'
-    as data_user_activity;
 import 'package:nutriq/core/data/repository/user_repository.dart'
     as data_user;
-import 'package:nutriq/core/data/repository/weight_repository.dart'
-    as data_weight;
 import 'package:nutriq/core/data/repository/notification_settings_repository.dart'
     as data_notification;
 import 'package:nutriq/core/data/repository/water_repository.dart'
@@ -434,29 +426,17 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<domain_intake.IntakeRepository>(
     () => data_intake.IntakeRepository(locator(), locator()),
   );
-  locator.registerLazySingleton<data_intake.IntakeRepository>(
-    () => locator<domain_intake.IntakeRepository>()
-        as data_intake.IntakeRepository,
-  );
   locator.registerLazySingleton<ProductsRepository>(
     () => ProductsRepository(locator(), locator()),
   );
   locator.registerLazySingleton<domain_user_activity.UserActivityRepository>(
     () => data_user_activity.UserActivityRepository(locator()),
   );
-  locator.registerLazySingleton<data_user_activity.UserActivityRepository>(
-    () => locator<domain_user_activity.UserActivityRepository>()
-        as data_user_activity.UserActivityRepository,
-  );
   locator.registerLazySingleton<domain_physical_activity.PhysicalActivityRepository>(
     () => data_physical_activity.PhysicalActivityRepository(locator()),
   );
   locator.registerLazySingleton<domain_tracked_day.TrackedDayRepository>(
     () => data_tracked_day.TrackedDayRepository(locator()),
-  );
-  locator.registerLazySingleton<data_tracked_day.TrackedDayRepository>(
-    () => locator<domain_tracked_day.TrackedDayRepository>()
-        as data_tracked_day.TrackedDayRepository,
   );
   locator.registerLazySingleton<recipe_domain.RecipeRepository>(
     () => RecipeRepository(locator(), locator()),

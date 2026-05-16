@@ -3,14 +3,14 @@ import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:nutriq/core/data/repository/intake_repository.dart' as data_intake;
-import 'package:nutriq/core/data/repository/tracked_day_repository.dart' as data_tracked_day;
-import 'package:nutriq/core/data/repository/user_activity_repository.dart' as data_user_activity;
+import 'package:nutriq/core/domain/repository/intake_repository.dart';
+import 'package:nutriq/core/domain/repository/tracked_day_repository.dart';
+import 'package:nutriq/core/domain/repository/user_activity_repository.dart';
 
 class ExportDataUsecase {
-  final data_user_activity.UserActivityRepository _userActivityRepository;
-  final data_intake.IntakeRepository _intakeRepository;
-  final data_tracked_day.TrackedDayRepository _trackedDayRepository;
+  final UserActivityRepository _userActivityRepository;
+  final IntakeRepository _intakeRepository;
+  final TrackedDayRepository _trackedDayRepository;
 
   ExportDataUsecase(this._userActivityRepository, this._intakeRepository,
       this._trackedDayRepository);
@@ -20,21 +20,18 @@ class ExportDataUsecase {
       String userActivityJsonFileName,
       String userIntakeJsonFileName,
       String trackedDayJsonFileName) async {
-    final fullUserActivity =
-        await _userActivityRepository.getAllUserActivitiesData();
-    final fullUserActivityJson = jsonEncode(
-        fullUserActivity.map((activity) => activity.toJson()).toList());
-    final userActivityJsonBytes = utf8.encode(fullUserActivityJson);
+    final userActivityJsonList =
+        await _userActivityRepository.exportAllToJson();
+    final userActivityJsonBytes =
+        utf8.encode(jsonEncode(userActivityJsonList));
 
-    final fullIntake = await _intakeRepository.getAllIntakesData();
-    final fullIntakeJson =
-        jsonEncode(fullIntake.map((intake) => intake.toJson()).toList());
-    final intakeJsonBytes = utf8.encode(fullIntakeJson);
+    final intakeJsonList = await _intakeRepository.exportAllToJson();
+    final intakeJsonBytes = utf8.encode(jsonEncode(intakeJsonList));
 
-    final fullTrackedDay = await _trackedDayRepository.getAllTrackedDaysData();
-    final fullTrackedDayJson = jsonEncode(
-        fullTrackedDay.map((trackedDay) => trackedDay.toJson()).toList());
-    final trackedDayJsonBytes = utf8.encode(fullTrackedDayJson);
+    final trackedDayJsonList =
+        await _trackedDayRepository.exportAllToJson();
+    final trackedDayJsonBytes =
+        utf8.encode(jsonEncode(trackedDayJsonList));
 
     final archive = Archive();
     archive.addFile(

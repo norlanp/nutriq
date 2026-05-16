@@ -88,9 +88,6 @@ import 'package:nutriq/core/domain/usecase/widget/update_widget_data_usecase.dar
 import 'package:nutriq/core/data/data_export_service.dart';
 import 'package:nutriq/core/data/data_import_service.dart';
 import 'package:nutriq/core/data/encrypted_backup_service.dart';
-import 'package:nutriq/core/data/repository/intake_repository.dart' as data_intake;
-import 'package:nutriq/core/data/repository/tracked_day_repository.dart' as data_tracked_day;
-import 'package:nutriq/core/data/repository/user_activity_repository.dart' as data_user_activity;
 import 'package:nutriq/core/domain/service/recipe_catalog_service.dart';
 import 'package:nutriq/core/providers/repository_providers.dart';
 import 'package:nutriq/core/data/service/recipe_scraper_service_impl.dart';
@@ -574,30 +571,18 @@ final encryptedBackupServiceProvider = Provider((ref) {
   );
 });
 
-final _dataIntakeRepositoryProvider = Provider<data_intake.IntakeRepository>((ref) {
-  return ref.watch(intakeRepositoryProvider) as data_intake.IntakeRepository;
-});
-
-final _dataUserActivityRepositoryProvider = Provider<data_user_activity.UserActivityRepository>((ref) {
-  return ref.watch(userActivityRepositoryProvider) as data_user_activity.UserActivityRepository;
-});
-
-final _dataTrackedDayRepositoryProvider = Provider<data_tracked_day.TrackedDayRepository>((ref) {
-  return ref.watch(trackedDayRepositoryProvider) as data_tracked_day.TrackedDayRepository;
-});
-
 final exportDataUsecaseProvider = Provider((ref) {
   return ExportDataUsecase(
-    ref.watch(_dataUserActivityRepositoryProvider),
-    ref.watch(_dataIntakeRepositoryProvider),
-    ref.watch(_dataTrackedDayRepositoryProvider),
+    ref.watch(userActivityRepositoryProvider),
+    ref.watch(intakeRepositoryProvider),
+    ref.watch(trackedDayRepositoryProvider),
   );
 });
 
 final importDataUsecaseProvider = Provider((ref) {
   return ImportDataUsecase(
-    ref.watch(_dataUserActivityRepositoryProvider),
-    ref.watch(_dataIntakeRepositoryProvider),
-    ref.watch(_dataTrackedDayRepositoryProvider),
+    ref.watch(userActivityRepositoryProvider),
+    ref.watch(intakeRepositoryProvider),
+    ref.watch(trackedDayRepositoryProvider),
   );
 });

@@ -8,4 +8,8 @@ abstract class UserActivityRepository {
   Future<List<UserActivityEntity>> getAllUserActivityByDate(DateTime dateTime);
 
   Future<List<UserActivityEntity>> getRecentUserActivity();
+
+  Future<void> importAllFromJson(List<Map<String, dynamic>> jsonList);
+
+  Future<List<Map<String, dynamic>>> exportAllToJson();
 }
