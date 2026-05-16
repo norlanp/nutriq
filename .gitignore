@@ -74,12 +74,6 @@ build/
 # Generated Drift files (regenerated via build_runner)
 *.g.dart
 
-# TFLite model binaries
-assets/models/*.tflite
-
-# SQL.js WASM binary
-web/sql-wasm.wasm
-
 # Playwright MCP artifacts
 .playwright-mcp/
 

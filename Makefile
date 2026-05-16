@@ -1,20 +1,13 @@
-.PHONY: run run-web run-ios run-android \
-       build-web build-apk build-apk-debug build-ios build-android build-mobile \
+.PHONY: run-ios run-android \
+       build-apk build-apk-debug build-ios build-android build-mobile \
        codegen codegen-watch l10n \
        analyze test format format-check lint \
        clean \
        get upgrade \
-       serve \
        db-reset \
        setup check
 
 # ── Run ──────────────────────────────────────────────────────────────
-
-run:
-	flutter run -d chrome
-
-run-web:
-	flutter run -d web-server --web-port 8080 --web-hostname localhost
 
 run-ios:
 	flutter run -d ios
@@ -23,9 +16,6 @@ run-android:
 	flutter run -d android
 
 # ── Build ────────────────────────────────────────────────────────────
-
-build-web:
-	flutter build web
 
 build-apk:
 	flutter build apk
@@ -80,11 +70,6 @@ get:
 
 upgrade:
 	flutter pub upgrade
-
-# ── Serve (Firefox testing) ─────────────────────────────────────────
-
-serve: build-web
-	cd build/web && python3 -m http.server 8080
 
 # ── DB Reset ─────────────────────────────────────────────────────────
 
