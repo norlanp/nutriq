@@ -20,7 +20,7 @@ import 'package:nutriq/features/menu_scan/presentation/menu_scan_bloc.dart';
 
 
 import 'package:nutriq/features/step_bonus/presentation/step_bonus_bloc.dart';
-import 'package:nutriq/features/symptom_tracking/presentation/symptom_bloc.dart';
+
 import 'package:nutriq/features/voice_logging/presentation/voice_logging_bloc.dart';
 
 
@@ -96,14 +96,6 @@ final customTrackerBlocProvider = Provider((ref) {
     ref.watch(deleteCustomTrackerUsecaseProvider),
     ref.watch(logTrackerEntryUsecaseProvider),
     ref.watch(getTrackerEntriesUsecaseProvider),
-  );
-});
-
-final symptomBlocProvider = Provider((ref) {
-  return SymptomBloc(
-    ref.watch(getSymptomsUsecaseProvider),
-    ref.watch(addSymptomUsecaseProvider),
-    ref.watch(deleteSymptomUsecaseProvider),
   );
 });
 
