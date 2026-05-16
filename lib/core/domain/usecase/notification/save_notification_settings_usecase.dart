@@ -1,4 +1,4 @@
-import 'package:nutriq/core/data/repository/notification_settings_repository.dart';
+import 'package:nutriq/core/domain/repository/notification_settings_repository.dart';
 import 'package:nutriq/core/domain/entity/notification_settings_entity.dart';
 
 class SaveNotificationSettingsUsecase {

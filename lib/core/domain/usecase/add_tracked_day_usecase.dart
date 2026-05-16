@@ -1,4 +1,4 @@
-import 'package:nutriq/core/data/repository/tracked_day_repository.dart';
+import 'package:nutriq/core/domain/repository/tracked_day_repository.dart';
 
 class AddTrackedDayUsecase {
   final TrackedDayRepository _trackedDayRepository;

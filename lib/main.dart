@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/data/data_source/user_data_source.dart';
-import 'package:nutriq/core/data/repository/config_repository.dart';
+import 'package:nutriq/core/domain/repository/config_repository.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/presentation/main_screen.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
@@ -76,11 +76,7 @@ Future<void> main() async {
       FlutterError.presentError(details);
     };
 
-    try {
-      await initLocator();
-    } catch (e, st) {
-      log.severe('initLocator failed', e, st);
-    }
+    await initLocator();
 
     try {
       await HomeWidget.setAppGroupId('group.com.nutriq.app');

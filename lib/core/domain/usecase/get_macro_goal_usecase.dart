@@ -1,4 +1,4 @@
-import 'package:nutriq/core/data/repository/config_repository.dart';
+import 'package:nutriq/core/domain/repository/config_repository.dart';
 import 'package:nutriq/core/utils/calc/macro_calc.dart';
 
 class GetMacroGoalUsecase {

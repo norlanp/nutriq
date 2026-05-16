@@ -1,4 +1,4 @@
-import 'package:nutriq/core/data/repository/physical_activity_repository.dart';
+import 'package:nutriq/core/domain/repository/physical_activity_repository.dart';
 import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
 
 class GetPhysicalActivityUsecase {

@@ -3,14 +3,14 @@ import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:nutriq/core/data/repository/intake_repository.dart';
-import 'package:nutriq/core/data/repository/tracked_day_repository.dart';
-import 'package:nutriq/core/data/repository/user_activity_repository.dart';
+import 'package:nutriq/core/data/repository/intake_repository.dart' as data_intake;
+import 'package:nutriq/core/data/repository/tracked_day_repository.dart' as data_tracked_day;
+import 'package:nutriq/core/data/repository/user_activity_repository.dart' as data_user_activity;
 
 class ExportDataUsecase {
-  final UserActivityRepository _userActivityRepository;
-  final IntakeRepository _intakeRepository;
-  final TrackedDayRepository _trackedDayRepository;
+  final data_user_activity.UserActivityRepository _userActivityRepository;
+  final data_intake.IntakeRepository _intakeRepository;
+  final data_tracked_day.TrackedDayRepository _trackedDayRepository;
 
   ExportDataUsecase(this._userActivityRepository, this._intakeRepository,
       this._trackedDayRepository);

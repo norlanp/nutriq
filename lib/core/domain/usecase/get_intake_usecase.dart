@@ -1,4 +1,4 @@
-import 'package:nutriq/core/data/repository/intake_repository.dart';
+import 'package:nutriq/core/domain/repository/intake_repository.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 

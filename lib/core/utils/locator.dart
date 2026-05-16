@@ -66,12 +66,27 @@ import 'package:nutriq/core/domain/repository/medication_repository.dart'
     as domain_medication;
 import 'package:nutriq/core/domain/repository/weight_repository.dart'
     as domain_weight;
-import 'package:nutriq/core/data/repository/intake_repository.dart';
-import 'package:nutriq/core/data/repository/physical_activity_repository.dart';
+import 'package:nutriq/core/domain/repository/intake_repository.dart'
+    as domain_intake;
+import 'package:nutriq/core/domain/repository/physical_activity_repository.dart'
+    as domain_physical_activity;
+import 'package:nutriq/core/domain/repository/tracked_day_repository.dart'
+    as domain_tracked_day;
+import 'package:nutriq/core/domain/repository/user_activity_repository.dart'
+    as domain_user_activity;
+import 'package:nutriq/core/domain/repository/user_repository.dart'
+    as domain_user;
+import 'package:nutriq/core/data/repository/intake_repository.dart'
+    as data_intake;
+import 'package:nutriq/core/data/repository/physical_activity_repository.dart'
+    as data_physical_activity;
 import 'package:nutriq/core/data/repository/recipe_repository.dart';
-import 'package:nutriq/core/data/repository/tracked_day_repository.dart';
-import 'package:nutriq/core/data/repository/user_activity_repository.dart';
-import 'package:nutriq/core/data/repository/user_repository.dart';
+import 'package:nutriq/core/data/repository/tracked_day_repository.dart'
+    as data_tracked_day;
+import 'package:nutriq/core/data/repository/user_activity_repository.dart'
+    as data_user_activity;
+import 'package:nutriq/core/data/repository/user_repository.dart'
+    as data_user;
 import 'package:nutriq/core/data/repository/weight_repository.dart'
     as data_weight;
 import 'package:nutriq/core/data/repository/notification_settings_repository.dart'
@@ -413,23 +428,35 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<domain.ConfigRepository>(
     () => data.ConfigRepository(locator()),
   );
-  locator.registerLazySingleton<UserRepository>(
-    () => UserRepository(locator()),
+  locator.registerLazySingleton<domain_user.UserRepository>(
+    () => data_user.UserRepository(locator()),
   );
-  locator.registerLazySingleton<IntakeRepository>(
-    () => IntakeRepository(locator(), locator()),
+  locator.registerLazySingleton<domain_intake.IntakeRepository>(
+    () => data_intake.IntakeRepository(locator(), locator()),
+  );
+  locator.registerLazySingleton<data_intake.IntakeRepository>(
+    () => locator<domain_intake.IntakeRepository>()
+        as data_intake.IntakeRepository,
   );
   locator.registerLazySingleton<ProductsRepository>(
     () => ProductsRepository(locator(), locator()),
   );
-  locator.registerLazySingleton<UserActivityRepository>(
-    () => UserActivityRepository(locator()),
+  locator.registerLazySingleton<domain_user_activity.UserActivityRepository>(
+    () => data_user_activity.UserActivityRepository(locator()),
   );
-  locator.registerLazySingleton<PhysicalActivityRepository>(
-    () => PhysicalActivityRepository(locator()),
+  locator.registerLazySingleton<data_user_activity.UserActivityRepository>(
+    () => locator<domain_user_activity.UserActivityRepository>()
+        as data_user_activity.UserActivityRepository,
   );
-  locator.registerLazySingleton<TrackedDayRepository>(
-    () => TrackedDayRepository(locator()),
+  locator.registerLazySingleton<domain_physical_activity.PhysicalActivityRepository>(
+    () => data_physical_activity.PhysicalActivityRepository(locator()),
+  );
+  locator.registerLazySingleton<domain_tracked_day.TrackedDayRepository>(
+    () => data_tracked_day.TrackedDayRepository(locator()),
+  );
+  locator.registerLazySingleton<data_tracked_day.TrackedDayRepository>(
+    () => locator<domain_tracked_day.TrackedDayRepository>()
+        as data_tracked_day.TrackedDayRepository,
   );
   locator.registerLazySingleton<recipe_domain.RecipeRepository>(
     () => RecipeRepository(locator(), locator()),

@@ -1,4 +1,4 @@
-import 'package:nutriq/core/data/repository/user_repository.dart';
+import 'package:nutriq/core/domain/repository/user_repository.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
 
 class AddUserUsecase {

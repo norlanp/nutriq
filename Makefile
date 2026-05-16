@@ -13,7 +13,9 @@ run-ios:
 	flutter run -d ios
 
 run-android:
-	flutter run -d android
+	@ID=$$(flutter devices 2>/dev/null | grep android | head -1 | awk -F'•' '{gsub(/^ +| +$$/,"",$$2); print $$2}'); \
+	if [ -z "$$ID" ]; then echo "No Android device found"; exit 1; fi; \
+	flutter run -d $$ID
 
 # ── Build ────────────────────────────────────────────────────────────
 

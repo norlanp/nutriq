@@ -4,17 +4,17 @@ import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:nutriq/core/data/drift/app_database.dart';
-import 'package:nutriq/core/data/repository/intake_repository.dart';
-import 'package:nutriq/core/data/repository/tracked_day_repository.dart';
-import 'package:nutriq/core/data/repository/user_activity_repository.dart';
+import 'package:nutriq/core/data/repository/intake_repository.dart' as data_intake;
+import 'package:nutriq/core/data/repository/tracked_day_repository.dart' as data_tracked_day;
+import 'package:nutriq/core/data/repository/user_activity_repository.dart' as data_user_activity;
 import 'package:nutriq/core/utils/file_helper_stub.dart'
     if (dart.library.html) 'package:nutriq/core/utils/file_helper_web.dart'
     as file_helper;
 
 class ImportDataUsecase {
-  final UserActivityRepository _userActivityRepository;
-  final IntakeRepository _intakeRepository;
-  final TrackedDayRepository _trackedDayRepository;
+  final data_user_activity.UserActivityRepository _userActivityRepository;
+  final data_intake.IntakeRepository _intakeRepository;
+  final data_tracked_day.TrackedDayRepository _trackedDayRepository;
 
   ImportDataUsecase(this._userActivityRepository, this._intakeRepository,
       this._trackedDayRepository);

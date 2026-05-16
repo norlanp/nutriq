@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:nutriq/core/data/repository/config_repository.dart';
-import 'package:nutriq/core/data/repository/user_activity_repository.dart';
-import 'package:nutriq/core/data/repository/user_repository.dart';
+import 'package:nutriq/core/domain/repository/config_repository.dart';
+import 'package:nutriq/core/domain/repository/user_activity_repository.dart';
+import 'package:nutriq/core/domain/repository/user_repository.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 import 'package:nutriq/core/utils/calc/calorie_goal_calc.dart';
