@@ -4,15 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
-import 'package:nutriq/core/data/data_source/user_data_source.dart';
-import 'package:nutriq/core/domain/repository/config_repository.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/presentation/main_screen.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
 import 'package:nutriq/core/styles/color_schemes.dart';
 import 'package:nutriq/core/styles/fonts.dart';
 import 'package:nutriq/core/utils/env.dart';
-import 'package:nutriq/core/utils/locator.dart';
 import 'package:nutriq/core/utils/logger_config.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/core/utils/theme_mode_provider.dart';
@@ -61,6 +58,9 @@ import 'package:nutriq/generated/l10n.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     hide ChangeNotifierProvider, Provider;
 import 'package:provider/provider.dart';
+import 'package:nutriq/core/providers/data_source_providers.dart';
+import 'package:nutriq/core/providers/database_provider.dart';
+import 'package:nutriq/core/providers/repository_providers.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -78,14 +78,15 @@ Future<void> main() async {
       FlutterError.presentError(details);
     };
 
-    await initLocator();
+    final container = ProviderContainer();
+    await container.read(appInitializerProvider);
 
     try {
       await HomeWidget.setAppGroupId('group.com.nutriq.app');
     } catch (_) {}
 
-    final isUserInitialized = await locator<UserDataSource>().hasUserData();
-    final configRepo = locator<ConfigRepository>();
+    final isUserInitialized = await container.read(userDataSourceProvider).hasUserData();
+    final configRepo = container.read(configRepositoryProvider);
     final hasAcceptedAnonymousData =
         await configRepo.getConfigHasAcceptedAnonymousData();
     final savedAppTheme = await configRepo.getConfigAppTheme();
@@ -94,10 +95,10 @@ Future<void> main() async {
     // sentry enabled, else run without it
     if (kReleaseMode && hasAcceptedAnonymousData) {
       log.info('Starting App with Sentry enabled ...');
-      _runAppWithSentryReporting(isUserInitialized, savedAppTheme);
+      _runAppWithSentryReporting(isUserInitialized, savedAppTheme, container);
     } else {
       log.info('Starting App ...');
-      runAppWithChangeNotifiers(isUserInitialized, savedAppTheme);
+      runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, container);
     }
   }, (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -107,18 +108,21 @@ Future<void> main() async {
 }
 
 void _runAppWithSentryReporting(
-    bool isUserInitialized, AppThemeEntity savedAppTheme) async {
+    bool isUserInitialized, AppThemeEntity savedAppTheme,
+    [ProviderContainer? container]) async {
   await SentryFlutter.init((options) {
     options.dsn = Env.sentryDns;
     options.tracesSampleRate = 1.0;
   },
       appRunner: () =>
-          runAppWithChangeNotifiers(isUserInitialized, savedAppTheme));
+          runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, container));
 }
 
 void runAppWithChangeNotifiers(
-        bool userInitialized, AppThemeEntity savedAppTheme) =>
-    runApp(ProviderScope(
+        bool userInitialized, AppThemeEntity savedAppTheme,
+        [ProviderContainer? container]) =>
+    runApp(UncontrolledProviderScope(
+        container: container ?? ProviderContainer(),
         child: ChangeNotifierProvider(
             create: (_) => ThemeModeProvider(appTheme: savedAppTheme),
             child: NutriqApp(userInitialized: userInitialized))));

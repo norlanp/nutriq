@@ -13,13 +13,19 @@ import 'package:nutriq/core/domain/usecase/get_kcal_goal_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_user_usecase.dart';
 import 'package:nutriq/core/utils/calc/bmi_calc.dart';
 import 'package:nutriq/core/utils/calc/unit_calc.dart';
-import 'package:nutriq/core/utils/locator.dart';
-import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
+
+typedef RefreshHomeCallback = void Function();
+typedef RefreshDiaryCallback = void Function();
+typedef RefreshCalendarDayCallback = void Function();
+
+typedef _ProfileRefreshCallbacks = ({
+  RefreshHomeCallback refreshHome,
+  RefreshDiaryCallback refreshDiary,
+  RefreshCalendarDayCallback refreshCalendarDay,
+});
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final GetUserUsecase _getUserUsecase;
@@ -30,6 +36,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final AddConfigUsecase _addConfigUsecase;
   final CalculateBMRUsecase _calculateBMRUsecase;
 
+  final _ProfileRefreshCallbacks _refreshCallbacks;
+
   ProfileBloc(
       this._getUserUsecase,
       this._addUserUsecase,
@@ -37,7 +45,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       this._getConfigUsecase,
       this._getKcalGoalUsecase,
       this._addConfigUsecase,
-      this._calculateBMRUsecase)
+      this._calculateBMRUsecase,
+      this._refreshCallbacks)
       : super(ProfileInitial()) {
     on<LoadProfileEvent>((event, emit) async {
       emit(ProfileLoadingState());
@@ -78,26 +87,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           bmrCalculation: bmrCalculation,
           tdeeMethod: userConfig.tdeeMethod));
 
-      locator<HomeBloc>().add(const LoadItemsEvent());
-      locator<DiaryBloc>().add(const LoadDiaryYearEvent());
-      locator<CalendarDayBloc>().add(RefreshCalendarDayEvent());
+      _refreshCallbacks.refreshHome();
+      _refreshCallbacks.refreshDiary();
+      _refreshCallbacks.refreshCalendarDay();
     });
   }
 
   void updateUser(UserEntity userEntity) async {
-    // Update user in DB
     await _addUserUsecase.addUser(userEntity);
 
-    // Update Tracked Day
     await _updateTrackedDayCalorieGoal(userEntity, DateTime.now());
 
-    // Refresh Profile
     add(LoadProfileEvent());
-    // Refresh Home Page
-    locator<HomeBloc>().add(const LoadItemsEvent());
-    // Refresh Diary Page
-    locator<DiaryBloc>().add(const LoadDiaryYearEvent());
-    locator<CalendarDayBloc>().add(RefreshCalendarDayEvent());
+    _refreshCallbacks.refreshHome();
+    _refreshCallbacks.refreshDiary();
+    _refreshCallbacks.refreshCalendarDay();
   }
 
   Future<void> _updateTrackedDayCalorieGoal(

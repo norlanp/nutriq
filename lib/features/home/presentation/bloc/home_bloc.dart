@@ -18,13 +18,13 @@ import 'package:nutriq/core/domain/usecase/update_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/widget/update_widget_data_usecase.dart';
 import 'package:nutriq/core/utils/calc/calorie_goal_calc.dart';
 import 'package:nutriq/core/utils/calc/macro_calc.dart';
-import 'package:nutriq/core/utils/locator.dart';
-import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
 
 part 'home_event.dart';
 
 part 'home_state.dart';
+
+typedef RefreshDiaryCallback = void Function();
+typedef RefreshCalendarDayCallback = void Function();
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetConfigUsecase _getConfigUsecase;
@@ -43,6 +43,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   DateTime currentDay = DateTime.now();
 
+  final RefreshDiaryCallback _refreshDiary;
+  final RefreshCalendarDayCallback _refreshCalendarDay;
+
   HomeBloc(
       this._getConfigUsecase,
       this._addConfigUsecase,
@@ -56,7 +59,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       this._getMacroGoalUsecase,
       this._netCarbsUsecase,
       this._calculateStepBonusUsecase,
-      this._updateWidgetDataUsecase)
+      this._updateWidgetDataUsecase,
+      this._refreshDiary,
+      this._refreshCalendarDay)
       : super(HomeInitial()) {
     on<LoadItemsEvent>((event, emit) async {
       emit(HomeLoadingState());
@@ -253,7 +258,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _updateDiaryPage(DateTime day) async {
-    locator<DiaryBloc>().add(const LoadDiaryYearEvent());
-    locator<CalendarDayBloc>().add(RefreshCalendarDayEvent());
+    _refreshDiary();
+    _refreshCalendarDay();
   }
 }

@@ -13,12 +13,12 @@ import 'package:nutriq/core/domain/usecase/get_intake_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_tracked_day_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_user_activity_usecase.dart';
 import 'package:nutriq/core/utils/calc/macro_calc.dart';
-import 'package:nutriq/core/utils/locator.dart';
-import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
 
 part 'calendar_day_event.dart';
 
 part 'calendar_day_state.dart';
+
+typedef RefreshDiaryCallback = void Function();
 
 class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
   final GetUserActivityUsecase _getUserActivityUsecase;
@@ -32,6 +32,8 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
 
   DateTime? _currentDay;
 
+  final RefreshDiaryCallback _refreshDiary;
+
   CalendarDayBloc(
       this._getUserActivityUsecase,
       this._getIntakeUsecase,
@@ -40,7 +42,8 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
       this._getTrackedDayUsecase,
       this._addTrackedDayUsecase,
       this._getDailyBurnedCaloriesUsecase,
-      this._netCaloriesUsecase)
+      this._netCaloriesUsecase,
+      this._refreshDiary)
       : super(CalendarDayInitial()) {
     on<LoadCalendarDayEvent>((event, emit) async {
       emit(CalendarDayLoading());
@@ -116,7 +119,7 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
   }
 
   Future<void> _updateDiaryPage(DateTime day) async {
-    locator<DiaryBloc>().add(const LoadDiaryYearEvent());
-    locator<CalendarDayBloc>().add(LoadCalendarDayEvent(day));
+    _refreshDiary();
+    add(LoadCalendarDayEvent(day));
   }
 }

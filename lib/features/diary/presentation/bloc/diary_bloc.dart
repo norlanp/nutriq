@@ -4,12 +4,12 @@ import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_tracked_day_usecase.dart';
 import 'package:nutriq/core/utils/extensions.dart';
-import 'package:nutriq/core/utils/locator.dart';
-import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 
 part 'diary_event.dart';
 
 part 'diary_state.dart';
+
+typedef RefreshHomeCallback = void Function();
 
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
   final GetTrackedDayUsecase _getDayTrackedUsecase;
@@ -17,7 +17,9 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
 
   DateTime currentDay = DateTime.now();
 
-  DiaryBloc(this._getDayTrackedUsecase, this._getConfigUsecase)
+  final RefreshHomeCallback _refreshHome;
+
+  DiaryBloc(this._getDayTrackedUsecase, this._getConfigUsecase, this._refreshHome)
       : super(DiaryInitial()) {
     on<LoadDiaryYearEvent>((event, emit) async {
       emit(DiaryLoadingState());
@@ -45,6 +47,6 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
   }
 
   void updateHomePage() {
-    locator<HomeBloc>().add(const LoadItemsEvent());
+    _refreshHome();
   }
 }
