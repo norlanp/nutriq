@@ -1,85 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/domain/entity/body_measurement_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/generated/l10n.dart';
-import 'package:nutriq/features/body_measurements/presentation/body_measurement_bloc.dart';
+import 'package:nutriq/core/domain/entity/body_measurement_entity.dart';
+import 'package:nutriq/features/body_measurements/presentation/notifier/body_measurement_notifier.dart';
+import 'package:nutriq/features/body_measurements/presentation/notifier/body_measurement_state.dart';
 import 'package:nutriq/features/body_measurements/presentation/widgets/measurement_history_list.dart';
 import 'package:nutriq/features/body_measurements/presentation/widgets/measurement_trend_chart.dart';
+import 'package:nutriq/generated/l10n.dart';
 
 class BodyMeasurementScreen extends ConsumerStatefulWidget {
   const BodyMeasurementScreen({super.key});
 
   @override
-  ConsumerState<BodyMeasurementScreen> createState() => _BodyMeasurementScreenState();
+  ConsumerState<BodyMeasurementScreen> createState() =>
+      _BodyMeasurementScreenState();
 }
 
 class _BodyMeasurementScreenState extends ConsumerState<BodyMeasurementScreen> {
-  late BodyMeasurementBloc _bloc;
-
   @override
   void initState() {
     super.initState();
-    _bloc = ref.read(bodyMeasurementBlocProvider);
     final now = DateTime.now();
-    _bloc.add(LoadMeasurements(
-      startDate: DateTime(now.year, now.month, 1),
-      endDate: DateTime(now.year, now.month + 1, 0),
-    ));
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
+    ref.read(bodyMeasurementNotifierProvider.notifier).loadMeasurements(
+          DateTime(now.year, now.month, 1),
+          DateTime(now.year, now.month + 1, 0),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    return BlocProvider.value(
-      value: _bloc,
-      child: Scaffold(
-        appBar: AppBar(title: Text(s.bodyMeasurementTitle)),
-        body: BlocBuilder<BodyMeasurementBloc, BodyMeasurementState>(
-          builder: (context, state) {
-            if (state is BodyMeasurementLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is BodyMeasurementError) {
-              return Center(child: Text(state.message));
-            }
-            if (state is BodyMeasurementLoaded) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MeasurementTrendChart(measurements: state.measurements),
-                    const SizedBox(height: 24),
-                    MeasurementHistoryList(
-                      measurements: state.measurements,
-                      onDelete: (measurement) {
-                        final now = DateTime.now();
-                        _bloc.add(DeleteMeasurement(
-                          measurement: measurement,
-                          startDate: DateTime(now.year, now.month, 1),
-                          endDate: DateTime(now.year, now.month + 1, 0),
-                        ));
-                      },
-                    ),
-                  ],
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _showAddDialog(context),
-          child: const Icon(Icons.add),
-        ),
+    final state = ref.watch(bodyMeasurementNotifierProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: Text(s.bodyMeasurementTitle)),
+      body: _buildBody(context, state),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddDialog(context),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, BodyMeasurementState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          MeasurementTrendChart(measurements: state.measurements),
+          const SizedBox(height: 24),
+          MeasurementHistoryList(
+            measurements: state.measurements,
+            onDelete: (measurement) {
+              final now = DateTime.now();
+              ref.read(bodyMeasurementNotifierProvider.notifier).deleteMeasurement(
+                    measurement,
+                    DateTime(now.year, now.month, 1),
+                    DateTime(now.year, now.month + 1, 0),
+                  );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -187,12 +174,11 @@ class _BodyMeasurementScreenState extends ConsumerState<BodyMeasurementScreen> {
                       : null,
                   note: noteCtrl.text.isNotEmpty ? noteCtrl.text : null,
                 );
-                _bloc.add(AddMeasurement(
-                  measurement: measurement,
-                  startDate: DateTime(selectedDate.year, selectedDate.month, 1),
-                  endDate:
+                ref.read(bodyMeasurementNotifierProvider.notifier).addMeasurement(
+                      measurement,
+                      DateTime(selectedDate.year, selectedDate.month, 1),
                       DateTime(selectedDate.year, selectedDate.month + 1, 0),
-                ));
+                    );
                 Navigator.pop(ctx);
               },
               child: Text(s.save),

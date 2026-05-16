@@ -7,7 +7,7 @@ import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detai
 import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
 import 'package:nutriq/features/autopilot/presentation/autopilot_bloc.dart';
 import 'package:nutriq/features/blood_glucose/presentation/blood_glucose_bloc.dart';
-import 'package:nutriq/features/body_measurements/presentation/body_measurement_bloc.dart';
+
 import 'package:nutriq/features/calorie_cycling/presentation/calorie_cycling_bloc.dart';
 import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_bloc.dart';
 import 'package:nutriq/features/daily_notes/presentation/daily_note_bloc.dart';
@@ -58,14 +58,6 @@ final activityDetailBlocProvider = Provider((ref) {
 
 
 
-
-final bodyMeasurementBlocProvider = Provider((ref) {
-  return BodyMeasurementBloc(
-    getMeasurements: ref.watch(getBodyMeasurementsUsecaseProvider),
-    addMeasurement: ref.watch(addBodyMeasurementUsecaseProvider),
-    deleteMeasurement: ref.watch(deleteBodyMeasurementUsecaseProvider),
-  );
-});
 
 final foodGradeBlocProvider = Provider((ref) {
   return FoodGradeBloc();
