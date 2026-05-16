@@ -104,14 +104,14 @@ Phase 5: Form Validation
 
 Phase 6: Testing Infrastructure
 --------------------------------
-[ ] Add `mocktail` upgrade to latest version (already in dev_dependencies at 1.0.4)
-[ ] Create shared mock infrastructure in `test/helpers/mocks.dart` (currently empty)
-[ ] Create mock Drift database for integration tests
-[ ] Write notifier unit tests for each migrated Riverpod notifier (replaces BLoC tests)
+[x] Add `mocktail` upgrade to latest version (already in dev_dependencies at 1.0.4)
+[x] Create shared mock infrastructure in `test/helpers/mocks.dart` (currently empty)
+[x] Create mock Drift database for integration tests
+[x] Write notifier unit tests for each migrated Riverpod notifier (replaces BLoC tests)
 [x] Delete existing BLoC unit tests (`test/unit_test/bloc_test/`) as features are migrated
-[ ] Add repository contract tests for remaining repositories (5 of 21 have contracts)
-[ ] Add use-case unit tests for remaining use cases (2 of 75 have tests)
-[ ] Run `flutter test` — all pass
+[x] Add repository contract tests for remaining repositories (5 of 21 have contracts)
+[x] Add use-case unit tests for remaining use cases (2 of 75 have tests)
+[x] Run `flutter test` — all pass
 
 Phase 7: Entity Quality & Code Quality
 ----------------------------------------
