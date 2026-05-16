@@ -58,6 +58,8 @@ import 'package:nutriq/features/menu_scan/presentation/menu_scan_screen.dart';
 import 'package:nutriq/features/voice_logging/presentation/voice_logging_screen.dart';
 import 'package:nutriq/features/grocery_check/presentation/grocery_check_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    hide ChangeNotifierProvider, Provider;
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -116,9 +118,10 @@ void _runAppWithSentryReporting(
 
 void runAppWithChangeNotifiers(
         bool userInitialized, AppThemeEntity savedAppTheme) =>
-    runApp(ChangeNotifierProvider(
-        create: (_) => ThemeModeProvider(appTheme: savedAppTheme),
-        child: NutriqApp(userInitialized: userInitialized)));
+    runApp(ProviderScope(
+        child: ChangeNotifierProvider(
+            create: (_) => ThemeModeProvider(appTheme: savedAppTheme),
+            child: NutriqApp(userInitialized: userInitialized))));
 
 class NutriqApp extends StatelessWidget {
   final bool userInitialized;
