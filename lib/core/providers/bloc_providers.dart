@@ -6,7 +6,7 @@ import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detai
 
 import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
 import 'package:nutriq/features/autopilot/presentation/autopilot_bloc.dart';
-import 'package:nutriq/features/blood_glucose/presentation/blood_glucose_bloc.dart';
+
 
 import 'package:nutriq/features/calorie_cycling/presentation/calorie_cycling_bloc.dart';
 import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_bloc.dart';
@@ -114,15 +114,6 @@ final medicationBlocProvider = Provider((ref) {
     ref.watch(logMedicationUsecaseProvider),
     ref.watch(getMedicationLogUsecaseProvider),
     ref.watch(getMedicationsUsecaseProvider),
-  );
-});
-
-final bloodGlucoseBlocProvider = Provider((ref) {
-  return BloodGlucoseBloc(
-    ref.watch(getBloodGlucoseUsecaseProvider),
-    ref.watch(addBloodGlucoseUsecaseProvider),
-    ref.watch(deleteBloodGlucoseUsecaseProvider),
-    ref.watch(getBloodGlucoseAverageUsecaseProvider),
   );
 });
 
