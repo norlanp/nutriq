@@ -26,7 +26,7 @@ class ScannerBloc extends Bloc<ScannerEvent, ScannerState> {
         emit(ScannerLoadedState(
             product: result, usesImperialUnits: config.usesImperialUnits));
       } catch (exception) {
-        if (exception == ProductNotFoundException) {
+        if (exception is ProductNotFoundException) {
           emit(
               const ScannerFailedState(ScannerFailedStateType.productNotFound));
         } else {

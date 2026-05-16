@@ -49,21 +49,27 @@ class OFFDataSource {
           await httpClient.get(searchUrl).timeout(_timeoutDuration);
       log.fine('Fetching OFF result from: $searchUrl');
       if (response.statusCode == OFFConst.offHttpSuccessCode) {
+        final decoded = jsonDecode(response.body) as Map<String, dynamic>;
+        final status = decoded['status'];
+        if (status == 0) {
+          log.warning("OFF Product not found (status=0)");
+          throw ProductNotFoundException();
+        }
         final productResponse =
-            OFFProductResponseDTO.fromJson(jsonDecode(response.body));
+            OFFProductResponseDTO.fromJson(decoded);
         log.fine('Successful response from OFF');
         return productResponse;
       } else if (response.statusCode == OFFConst.offProductNotFoundCode) {
         log.warning("404 OFF Product not found");
-        return Future.error(ProductNotFoundException);
+        throw ProductNotFoundException();
       } else {
         log.warning('Failed OFF call: ${response.statusCode}');
-        return Future.error(response.statusCode);
+        throw Exception('OFF returned ${response.statusCode}');
       }
     } catch (exception, stacktrace) {
       log.severe('Exception while getting OFF barcode search $exception');
       Sentry.captureException(exception, stackTrace: stacktrace);
-      return Future.error(exception);
+      rethrow;
     }
   }
 }
