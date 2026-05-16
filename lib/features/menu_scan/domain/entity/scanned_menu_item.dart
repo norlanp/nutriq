@@ -5,7 +5,7 @@ import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 part 'scanned_menu_item.freezed.dart';
 
 @freezed
-class ScannedMenuItem with _$ScannedMenuItem {
+abstract class ScannedMenuItem with _$ScannedMenuItem {
   const factory ScannedMenuItem({
     required String name,
     double? menuPrice,

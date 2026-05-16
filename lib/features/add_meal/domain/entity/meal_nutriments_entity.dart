@@ -8,7 +8,7 @@ import 'package:nutriq/features/add_meal/data/dto/off/off_product_nutriments_dto
 part 'meal_nutriments_entity.freezed.dart';
 
 @freezed
-class MealNutrimentsEntity with _$MealNutrimentsEntity {
+abstract class MealNutrimentsEntity with _$MealNutrimentsEntity {
   // Macronutrients
   // Micronutrients
   const factory MealNutrimentsEntity({

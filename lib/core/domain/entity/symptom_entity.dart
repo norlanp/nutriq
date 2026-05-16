@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'symptom_entity.freezed.dart';
 
 @freezed
-class SymptomEntity with _$SymptomEntity {
+abstract class SymptomEntity with _$SymptomEntity {
   const factory SymptomEntity({
     required int id,
     required int userId,

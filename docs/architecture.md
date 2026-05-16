@@ -1,16 +1,15 @@
 # System Architecture: Nutriq
 
 ## Overview
-Nutriq is built using **Clean Architecture** and the **BLoC (Business Logic Component) pattern**. The goal is to separate concerns, ensuring that the business logic is independent of the UI, framework, and external data sources.
+Nutriq is built using **Clean Architecture** and the **Riverpod Notifier pattern**. The goal is to separate concerns, ensuring that the business logic is independent of the UI, framework, and external data sources.
 
 ## Layered Architecture
 
 ### 1. Presentation Layer
 The presentation layer is responsible for the UI and interacting with the user.
 - **Widgets**: Lean components that render the UI based on state.
-- **BLoCs**: Manage the state of a particular feature. They receive events from the UI and emit new states.
-- **State**: Immutable objects (extending `Equatable`) that represent the current state of the UI.
-- **Events**: Signal user actions or system triggers that the BLoC should handle.
+- **Notifiers**: Manage the state of a particular feature using Riverpod `Notifier` and `AsyncNotifier`. They expose methods that update state immutably.
+- **State**: Immutable objects (extending `Equatable` or using `freezed`) that represent the current state of the UI.
 
 ### 2. Domain Layer
 The core of the application, containing purely business logic and rules. It is independent of any other layer.
@@ -25,10 +24,10 @@ The implementation of data retrieval and persistence.
 - **DTOs/DBOs (Data Transfer/Database Objects)**: Specialized objects used for serialization/deserialization. These are converted to Entities before entering the Domain layer.
 
 ## Data Flow
-`UI (Widget)` $\rightarrow$ `Event` $\rightarrow$ `BLoC` $\rightarrow$ `Use Case` $\rightarrow$ `Repository` $\rightarrow$ `Data Source` $\rightarrow$ `DB/API` $\rightarrow$ (Reverse flow for Response)
+`UI (Widget)` $\rightarrow$ `Notifier method call` $\rightarrow$ `Notifier` $\rightarrow$ `Use Case` $\rightarrow$ `Repository` $\rightarrow$ `Data Source` $\rightarrow$ `DB/API` $\rightarrow$ (Reverse flow for State)
 
 ## Key Technical Choices
-- **State Management**: `flutter_bloc` for predictable state transitions and separation of logic.
+- **State Management**: `flutter_riverpod` with `Notifier` and `AsyncNotifier` for predictable state transitions and separation of logic.
 - **Dependency Injection**: `flutter_riverpod` for decoupling components and improving testability.
 - **Local Persistence**: `drift` (SQLite) for type-safe relational storage.
 - **Localization**: `flutter_intl` for multi-language support (EN/DE/TR).
@@ -53,7 +52,7 @@ The implementation of data retrieval and persistence.
 | **Domain** | Repository interfaces | 20 |
 | **Domain** | Use cases | 75 |
 | **Presentation** | Feature modules | 38 |
-| **Presentation** | BLoCs | 39 |
+| **Presentation** | Notifiers | 39 |
 | **Infrastructure** | DB schema version | 22 |
 | **Infrastructure** | Languages (i18n) | 3 |
 | **Infrastructure** | Platforms | 2 (iOS, Android) |

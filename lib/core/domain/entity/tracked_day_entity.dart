@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 part 'tracked_day_entity.freezed.dart';
 
 @freezed
-class TrackedDayEntity with _$TrackedDayEntity {
+abstract class TrackedDayEntity with _$TrackedDayEntity {
   static const maxKcalDifferenceOverGoal = 500;
   static const maxKcalDifferenceUnderGoal = 1000;
 

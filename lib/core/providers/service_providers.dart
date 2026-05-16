@@ -1,3 +1,4 @@
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/service/allergen_filter_service.dart';
 import 'package:nutriq/core/domain/service/autopilot_service.dart';
@@ -15,6 +16,12 @@ import 'package:nutriq/features/voice_logging/data/voice_logging_service.dart';
 import 'package:nutriq/features/health_sync/domain/health_sync_service.dart';
 import 'package:nutriq/features/health_sync/data/platform_health_service_factory_io.dart'
     as health_factory;
+
+import 'package:nutriq/core/utils/ont_image_cache_manager.dart';
+
+final cacheManagerProvider = Provider<CacheManager>((ref) {
+  return OntImageCacheManager.instance;
+});
 
 final recipeScraperServiceProvider = Provider<RecipeScraperService>((ref) {
   return RecipeScraperServiceImpl();

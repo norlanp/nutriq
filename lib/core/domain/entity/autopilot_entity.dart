@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'autopilot_entity.freezed.dart';
 
 @freezed
-class AutopilotEntity with _$AutopilotEntity {
+abstract class AutopilotEntity with _$AutopilotEntity {
   const factory AutopilotEntity({
     required int id,
     required int userId,

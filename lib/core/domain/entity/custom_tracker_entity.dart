@@ -5,7 +5,7 @@ part 'custom_tracker_entity.freezed.dart';
 enum TrackerType { scale, boolean, text }
 
 @freezed
-class CustomTrackerEntity with _$CustomTrackerEntity {
+abstract class CustomTrackerEntity with _$CustomTrackerEntity {
   const factory CustomTrackerEntity({
     required int id,
     required int userId,

@@ -10,7 +10,7 @@ import 'package:nutriq/features/onboarding/domain/entity/user_goal_selection_ent
 part 'user_data_mask_entity.freezed.dart';
 
 @freezed
-class UserDataMaskEntity with _$UserDataMaskEntity {
+abstract class UserDataMaskEntity with _$UserDataMaskEntity {
   const factory UserDataMaskEntity({
     UserGenderSelectionEntity? gender,
     DateTime? birthday,

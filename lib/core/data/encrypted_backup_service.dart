@@ -132,7 +132,6 @@ class EncryptedBackupService {
 
   Key _deriveKey(String password, Uint8List salt) {
     final params = pc.Pbkdf2Parameters(salt, _pbkdf2Iterations, 32);
-    final hmac = pc.HMac(pc.SHA256Digest(), 64);
     final derivator = pc.KeyDerivator('PBKDF2')
       ..init(params);
     final result = derivator.process(Uint8List.fromList(utf8.encode(password)));

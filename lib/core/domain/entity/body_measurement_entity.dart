@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'body_measurement_entity.freezed.dart';
 
 @freezed
-class BodyMeasurementEntity with _$BodyMeasurementEntity {
+abstract class BodyMeasurementEntity with _$BodyMeasurementEntity {
   const factory BodyMeasurementEntity({
     required int id,
     required int userId,

@@ -8,7 +8,7 @@ import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 part 'config_entity.freezed.dart';
 
 @freezed
-class ConfigEntity with _$ConfigEntity {
+abstract class ConfigEntity with _$ConfigEntity {
   const ConfigEntity._();
 
   const factory ConfigEntity({
@@ -26,7 +26,7 @@ class ConfigEntity with _$ConfigEntity {
     @Default(ExerciseCalorieModeEntity.half)
     ExerciseCalorieModeEntity exerciseCalorieMode,
     @Default(0.5) double exerciseCreditPercent,
-    @Default(const <AllergenType>{}) Set<AllergenType> userAllergens,
+    @Default(<AllergenType>{}) Set<AllergenType> userAllergens,
     @Default(70) int? bloodGlucoseMinMgDl,
     @Default(180) int? bloodGlucoseMaxMgDl,
     @Default(false) bool netCarbsEnabled,

@@ -4,7 +4,7 @@ import 'package:nutriq/features/recipe_builder/domain/entity/recipe_item_entity.
 part 'recipe_entity.freezed.dart';
 
 @freezed
-class RecipeEntity with _$RecipeEntity {
+abstract class RecipeEntity with _$RecipeEntity {
   const factory RecipeEntity({
     required String id,
     required String name,

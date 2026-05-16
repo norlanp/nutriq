@@ -6,7 +6,7 @@ import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 part 'bmr_calculation_entity.freezed.dart';
 
 @freezed
-class BMRCalculationEntity with _$BMRCalculationEntity {
+abstract class BMRCalculationEntity with _$BMRCalculationEntity {
   const factory BMRCalculationEntity({
     required double bmr,
     required double tdee,

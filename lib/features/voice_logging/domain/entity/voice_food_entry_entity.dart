@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'voice_food_entry_entity.freezed.dart';
 
 @freezed
-class VoiceFoodEntryEntity with _$VoiceFoodEntryEntity {
+abstract class VoiceFoodEntryEntity with _$VoiceFoodEntryEntity {
   const VoiceFoodEntryEntity._();
 
   const factory VoiceFoodEntryEntity({

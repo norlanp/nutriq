@@ -11,7 +11,7 @@ enum FastingPresetType {
 }
 
 @freezed
-class FastingEntity with _$FastingEntity {
+abstract class FastingEntity with _$FastingEntity {
   const factory FastingEntity({
     required int id,
     required int userId,

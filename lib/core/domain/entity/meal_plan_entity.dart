@@ -4,7 +4,7 @@ import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 part 'meal_plan_entity.freezed.dart';
 
 @freezed
-class MealPlanEntity with _$MealPlanEntity {
+abstract class MealPlanEntity with _$MealPlanEntity {
   const MealPlanEntity._();
 
   const factory MealPlanEntity({

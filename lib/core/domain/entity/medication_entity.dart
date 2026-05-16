@@ -5,7 +5,7 @@ part 'medication_entity.freezed.dart';
 enum MedicationFrequencyType { daily, weekly, asNeeded }
 
 @freezed
-class MedicationEntity with _$MedicationEntity {
+abstract class MedicationEntity with _$MedicationEntity {
   const factory MedicationEntity({
     required int id,
     required int userId,

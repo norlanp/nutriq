@@ -5,6 +5,9 @@ Phase 1: Foundation (no breaking changes, additive only)
 ---------------------------------------------------------
 [x] Add `freezed` + `freezed_annotation` to pubspec.yaml dev_dependencies
 [x] Convert 36 domain entities to `freezed` immutable classes (start with core entities, then per-feature)
+[x] Fix `freezed` entity classes for Dart 3.11: `class X with _$X` → `abstract class X with _$X`
+[x] Move `freezed_annotation` from dev_dependencies to dependencies (required in prod code)
+[x] Add `pointycastle` to dependencies (transitive dep of `encrypt`)
 [x] Add `formz` to pubspec.yaml dependencies
 [x] Add `go_router` to pubspec.yaml dependencies
 [x] Replace `provider` package ThemeModeProvider with Riverpod-based theme provider
@@ -63,9 +66,9 @@ deleted. Old BLoC files and `test/unit_test/bloc_test/` removed.
 [x] Delete `lib/core/providers/bloc_providers.dart` after all features migrated
 [x] Remove `flutter_bloc` and `provider` from pubspec.yaml
 [x] Remove `bloc_test` from dev_dependencies
-[ ] Update `docs/requirements.md` NFR-5.2: "BLoC pattern" → "Riverpod Notifier pattern"
-[ ] Update `docs/architecture.md`: reflect Riverpod state management
-[ ] Run `flutter analyze` — zero errors/warnings
+[x] Update `docs/requirements.md` NFR-5.2: "BLoC pattern" → "Riverpod Notifier pattern"
+[x] Update `docs/architecture.md`: reflect Riverpod state management
+[x] Run `flutter analyze` — zero errors/warnings ✅ (0 errors, 0 warnings, 26 infos)
 
 Phase 3: Routing Overhaul
 --------------------------

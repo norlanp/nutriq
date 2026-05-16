@@ -192,7 +192,7 @@
 
 ### NFR-5: Maintainability
 - NFR-5.1: Clean Architecture layer separation (Presentation / Domain / Data)
-- NFR-5.2: BLoC pattern for all state management
+- NFR-5.2: Riverpod Notifier pattern for all state management
 - NFR-5.3: Dependency injection via Riverpod
 - NFR-5.4: Zero lint warnings (`flutter analyze`)
 

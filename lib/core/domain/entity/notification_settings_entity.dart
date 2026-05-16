@@ -4,7 +4,7 @@ import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 part 'notification_settings_entity.freezed.dart';
 
 @freezed
-class NotificationSettingsEntity with _$NotificationSettingsEntity {
+abstract class NotificationSettingsEntity with _$NotificationSettingsEntity {
   const NotificationSettingsEntity._();
 
   const factory NotificationSettingsEntity({

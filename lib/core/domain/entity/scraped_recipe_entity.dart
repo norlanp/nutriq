@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'scraped_recipe_entity.freezed.dart';
 
 @freezed
-class ScrapedRecipeEntity with _$ScrapedRecipeEntity {
+abstract class ScrapedRecipeEntity with _$ScrapedRecipeEntity {
   const ScrapedRecipeEntity._();
 
   const factory ScrapedRecipeEntity({

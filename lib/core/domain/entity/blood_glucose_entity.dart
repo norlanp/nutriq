@@ -10,7 +10,7 @@ enum BloodGlucoseLabelType {
 }
 
 @freezed
-class BloodGlucoseEntity with _$BloodGlucoseEntity {
+abstract class BloodGlucoseEntity with _$BloodGlucoseEntity {
   const factory BloodGlucoseEntity({
     required int id,
     required int userId,

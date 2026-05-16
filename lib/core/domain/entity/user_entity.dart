@@ -7,7 +7,7 @@ import 'package:nutriq/core/domain/entity/user_weight_goal_entity.dart';
 part 'user_entity.freezed.dart';
 
 @freezed
-class UserEntity with _$UserEntity {
+abstract class UserEntity with _$UserEntity {
   const factory UserEntity({
     required DateTime birthday,
     required double heightCM,

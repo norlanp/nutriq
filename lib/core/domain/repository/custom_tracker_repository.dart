@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:nutriq/core/domain/entity/custom_tracker_entity.dart';
 import 'package:nutriq/core/domain/entity/custom_tracker_entry_entity.dart';
 

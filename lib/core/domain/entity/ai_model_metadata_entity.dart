@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'ai_model_metadata_entity.freezed.dart';
 
 @freezed
-class AiModelMetadataEntity with _$AiModelMetadataEntity {
+abstract class AiModelMetadataEntity with _$AiModelMetadataEntity {
   const AiModelMetadataEntity._();
 
   const factory AiModelMetadataEntity({

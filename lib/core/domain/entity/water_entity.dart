@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'water_entity.freezed.dart';
 
 @freezed
-class WaterEntity with _$WaterEntity {
+abstract class WaterEntity with _$WaterEntity {
   const WaterEntity._();
 
   const factory WaterEntity({

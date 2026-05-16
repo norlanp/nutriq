@@ -4,7 +4,7 @@ part 'catalog_recipe_entity.freezed.dart';
 part 'catalog_recipe_entity.g.dart';
 
 @freezed
-class CatalogRecipeMacros with _$CatalogRecipeMacros {
+abstract class CatalogRecipeMacros with _$CatalogRecipeMacros {
   const CatalogRecipeMacros._();
 
   const factory CatalogRecipeMacros({
@@ -26,7 +26,7 @@ class CatalogRecipeMacros with _$CatalogRecipeMacros {
 }
 
 @freezed
-class CatalogRecipeEntity with _$CatalogRecipeEntity {
+abstract class CatalogRecipeEntity with _$CatalogRecipeEntity {
   const CatalogRecipeEntity._();
 
   const factory CatalogRecipeEntity({

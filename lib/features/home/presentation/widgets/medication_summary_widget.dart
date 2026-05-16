@@ -4,7 +4,7 @@ import 'package:nutriq/core/domain/entity/medication_entity.dart';
 import 'package:nutriq/core/domain/entity/medication_log_entity.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/medication/presentation/notifier/medication_notifier.dart';
-import 'package:nutriq/features/medication/presentation/notifier/medication_state.dart';
+
 import 'package:nutriq/generated/l10n.dart';
 
 class MedicationSummaryWidget extends ConsumerStatefulWidget {

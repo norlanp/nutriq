@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:nutriq/core/utils/extensions.dart';
+
 import 'package:nutriq/core/utils/supported_language.dart';
 import 'package:nutriq/features/add_meal/data/dto/off/json_converters.dart';
 import 'package:nutriq/features/add_meal/data/dto/off/off_product_nutriments_dto.dart';

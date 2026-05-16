@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
-import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
+
 import 'package:nutriq/features/add_meal/presentation/notifier/food_search_state.dart';
 
 class ProductsNotifier extends Notifier<FoodSearchState> {

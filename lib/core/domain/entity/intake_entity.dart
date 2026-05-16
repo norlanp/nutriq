@@ -7,7 +7,7 @@ import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 part 'intake_entity.freezed.dart';
 
 @freezed
-class IntakeEntity with _$IntakeEntity {
+abstract class IntakeEntity with _$IntakeEntity {
   const factory IntakeEntity({
     required String id,
     required String unit,

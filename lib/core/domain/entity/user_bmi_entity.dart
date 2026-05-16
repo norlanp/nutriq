@@ -5,7 +5,7 @@ import 'package:nutriq/generated/l10n.dart';
 part 'user_bmi_entity.freezed.dart';
 
 @freezed
-class UserBMIEntity with _$UserBMIEntity {
+abstract class UserBMIEntity with _$UserBMIEntity {
   const UserBMIEntity._();
 
   const factory UserBMIEntity({

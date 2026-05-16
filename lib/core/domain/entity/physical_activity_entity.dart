@@ -11,7 +11,7 @@ part 'physical_activity_entity.freezed.dart';
 /// https://pubmed.ncbi.nlm.nih.gov/21681120/
 /// by Ainsworth et al.
 @freezed
-class PhysicalActivityEntity with _$PhysicalActivityEntity {
+abstract class PhysicalActivityEntity with _$PhysicalActivityEntity {
   const factory PhysicalActivityEntity({
     required String code,
     required String specificActivity,

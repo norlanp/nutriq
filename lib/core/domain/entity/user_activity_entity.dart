@@ -6,7 +6,7 @@ import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
 part 'user_activity_entity.freezed.dart';
 
 @freezed
-class UserActivityEntity with _$UserActivityEntity {
+abstract class UserActivityEntity with _$UserActivityEntity {
   const factory UserActivityEntity({
     required String id,
     required double duration,

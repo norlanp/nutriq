@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'weight_entity.freezed.dart';
 
 @freezed
-class WeightEntity with _$WeightEntity {
+abstract class WeightEntity with _$WeightEntity {
   const WeightEntity._();
 
   const factory WeightEntity({

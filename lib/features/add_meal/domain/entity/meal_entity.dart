@@ -15,7 +15,7 @@ part 'meal_entity.freezed.dart';
 enum MealSourceEntity { unknown, custom, off, fdc }
 
 @freezed
-class MealEntity with _$MealEntity {
+abstract class MealEntity with _$MealEntity {
   static const liquidUnits = {'ml', 'l', 'dl', 'cl', 'fl oz', 'fl.oz'};
   static const solidUnits = {'kg', 'g', 'mg', 'µg', 'oz'};
 

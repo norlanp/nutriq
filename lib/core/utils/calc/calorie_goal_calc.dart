@@ -71,7 +71,6 @@ class CalorieGoalCalc {
       UserEntity userEntity, TDEEMethodEntity method) {
     switch (method) {
       case TDEEMethodEntity.iom2005:
-        final pal = PalCalc.getPALValueFromActivityCategory(userEntity);
         final tdee = TDEECalc.getTDEEKcalIOM2005(userEntity);
         final bmr = BMRCalc.getBMRSchofield11985(userEntity);
         if (bmr == 0) return 1.0;
