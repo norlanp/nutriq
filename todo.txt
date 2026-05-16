@@ -25,7 +25,7 @@ Strategy: migrate one feature at a time, verify each, then delete BLoC files.
 [x] Convert `ThemeModeProvider` from ChangeNotifier to Riverpod `Notifier`
 [x] Update `main.dart`: change `NutriqApp` from `StatelessWidget` to `ConsumerWidget`, remove `provider` package import, wrap with `ProviderScope`
 [x] Migrate home feature (home_bloc → home_notifier, screens, providers)
-[ ] Migrate diary feature
+[x] Migrate diary feature
 [ ] Migrate profile feature
 [ ] Migrate settings feature
 [ ] Migrate onboarding feature

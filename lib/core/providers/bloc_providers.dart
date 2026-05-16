@@ -16,8 +16,8 @@ import 'package:nutriq/features/body_measurements/presentation/body_measurement_
 import 'package:nutriq/features/calorie_cycling/presentation/calorie_cycling_bloc.dart';
 import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_bloc.dart';
 import 'package:nutriq/features/daily_notes/presentation/daily_note_bloc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
+import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/edit_meal/presentation/bloc/edit_meal_bloc.dart';
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
@@ -45,10 +45,10 @@ class _BlocCrossRefs {
   final Ref _ref;
   _BlocCrossRefs(this._ref);
 
-  void refreshDiary() => _ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());
-  void refreshCalendarDay() => _ref.read(calendarDayBlocProvider).add(const RefreshCalendarDayEvent());
+  void refreshDiary() => _ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
+  void refreshCalendarDay() => _ref.read(calendarDayNotifierProvider.notifier).refreshCalendarDay();
   void refreshHome() => _ref.read(homeNotifierProvider.notifier).loadItems();
-  void loadCalendarDay(DateTime day) => _ref.read(calendarDayBlocProvider).add(LoadCalendarDayEvent(day));
+  void loadCalendarDay(DateTime day) => _ref.read(calendarDayNotifierProvider.notifier).loadCalendarDay(day);
 }
 
 final _blocCrossRefsProvider = Provider<_BlocCrossRefs>((ref) => _BlocCrossRefs(ref));
@@ -59,30 +59,6 @@ final onboardingBlocProvider = Provider((ref) {
   return OnboardingBloc(
     ref.watch(addUserUsecaseProvider),
     ref.watch(addConfigUsecaseProvider),
-  );
-});
-
-final diaryBlocProvider = Provider<DiaryBloc>((ref) {
-  final crossRefs = ref.watch(_blocCrossRefsProvider);
-  return DiaryBloc(
-    ref.watch(getTrackedDayUsecaseProvider),
-    ref.watch(getConfigUsecaseProvider),
-    crossRefs.refreshHome,
-  );
-});
-
-final calendarDayBlocProvider = Provider<CalendarDayBloc>((ref) {
-  final crossRefs = ref.watch(_blocCrossRefsProvider);
-  return CalendarDayBloc(
-    ref.watch(getUserActivityUsecaseProvider),
-    ref.watch(getIntakeUsecaseProvider),
-    ref.watch(deleteIntakeUsecaseProvider),
-    ref.watch(deleteUserActivityUsecaseProvider),
-    ref.watch(getTrackedDayUsecaseProvider),
-    ref.watch(addTrackedDayUsecaseProvider),
-    ref.watch(getDailyBurnedCaloriesUsecaseProvider),
-    ref.watch(netCaloriesUsecaseProvider),
-    crossRefs.refreshDiary,
   );
 });
 

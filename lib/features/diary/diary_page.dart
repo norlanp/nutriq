@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
-import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
+import 'package:nutriq/features/diary/presentation/notifier/calendar_day_state.dart';
+import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/diary/presentation/widgets/diary_table_calendar.dart';
 import 'package:nutriq/features/diary/presentation/widgets/day_info_widget.dart';
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class DiaryPage extends ConsumerStatefulWidget {
@@ -22,23 +22,21 @@ class DiaryPage extends ConsumerStatefulWidget {
   ConsumerState<DiaryPage> createState() => _DiaryPageState();
 }
 
-class _DiaryPageState extends ConsumerState<DiaryPage> with WidgetsBindingObserver {
+class _DiaryPageState extends ConsumerState<DiaryPage>
+    with WidgetsBindingObserver {
   final log = Logger('DiaryPage');
 
-  late DiaryBloc _diaryBloc;
-  late CalendarDayBloc _calendarDayBloc;
   late MealDetailBloc _mealDetailBloc;
 
   static const _calendarDurationDays = Duration(days: 356);
   final _currentDate = DateTime.now();
   var _selectedDate = DateTime.now();
   var _focusedDate = DateTime.now();
+  bool _diaryInitialized = false;
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    _diaryBloc = ref.read(diaryBlocProvider);
-    _calendarDayBloc = ref.read(calendarDayBlocProvider);
     _mealDetailBloc = ref.read(mealDetailBlocProvider);
     super.initState();
   }
@@ -51,18 +49,26 @@ class _DiaryPageState extends ConsumerState<DiaryPage> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DiaryBloc, DiaryState>(
-      bloc: _diaryBloc,
-      builder: (context, state) {
-        if (state is DiaryInitial) {
-          _diaryBloc.add(const LoadDiaryYearEvent());
-        } else if (state is DiaryLoadingState) {
-          return _getLoadingContent();
-        } else if (state is DiaryLoadedState) {
-          return _getLoadedContent(
-              context, state.trackedDayMap, state.usesImperialUnits);
-        }
-        return const SizedBox();
+    final diaryAsync = ref.watch(diaryNotifierProvider);
+    final calendarDayAsync = ref.watch(calendarDayNotifierProvider);
+
+    if (!_diaryInitialized) {
+      _diaryInitialized = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
+      });
+    }
+
+    return diaryAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, __) => const SizedBox(),
+      data: (diaryState) {
+        return _getLoadedContent(
+          context,
+          diaryState.trackedDayMap,
+          diaryState.usesImperialUnits,
+          calendarDayAsync,
+        );
       },
     );
   }
@@ -76,11 +82,12 @@ class _DiaryPageState extends ConsumerState<DiaryPage> with WidgetsBindingObserv
     super.didChangeAppLifecycleState(state);
   }
 
-  Widget _getLoadingContent() =>
-      const Center(child: CircularProgressIndicator());
-
-  Widget _getLoadedContent(BuildContext context,
-      Map<String, TrackedDayEntity> trackedDaysMap, bool usesImperialUnits) {
+  Widget _getLoadedContent(
+    BuildContext context,
+    Map<String, TrackedDayEntity> trackedDaysMap,
+    bool usesImperialUnits,
+    AsyncValue<CalendarDayState> calendarDayAsync,
+  ) {
     return ListView(
       children: [
         DiaryTableCalendar(
@@ -92,32 +99,34 @@ class _DiaryPageState extends ConsumerState<DiaryPage> with WidgetsBindingObserv
           focusedDate: _focusedDate,
         ),
         const SizedBox(height: 16.0),
-        BlocBuilder<CalendarDayBloc, CalendarDayState>(
-          bloc: _calendarDayBloc,
-          builder: (context, state) {
-            if (state is CalendarDayInitial) {
-              _calendarDayBloc.add(LoadCalendarDayEvent(_selectedDate));
-            } else if (state is CalendarDayLoading) {
-              return _getLoadingContent();
-            } else if (state is CalendarDayLoaded) {
-              return DayInfoWidget(
-                trackedDayEntity: state.trackedDayEntity,
-                selectedDay: _selectedDate,
-                userActivities: state.userActivityList,
-                breakfastIntake: state.breakfastIntakeList,
-                lunchIntake: state.lunchIntakeList,
-                dinnerIntake: state.dinnerIntakeList,
-                snackIntake: state.snackIntakeList,
-                burnedCalories: state.burnedCalories,
-                netCalories: state.netCalories,
-                onDeleteIntake: _onDeleteIntakeItem,
-                onDeleteActivity: _onDeleteActivityItem,
-                onCopyIntake: _onCopyIntakeItem,
-                onCopyActivity: _onCopyActivityItem,
-                usesImperialUnits: usesImperialUnits,
-              );
+        calendarDayAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (_, __) => const SizedBox(),
+          data: (CalendarDayState calendarDayState) {
+            if (calendarDayState.currentDay == null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ref
+                    .read(calendarDayNotifierProvider.notifier)
+                    .loadCalendarDay(_selectedDate);
+              });
+              return const Center(child: CircularProgressIndicator());
             }
-            return const SizedBox();
+            return DayInfoWidget(
+              trackedDayEntity: calendarDayState.trackedDayEntity,
+              selectedDay: _selectedDate,
+              userActivities: calendarDayState.userActivityList,
+              breakfastIntake: calendarDayState.breakfastIntakeList,
+              lunchIntake: calendarDayState.lunchIntakeList,
+              dinnerIntake: calendarDayState.dinnerIntakeList,
+              snackIntake: calendarDayState.snackIntakeList,
+              burnedCalories: calendarDayState.burnedCalories,
+              netCalories: calendarDayState.netCalories,
+              onDeleteIntake: _onDeleteIntakeItem,
+              onDeleteActivity: _onDeleteActivityItem,
+              onCopyIntake: _onCopyIntakeItem,
+              onCopyActivity: _onCopyActivityItem,
+              usesImperialUnits: usesImperialUnits,
+            );
           },
         )
       ],
@@ -126,27 +135,30 @@ class _DiaryPageState extends ConsumerState<DiaryPage> with WidgetsBindingObserv
 
   void _onDeleteIntakeItem(
       IntakeEntity intakeEntity, TrackedDayEntity? trackedDayEntity) async {
-    await _calendarDayBloc.deleteIntakeItem(
-        context, intakeEntity, trackedDayEntity?.day ?? DateTime.now());
-    _diaryBloc.add(const LoadDiaryYearEvent());
-    _calendarDayBloc.add(LoadCalendarDayEvent(_selectedDate));
-    _diaryBloc.updateHomePage();
+    await ref
+        .read(calendarDayNotifierProvider.notifier)
+        .deleteIntakeItem(intakeEntity, trackedDayEntity?.day ?? DateTime.now());
+    await ref
+        .read(calendarDayNotifierProvider.notifier)
+        .updateDiaryPage(_selectedDate);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context).itemDeletedSnackbar)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(S.of(context).itemDeletedSnackbar)));
     }
   }
 
   void _onDeleteActivityItem(UserActivityEntity userActivityEntity,
       TrackedDayEntity? trackedDayEntity) async {
-    await _calendarDayBloc.deleteUserActivityItem(
-        context, userActivityEntity, trackedDayEntity?.day ?? DateTime.now());
-    _diaryBloc.add(const LoadDiaryYearEvent());
-    _calendarDayBloc.add(LoadCalendarDayEvent(_selectedDate));
-    _diaryBloc.updateHomePage();
+    await ref
+        .read(calendarDayNotifierProvider.notifier)
+        .deleteUserActivityItem(
+            userActivityEntity, trackedDayEntity?.day ?? DateTime.now());
+    await ref
+        .read(calendarDayNotifierProvider.notifier)
+        .updateDiaryPage(_selectedDate);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context).itemDeletedSnackbar)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(S.of(context).itemDeletedSnackbar)));
     }
   }
 
@@ -165,7 +177,7 @@ class _DiaryPageState extends ConsumerState<DiaryPage> with WidgetsBindingObserv
         finalType,
         intakeEntity.meal,
         DateTime.now());
-    _diaryBloc.updateHomePage();
+    ref.read(diaryNotifierProvider.notifier).updateHomePage();
   }
 
   void _onCopyActivityItem(UserActivityEntity userActivityEntity,
@@ -178,14 +190,16 @@ class _DiaryPageState extends ConsumerState<DiaryPage> with WidgetsBindingObserv
     setState(() {
       _selectedDate = newDate;
       _focusedDate = newDate;
-      _calendarDayBloc.add(LoadCalendarDayEvent(newDate));
+      ref
+          .read(calendarDayNotifierProvider.notifier)
+          .loadCalendarDay(newDate);
     });
   }
 
   void _refreshPageOnDayChange() {
     if (DateUtils.isSameDay(_selectedDate, DateTime.now())) {
-      _calendarDayBloc.add(LoadCalendarDayEvent(_selectedDate));
-      _diaryBloc.add(const LoadDiaryYearEvent());
+      ref.read(calendarDayNotifierProvider.notifier).loadCalendarDay(_selectedDate);
+      ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
     }
   }
 }

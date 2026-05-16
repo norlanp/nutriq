@@ -8,10 +8,9 @@ import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/app_const.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/core/providers/notifier_providers.dart';
+import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/core/utils/url_const.dart';
-import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
 
 import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
@@ -33,15 +32,11 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   late SettingsBloc _settingsBloc;
   late ProfileBloc _profileBloc;
-  late DiaryBloc _diaryBloc;
-  late CalendarDayBloc _calendarDayBloc;
 
   @override
   void initState() {
     _settingsBloc = ref.read(settingsBlocProvider);
     _profileBloc = ref.read(profileBlocProvider);
-    _diaryBloc = ref.read(diaryBlocProvider);
-    _calendarDayBloc = ref.read(calendarDayBlocProvider);
     super.initState();
   }
 
@@ -193,7 +188,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       // Update blocs
       _profileBloc.add(LoadProfileEvent());
       ref.read(homeNotifierProvider.notifier).loadItems();
-      _diaryBloc.add(const LoadDiaryYearEvent());
+      ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
     }
   }
 
@@ -243,7 +238,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       _settingsBloc.add(LoadSettingsEvent());
 
       ref.read(homeNotifierProvider.notifier).loadItems();
-      _diaryBloc.add(const LoadDiaryYearEvent());
+      ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
     }
   }
 
@@ -253,8 +248,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (context) => CalculationsDialog(
         settingsBloc: _settingsBloc,
         profileBloc: _profileBloc,
-        diaryBloc: _diaryBloc,
-        calendarDayBloc: _calendarDayBloc,
       ),
     );
   }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
-import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
+import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
@@ -12,15 +12,11 @@ import 'package:nutriq/generated/l10n.dart';
 class CalculationsDialog extends ConsumerStatefulWidget {
   final SettingsBloc settingsBloc;
   final ProfileBloc profileBloc;
-  final DiaryBloc diaryBloc;
-  final CalendarDayBloc calendarDayBloc;
 
   const CalculationsDialog({
     super.key,
     required this.settingsBloc,
     required this.profileBloc,
-    required this.diaryBloc,
-    required this.calendarDayBloc,
   });
 
   @override
@@ -359,8 +355,8 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
     ref.read(homeNotifierProvider.notifier).loadItems();
 
     widget.settingsBloc.updateTrackedDay(DateTime.now());
-    widget.diaryBloc.add(LoadDiaryYearEvent());
-    widget.calendarDayBloc.add(RefreshCalendarDayEvent());
+    ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
+    ref.read(calendarDayNotifierProvider.notifier).refreshCalendarDay();
 
     Navigator.of(context).pop();
   }

@@ -10,8 +10,8 @@ import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detai
 import 'package:nutriq/features/activity_detail/presentation/widget/activity_detail_bottom_sheet.dart';
 import 'package:nutriq/features/activity_detail/presentation/widget/activity_info_button.dart';
 import 'package:nutriq/features/activity_detail/presentation/widget/activity_title_expanded.dart';
-import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
+import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -197,8 +197,8 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
     ref.read(homeNotifierProvider.notifier).loadItems();
 
     // Refresh Diary Page
-    ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());
-    ref.read(calendarDayBlocProvider).add(RefreshCalendarDayEvent());
+    ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
+    ref.read(calendarDayNotifierProvider.notifier).refreshCalendarDay();
 
     // Show snackbar and return to dashboard
     ScaffoldMessenger.of(context).showSnackBar(

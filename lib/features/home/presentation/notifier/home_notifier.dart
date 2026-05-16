@@ -2,12 +2,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/core/utils/calc/calorie_goal_calc.dart';
 import 'package:nutriq/core/utils/calc/macro_calc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
-import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
+import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_state.dart';
 
 class HomeNotifier extends AsyncNotifier<HomeState> {
@@ -210,8 +209,8 @@ class HomeNotifier extends AsyncNotifier<HomeState> {
   }
 
   void _refreshDiaryAndCalendar() {
-    ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());
-    ref.read(calendarDayBlocProvider).add(const RefreshCalendarDayEvent());
+    ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
+    ref.read(calendarDayNotifierProvider.notifier).refreshCalendarDay();
   }
 
   double _getTotalKcal(List<IntakeEntity> intakeList) =>
