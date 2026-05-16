@@ -1,30 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nutriq/core/utils/calc/unit_calc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/domain/validation/height_input.dart';
+import 'package:nutriq/core/domain/validation/weight_input.dart';
+import 'package:nutriq/features/onboarding/presentation/notifier/onboarding_form_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class OnboardingSecondPageBody extends StatefulWidget {
-  final Function(bool active, double? selectedHeight, double? selectedWeight,
-      bool usesImperialUnits) setButtonContent;
-
-  const OnboardingSecondPageBody({super.key, required this.setButtonContent});
+class OnboardingSecondPageBody extends ConsumerStatefulWidget {
+  const OnboardingSecondPageBody({super.key});
 
   @override
-  State<OnboardingSecondPageBody> createState() =>
+  ConsumerState<OnboardingSecondPageBody> createState() =>
       _OnboardingSecondPageBodyState();
 }
 
-class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
-  final _heightFormKey = GlobalKey<FormState>();
-  final _weightFormKey = GlobalKey<FormState>();
-  final _isUnitSelected = [true, false];
-  double? _parsedHeight;
-  double? _parsedWeight;
+class _OnboardingSecondPageBodyState
+    extends ConsumerState<OnboardingSecondPageBody> {
+  final _heightController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _heightFocusNode = FocusNode();
+  final _weightFocusNode = FocusNode();
 
-  bool get _isImperialSelected => _isUnitSelected[1];
+  @override
+  void initState() {
+    super.initState();
+    final form = ref.read(onboardingFormProvider);
+    _heightController.text = form.height.value;
+    _weightController.text = form.weight.value;
+
+    _heightFocusNode.addListener(() {
+      if (!_heightFocusNode.hasFocus && _heightController.text.isNotEmpty) {
+        ref.read(onboardingFormProvider.notifier).heightChanged(_heightController.text);
+      }
+    });
+    _weightFocusNode.addListener(() {
+      if (!_weightFocusNode.hasFocus && _weightController.text.isNotEmpty) {
+        ref.read(onboardingFormProvider.notifier).weightChanged(_weightController.text);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _heightController.dispose();
+    _weightController.dispose();
+    _heightFocusNode.dispose();
+    _weightFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final form = ref.watch(onboardingFormProvider);
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -36,51 +63,39 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
           Text(S.of(context).onboardingHeightQuestionSubtitle,
               style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 16.0),
-          Form(
-            key: _heightFormKey,
-            child: TextFormField(
-                onChanged: (text) {
-                  if (_heightFormKey.currentState!.validate()) {
-                    _parsedHeight = double.tryParse(text.replaceAll(',', '.'));
-                    checkCorrectInput();
-                  } else {
-                    _parsedHeight = null;
-                    checkCorrectInput();
-                  }
-                },
-                validator: validateHeight,
-                decoration: InputDecoration(
-                  labelText: _isImperialSelected ? 'ft' : 'cm',
-                  hintText: _isImperialSelected
-                      ? S.of(context).onboardingHeightExampleHintFt
-                      : S.of(context).onboardingHeightExampleHintCm,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+          TextFormField(
+              controller: _heightController,
+              focusNode: _heightFocusNode,
+              onChanged: (text) {
+                ref.read(onboardingFormProvider.notifier).heightChanged(text);
+              },
+              decoration: InputDecoration(
+                labelText: form.usesImperialUnits ? 'ft' : S.of(context).cmLabel,
+                hintText: form.usesImperialUnits
+                    ? S.of(context).onboardingHeightExampleHintFt
+                    : S.of(context).onboardingHeightExampleHintCm,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  !_isImperialSelected
-                      ? FilteringTextInputFormatter.digitsOnly
-                      : FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+([.,]\d{0,1})?$'))
-                ]),
-          ),
+                errorText: _heightErrorText(context, form.height),
+              ),
+              keyboardType: TextInputType.numberWithOptions(decimal: form.usesImperialUnits),
+              inputFormatters: [
+                !form.usesImperialUnits
+                    ? FilteringTextInputFormatter.digitsOnly
+                    : FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+([.,]\d{0,1})?$'))
+              ]),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: ToggleButtons(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
-              isSelected: _isUnitSelected,
+              isSelected: [!form.usesImperialUnits, form.usesImperialUnits],
               onPressed: (int index) {
-                setState(() {
-                  // Toggle height unit
-                  for (int i = 0; i < _isUnitSelected.length; i++) {
-                    _isUnitSelected[i] = i == index;
-                  }
-                  _heightFormKey.currentState!.validate();
-                  checkCorrectInput();
-                });
+                ref
+                    .read(onboardingFormProvider.notifier)
+                    .unitChanged(index == 1);
               },
               children: [
                 Padding(
@@ -100,47 +115,36 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
           Text(S.of(context).onboardingWeightQuestionSubtitle,
               style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 16.0),
-          Form(
-            key: _weightFormKey,
-            child: TextFormField(
-                onChanged: (text) {
-                  if (_weightFormKey.currentState!.validate()) {
-                    _parsedWeight = double.tryParse(text);
-                    checkCorrectInput();
-                  } else {
-                    checkCorrectInput();
-                  }
-                },
-                validator: validateWeight,
-                decoration: InputDecoration(
-                  labelText: _isImperialSelected
-                      ? S.of(context).lbsLabel
-                      : S.of(context).kgLabel,
-                  hintText: _isImperialSelected
-                      ? S.of(context).onboardingWeightExampleHintLbs
-                      : S.of(context).onboardingWeightExampleHintKg,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+          TextFormField(
+              controller: _weightController,
+              focusNode: _weightFocusNode,
+              onChanged: (text) {
+                ref.read(onboardingFormProvider.notifier).weightChanged(text);
+              },
+              decoration: InputDecoration(
+                labelText: form.usesImperialUnits
+                    ? S.of(context).lbsLabel
+                    : S.of(context).kgLabel,
+                hintText: form.usesImperialUnits
+                    ? S.of(context).onboardingWeightExampleHintLbs
+                    : S.of(context).onboardingWeightExampleHintKg,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
-          ),
+                errorText: _weightErrorText(context, form.weight),
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: ToggleButtons(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
-              isSelected: _isUnitSelected,
+              isSelected: [!form.usesImperialUnits, form.usesImperialUnits],
               onPressed: (int index) {
-                setState(() {
-                  // Toggle height unit
-                  for (int i = 0; i < _isUnitSelected.length; i++) {
-                    _isUnitSelected[i] = i == index;
-                  }
-                  _weightFormKey.currentState!.validate();
-                  checkCorrectInput();
-                });
+                ref
+                    .read(onboardingFormProvider.notifier)
+                    .unitChanged(index == 1);
               },
               children: [
                 Padding(
@@ -159,55 +163,35 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
     );
   }
 
-  String? validateHeight(String? value) {
-    if (value == null) return S.of(context).onboardingWrongHeightLabel;
-
-    if (_isImperialSelected) {
-      // Regex for feet and inches
-      if (value.isEmpty || !RegExp(r'^[0-9]+([.,][0-9])?$').hasMatch(value)) {
-        return S.of(context).onboardingWrongHeightLabel;
-      } else {
-        return null;
-      }
-    } else {
-      // Regex for cm
-      if (value.isEmpty || !RegExp(r'^[0-9]+$').hasMatch(value)) {
-        return S.of(context).onboardingWrongHeightLabel;
-      } else {
-        return null;
-      }
-    }
-  }
-
-  String? validateWeight(String? value) {
-    if (value == null) return S.of(context).onboardingWrongWeightLabel;
-    if (value.isEmpty || !RegExp(r'^[0-9]').hasMatch(value)) {
+  String? _heightErrorText(BuildContext context, HeightInput height) {
+    if (!height.isPure && height.displayError == HeightInputError.empty) {
       return S.of(context).onboardingWrongHeightLabel;
-    } else {
-      return null;
     }
+    if (!height.isPure && height.displayError == HeightInputError.invalidFormat) {
+      return S.of(context).onboardingWrongHeightLabel;
+    }
+    if (!height.isPure && height.displayError == HeightInputError.tooSmall) {
+      return S.of(context).onboardingWrongHeightLabel;
+    }
+    if (!height.isPure && height.displayError == HeightInputError.tooLarge) {
+      return S.of(context).onboardingWrongHeightLabel;
+    }
+    return null;
   }
 
-  /// Check if the input is correct and update the button content
-  void checkCorrectInput() {
-    final isHeightValid = _heightFormKey.currentState?.validate() ?? false;
-    final isWeightValid = _weightFormKey.currentState?.validate() ?? false;
-
-    if (isHeightValid && isWeightValid) {
-      if (_parsedHeight != null && _parsedWeight != null) {
-        final heightCm = _isImperialSelected
-            ? UnitCalc.feetToCm(_parsedHeight!)
-            : _parsedHeight!;
-        final weightKg = _isImperialSelected
-            ? UnitCalc.lbsToKg(_parsedWeight!)
-            : _parsedWeight!;
-
-        widget.setButtonContent(true, heightCm, weightKg, _isImperialSelected);
-      } else {
-        widget.setButtonContent(false, null, null, _isImperialSelected);
-      }
-    } else {
-      widget.setButtonContent(false, null, null, _isImperialSelected);
+  String? _weightErrorText(BuildContext context, WeightInput weight) {
+    if (!weight.isPure && weight.displayError == WeightInputError.empty) {
+      return S.of(context).onboardingWrongWeightLabel;
     }
+    if (!weight.isPure && weight.displayError == WeightInputError.invalidFormat) {
+      return S.of(context).onboardingWrongWeightLabel;
+    }
+    if (!weight.isPure && weight.displayError == WeightInputError.tooSmall) {
+      return S.of(context).onboardingWrongWeightLabel;
+    }
+    if (!weight.isPure && weight.displayError == WeightInputError.tooLarge) {
+      return S.of(context).onboardingWrongWeightLabel;
+    }
+    return null;
   }
 }

@@ -1,27 +1,26 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/presentation/widgets/app_banner_version.dart';
 import 'package:nutriq/core/utils/app_const.dart';
 import 'package:nutriq/core/utils/url_const.dart';
+import 'package:nutriq/features/onboarding/presentation/notifier/onboarding_form_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class OnboardingIntroPageBody extends StatefulWidget {
-  const OnboardingIntroPageBody({super.key, required this.setPageContent});
-
-  final Function(bool active, bool acceptedDataCollection) setPageContent;
+class OnboardingIntroPageBody extends ConsumerStatefulWidget {
+  const OnboardingIntroPageBody({super.key});
 
   @override
-  State<OnboardingIntroPageBody> createState() =>
+  ConsumerState<OnboardingIntroPageBody> createState() =>
       _OnboardingIntroPageBodyState();
 }
 
-class _OnboardingIntroPageBodyState extends State<OnboardingIntroPageBody> {
-  bool _acceptedPolicy = false;
-  bool _acceptedDataCollection = false;
-
+class _OnboardingIntroPageBodyState
+    extends ConsumerState<OnboardingIntroPageBody> {
   @override
   Widget build(BuildContext context) {
+    final form = ref.watch(onboardingFormProvider);
     return FutureBuilder(
       future: AppConst.getVersionNumber(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -65,7 +64,7 @@ class _OnboardingIntroPageBodyState extends State<OnboardingIntroPageBody> {
                                 }),
                         ])),
                 leading: Checkbox(
-                  value: _acceptedPolicy,
+                  value: form.privacyAccepted.value,
                   onChanged: (value) {
                     if (value != null) {
                       _togglePolicy();
@@ -79,8 +78,8 @@ class _OnboardingIntroPageBodyState extends State<OnboardingIntroPageBody> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall),
                 leading: Checkbox(
-                  value: _acceptedDataCollection,
-                  onChanged: (value) => _toggleDataCollection(),
+                  value: form.acceptDataCollection,
+                  onChanged: (_) => _toggleDataCollection(),
                 ),
               )
             ],
@@ -93,17 +92,17 @@ class _OnboardingIntroPageBodyState extends State<OnboardingIntroPageBody> {
   }
 
   void _togglePolicy() {
-    setState(() {
-      _acceptedPolicy = !_acceptedPolicy;
-      widget.setPageContent(_acceptedPolicy, _acceptedDataCollection);
-    });
+    final current = ref.read(onboardingFormProvider).privacyAccepted;
+    ref
+        .read(onboardingFormProvider.notifier)
+        .privacyAcceptedChanged(!current.value);
   }
 
   void _toggleDataCollection() {
-    setState(() {
-      _acceptedDataCollection = !_acceptedDataCollection;
-      widget.setPageContent(_acceptedPolicy, _acceptedDataCollection);
-    });
+    final current = ref.read(onboardingFormProvider).acceptDataCollection;
+    ref
+        .read(onboardingFormProvider.notifier)
+        .dataCollectionAcceptedChanged(!current);
   }
 
   Future<void> _launchUrl() async {

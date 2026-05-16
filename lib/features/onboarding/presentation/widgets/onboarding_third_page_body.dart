@@ -1,27 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/presentation/widgets/info_dialog.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_activity_selection_entity.dart';
+import 'package:nutriq/features/onboarding/presentation/notifier/onboarding_form_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class OnboardingThirdPageBody extends StatefulWidget {
-  final Function(bool active, UserActivitySelectionEntity? selectedActivity)
-      setButtonContent;
-
-  const OnboardingThirdPageBody({super.key, required this.setButtonContent});
+class OnboardingThirdPageBody extends ConsumerWidget {
+  const OnboardingThirdPageBody({super.key});
 
   @override
-  State<OnboardingThirdPageBody> createState() =>
-      _OnboardingThirdPageBodyState();
-}
-
-class _OnboardingThirdPageBodyState extends State<OnboardingThirdPageBody> {
-  bool _sedentarySelected = false;
-  bool _lowActiveSelected = false;
-  bool _activeSelected = false;
-  bool _veryActiveSelected = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final form = ref.watch(onboardingFormProvider);
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -40,12 +29,12 @@ class _OnboardingThirdPageBodyState extends State<OnboardingThirdPageBody> {
                 ChoiceChip(
                   label: Text(S.of(context).palSedentaryLabel,
                       style: Theme.of(context).textTheme.titleLarge),
-                  selected: _sedentarySelected,
+                  selected: form.activity.value ==
+                      UserActivitySelectionEntity.sedentary,
                   onSelected: (bool selected) {
-                    setState(() {
-                      _setSelectedChoiceChip(sedentary: true);
-                      checkCorrectInput();
-                    });
+                    ref
+                        .read(onboardingFormProvider.notifier)
+                        .activityChanged(UserActivitySelectionEntity.sedentary);
                   },
                 ),
                 Padding(
@@ -73,12 +62,12 @@ class _OnboardingThirdPageBodyState extends State<OnboardingThirdPageBody> {
                 ChoiceChip(
                   label: Text(S.of(context).palLowLActiveLabel,
                       style: Theme.of(context).textTheme.titleLarge),
-                  selected: _lowActiveSelected,
+                  selected: form.activity.value ==
+                      UserActivitySelectionEntity.lowActive,
                   onSelected: (bool selected) {
-                    setState(() {
-                      _setSelectedChoiceChip(lowActive: true);
-                      checkCorrectInput();
-                    });
+                    ref
+                        .read(onboardingFormProvider.notifier)
+                        .activityChanged(UserActivitySelectionEntity.lowActive);
                   },
                 ),
                 Padding(
@@ -106,12 +95,12 @@ class _OnboardingThirdPageBodyState extends State<OnboardingThirdPageBody> {
                 ChoiceChip(
                   label: Text(S.of(context).palActiveLabel,
                       style: Theme.of(context).textTheme.titleLarge),
-                  selected: _activeSelected,
+                  selected: form.activity.value ==
+                      UserActivitySelectionEntity.active,
                   onSelected: (bool selected) {
-                    setState(() {
-                      _setSelectedChoiceChip(active: true);
-                      checkCorrectInput();
-                    });
+                    ref
+                        .read(onboardingFormProvider.notifier)
+                        .activityChanged(UserActivitySelectionEntity.active);
                   },
                 ),
                 Padding(
@@ -137,12 +126,12 @@ class _OnboardingThirdPageBodyState extends State<OnboardingThirdPageBody> {
                 ChoiceChip(
                   label: Text(S.of(context).palVeryActiveLabel,
                       style: Theme.of(context).textTheme.titleLarge),
-                  selected: _veryActiveSelected,
+                  selected: form.activity.value ==
+                      UserActivitySelectionEntity.veryActive,
                   onSelected: (bool selected) {
-                    setState(() {
-                      _setSelectedChoiceChip(veryActive: true);
-                      checkCorrectInput();
-                    });
+                    ref
+                        .read(onboardingFormProvider.notifier)
+                        .activityChanged(UserActivitySelectionEntity.veryActive);
                   },
                 ),
                 Padding(
@@ -165,35 +154,5 @@ class _OnboardingThirdPageBodyState extends State<OnboardingThirdPageBody> {
         ],
       ),
     );
-  }
-
-  void _setSelectedChoiceChip(
-      {sedentary = false,
-      lowActive = false,
-      active = false,
-      veryActive = false}) {
-    _sedentarySelected = sedentary;
-    _lowActiveSelected = lowActive;
-    _activeSelected = active;
-    _veryActiveSelected = veryActive;
-  }
-
-  void checkCorrectInput() {
-    UserActivitySelectionEntity? selectedActivity;
-    if (_sedentarySelected) {
-      selectedActivity = UserActivitySelectionEntity.sedentary;
-    } else if (_lowActiveSelected) {
-      selectedActivity = UserActivitySelectionEntity.lowActive;
-    } else if (_activeSelected) {
-      selectedActivity = UserActivitySelectionEntity.active;
-    } else if (_veryActiveSelected) {
-      selectedActivity = UserActivitySelectionEntity.veryActive;
-    }
-
-    if (selectedActivity != null) {
-      widget.setButtonContent(true, selectedActivity);
-    } else {
-      widget.setButtonContent(false, null);
-    }
   }
 }

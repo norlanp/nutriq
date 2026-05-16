@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+
 import 'package:nutriq/features/onboarding/domain/entity/user_gender_selection_entity.dart';
+import 'package:nutriq/features/onboarding/presentation/notifier/onboarding_form_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class OnboardingFirstPageBody extends StatefulWidget {
-  final Function(
-          bool active, UserGenderSelectionEntity? gender, DateTime? birthday)
-      setPageContent;
-
-  const OnboardingFirstPageBody({super.key, required this.setPageContent});
+class OnboardingFirstPageBody extends ConsumerStatefulWidget {
+  const OnboardingFirstPageBody({super.key});
 
   @override
-  State<OnboardingFirstPageBody> createState() =>
+  ConsumerState<OnboardingFirstPageBody> createState() =>
       _OnboardingFirstPageBodyState();
 }
 
-class _OnboardingFirstPageBodyState extends State<OnboardingFirstPageBody> {
+class _OnboardingFirstPageBodyState
+    extends ConsumerState<OnboardingFirstPageBody> {
   final _dateInput = TextEditingController();
-  DateTime? _selectedDate;
 
-  bool _maleSelected = false;
-  bool _femaleSelected = false;
+  @override
+  void dispose() {
+    _dateInput.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final form = ref.watch(onboardingFormProvider);
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -37,24 +40,22 @@ class _OnboardingFirstPageBodyState extends State<OnboardingFirstPageBody> {
           const SizedBox(height: 16.0),
           ChoiceChip(
             label: Text(S.of(context).genderMaleLabel),
-            selected: _maleSelected,
+            selected:
+                form.gender.value == UserGenderSelectionEntity.genderMale,
             onSelected: (bool selected) {
-              setState(() {
-                _maleSelected = true;
-                _femaleSelected = false;
-                checkCorrectInput();
-              });
+              ref
+                  .read(onboardingFormProvider.notifier)
+                  .genderChanged(UserGenderSelectionEntity.genderMale);
             },
           ),
           ChoiceChip(
             label: Text(S.of(context).genderFemaleLabel),
-            selected: _femaleSelected,
+            selected:
+                form.gender.value == UserGenderSelectionEntity.genderFemale,
             onSelected: (bool selected) {
-              setState(() {
-                _maleSelected = false;
-                _femaleSelected = true;
-                checkCorrectInput();
-              });
+              ref
+                  .read(onboardingFormProvider.notifier)
+                  .genderChanged(UserGenderSelectionEntity.genderFemale);
             },
           ),
           const SizedBox(height: 32.0),
@@ -70,11 +71,13 @@ class _OnboardingFirstPageBodyState extends State<OnboardingFirstPageBody> {
               hintText: S.of(context).onboardingEnterBirthdayLabel,
               labelText: S.of(context).onboardingEnterBirthdayLabel,
               prefixIcon: const Icon(Icons.calendar_month_outlined),
-              //fillColor: Colors.white,
               filled: true,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
+              errorText: form.birthday.displayError != null
+                  ? S.of(context).onboardingEnterBirthdayLabel
+                  : null,
             ),
             onTap: onDateInputClicked,
           ),
@@ -92,25 +95,9 @@ class _OnboardingFirstPageBodyState extends State<OnboardingFirstPageBody> {
     if (pickedDate != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
       setState(() {
-        _selectedDate = pickedDate;
         _dateInput.text = formattedDate;
-        checkCorrectInput();
       });
-    }
-  }
-
-  void checkCorrectInput() {
-    UserGenderSelectionEntity? selectedGender;
-    if (_maleSelected) {
-      selectedGender = UserGenderSelectionEntity.genderMale;
-    } else if (_femaleSelected) {
-      selectedGender = UserGenderSelectionEntity.genderFemale;
-    }
-
-    if (selectedGender != null && _selectedDate != null) {
-      widget.setPageContent(true, selectedGender, _selectedDate);
-    } else {
-      widget.setPageContent(false, null, null);
+      ref.read(onboardingFormProvider.notifier).birthdayChanged(pickedDate);
     }
   }
 }

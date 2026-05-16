@@ -6,17 +6,14 @@ class OnboardingOverviewPageBody extends StatelessWidget {
   final String carbsGoalString;
   final String fatGoalString;
   final String proteinGoalString;
-  final Function(bool active) setButtonActive;
-  final double? totalKcalCalculated;
 
-  const OnboardingOverviewPageBody(
-      {super.key,
-      required this.setButtonActive,
-      this.totalKcalCalculated,
-      required this.calorieGoalDayString,
-      required this.carbsGoalString,
-      required this.fatGoalString,
-      required this.proteinGoalString});
+  const OnboardingOverviewPageBody({
+    super.key,
+    required this.calorieGoalDayString,
+    required this.carbsGoalString,
+    required this.fatGoalString,
+    required this.proteinGoalString,
+  });
 
   @override
   Widget build(BuildContext context) {

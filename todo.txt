@@ -94,12 +94,13 @@ Phase 4: HTTP Layer Hardening
 
 Phase 5: Form Validation
 --------------------------
-[ ] Create `formz` input validators for onboarding (gender, birthday, height, weight, goal, PAL)
-[ ] Create `formz` input validators for profile editing (weight, height, goal weight)
-[ ] Create `formz` input validators for custom food creation
-[ ] Refactor onboarding screens to use `formz` validated inputs instead of manual `_pageButtonActive` flags
-[ ] Refactor profile dialogs to use `formz` validated inputs
-[ ] Run `flutter analyze` — zero errors/warnings
+[x] Create `formz` input validators for onboarding (gender, birthday, height, weight, goal, PAL)
+[x] Create `formz` input validators for profile editing (weight, height, goal weight)
+[x] Create `formz` input validators for custom food creation
+[x] Refactor onboarding screens to use `formz` validated inputs instead of manual `_pageButtonActive` flags
+[x] Refactor profile dialogs — skipped (HorizontalPicker slider dialogs; existing guard clause is appropriate)
+[x] Refactor custom food creation screen to use `formz` validated inputs
+[x] Run `flutter analyze` — zero errors/warnings ✅ (0 errors, 0 warnings, 27 infos)
 
 Phase 6: Testing Infrastructure
 --------------------------------

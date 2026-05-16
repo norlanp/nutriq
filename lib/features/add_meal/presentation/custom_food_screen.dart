@@ -1,66 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
+import 'package:nutriq/core/domain/validation/macro_input.dart';
+import 'package:nutriq/core/domain/validation/non_negative_double_input.dart';
 import 'package:nutriq/core/router/app_routes.dart';
 import 'package:nutriq/core/utils/custom_text_input_formatter.dart';
-import 'package:nutriq/core/utils/extensions.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.dart';
+import 'package:nutriq/features/add_meal/presentation/custom_food_form_notifier.dart';
 import 'package:nutriq/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class CustomFoodScreen extends StatefulWidget {
+class CustomFoodScreen extends ConsumerWidget {
   final CustomFoodScreenArguments arguments;
 
   const CustomFoodScreen({super.key, required this.arguments});
 
   @override
-  State<CustomFoodScreen> createState() => _CustomFoodScreenState();
-}
-
-class _CustomFoodScreenState extends State<CustomFoodScreen> {
-  late DateTime _day;
-  late IntakeTypeEntity _intakeTypeEntity;
-  late bool _usesImperialUnits;
-
-  final _nameController = TextEditingController();
-  final _brandsController = TextEditingController();
-  final _kcalController = TextEditingController();
-  final _carbsController = TextEditingController();
-  final _fatController = TextEditingController();
-  final _proteinController = TextEditingController();
-  final _sugarsController = TextEditingController();
-  final _saturatedFatController = TextEditingController();
-  final _fiberController = TextEditingController();
-  final _sodiumController = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _day = widget.arguments.day;
-    _intakeTypeEntity = widget.arguments.intakeTypeEntity;
-    _usesImperialUnits = widget.arguments.usesImperialUnits;
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _brandsController.dispose();
-    _kcalController.dispose();
-    _carbsController.dispose();
-    _fatController.dispose();
-    _proteinController.dispose();
-    _sugarsController.dispose();
-    _saturatedFatController.dispose();
-    _fiberController.dispose();
-    _sodiumController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final form = ref.watch(customFoodFormProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).createCustomFoodLabel),
@@ -68,33 +27,35 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
             child: FilledButton(
-              onPressed: _onSave,
+              onPressed: form.isValid ? () => _onSave(context, ref) : null,
               child: Text(S.of(context).buttonSaveLabel),
             ),
           ),
         ],
       ),
       body: Form(
-        key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
             TextFormField(
-              controller: _nameController,
+              initialValue: form.name.value,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .nameChanged(value),
               decoration: InputDecoration(
                 labelText: S.of(context).mealNameLabel,
                 border: const OutlineInputBorder(),
+                errorText: form.name.displayError != null
+                    ? S.of(context).customFoodNameRequired
+                    : null,
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return S.of(context).customFoodNameRequired;
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _brandsController,
+              initialValue: form.brands,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .brandsChanged(value),
               decoration: InputDecoration(
                 labelText: S.of(context).mealBrandsLabel,
                 border: const OutlineInputBorder(),
@@ -107,87 +68,108 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _kcalController,
+              initialValue: form.kcal.value,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .kcalChanged(value),
               inputFormatters: CustomTextInputFormatter.doubleOnly(),
               decoration: InputDecoration(
                 labelText: S.of(context).customFoodEnergyLabel,
                 border: const OutlineInputBorder(),
+                errorText: _nonNegativeErrorText(context, form.kcal),
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              validator: _nonNegativeValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _carbsController,
+              initialValue: form.carbs.value,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .carbsChanged(value),
               inputFormatters: CustomTextInputFormatter.doubleOnly(),
               decoration: InputDecoration(
                 labelText: S.of(context).carbohydrateLabel,
                 border: const OutlineInputBorder(),
+                errorText: _macroErrorText(context, form.carbs),
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              validator: _macroValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _fatController,
+              initialValue: form.fat.value,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .fatChanged(value),
               inputFormatters: CustomTextInputFormatter.doubleOnly(),
               decoration: InputDecoration(
                 labelText: S.of(context).fatLabel,
                 border: const OutlineInputBorder(),
+                errorText: _macroErrorText(context, form.fat),
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              validator: _macroValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _proteinController,
+              initialValue: form.protein.value,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .proteinChanged(value),
               inputFormatters: CustomTextInputFormatter.doubleOnly(),
               decoration: InputDecoration(
                 labelText: S.of(context).proteinLabel,
                 border: const OutlineInputBorder(),
+                errorText: _macroErrorText(context, form.protein),
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              validator: _macroValidator,
             ),
             const SizedBox(height: 24),
             TextFormField(
-              controller: _sugarsController,
+              initialValue: form.sugars.value,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .sugarsChanged(value),
               inputFormatters: CustomTextInputFormatter.doubleOnly(),
               decoration: InputDecoration(
                 labelText: S.of(context).sugarLabel,
                 border: const OutlineInputBorder(),
+                errorText: _macroErrorText(context, form.sugars),
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              validator: _macroValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _saturatedFatController,
+              initialValue: form.saturatedFat.value,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .saturatedFatChanged(value),
               inputFormatters: CustomTextInputFormatter.doubleOnly(),
               decoration: InputDecoration(
                 labelText: S.of(context).saturatedFatLabel,
                 border: const OutlineInputBorder(),
+                errorText: _macroErrorText(context, form.saturatedFat),
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              validator: _macroValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _fiberController,
+              initialValue: form.fiber.value,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .fiberChanged(value),
               inputFormatters: CustomTextInputFormatter.doubleOnly(),
               decoration: InputDecoration(
                 labelText: S.of(context).fiberLabel,
                 border: const OutlineInputBorder(),
+                errorText: _macroErrorText(context, form.fiber),
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              validator: _macroValidator,
             ),
             const SizedBox(height: 24),
             Text(
@@ -196,15 +178,18 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _sodiumController,
+              initialValue: form.sodium.value,
+              onChanged: (value) => ref
+                  .read(customFoodFormProvider.notifier)
+                  .sodiumChanged(value),
               inputFormatters: CustomTextInputFormatter.doubleOnly(),
               decoration: InputDecoration(
                 labelText: S.of(context).sodiumPer100Label,
                 border: const OutlineInputBorder(),
+                errorText: _nonNegativeErrorText(context, form.sodium),
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              validator: _nonNegativeValidator,
             ),
           ],
         ),
@@ -212,34 +197,41 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
     );
   }
 
-  String? _nonNegativeValidator(String? value) {
-    if (value == null || value.isEmpty) return null;
-    final num = double.tryParse(value);
-    if (num == null) return S.of(context).invalidNumberLabel;
-    if (num < 0) return S.of(context).invalidNegativeLabel;
-    return null;
-  }
-
-  String? _macroValidator(String? value) {
-    if (value == null || value.isEmpty) return null;
-    final num = double.tryParse(value);
-    if (num == null) return S.of(context).invalidNumberLabel;
-    if (num < 0) return S.of(context).invalidNegativeLabel;
-    if (num > 100) return S.of(context).invalidMax100Label;
-    return null;
-  }
-
-  void _onSave() {
-    if (!_formKey.currentState!.validate()) {
-      return;
+  String? _nonNegativeErrorText(
+      BuildContext context, NonNegativeDoubleInput input) {
+    if (input.isPure) return null;
+    switch (input.displayError) {
+      case NonNegativeDoubleInputError.invalidFormat:
+        return S.of(context).invalidNumberLabel;
+      case NonNegativeDoubleInputError.negative:
+        return S.of(context).invalidNegativeLabel;
+      case null:
+      case NonNegativeDoubleInputError.empty:
+        return null;
     }
+  }
 
+  String? _macroErrorText(BuildContext context, MacroInput input) {
+    if (input.isPure) return null;
+    switch (input.displayError) {
+      case MacroInputError.invalidFormat:
+        return S.of(context).invalidNumberLabel;
+      case MacroInputError.negative:
+        return S.of(context).invalidNegativeLabel;
+      case MacroInputError.tooLarge:
+        return S.of(context).invalidMax100Label;
+      case null:
+      case MacroInputError.empty:
+        return null;
+    }
+  }
+
+  void _onSave(BuildContext context, WidgetRef ref) {
+    final form = ref.read(customFoodFormProvider);
     final mealEntity = MealEntity(
       code: null,
-      name: _nameController.text.trim(),
-      brands: _brandsController.text.trim().isEmpty
-          ? null
-          : _brandsController.text.trim(),
+      name: form.name.value.trim(),
+      brands: form.brands.trim().isEmpty ? null : form.brands.trim(),
       url: null,
       mealQuantity: null,
       mealUnit: 'g',
@@ -247,26 +239,25 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
       servingUnit: 'g',
       servingSize: '',
       nutriments: MealNutrimentsEntity(
-        energyKcal100: _kcalController.text.toDoubleOrNull(),
-        carbohydrates100: _carbsController.text.toDoubleOrNull(),
-        fat100: _fatController.text.toDoubleOrNull(),
-        proteins100: _proteinController.text.toDoubleOrNull(),
-        sugars100: _sugarsController.text.toDoubleOrNull(),
-        saturatedFat100: _saturatedFatController.text.toDoubleOrNull(),
-        fiber100: _fiberController.text.toDoubleOrNull(),
-        sodium100: _sodiumController.text.toDoubleOrNull(),
+        energyKcal100: form.kcal.toDouble(),
+        carbohydrates100: form.carbs.toDouble(),
+        fat100: form.fat.toDouble(),
+        proteins100: form.protein.toDouble(),
+        sugars100: form.sugars.toDouble(),
+        saturatedFat100: form.saturatedFat.toDouble(),
+        fiber100: form.fiber.toDouble(),
+        sodium100: form.sodium.toDouble(),
       ),
       source: MealSourceEntity.custom,
     );
 
     context.go(AppRoutes.editMeal,
-      extra: EditMealScreenArguments(
-        _day,
-        mealEntity,
-        _intakeTypeEntity,
-        _usesImperialUnits,
-      ),
-    );
+        extra: EditMealScreenArguments(
+          arguments.day,
+          mealEntity,
+          arguments.intakeTypeEntity,
+          arguments.usesImperialUnits,
+        ));
   }
 }
 

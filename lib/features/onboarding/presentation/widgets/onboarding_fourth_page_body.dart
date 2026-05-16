@@ -1,25 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_goal_selection_entity.dart';
+import 'package:nutriq/features/onboarding/presentation/notifier/onboarding_form_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class OnboardingFourthPageBody extends StatefulWidget {
-  final Function(bool active, UserGoalSelectionEntity? selectedGoal)
-      setButtonContent;
-
-  const OnboardingFourthPageBody({super.key, required this.setButtonContent});
+class OnboardingFourthPageBody extends ConsumerWidget {
+  const OnboardingFourthPageBody({super.key});
 
   @override
-  State<OnboardingFourthPageBody> createState() =>
-      _OnboardingFourthPageBodyState();
-}
-
-class _OnboardingFourthPageBodyState extends State<OnboardingFourthPageBody> {
-  bool _looseWeightSelected = false;
-  bool _maintainWeightSelected = false;
-  bool _gainWeightSelected = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final form = ref.watch(onboardingFormProvider);
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -34,64 +24,37 @@ class _OnboardingFourthPageBodyState extends State<OnboardingFourthPageBody> {
           ChoiceChip(
             label: Text(S.of(context).goalLoseWeight,
                 style: Theme.of(context).textTheme.titleLarge),
-            selected: _looseWeightSelected,
+            selected: form.goal.value == UserGoalSelectionEntity.loseWeight,
             onSelected: (bool selected) {
-              setState(() {
-                _setSelectedChoiceChip(looseWeight: true);
-                _checkCorrectInput();
-              });
+              ref
+                  .read(onboardingFormProvider.notifier)
+                  .goalChanged(UserGoalSelectionEntity.loseWeight);
             },
           ),
           const SizedBox(height: 8.0),
           ChoiceChip(
             label: Text(S.of(context).goalMaintainWeight,
                 style: Theme.of(context).textTheme.titleLarge),
-            selected: _maintainWeightSelected,
+            selected: form.goal.value == UserGoalSelectionEntity.maintainWeight,
             onSelected: (bool selected) {
-              setState(() {
-                _setSelectedChoiceChip(maintainWeigh: true);
-                _checkCorrectInput();
-              });
+              ref
+                  .read(onboardingFormProvider.notifier)
+                  .goalChanged(UserGoalSelectionEntity.maintainWeight);
             },
           ),
           const SizedBox(height: 8.0),
           ChoiceChip(
             label: Text(S.of(context).goalGainWeight,
                 style: Theme.of(context).textTheme.titleLarge),
-            selected: _gainWeightSelected,
+            selected: form.goal.value == UserGoalSelectionEntity.gainWeigh,
             onSelected: (bool selected) {
-              setState(() {
-                _setSelectedChoiceChip(gainWeight: true);
-                _checkCorrectInput();
-              });
+              ref
+                  .read(onboardingFormProvider.notifier)
+                  .goalChanged(UserGoalSelectionEntity.gainWeigh);
             },
           ),
         ],
       ),
     );
-  }
-
-  void _setSelectedChoiceChip(
-      {looseWeight = false, maintainWeigh = false, gainWeight = false}) {
-    _looseWeightSelected = looseWeight;
-    _maintainWeightSelected = maintainWeigh;
-    _gainWeightSelected = gainWeight;
-  }
-
-  void _checkCorrectInput() {
-    UserGoalSelectionEntity? selectedGoal;
-    if (_looseWeightSelected) {
-      selectedGoal = UserGoalSelectionEntity.loseWeight;
-    } else if (_maintainWeightSelected) {
-      selectedGoal = UserGoalSelectionEntity.maintainWeight;
-    } else if (_gainWeightSelected) {
-      selectedGoal = UserGoalSelectionEntity.gainWeigh;
-    }
-
-    if (selectedGoal != null) {
-      widget.setButtonContent(true, selectedGoal);
-    } else {
-      widget.setButtonContent(false, null);
-    }
   }
 }

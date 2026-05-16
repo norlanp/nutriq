@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:nutriq/core/router/app_routes.dart';
-import 'package:nutriq/features/onboarding/domain/entity/user_activity_selection_entity.dart';
-import 'package:nutriq/features/onboarding/domain/entity/user_gender_selection_entity.dart';
-import 'package:nutriq/features/onboarding/domain/entity/user_goal_selection_entity.dart';
+import 'package:nutriq/core/utils/calc/calorie_goal_calc.dart';
+import 'package:nutriq/core/utils/calc/macro_calc.dart';
+import 'package:nutriq/features/onboarding/domain/entity/user_data_mask_entity.dart';
 import 'package:nutriq/features/onboarding/presentation/notifier/onboarding_notifier.dart';
+import 'package:nutriq/features/onboarding/presentation/notifier/onboarding_form_notifier.dart';
 import 'package:nutriq/features/onboarding/presentation/onboarding_intro_page_body.dart';
 import 'package:nutriq/features/onboarding/presentation/widgets/onboarding_fourth_page_body.dart';
 import 'package:nutriq/features/onboarding/presentation/widgets/onboarding_overview_page_body.dart';
@@ -31,24 +32,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   final _defaultImageWidget = null;
 
-  bool _introPageButtonActive = false;
-  bool _firstPageButtonActive = false;
-  bool _secondPageButtonActive = false;
-  bool _thirdPageButtonActive = false;
-  bool _fourthPageButtonActive = false;
-  bool _overviewPageButtonActive = false;
-
   @override
   Widget build(BuildContext context) {
+    final form = ref.watch(onboardingFormProvider);
     ref.watch(onboardingNotifierProvider);
     return Scaffold(
       body: SafeArea(
-        child: _getLoadedContent(context),
+        child: _getLoadedContent(context, form),
       ),
     );
   }
 
-  Widget _getLoadedContent(BuildContext context) {
+  Widget _getLoadedContent(BuildContext context, OnboardingFormState form) {
     return IntroductionScreen(
         key: _introKey,
         scrollPhysics: const NeverScrollableScrollPhysics(),
@@ -66,72 +61,61 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             borderRadius: BorderRadius.all(Radius.circular(25.0)),
           ),
         ),
-        onChange: onPageChanged,
-        pages: _getPageViewModels());
+        onChange: (_) {},
+        pages: _getPageViewModels(form));
   }
 
-  List<PageViewModel> _getPageViewModels() {
-    final notifier = ref.read(onboardingNotifierProvider.notifier);
+  List<PageViewModel> _getPageViewModels(OnboardingFormState form) {
     return <PageViewModel>[
       PageViewModel(
           title: S.of(context).onboardingWelcomeLabel,
           decoration: _pageDecoration,
           image: _defaultImageWidget,
-          bodyWidget: OnboardingIntroPageBody(
-            setPageContent: _setIntroPageData,
-          ),
+          bodyWidget: const OnboardingIntroPageBody(),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonStartLabel,
             onButtonPressed: () => _scrollToPage(1),
-            buttonActive: _introPageButtonActive,
+            buttonActive: form.introPageValid,
           )),
       PageViewModel(
           titleWidget: const SizedBox(),
           decoration: _pageDecoration,
           image: _defaultImageWidget,
-          bodyWidget: OnboardingFirstPageBody(
-            setPageContent: _setFirstPageData,
-          ),
+          bodyWidget: const OnboardingFirstPageBody(),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
             onButtonPressed: () => _scrollToPage(2),
-            buttonActive: _firstPageButtonActive,
+            buttonActive: form.firstPageValid,
           )),
       PageViewModel(
           titleWidget: const SizedBox(),
           decoration: _pageDecoration,
           image: _defaultImageWidget,
-          bodyWidget: OnboardingSecondPageBody(
-            setButtonContent: _setSecondPageData,
-          ),
+          bodyWidget: const OnboardingSecondPageBody(),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
             onButtonPressed: () => _scrollToPage(3),
-            buttonActive: _secondPageButtonActive,
+            buttonActive: form.secondPageValid,
           )),
       PageViewModel(
           titleWidget: const SizedBox(),
           decoration: _pageDecoration,
           image: _defaultImageWidget,
-          bodyWidget: OnboardingThirdPageBody(
-            setButtonContent: _setThirdPageButton,
-          ),
+          bodyWidget: const OnboardingThirdPageBody(),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
             onButtonPressed: () => _scrollToPage(4),
-            buttonActive: _thirdPageButtonActive,
+            buttonActive: form.thirdPageValid,
           )),
       PageViewModel(
           titleWidget: const SizedBox(),
           decoration: _pageDecoration,
           image: _defaultImageWidget,
-          bodyWidget: OnboardingFourthPageBody(
-            setButtonContent: _setFourthPageButton,
-          ),
+          bodyWidget: const OnboardingFourthPageBody(),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
             onButtonPressed: () => _scrollToPage(5),
-            buttonActive: _fourthPageButtonActive,
+            buttonActive: form.fourthPageValid,
           )),
       PageViewModel(
           titleWidget: const SizedBox(),
@@ -139,21 +123,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           image: _defaultImageWidget,
           bodyWidget: OnboardingOverviewPageBody(
             calorieGoalDayString:
-                notifier.getOverviewCalorieGoal()?.toInt().toString() ?? "?",
+                _getCalorieGoal(form)?.toInt().toString() ?? "?",
             carbsGoalString:
-                notifier.getOverviewCarbsGoal()?.toInt().toString() ?? "?",
+                _getCarbsGoal(form)?.toInt().toString() ?? "?",
             fatGoalString:
-                notifier.getOverviewFatGoal()?.toInt().toString() ?? "?",
+                _getFatGoal(form)?.toInt().toString() ?? "?",
             proteinGoalString:
-                notifier.getOverviewProteinGoal()?.toInt().toString() ?? "?",
-            setButtonActive: _setOverviewPageContent,
+                _getProteinGoal(form)?.toInt().toString() ?? "?",
           ),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonStartLabel,
-            onButtonPressed: () {
-              _onOverviewStartButtonPressed(context);
-            },
-            buttonActive: _overviewPageButtonActive,
+            onButtonPressed: () => _onOverviewStartButtonPressed(context),
+            buttonActive: form.introPageValid &&
+                form.firstPageValid &&
+                form.secondPageValid &&
+                form.thirdPageValid &&
+                form.fourthPageValid,
           )),
     ];
   }
@@ -163,83 +148,64 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     _introKey.currentState?.animateScroll(page);
   }
 
-  void _setIntroPageData(bool active, bool acceptedDataCollection) {
-    final userSelection = ref.read(onboardingNotifierProvider);
-    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
-        userSelection.copyWith(acceptDataCollection: acceptedDataCollection));
-    setState(() {
-      _introPageButtonActive = active;
-    });
+  double? _getCalorieGoal(OnboardingFormState form) {
+    final userSelection = _formToUserSelection(form);
+    final userEntity = userSelection.toUserEntity();
+    if (userEntity != null) {
+      return CalorieGoalCalc.getTotalKcalGoal(userEntity, 0);
+    }
+    return null;
   }
 
-  void _setFirstPageData(bool active, UserGenderSelectionEntity? selectedGender,
-      DateTime? selectedBirthday) {
-    final userSelection = ref.read(onboardingNotifierProvider);
-    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
-        userSelection.copyWith(gender: selectedGender, birthday: selectedBirthday));
-    setState(() {
-      _firstPageButtonActive = active;
-    });
+  double? _getCarbsGoal(OnboardingFormState form) {
+    final calorieGoal = _getCalorieGoal(form);
+    final userSelection = _formToUserSelection(form);
+    if (userSelection.toUserEntity() != null && calorieGoal != null) {
+      return MacroCalc.getTotalCarbsGoal(calorieGoal);
+    }
+    return null;
   }
 
-  void _setSecondPageData(bool active, double? selectedHeight,
-      double? selectedWeight, bool usesImperial) {
-    final userSelection = ref.read(onboardingNotifierProvider);
-    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
-        userSelection.copyWith(
-            height: selectedHeight,
-            weight: selectedWeight,
-            usesImperialUnits: usesImperial));
-    setState(() {
-      _secondPageButtonActive = active;
-    });
+  double? _getFatGoal(OnboardingFormState form) {
+    final calorieGoal = _getCalorieGoal(form);
+    final userSelection = _formToUserSelection(form);
+    if (userSelection.toUserEntity() != null && calorieGoal != null) {
+      return MacroCalc.getTotalFatsGoal(calorieGoal);
+    }
+    return null;
   }
 
-  void _setThirdPageButton(
-      bool active, UserActivitySelectionEntity? selectedActivity) {
-    final userSelection = ref.read(onboardingNotifierProvider);
-    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
-        userSelection.copyWith(activity: selectedActivity));
-    setState(() {
-      _thirdPageButtonActive = active;
-    });
+  double? _getProteinGoal(OnboardingFormState form) {
+    final calorieGoal = _getCalorieGoal(form);
+    final userSelection = _formToUserSelection(form);
+    if (userSelection.toUserEntity() != null && calorieGoal != null) {
+      return MacroCalc.getTotalProteinsGoal(calorieGoal);
+    }
+    return null;
   }
 
-  void _setFourthPageButton(
-      bool active, UserGoalSelectionEntity? selectedGoal) {
-    final userSelection = ref.read(onboardingNotifierProvider);
-    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
-        userSelection.copyWith(goal: selectedGoal));
-    setState(() {
-      _fourthPageButtonActive = active;
-    });
-  }
-
-  void onPageChanged(int page) {
-    checkUserDataProvided();
-  }
-
-  void checkUserDataProvided() {
-    final userSelection = ref.read(onboardingNotifierProvider);
-    userSelection.checkDataProvided()
-        ? _setOverviewPageContent(true)
-        : _setOverviewPageContent(false);
-  }
-
-  void _setOverviewPageContent(bool active) {
-    setState(() {
-      _overviewPageButtonActive = active;
-    });
+  UserDataMaskEntity _formToUserSelection(OnboardingFormState form) {
+    final heightCm = form.height.toCm();
+    final weightKg = form.weight.toKg();
+    return UserDataMaskEntity(
+      gender: form.gender.value,
+      birthday: form.birthday.value,
+      height: heightCm,
+      weight: weightKg,
+      activity: form.activity.value,
+      goal: form.goal.value,
+      acceptDataCollection: form.acceptDataCollection,
+      usesImperialUnits: form.usesImperialUnits,
+    );
   }
 
   void _onOverviewStartButtonPressed(BuildContext context) {
-    final userSelection = ref.read(onboardingNotifierProvider);
+    final form = ref.read(onboardingFormProvider);
+    final userSelection = _formToUserSelection(form);
     final userEntity = userSelection.toUserEntity();
-    final hasAcceptedDataCollection = userSelection.acceptDataCollection;
-    final usesImperialUnits = userSelection.usesImperialUnits;
     if (userEntity != null) {
       ref.read(onboardingNotifierProvider.notifier).saveOnboardingData(
-          userEntity, hasAcceptedDataCollection, usesImperialUnits);
+          userEntity, form.acceptDataCollection, form.usesImperialUnits);
       context.go(AppRoutes.main);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
