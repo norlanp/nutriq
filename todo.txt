@@ -26,10 +26,10 @@ Strategy: migrate one feature at a time, verify each, then delete BLoC files.
 [x] Update `main.dart`: change `NutriqApp` from `StatelessWidget` to `ConsumerWidget`, remove `provider` package import, wrap with `ProviderScope`
 [x] Migrate home feature (home_bloc → home_notifier, screens, providers)
 [x] Migrate diary feature
-[ ] Migrate profile feature
-[ ] Migrate settings feature
-[ ] Migrate onboarding feature
-[ ] Migrate add_meal feature
+[x] Migrate profile feature
+[x] Migrate settings feature
+[x] Migrate onboarding feature
+[x] Migrate add_meal feature
 [ ] Migrate add_activity feature
 [ ] Migrate scanner feature
 [ ] Migrate weight_tracking feature

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_activity_selection_entity.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_gender_selection_entity.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_goal_selection_entity.dart';
-import 'package:nutriq/features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:nutriq/features/onboarding/presentation/notifier/onboarding_notifier.dart';
 import 'package:nutriq/features/onboarding/presentation/onboarding_intro_page_body.dart';
 import 'package:nutriq/features/onboarding/presentation/widgets/onboarding_fourth_page_body.dart';
 import 'package:nutriq/features/onboarding/presentation/widgets/onboarding_overview_page_body.dart';
@@ -25,7 +23,6 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
-  late OnboardingBloc _onboardingBloc;
   final _introKey = GlobalKey<IntroductionScreenState>();
 
   final _pageDecoration = const PageDecoration(
@@ -41,35 +38,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   bool _overviewPageButtonActive = false;
 
   @override
-  void initState() {
-    _onboardingBloc = ref.read(onboardingBlocProvider);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    ref.watch(onboardingNotifierProvider);
     return Scaffold(
       body: SafeArea(
-        child: BlocBuilder<OnboardingBloc, OnboardingState>(
-          bloc: _onboardingBloc,
-          builder: (context, state) {
-            if (state is OnboardingInitialState) {
-              _onboardingBloc.add(LoadOnboardingEvent());
-              return _getLoadingContent();
-            } else if (state is OnboardingLoadingState) {
-              return _getLoadingContent();
-            } else if (state is OnboardingLoadedState) {
-              return _getLoadedContent(context);
-            }
-            return _getLoadingContent();
-          },
-        ),
+        child: _getLoadedContent(context),
       ),
     );
-  }
-
-  Widget _getLoadingContent() {
-    return const Center(child: CircularProgressIndicator());
   }
 
   Widget _getLoadedContent(BuildContext context) {
@@ -94,156 +69,147 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         pages: _getPageViewModels());
   }
 
-  List<PageViewModel> _getPageViewModels() => <PageViewModel>[
-        PageViewModel(
-            title: S.of(context).onboardingWelcomeLabel,
-            decoration: _pageDecoration,
-            image: _defaultImageWidget,
-            bodyWidget: OnboardingIntroPageBody(
-              setPageContent: _setIntroPageData,
-            ),
-            footer: HighlightButton(
-              buttonLabel: S.of(context).buttonStartLabel,
-              onButtonPressed: () => _scrollToPage(1),
-              buttonActive: _introPageButtonActive,
-            )),
-        PageViewModel(
-            titleWidget: const SizedBox(),
-            // empty
-            decoration: _pageDecoration,
-            image: _defaultImageWidget,
-            bodyWidget: OnboardingFirstPageBody(
-              setPageContent: _setFirstPageData,
-            ),
-            footer: HighlightButton(
-              buttonLabel: S.of(context).buttonNextLabel,
-              onButtonPressed: () => _scrollToPage(2),
-              buttonActive: _firstPageButtonActive,
-            )),
-        PageViewModel(
-            titleWidget: const SizedBox(),
-            // empty
-            decoration: _pageDecoration,
-            image: _defaultImageWidget,
-            bodyWidget: OnboardingSecondPageBody(
-              setButtonContent: _setSecondPageData,
-            ),
-            footer: HighlightButton(
-              buttonLabel: S.of(context).buttonNextLabel,
-              onButtonPressed: () => _scrollToPage(3),
-              buttonActive: _secondPageButtonActive,
-            )),
-        PageViewModel(
-            titleWidget: const SizedBox(),
-            // empty
-            decoration: _pageDecoration,
-            image: _defaultImageWidget,
-            bodyWidget: OnboardingThirdPageBody(
-              setButtonContent: _setThirdPageButton,
-            ),
-            footer: HighlightButton(
-              buttonLabel: S.of(context).buttonNextLabel,
-              onButtonPressed: () => _scrollToPage(4),
-              buttonActive: _thirdPageButtonActive,
-            )),
-        PageViewModel(
-            titleWidget: const SizedBox(),
-            // empty
-            decoration: _pageDecoration,
-            image: _defaultImageWidget,
-            bodyWidget: OnboardingFourthPageBody(
-              setButtonContent: _setFourthPageButton,
-            ),
-            footer: HighlightButton(
-              buttonLabel: S.of(context).buttonNextLabel,
-              onButtonPressed: () => _scrollToPage(5),
-              buttonActive: _fourthPageButtonActive,
-            )),
-        PageViewModel(
-            titleWidget: const SizedBox(),
-            // empty
-            decoration: _pageDecoration,
-            image: _defaultImageWidget,
-            bodyWidget: OnboardingOverviewPageBody(
-              calorieGoalDayString: _onboardingBloc
-                      .getOverviewCalorieGoal()
-                      ?.toInt()
-                      .toString() ??
-                  "?",
-              carbsGoalString:
-                  _onboardingBloc.getOverviewCarbsGoal()?.toInt().toString() ??
-                      "?",
-              fatGoalString:
-                  _onboardingBloc.getOverviewFatGoal()?.toInt().toString() ??
-                      "?",
-              proteinGoalString: _onboardingBloc
-                      .getOverviewProteinGoal()
-                      ?.toInt()
-                      .toString() ??
-                  "?",
-              setButtonActive: _setOverviewPageContent,
-            ),
-            footer: HighlightButton(
-              buttonLabel: S.of(context).buttonStartLabel,
-              onButtonPressed: () {
-                _onOverviewStartButtonPressed(context);
-              },
-              buttonActive: _overviewPageButtonActive,
-            )),
-      ];
+  List<PageViewModel> _getPageViewModels() {
+    final notifier = ref.read(onboardingNotifierProvider.notifier);
+    return <PageViewModel>[
+      PageViewModel(
+          title: S.of(context).onboardingWelcomeLabel,
+          decoration: _pageDecoration,
+          image: _defaultImageWidget,
+          bodyWidget: OnboardingIntroPageBody(
+            setPageContent: _setIntroPageData,
+          ),
+          footer: HighlightButton(
+            buttonLabel: S.of(context).buttonStartLabel,
+            onButtonPressed: () => _scrollToPage(1),
+            buttonActive: _introPageButtonActive,
+          )),
+      PageViewModel(
+          titleWidget: const SizedBox(),
+          decoration: _pageDecoration,
+          image: _defaultImageWidget,
+          bodyWidget: OnboardingFirstPageBody(
+            setPageContent: _setFirstPageData,
+          ),
+          footer: HighlightButton(
+            buttonLabel: S.of(context).buttonNextLabel,
+            onButtonPressed: () => _scrollToPage(2),
+            buttonActive: _firstPageButtonActive,
+          )),
+      PageViewModel(
+          titleWidget: const SizedBox(),
+          decoration: _pageDecoration,
+          image: _defaultImageWidget,
+          bodyWidget: OnboardingSecondPageBody(
+            setButtonContent: _setSecondPageData,
+          ),
+          footer: HighlightButton(
+            buttonLabel: S.of(context).buttonNextLabel,
+            onButtonPressed: () => _scrollToPage(3),
+            buttonActive: _secondPageButtonActive,
+          )),
+      PageViewModel(
+          titleWidget: const SizedBox(),
+          decoration: _pageDecoration,
+          image: _defaultImageWidget,
+          bodyWidget: OnboardingThirdPageBody(
+            setButtonContent: _setThirdPageButton,
+          ),
+          footer: HighlightButton(
+            buttonLabel: S.of(context).buttonNextLabel,
+            onButtonPressed: () => _scrollToPage(4),
+            buttonActive: _thirdPageButtonActive,
+          )),
+      PageViewModel(
+          titleWidget: const SizedBox(),
+          decoration: _pageDecoration,
+          image: _defaultImageWidget,
+          bodyWidget: OnboardingFourthPageBody(
+            setButtonContent: _setFourthPageButton,
+          ),
+          footer: HighlightButton(
+            buttonLabel: S.of(context).buttonNextLabel,
+            onButtonPressed: () => _scrollToPage(5),
+            buttonActive: _fourthPageButtonActive,
+          )),
+      PageViewModel(
+          titleWidget: const SizedBox(),
+          decoration: _pageDecoration,
+          image: _defaultImageWidget,
+          bodyWidget: OnboardingOverviewPageBody(
+            calorieGoalDayString:
+                notifier.getOverviewCalorieGoal()?.toInt().toString() ?? "?",
+            carbsGoalString:
+                notifier.getOverviewCarbsGoal()?.toInt().toString() ?? "?",
+            fatGoalString:
+                notifier.getOverviewFatGoal()?.toInt().toString() ?? "?",
+            proteinGoalString:
+                notifier.getOverviewProteinGoal()?.toInt().toString() ?? "?",
+            setButtonActive: _setOverviewPageContent,
+          ),
+          footer: HighlightButton(
+            buttonLabel: S.of(context).buttonStartLabel,
+            onButtonPressed: () {
+              _onOverviewStartButtonPressed(context);
+            },
+            buttonActive: _overviewPageButtonActive,
+          )),
+    ];
+  }
 
   void _scrollToPage(int page) {
-    FocusScope.of(context).requestFocus(FocusNode()); // Dismiss Keyboard
+    FocusScope.of(context).requestFocus(FocusNode());
     _introKey.currentState?.animateScroll(page);
   }
 
   void _setIntroPageData(bool active, bool acceptedDataCollection) {
+    final userSelection = ref.read(onboardingNotifierProvider);
+    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
+        userSelection.copyWith(acceptDataCollection: acceptedDataCollection));
     setState(() {
-      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
-          acceptDataCollection: acceptedDataCollection);
-
       _introPageButtonActive = active;
     });
   }
 
   void _setFirstPageData(bool active, UserGenderSelectionEntity? selectedGender,
       DateTime? selectedBirthday) {
+    final userSelection = ref.read(onboardingNotifierProvider);
+    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
+        userSelection.copyWith(gender: selectedGender, birthday: selectedBirthday));
     setState(() {
-      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
-          gender: selectedGender, birthday: selectedBirthday);
-
       _firstPageButtonActive = active;
     });
   }
 
   void _setSecondPageData(bool active, double? selectedHeight,
       double? selectedWeight, bool usesImperial) {
+    final userSelection = ref.read(onboardingNotifierProvider);
+    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
+        userSelection.copyWith(
+            height: selectedHeight,
+            weight: selectedWeight,
+            usesImperialUnits: usesImperial));
     setState(() {
-      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
-          height: selectedHeight,
-          weight: selectedWeight,
-          usesImperialUnits: usesImperial);
-
       _secondPageButtonActive = active;
     });
   }
 
   void _setThirdPageButton(
       bool active, UserActivitySelectionEntity? selectedActivity) {
+    final userSelection = ref.read(onboardingNotifierProvider);
+    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
+        userSelection.copyWith(activity: selectedActivity));
     setState(() {
-      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
-          activity: selectedActivity);
-
       _thirdPageButtonActive = active;
     });
   }
 
   void _setFourthPageButton(
       bool active, UserGoalSelectionEntity? selectedGoal) {
+    final userSelection = ref.read(onboardingNotifierProvider);
+    ref.read(onboardingNotifierProvider.notifier).updateUserSelection(
+        userSelection.copyWith(goal: selectedGoal));
     setState(() {
-      _onboardingBloc.userSelection = _onboardingBloc.userSelection.copyWith(
-          goal: selectedGoal);
-
       _fourthPageButtonActive = active;
     });
   }
@@ -253,7 +219,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   void checkUserDataProvided() {
-    _onboardingBloc.userSelection.checkDataProvided()
+    final userSelection = ref.read(onboardingNotifierProvider);
+    userSelection.checkDataProvided()
         ? _setOverviewPageContent(true)
         : _setOverviewPageContent(false);
   }
@@ -265,16 +232,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   void _onOverviewStartButtonPressed(BuildContext context) {
-    final userEntity = _onboardingBloc.userSelection.toUserEntity();
-    final hasAcceptedDataCollection =
-        _onboardingBloc.userSelection.acceptDataCollection;
-    final usesImperialUnits = _onboardingBloc.userSelection.usesImperialUnits;
+    final userSelection = ref.read(onboardingNotifierProvider);
+    final userEntity = userSelection.toUserEntity();
+    final hasAcceptedDataCollection = userSelection.acceptDataCollection;
+    final usesImperialUnits = userSelection.usesImperialUnits;
     if (userEntity != null) {
-      _onboardingBloc.saveOnboardingData(
-          context, userEntity, hasAcceptedDataCollection, usesImperialUnits);
+      ref.read(onboardingNotifierProvider.notifier).saveOnboardingData(
+          userEntity, hasAcceptedDataCollection, usesImperialUnits);
       Navigator.pushReplacementNamed(context, NavigationOptions.mainRoute);
     } else {
-      // Error with user input
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.of(context).onboardingSaveUserError)));
       _scrollToPage(1);

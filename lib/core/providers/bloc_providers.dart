@@ -5,10 +5,6 @@ import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
 import 'package:nutriq/features/add_activity/presentation/bloc/activities_bloc.dart';
 import 'package:nutriq/features/add_activity/presentation/bloc/recent_activities_bloc.dart';
-import 'package:nutriq/features/add_meal/presentation/bloc/add_meal_bloc.dart';
-import 'package:nutriq/features/add_meal/presentation/bloc/food_bloc.dart';
-import 'package:nutriq/features/add_meal/presentation/bloc/products_bloc.dart';
-import 'package:nutriq/features/add_meal/presentation/bloc/recent_meal_bloc.dart';
 import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
 import 'package:nutriq/features/autopilot/presentation/autopilot_bloc.dart';
 import 'package:nutriq/features/blood_glucose/presentation/blood_glucose_bloc.dart';
@@ -25,15 +21,11 @@ import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
 import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
 import 'package:nutriq/features/menu_scan/presentation/menu_scan_bloc.dart';
 import 'package:nutriq/features/notifications/presentation/notification_bloc.dart';
-import 'package:nutriq/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:nutriq/features/photo_progress/presentation/photo_progress_bloc.dart';
-import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:nutriq/features/recipe_builder/presentation/bloc/recipe_bloc.dart';
 import 'package:nutriq/features/recipe_catalog/presentation/recipe_catalog_bloc.dart';
 import 'package:nutriq/features/recipe_import/presentation/recipe_import_bloc.dart';
 import 'package:nutriq/features/scanner/presentation/scanner_bloc.dart';
-import 'package:nutriq/features/settings/presentation/bloc/export_import_bloc.dart';
-import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:nutriq/features/step_bonus/presentation/step_bonus_bloc.dart';
 import 'package:nutriq/features/symptom_tracking/presentation/symptom_bloc.dart';
 import 'package:nutriq/features/voice_logging/presentation/voice_logging_bloc.dart';
@@ -53,51 +45,7 @@ class _BlocCrossRefs {
 
 final _blocCrossRefsProvider = Provider<_BlocCrossRefs>((ref) => _BlocCrossRefs(ref));
 
-// --- Singleton BLoC providers (were registerLazySingleton) ---
-
-final onboardingBlocProvider = Provider((ref) {
-  return OnboardingBloc(
-    ref.watch(addUserUsecaseProvider),
-    ref.watch(addConfigUsecaseProvider),
-  );
-});
-
-final profileBlocProvider = Provider<ProfileBloc>((ref) {
-  final crossRefs = ref.watch(_blocCrossRefsProvider);
-  return ProfileBloc(
-    ref.watch(getUserUsecaseProvider),
-    ref.watch(addUserUsecaseProvider),
-    ref.watch(addTrackedDayUsecaseProvider),
-    ref.watch(getConfigUsecaseProvider),
-    ref.watch(getKcalGoalUsecaseProvider),
-    ref.watch(addConfigUsecaseProvider),
-    ref.watch(calculateBMRUsecaseProvider),
-    (
-      refreshHome: crossRefs.refreshHome,
-      refreshDiary: crossRefs.refreshDiary,
-      refreshCalendarDay: crossRefs.refreshCalendarDay,
-    ),
-  );
-});
-
-final settingsBlocProvider = Provider((ref) {
-  return SettingsBloc(
-    ref.watch(getConfigUsecaseProvider),
-    ref.watch(addConfigUsecaseProvider),
-    ref.watch(addTrackedDayUsecaseProvider),
-    ref.watch(getKcalGoalUsecaseProvider),
-    ref.watch(getMacroGoalUsecaseProvider),
-  );
-});
-
 // --- Factory BLoC providers (were registerFactory) ---
-
-final exportImportBlocProvider = Provider((ref) {
-  return ExportImportBloc(
-    ref.watch(exportDataUsecaseProvider),
-    ref.watch(importDataUsecaseProvider),
-  );
-});
 
 final activitiesBlocProvider = Provider((ref) {
   return ActivitiesBloc(ref.watch(getPhysicalActivityUsecaseProvider));
@@ -135,33 +83,6 @@ final scannerBlocProvider = Provider((ref) {
 
 final editMealBlocProvider = Provider((ref) {
   return EditMealBloc(ref.watch(getConfigUsecaseProvider));
-});
-
-final addMealBlocProvider = Provider((ref) {
-  return AddMealBloc(ref.watch(getConfigUsecaseProvider));
-});
-
-final productsBlocProvider = Provider((ref) {
-  return ProductsBloc(
-    ref.watch(searchProductsUseCaseProvider),
-    ref.watch(getConfigUsecaseProvider),
-    ref.watch(allergenFilterServiceProvider),
-  );
-});
-
-final foodBlocProvider = Provider((ref) {
-  return FoodBloc(
-    ref.watch(searchProductsUseCaseProvider),
-    ref.watch(getConfigUsecaseProvider),
-    ref.watch(allergenFilterServiceProvider),
-  );
-});
-
-final recentMealBlocProvider = Provider((ref) {
-  return RecentMealBloc(
-    ref.watch(getIntakeUsecaseProvider),
-    ref.watch(getConfigUsecaseProvider),
-  );
 });
 
 final recipeBlocProvider = Provider((ref) {

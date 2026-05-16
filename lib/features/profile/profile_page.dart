@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/bmr_calculation_entity.dart';
 import 'package:nutriq/core/domain/entity/user_bmi_entity.dart';
@@ -8,9 +7,8 @@ import 'package:nutriq/core/domain/entity/user_gender_entity.dart';
 import 'package:nutriq/core/domain/entity/user_pal_entity.dart';
 import 'package:nutriq/core/domain/entity/user_weight_goal_entity.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/calc/unit_calc.dart';
-import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:nutriq/features/profile/presentation/notifier/profile_notifier.dart';
 import 'package:nutriq/features/profile/presentation/widgets/bmi_overview.dart';
 import 'package:nutriq/features/profile/presentation/widgets/bmr_overview.dart';
 import 'package:nutriq/features/profile/presentation/widgets/set_gender_dialog.dart';
@@ -28,37 +26,21 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
-  late ProfileBloc _profileBloc;
-
-  @override
-  void initState() {
-    _profileBloc = ref.read(profileBlocProvider);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      bloc: _profileBloc,
-      builder: (context, state) {
-        if (state is ProfileInitial) {
-          _profileBloc.add(LoadProfileEvent());
-          return _getLoadingContent();
-        } else if (state is ProfileLoadingState) {
-          return _getLoadingContent();
-        } else if (state is ProfileLoadedState) {
-          return _getLoadedContent(context, state.userBMI, state.userEntity,
-              state.usesImperialUnits, state.bmrCalculation, state.tdeeMethod);
-        } else {
-          return _getLoadingContent();
-        }
-      },
-    );
-  }
+    final profileAsync = ref.watch(profileNotifierProvider);
 
-  Widget _getLoadingContent() {
-    return const Center(
-      child: CircularProgressIndicator(),
+    return profileAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, __) => const Center(child: CircularProgressIndicator()),
+      data: (state) => _getLoadedContent(
+        context,
+        state.userBMI,
+        state.userEntity,
+        state.usesImperialUnits,
+        state.bmrCalculation,
+        state.tdeeMethod,
+      ),
     );
   }
 
@@ -81,7 +63,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           bmrCalculation: bmrCalculation,
           tdeeMethod: tdeeMethod,
           onMethodChanged: (method) {
-            _profileBloc.add(ChangeTDEEMethodEvent(method));
+            ref.read(profileNotifierProvider.notifier).changeTDEEMethod(method);
           },
         ),
         const SizedBox(height: 8.0),
@@ -121,7 +103,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Text(
-            '${_profileBloc.getDisplayWeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
+            '${getDisplayWeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           leading: const SizedBox(
@@ -138,7 +120,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Text(
-            '${_profileBloc.getDisplayHeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).ftLabel : S.of(context).cmLabel}',
+            '${getDisplayHeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).ftLabel : S.of(context).cmLabel}',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           leading: const SizedBox(
@@ -194,7 +176,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         builder: (BuildContext context) => const SetPALCategoryDialog());
     if (selectedPalCategory != null) {
       final updated = userEntity.copyWith(pal: selectedPalCategory);
-      _profileBloc.updateUser(updated);
+      ref.read(profileNotifierProvider.notifier).updateUser(updated);
     }
   }
 
@@ -205,7 +187,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         builder: (BuildContext context) => const SetWeightGoalDialog());
     if (selectedGoal != null) {
       final updated = userEntity.copyWith(goal: selectedGoal);
-      _profileBloc.updateUser(updated);
+      ref.read(profileNotifierProvider.notifier).updateUser(updated);
     }
   }
 
@@ -224,7 +206,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           ? UnitCalc.feetToCm(selectedHeight)
           : selectedHeight;
       final updated = userEntity.copyWith(heightCM: heightCm);
-      _profileBloc.updateUser(updated);
+      ref.read(profileNotifierProvider.notifier).updateUser(updated);
     }
   }
 
@@ -243,7 +225,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           ? UnitCalc.lbsToKg(selectedWeight)
           : selectedWeight;
       final updated = userEntity.copyWith(weightKG: weightKg);
-      _profileBloc.updateUser(updated);
+      ref.read(profileNotifierProvider.notifier).updateUser(updated);
     }
   }
 
@@ -256,7 +238,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         lastDate: DateTime(2100));
     if (selectedDate != null) {
       final updated = userEntity.copyWith(birthday: selectedDate);
-      _profileBloc.updateUser(updated);
+      ref.read(profileNotifierProvider.notifier).updateUser(updated);
     }
   }
 
@@ -267,7 +249,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         builder: (BuildContext context) => const SetGenderDialog());
     if (selectedGender != null) {
       final updated = userEntity.copyWith(gender: selectedGender);
-      _profileBloc.updateUser(updated);
+      ref.read(profileNotifierProvider.notifier).updateUser(updated);
     }
   }
 }

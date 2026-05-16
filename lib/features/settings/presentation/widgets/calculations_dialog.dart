@@ -5,19 +5,12 @@ import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
-import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:nutriq/features/profile/presentation/notifier/profile_notifier.dart';
+import 'package:nutriq/features/settings/presentation/notifier/settings_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class CalculationsDialog extends ConsumerStatefulWidget {
-  final SettingsBloc settingsBloc;
-  final ProfileBloc profileBloc;
-
-  const CalculationsDialog({
-    super.key,
-    required this.settingsBloc,
-    required this.profileBloc,
-  });
+  const CalculationsDialog({super.key});
 
   @override
   ConsumerState<CalculationsDialog> createState() => _CalculationsDialogState();
@@ -33,7 +26,6 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
   static const double _defaultFatPctSelection = 0.25;
   static const double _defaultProteinPctSelection = 0.15;
 
-  // Macros percentages
   double _carbsPctSelection = _defaultCarbsPctSelection * 100;
   double _proteinPctSelection = _defaultProteinPctSelection * 100;
   double _fatPctSelection = _defaultFatPctSelection * 100;
@@ -46,11 +38,11 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
   }
 
   void _initializeKcalAdjustment() async {
-    final kcalAdjustment = await widget.settingsBloc.getKcalAdjustment() *
-        1.0; // Convert to double
-    final userCarbsPct = await widget.settingsBloc.getUserCarbGoalPct();
-    final userProteinPct = await widget.settingsBloc.getUserProteinGoalPct();
-    final userFatPct = await widget.settingsBloc.getUserFatGoalPct();
+    final settingsNotifier = ref.read(settingsNotifierProvider.notifier);
+    final kcalAdjustment = await settingsNotifier.getKcalAdjustment() * 1.0;
+    final userCarbsPct = await settingsNotifier.getUserCarbGoalPct();
+    final userProteinPct = await settingsNotifier.getUserProteinGoalPct();
+    final userFatPct = await settingsNotifier.getUserFatGoalPct();
     final tdeeMethod = await ref.read(addConfigUsecaseProvider).getConfigTDEEMethod();
 
     setState(() {
@@ -75,7 +67,7 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 8), // Add spacing between text and button
+          const SizedBox(width: 8),
           TextButton(
             child: Text(S.of(context).buttonResetLabel),
             onPressed: () {
@@ -158,7 +150,6 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
                 double delta = value - _carbsPctSelection;
                 _carbsPctSelection = value;
 
-                // Adjust other percentages proportionally
                 double proteinRatio = _proteinPctSelection /
                     (_proteinPctSelection + _fatPctSelection);
                 double fatRatio = _fatPctSelection /
@@ -167,7 +158,6 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
                 _proteinPctSelection -= delta * proteinRatio;
                 _fatPctSelection -= delta * fatRatio;
 
-                // Ensure no value goes below 5%
                 if (_proteinPctSelection < 5) {
                   double overflow = 5 - _proteinPctSelection;
                   _proteinPctSelection = 5;
@@ -303,31 +293,23 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
 
   void _normalizeMacros() {
     setState(() {
-      // First, ensure all values are rounded
       _carbsPctSelection = _carbsPctSelection.roundToDouble();
       _proteinPctSelection = _proteinPctSelection.roundToDouble();
       _fatPctSelection = _fatPctSelection.roundToDouble();
 
-      // Calculate total
       double total =
           _carbsPctSelection + _proteinPctSelection + _fatPctSelection;
 
-      // If total isn't 100, adjust values proportionally
       if (total != 100) {
-        // Calculate adjustment factor
         double factor = 100 / total;
 
-        // Adjust the first two values
         _carbsPctSelection = (_carbsPctSelection * factor).roundToDouble();
         _proteinPctSelection = (_proteinPctSelection * factor).roundToDouble();
 
-        // Set the last value to make total exactly 100
         _fatPctSelection = 100 - _carbsPctSelection - _proteinPctSelection;
 
-        // Ensure minimum values (5%)
         if (_fatPctSelection < 5) {
           _fatPctSelection = 5;
-          // Distribute remaining 95% proportionally between carbs and protein
           double remaining = 95;
           double ratio =
               _carbsPctSelection / (_carbsPctSelection + _proteinPctSelection);
@@ -336,28 +318,28 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
         }
       }
 
-      // Verify final values
       assert(
           _carbsPctSelection + _proteinPctSelection + _fatPctSelection == 100,
           'Macros must total 100%');
     });
   }
 
-  void _saveCalculationSettings() {
-    widget.settingsBloc
+  void _saveCalculationSettings() async {
+    final settingsNotifier = ref.read(settingsNotifierProvider.notifier);
+    await settingsNotifier
         .setKcalAdjustment(_kcalAdjustmentSelection.toInt().toDouble());
-    widget.settingsBloc.setMacroGoals(
+    await settingsNotifier.setMacroGoals(
         _carbsPctSelection, _proteinPctSelection, _fatPctSelection);
-    ref.read(addConfigUsecaseProvider).setConfigTDEEMethod(_tdeeMethodSelection);
+    await ref.read(addConfigUsecaseProvider).setConfigTDEEMethod(_tdeeMethodSelection);
 
-    widget.settingsBloc.add(LoadSettingsEvent());
-    widget.profileBloc.add(LoadProfileEvent());
+    await settingsNotifier.updateTrackedDay(DateTime.now());
+    ref.read(profileNotifierProvider.notifier).loadProfile();
     ref.read(homeNotifierProvider.notifier).loadItems();
-
-    widget.settingsBloc.updateTrackedDay(DateTime.now());
     ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
     ref.read(calendarDayNotifierProvider.notifier).refreshCalendarDay();
 
-    Navigator.of(context).pop();
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 }
