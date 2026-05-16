@@ -1,75 +1,129 @@
-Nutriq Audit Fix Plan
-=====================
+Nutriq Improvement Plan
+=======================
 
-Phase 1: Critical Security Fixes [DONE]
------------------------------------------
-[x] Remove .env from git tracking (git rm --cached .env executed)
-[ ] Rotate FDC_API_KEY and SENTRY_DNS (manual action required)
-[x] Gate Firebase.initializeApp() behind hasAcceptedAnonymousData consent
-[x] Add URL validation to recipe import (HTTPS-only, block internal IPs)
-[x] Add PBKDF2 key derivation + AES-GCM to encrypted_backup_service.dart
-[x] Sanitize FDC API key from log output in fdc_data_source.dart
-[x] Remove print() in main.dart error handler, use Logger
-[x] Set logger level to WARNING in release mode
-[x] Reduce Sentry tracesSampleRate from 1.0 to 0.1
+Phase 1: Foundation (no breaking changes, additive only)
+---------------------------------------------------------
+[ ] Add `freezed` + `freezed_annotation` to pubspec.yaml dev_dependencies
+[ ] Convert 36 domain entities to `freezed` immutable classes (start with core entities, then per-feature)
+[ ] Add `formz` to pubspec.yaml dependencies
+[ ] Add `go_router` to pubspec.yaml dependencies
+[ ] Replace `provider` package ThemeModeProvider with Riverpod-based theme provider
+[ ] Fix `LoggerConfig.intiLogger()` typo in main.dart → `initLogger`
+[ ] Fix `OnboardingBloc.saveOnboardingData()` — currently void, should return `Future<void>` and await persistence before navigation
+[ ] Fix validation gaps: weight/height dialogs have TODO validate comments
+[ ] Rotate FDC_API_KEY and SENTRY_DNS (manual action, not code)
 
-Phase 2: Critical Wiring Fixes [DONE]
---------------------------------------
-[x] Add 6 missing routes to main.dart: daily_notes, autopilot, calorie_cycling,
-    custom_trackers, food_grade, step_bonus
-[x] Add stepBonusRoute constant to NavigationOptions
-[x] Create meal_mapper.dart in data layer, move DTO→Entity mapping out of domain
-[x] Remove DTO imports from meal_entity.dart and meal_nutriments_entity.dart
+Phase 2: BLoC → Riverpod Migration (systematic, feature-by-feature)
+--------------------------------------------------------------------
+This replaces the old "Phase 3" from previous todo. The migration doc
+(bloc-to-riverpod-migration.md) describes the target state but was never
+committed. All 44 BLoCs and 132 BLoC files remain. 215+ screen usages.
 
-Phase 3: Remove Redundant State Management [DEFERRED]
-------------------------------------------------------
-[ ] Remove flutter_bloc from pubspec.yaml
-[ ] Remove provider from pubspec.yaml (migrate ThemeModeProvider to Riverpod)
-[ ] Convert all 39 BLoC classes to Riverpod Notifier/AsyncNotifier
-[ ] Convert all BLoC Event/State files to Riverpod state models
-[ ] Update all 54 screen files from BlocBuilder/BlocListener to Riverpod
-[ ] Remove bloc_providers.dart, replace with feature-level providers
-[ ] Remove all BLoC-related imports across lib/
-[ ] Run flutter analyze to confirm zero errors
-[ ] NOTE: Partial migration attempt was reverted. Full migration requires
-    systematic conversion of each screen individually. Estimated 2-3 days.
+Strategy: migrate one feature at a time, verify each, then delete BLoC files.
 
-Phase 4: Stale Code & Docs Cleanup [DONE]
-------------------------------------------
-[x] Remove 8 web-orphaned files (database_connection_web, notification_init_web,
-    file_helper_web, database_connection, platform_info_web,
-    platform_health_service_factory_web, stubs)
-[x] Simplify conditional imports to direct io imports across 12 files
-[x] Remove kIsWeb guard clauses from all affected files
-[x] Fix 4 silent empty catch blocks (main.dart, step_bonus_bloc.dart,
-    scan_menu_usecase.dart, activity_detail_screen.dart)
-[x] Update docs/architecture.md: Riverpod DI, no supabase, iOS+Android only
-[x] Update docs/requirements.md: NFR-4.2, NFR-5.3
-[x] Update docs/features.md: DI, platforms, module count
-[x] Remove unused dependencies: firebase_analytics, permission_handler
-[ ] Remove ThemeModeProvider ChangeNotifier — blocked on Phase 3
+[ ] Create `lib/core/providers/notifier_providers.dart` (central Riverpod notifier registry)
+[ ] Convert `ThemeModeProvider` from ChangeNotifier to Riverpod `Notifier`
+[ ] Update `main.dart`: change `NutriqApp` from `StatelessWidget` to `ConsumerWidget`, remove `provider` package import, wrap with `ProviderScope`
+[ ] Migrate home feature (home_bloc → home_notifier, screens, providers)
+[ ] Migrate diary feature
+[ ] Migrate profile feature
+[ ] Migrate settings feature
+[ ] Migrate onboarding feature
+[ ] Migrate add_meal feature
+[ ] Migrate add_activity feature
+[ ] Migrate scanner feature
+[ ] Migrate weight_tracking feature
+[ ] Migrate water_tracking feature
+[ ] Migrate fasting_tracker feature
+[ ] Migrate meal_detail feature
+[ ] Migrate edit_meal feature
+[ ] Migrate recipe_builder feature
+[ ] Migrate recipe_catalog feature
+[ ] Migrate recipe_import feature
+[ ] Migrate notifications feature
+[ ] Migrate progress_charts feature
+[ ] Migrate photo_progress feature
+[ ] Migrate meal_planning feature
+[ ] Migrate health_sync feature
+[ ] Migrate body_measurements feature
+[ ] Migrate blood_glucose feature
+[ ] Migrate medication feature
+[ ] Migrate symptom_tracking feature
+[ ] Migrate custom_trackers feature
+[ ] Migrate daily_notes feature
+[ ] Migrate calorie_cycling feature
+[ ] Migrate food_grade feature
+[ ] Migrate autopilot feature
+[ ] Migrate ai_food_scanner feature
+[ ] Migrate voice_logging feature
+[ ] Migrate menu_scan feature
+[ ] Migrate grocery_check feature
+[ ] Migrate step_bonus feature
+[ ] Migrate meal_timing feature
+[ ] Migrate data_sync feature
+[ ] Migrate activity_detail feature
+[ ] Delete `lib/core/providers/bloc_providers.dart` after all features migrated
+[ ] Remove `flutter_bloc` and `provider` from pubspec.yaml
+[ ] Remove `bloc_test` from dev_dependencies
+[ ] Update `docs/requirements.md` NFR-5.2: "BLoC pattern" → "Riverpod Notifier pattern"
+[ ] Update `docs/architecture.md`: reflect Riverpod state management
+[ ] Run `flutter analyze` — zero errors/warnings
 
-Phase 5: Code Quality [DONE]
----------------------------------
-[x] Add range validation to custom_food_screen.dart (negative values, macros > 100g)
-[x] Add l10n strings for validation errors (en, de, tr)
-[x] Split mappers.dart (1012 lines) into 20 domain-entity mapper files + barrel
-[x] Split grocery_check_screen.dart (493 lines) into widget files
-[x] Split settings_screen.dart — N/A (file doesn't exist; allergen_settings is only 143 lines)
-[x] Split usecase_providers.dart (587 lines) into core + per-feature provider files + barrel
-[x] Fix dynamic types in off_product_dto.dart (JsonConverter for 17 fields)
-[x] Remove 5 sized_box_for_whitespace lint suppressions in add_item_bottom_sheet.dart
-[x] Convert 14 TODO comments to GitHub issues (blocked: repo has issues disabled)
+Phase 3: Routing Overhaul
+--------------------------
+[ ] Replace `MaterialApp.routes` (48 named routes) with `go_router`
+[ ] Convert `NavigationOptions` string constants to type-safe `GoRoute` definitions
+[ ] Convert `ModalRoute.of(context)!.settings.arguments` to go_router typed path/query params
+[ ] Add deep linking support
+[ ] Delete `NavigationOptions` after full migration
+[ ] Run `flutter analyze` — zero errors/warnings
 
-Phase 6: Test Coverage [DONE]
----------------------------------
-[x] Add BLoC tests for diary, add_meal, profile, settings (mock repositories + real usecases)
-[x] Add IntakeEntity computed property tests (totalKcal, totalCarbsGram, etc.)
-[x] Add use-case tests for calorie goal calculation (GetKcalGoalUsecase)
-[x] Add use-case tests for step bonus (CalculateStepBonusUsecase)
-[x] Add use-case tests for macro goal calculation (GetMacroGoalUsecase, MacroCalc)
-[x] Add test dependencies (mocktail, bloc_test)
+Phase 4: HTTP Layer Hardening
+------------------------------
+[ ] Add `dio` to pubspec.yaml dependencies
+[ ] Add `retrofit` + `retrofit_generator` to dev_dependencies
+[ ] Create typed API client for Open Food Facts (OFF) — replace raw `http` calls in `off_data_source.dart`
+[ ] Create typed API client for USDA FDC — replace raw `http` calls in `fdc_data_source.dart`
+[ ] Add request interceptor for error handling, retry, and user-agent
+[ ] Add response logging in debug mode via `dio` logger
+[ ] Update `RecipeScraperServiceImpl` to use `dio` if needed
+[ ] Run `flutter analyze` — zero errors/warnings
 
-Remaining Audit Items
------------------------
-[x] iOS encryption compliance flag (ITSAppUsesNonExemptEncryption=false already present — correct for HTTPS-only app)
+Phase 5: Form Validation
+--------------------------
+[ ] Create `formz` input validators for onboarding (gender, birthday, height, weight, goal, PAL)
+[ ] Create `formz` input validators for profile editing (weight, height, goal weight)
+[ ] Create `formz` input validators for custom food creation
+[ ] Refactor onboarding screens to use `formz` validated inputs instead of manual `_pageButtonActive` flags
+[ ] Refactor profile dialogs to use `formz` validated inputs
+[ ] Run `flutter analyze` — zero errors/warnings
+
+Phase 6: Testing Infrastructure
+--------------------------------
+[ ] Add `mocktail` upgrade to latest version (already in dev_dependencies at 1.0.4)
+[ ] Create shared mock infrastructure in `test/helpers/mocks.dart` (currently empty)
+[ ] Create mock Drift database for integration tests
+[ ] Write notifier unit tests for each migrated Riverpod notifier (replaces BLoC tests)
+[ ] Delete existing BLoC unit tests (`test/unit_test/bloc_test/`) as features are migrated
+[ ] Add repository contract tests for remaining repositories (5 of 21 have contracts)
+[ ] Add use-case unit tests for remaining use cases (2 of 75 have tests)
+[ ] Run `flutter test` — all pass
+
+Phase 7: Entity Quality & Code Quality
+----------------------------------------
+[ ] Convert mutable entities to `freezed` immutable classes (UserEntity, UserDataMaskEntity, etc.)
+[ ] Fix `TrackedDayEntity.rating` — convert `int` to enum (TODO comment)
+[ ] Fix `PhysicalActivityEntity` — group activities into effort categories (TODO comment)
+[ ] Fix `FDC_CONST` — convert hardcoded strings to translation keys (TODO comment)
+[ ] Remove `drift` schema version discrepancy (docs say v22, code says v23 — verify)
+[ ] Eliminate remaining TODO comments in production code (13 found)
+[ ] Run `flutter analyze` — zero errors/warnings
+
+Phase 8: Optional Enhancements (priority order)
+--------------------------------------------------
+[ ] Replace `sentry_flutter` + `firebase_crashlytics` + `firebase_analytics` with unified crash/reporting strategy (reduce dependency count)
+[ ] Add `logger` package for structured debug logging (replace Dart `logging`)
+[ ] Add `workmanager` for background data sync / notification scheduling
+[ ] Add `connectivity_plus` for offline-first detection
+[ ] Verify AI scanner: `tflite_flutter` initialization is stubbed (TODO in food_classifier_service.dart)
+[ ] Add web platform support (currently iOS/Android only, some services have _web.dart stubs)
