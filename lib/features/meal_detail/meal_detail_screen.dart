@@ -1,16 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
-import 'package:nutriq/core/domain/service/allergen_filter_service.dart';
-import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
-import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/presentation/widgets/meal_value_unit_text.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
+import 'package:nutriq/core/providers/service_providers.dart';
+import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/edit_meal/presentation/edit_meal_screen.dart';
@@ -24,14 +23,14 @@ import 'package:nutriq/features/meal_detail/presentation/widgets/meal_title_expa
 import 'package:nutriq/features/meal_detail/presentation/widgets/off_disclaimer.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MealDetailScreen extends StatefulWidget {
+class MealDetailScreen extends ConsumerStatefulWidget {
   const MealDetailScreen({super.key});
 
   @override
-  State<MealDetailScreen> createState() => _MealDetailScreenState();
+  ConsumerState<MealDetailScreen> createState() => _MealDetailScreenState();
 }
 
-class _MealDetailScreenState extends State<MealDetailScreen> {
+class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
   static const _containerSize = 350.0;
 
   static const String _initialQuantityMetric = '100';
@@ -55,14 +54,14 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
   @override
   void initState() {
-    _mealDetailBloc = locator<MealDetailBloc>();
+    _mealDetailBloc = ref.read(mealDetailBlocProvider);
     _loadNetCarbsConfig();
 
     super.initState();
   }
 
   void _loadNetCarbsConfig() async {
-    final config = await locator<GetConfigUsecase>().getConfig();
+    final config = await ref.read(getConfigUsecaseProvider).getConfig();
     if (mounted) {
       setState(() {
         _netCarbsEnabled = config.netCarbsEnabled;
@@ -217,7 +216,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                     child: CachedNetworkImage(
                       width: 250,
                       height: 250,
-                      cacheManager: locator<CacheManager>(),
+                       cacheManager: ref.read(cacheManagerProvider),
                       imageUrl: meal.mainImageUrl ?? "",
                       fit: BoxFit.cover,
                       placeholder: (context, string) => const MealPlaceholder(),
@@ -318,8 +317,8 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
   }
 
   Widget _buildAllergenWarning(BuildContext context) {
-    final allergenFilterService = locator<AllergenFilterService>();
-    final configUsecase = locator<GetConfigUsecase>();
+    final allergenFilterService = ref.read(allergenFilterServiceProvider);
+    final configUsecase = ref.read(getConfigUsecaseProvider);
 
     return FutureBuilder<Set<AllergenType>>(
       future: configUsecase.getConfig().then((c) => c.userAllergens),

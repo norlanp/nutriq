@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/step_bonus/presentation/step_bonus_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class StepBonusScreen extends StatefulWidget {
+class StepBonusScreen extends ConsumerStatefulWidget {
   const StepBonusScreen({super.key});
 
   @override
-  State<StepBonusScreen> createState() => _StepBonusScreenState();
+  ConsumerState<StepBonusScreen> createState() => _StepBonusScreenState();
 }
 
-class _StepBonusScreenState extends State<StepBonusScreen> {
+class _StepBonusScreenState extends ConsumerState<StepBonusScreen> {
   late StepBonusBloc _bloc;
 
   @override
   void initState() {
     super.initState();
-    _bloc = locator<StepBonusBloc>();
+    _bloc = ref.read(stepBonusBlocProvider);
     _bloc.add(const LoadStepBonusConfig());
   }
 

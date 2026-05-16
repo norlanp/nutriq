@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutriq/core/domain/entity/body_measurement_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:nutriq/features/body_measurements/presentation/body_measurement_bloc.dart';
 import 'package:nutriq/features/body_measurements/presentation/widgets/measurement_history_list.dart';
 import 'package:nutriq/features/body_measurements/presentation/widgets/measurement_trend_chart.dart';
 
-class BodyMeasurementScreen extends StatefulWidget {
+class BodyMeasurementScreen extends ConsumerStatefulWidget {
   const BodyMeasurementScreen({super.key});
 
   @override
-  State<BodyMeasurementScreen> createState() => _BodyMeasurementScreenState();
+  ConsumerState<BodyMeasurementScreen> createState() => _BodyMeasurementScreenState();
 }
 
-class _BodyMeasurementScreenState extends State<BodyMeasurementScreen> {
+class _BodyMeasurementScreenState extends ConsumerState<BodyMeasurementScreen> {
   late BodyMeasurementBloc _bloc;
 
   @override
   void initState() {
     super.initState();
-    _bloc = locator<BodyMeasurementBloc>();
+    _bloc = ref.read(bodyMeasurementBlocProvider);
     final now = DateTime.now();
     _bloc.add(LoadMeasurements(
       startDate: DateTime(now.year, now.month, 1),

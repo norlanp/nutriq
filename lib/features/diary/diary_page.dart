@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
@@ -14,14 +15,14 @@ import 'package:nutriq/features/diary/presentation/widgets/day_info_widget.dart'
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class DiaryPage extends StatefulWidget {
+class DiaryPage extends ConsumerStatefulWidget {
   const DiaryPage({super.key});
 
   @override
-  State<DiaryPage> createState() => _DiaryPageState();
+  ConsumerState<DiaryPage> createState() => _DiaryPageState();
 }
 
-class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
+class _DiaryPageState extends ConsumerState<DiaryPage> with WidgetsBindingObserver {
   final log = Logger('DiaryPage');
 
   late DiaryBloc _diaryBloc;
@@ -36,9 +37,9 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    _diaryBloc = locator<DiaryBloc>();
-    _calendarDayBloc = locator<CalendarDayBloc>();
-    _mealDetailBloc = locator<MealDetailBloc>();
+    _diaryBloc = ref.read(diaryBlocProvider);
+    _calendarDayBloc = ref.read(calendarDayBlocProvider);
+    _mealDetailBloc = ref.read(mealDetailBlocProvider);
     super.initState();
   }
 

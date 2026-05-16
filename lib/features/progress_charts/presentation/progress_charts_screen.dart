@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/progress_charts/data/chart_export_service.dart';
 import 'package:nutriq/features/progress_charts/presentation/progress_charts_bloc.dart';
 import 'package:nutriq/features/progress_charts/presentation/widgets/macro_trend_chart.dart';
@@ -10,14 +11,14 @@ import 'package:nutriq/features/progress_charts/presentation/widgets/weight_tren
 import 'package:nutriq/generated/l10n.dart';
 import 'package:screenshot/screenshot.dart';
 
-class ProgressChartsScreen extends StatefulWidget {
+class ProgressChartsScreen extends ConsumerStatefulWidget {
   const ProgressChartsScreen({super.key});
 
   @override
-  State<ProgressChartsScreen> createState() => _ProgressChartsScreenState();
+  ConsumerState<ProgressChartsScreen> createState() => _ProgressChartsScreenState();
 }
 
-class _ProgressChartsScreenState extends State<ProgressChartsScreen>
+class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
     with SingleTickerProviderStateMixin {
   late ProgressChartsBloc _bloc;
   late TabController _tabController;
@@ -38,7 +39,7 @@ class _ProgressChartsScreenState extends State<ProgressChartsScreen>
     _tabController = TabController(length: 3, vsync: this);
     _screenshotController = ScreenshotController();
     _exportService = ChartExportService(_screenshotController);
-    _bloc = locator<ProgressChartsBloc>();
+    _bloc = ref.read(progressChartsBlocProvider);
     _bloc.add(LoadWeeklyData(startDate: _startDate));
   }
 

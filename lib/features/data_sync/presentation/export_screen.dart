@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/data/data_export_service.dart';
-import 'package:nutriq/core/data/data_import_service.dart';
-import 'package:nutriq/core/data/encrypted_backup_service.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/features/data_sync/presentation/data_sync_bloc.dart';
 import 'package:nutriq/features/data_sync/presentation/data_sync_event.dart';
 import 'package:nutriq/features/data_sync/presentation/data_sync_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class ExportScreen extends StatelessWidget {
+class ExportScreen extends ConsumerWidget {
   const ExportScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return BlocProvider<DataSyncBloc>(
       create: (_) => DataSyncBloc(
-        locator<DataExportService>(),
-        locator<DataImportService>(),
-        locator<EncryptedBackupService>(),
+        ref.read(dataExportServiceProvider),
+        ref.read(dataImportServiceProvider),
+        ref.read(encryptedBackupServiceProvider),
       ),
       child: const _ExportView(),
     );

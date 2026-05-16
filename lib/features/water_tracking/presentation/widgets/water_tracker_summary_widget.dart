@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/water_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/water_tracking/presentation/water_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class WaterTrackerSummaryWidget extends StatefulWidget {
+class WaterTrackerSummaryWidget extends ConsumerStatefulWidget {
   const WaterTrackerSummaryWidget({super.key});
 
   @override
-  State<WaterTrackerSummaryWidget> createState() =>
+  ConsumerState<WaterTrackerSummaryWidget> createState() =>
       _WaterTrackerSummaryWidgetState();
 }
 
-class _WaterTrackerSummaryWidgetState extends State<WaterTrackerSummaryWidget> {
+class _WaterTrackerSummaryWidgetState extends ConsumerState<WaterTrackerSummaryWidget> {
   late WaterBloc _waterBloc;
   static const int _defaultDailyGoal = 2000;
 
   @override
   void initState() {
     super.initState();
-    _waterBloc = locator<WaterBloc>();
+    _waterBloc = ref.read(waterBlocProvider);
     _waterBloc
         .add(LoadWater(date: DateTime.now(), dailyGoal: _defaultDailyGoal));
   }

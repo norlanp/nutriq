@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
@@ -10,7 +11,7 @@ import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MealDetailBottomSheet extends StatefulWidget {
+class MealDetailBottomSheet extends ConsumerStatefulWidget {
   final MealEntity product;
   final DateTime day;
   final IntakeTypeEntity intakeTypeEntity;
@@ -32,10 +33,10 @@ class MealDetailBottomSheet extends StatefulWidget {
       required this.selectedUnit});
 
   @override
-  State<MealDetailBottomSheet> createState() => _MealDetailBottomSheetState();
+  ConsumerState<MealDetailBottomSheet> createState() => _MealDetailBottomSheetState();
 }
 
-class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
+class _MealDetailBottomSheetState extends ConsumerState<MealDetailBottomSheet> {
   TimeOfDay? _selectedTime;
 
   @override
@@ -216,11 +217,11 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
         time: _selectedTime);
 
     // Refresh Home Page
-    locator<HomeBloc>().add(const LoadItemsEvent());
+    ref.read(homeBlocProvider).add(const LoadItemsEvent());
 
     // Refresh Diary Page
-    locator<DiaryBloc>().add(const LoadDiaryYearEvent());
-    locator<CalendarDayBloc>().add(RefreshCalendarDayEvent());
+    ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());
+    ref.read(calendarDayBlocProvider).add(RefreshCalendarDayEvent());
 
     // Show snackbar and return to dashboard
     ScaffoldMessenger.of(context).showSnackBar(

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/presentation/widgets/app_banner_version.dart';
 import 'package:nutriq/core/presentation/widgets/disclaimer_dialog.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/app_const.dart';
-import 'package:nutriq/core/utils/locator.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/core/utils/theme_mode_provider.dart';
 import 'package:nutriq/core/utils/url_const.dart';
@@ -16,19 +17,19 @@ import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:nutriq/features/settings/presentation/widgets/export_import_dialog.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as provider;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:nutriq/features/settings/presentation/widgets/calculations_dialog.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   late SettingsBloc _settingsBloc;
   late ProfileBloc _profileBloc;
   late HomeBloc _homeBloc;
@@ -37,11 +38,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
-    _settingsBloc = locator<SettingsBloc>();
-    _profileBloc = locator<ProfileBloc>();
-    _homeBloc = locator<HomeBloc>();
-    _diaryBloc = locator<DiaryBloc>();
-    _calendarDayBloc = locator<CalendarDayBloc>();
+    _settingsBloc = ref.read(settingsBlocProvider);
+    _profileBloc = ref.read(profileBlocProvider);
+    _homeBloc = ref.read(homeBlocProvider);
+    _diaryBloc = ref.read(diaryBlocProvider);
+    _calendarDayBloc = ref.read(calendarDayBlocProvider);
     super.initState();
   }
 
@@ -328,7 +329,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _settingsBloc.add(LoadSettingsEvent());
                     setState(() {
                       // Update Theme
-                      Provider.of<ThemeModeProvider>(context, listen: false)
+                      provider.Provider.of<ThemeModeProvider>(context, listen: false)
                           .updateTheme(selectedTheme);
                     });
                     Navigator.of(context).pop();

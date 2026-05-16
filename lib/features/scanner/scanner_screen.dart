@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/presentation/widgets/error_dialog.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
 import 'package:nutriq/features/scanner/presentation/scanner_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class ScannerScreen extends StatefulWidget {
+class ScannerScreen extends ConsumerStatefulWidget {
   const ScannerScreen({super.key});
 
   @override
-  State<ScannerScreen> createState() => _ScannerScreenState();
+  ConsumerState<ScannerScreen> createState() => _ScannerScreenState();
 }
 
-class _ScannerScreenState extends State<ScannerScreen> {
+class _ScannerScreenState extends ConsumerState<ScannerScreen> {
   final log = Logger('ScannerScreen');
 
   String? _scannedBarcode;
@@ -28,7 +29,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
   @override
   void initState() {
-    _scannerBloc = locator<ScannerBloc>();
+    _scannerBloc = ref.read(scannerBlocProvider);
     super.initState();
   }
 

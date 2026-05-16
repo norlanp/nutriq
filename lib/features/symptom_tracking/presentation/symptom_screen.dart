@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/symptom_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/symptom_tracking/presentation/symptom_bloc.dart';
 import 'package:nutriq/features/symptom_tracking/presentation/widgets/symptom_trend_chart.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class SymptomTrackingScreen extends StatefulWidget {
+class SymptomTrackingScreen extends ConsumerStatefulWidget {
   const SymptomTrackingScreen({super.key});
 
   @override
-  State<SymptomTrackingScreen> createState() => _SymptomTrackingScreenState();
+  ConsumerState<SymptomTrackingScreen> createState() => _SymptomTrackingScreenState();
 }
 
-class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
+class _SymptomTrackingScreenState extends ConsumerState<SymptomTrackingScreen> {
   late SymptomBloc _symptomBloc;
   String _selectedType = '';
   double _severity = 3;
@@ -36,7 +37,7 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
   @override
   void initState() {
     super.initState();
-    _symptomBloc = locator<SymptomBloc>();
+    _symptomBloc = ref.read(symptomBlocProvider);
     _symptomBloc.add(LoadSymptoms(
       startDate: _startDate,
       endDate: _endDate,

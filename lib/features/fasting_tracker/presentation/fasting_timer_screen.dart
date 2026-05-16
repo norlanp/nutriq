@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutriq/core/domain/entity/fasting_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/fasting_bloc.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/widgets/preset_selector.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/widgets/streak_display.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class FastingTimerScreen extends StatefulWidget {
+class FastingTimerScreen extends ConsumerStatefulWidget {
   const FastingTimerScreen({super.key});
 
   @override
-  State<FastingTimerScreen> createState() => _FastingTimerScreenState();
+  ConsumerState<FastingTimerScreen> createState() => _FastingTimerScreenState();
 }
 
-class _FastingTimerScreenState extends State<FastingTimerScreen> {
+class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
   late FastingBloc _fastingBloc;
   int _currentStreak = 0;
 
@@ -29,7 +30,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
 
   @override
   void initState() {
-    _fastingBloc = locator<FastingBloc>();
+    _fastingBloc = ref.read(fastingBlocProvider);
     _fastingBloc.add(const LoadActive());
     _fastingBloc.add(const LoadStreak());
     super.initState();

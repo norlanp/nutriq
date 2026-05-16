@@ -1,19 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/service_providers.dart';
 import 'package:nutriq/features/meal_detail/presentation/widgets/meal_placeholder.dart';
 
-class ImageFullScreen extends StatefulWidget {
+class ImageFullScreen extends ConsumerStatefulWidget {
   static const fullScreenHeroTag = 'fullScreenTag';
 
   const ImageFullScreen({super.key});
 
   @override
-  State<ImageFullScreen> createState() => _ImageFullScreenState();
+  ConsumerState<ImageFullScreen> createState() => _ImageFullScreenState();
 }
 
-class _ImageFullScreenState extends State<ImageFullScreen> {
+class _ImageFullScreenState extends ConsumerState<ImageFullScreen> {
   late String imageUrl;
 
   @override
@@ -38,7 +38,7 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
           child: CachedNetworkImage(
             width: double.infinity,
             height: double.infinity,
-            cacheManager: locator<CacheManager>(),
+            cacheManager: ref.read(cacheManagerProvider),
             imageUrl: imageUrl,
             fit: BoxFit.cover,
             placeholder: (context, string) => const MealPlaceholder(),

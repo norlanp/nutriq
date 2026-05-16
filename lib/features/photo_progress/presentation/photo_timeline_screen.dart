@@ -2,26 +2,27 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutriq/core/domain/entity/photo_progress_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/photo_progress/data/photo_storage_service.dart';
 import 'package:nutriq/features/photo_progress/presentation/photo_progress_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class PhotoTimelineScreen extends StatefulWidget {
+class PhotoTimelineScreen extends ConsumerStatefulWidget {
   const PhotoTimelineScreen({super.key});
 
   @override
-  State<PhotoTimelineScreen> createState() => _PhotoTimelineScreenState();
+  ConsumerState<PhotoTimelineScreen> createState() => _PhotoTimelineScreenState();
 }
 
-class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
+class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
   late PhotoProgressBloc _bloc;
   final _photoStorageService = PhotoStorageService();
 
   @override
   void initState() {
-    _bloc = locator<PhotoProgressBloc>();
+    _bloc = ref.read(photoProgressBlocProvider);
     _bloc.add(LoadPhotos(
       startDate: DateTime.now().subtract(const Duration(days: 365)),
       endDate: DateTime.now(),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/scraped_recipe_entity.dart';
 import 'package:nutriq/core/utils/id_generator.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 import 'package:nutriq/features/recipe_builder/domain/entity/recipe_entity.dart';
@@ -11,14 +12,14 @@ import 'package:nutriq/features/recipe_import/presentation/recipe_import_bloc.da
 import 'package:nutriq/generated/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RecipeImportScreen extends StatefulWidget {
+class RecipeImportScreen extends ConsumerStatefulWidget {
   const RecipeImportScreen({super.key});
 
   @override
-  State<RecipeImportScreen> createState() => _RecipeImportScreenState();
+  ConsumerState<RecipeImportScreen> createState() => _RecipeImportScreenState();
 }
 
-class _RecipeImportScreenState extends State<RecipeImportScreen> {
+class _RecipeImportScreenState extends ConsumerState<RecipeImportScreen> {
   late RecipeImportBloc _recipeImportBloc;
   final _urlController = TextEditingController();
   final _nameController = TextEditingController();
@@ -27,7 +28,7 @@ class _RecipeImportScreenState extends State<RecipeImportScreen> {
   @override
   void initState() {
     super.initState();
-    _recipeImportBloc = locator<RecipeImportBloc>();
+    _recipeImportBloc = ref.read(recipeImportBlocProvider);
   }
 
   @override
@@ -324,7 +325,7 @@ class _RecipeImportScreenState extends State<RecipeImportScreen> {
       }).toList(),
     );
 
-    locator<RecipeBloc>().add(AddRecipeEvent(recipeEntity));
+    ref.read(recipeBlocProvider).add(AddRecipeEvent(recipeEntity));
     _recipeImportBloc.add(const RecipeImportConfirm());
   }
 

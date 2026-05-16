@@ -1,12 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/presentation/widgets/meal_value_unit_text.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/service_providers.dart';
 
-class IntakeCard extends StatelessWidget {
+class IntakeCard extends ConsumerWidget {
   final IntakeEntity intake;
   final Function(BuildContext, IntakeEntity)? onItemLongPressed;
   final Function(BuildContext, IntakeEntity, bool)? onItemTapped;
@@ -24,7 +24,7 @@ class IntakeCard extends StatelessWidget {
       this.showTimestamp = false});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
         SizedBox(width: firstListElement ? 16 : 0),
@@ -49,7 +49,7 @@ class IntakeCard extends StatelessWidget {
                 children: [
                   intake.meal.mainImageUrl != null
                       ? CachedNetworkImage(
-                          cacheManager: locator<CacheManager>(),
+                           cacheManager: ref.read(cacheManagerProvider),
                           imageUrl: intake.meal.mainImageUrl ?? "",
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(

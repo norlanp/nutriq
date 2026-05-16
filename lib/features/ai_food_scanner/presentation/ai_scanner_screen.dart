@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class AiScannerScreen extends StatefulWidget {
+class AiScannerScreen extends ConsumerStatefulWidget {
   const AiScannerScreen({super.key});
 
   @override
-  State<AiScannerScreen> createState() => _AiScannerScreenState();
+  ConsumerState<AiScannerScreen> createState() => _AiScannerScreenState();
 }
 
-class _AiScannerScreenState extends State<AiScannerScreen> {
+class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
   late AiScannerBloc _bloc;
 
   @override
   void initState() {
-    _bloc = locator<AiScannerBloc>();
+    _bloc = ref.read(aiScannerBlocProvider);
     super.initState();
   }
 

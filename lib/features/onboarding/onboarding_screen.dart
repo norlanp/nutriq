@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_activity_selection_entity.dart';
 import 'package:nutriq/features/onboarding/domain/entity/user_gender_selection_entity.dart';
@@ -16,14 +17,14 @@ import 'package:nutriq/features/onboarding/presentation/widgets/onboarding_first
 import 'package:nutriq/features/onboarding/presentation/widgets/onboarding_second_page_body.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   late OnboardingBloc _onboardingBloc;
   final _introKey = GlobalKey<IntroductionScreenState>();
 
@@ -41,7 +42,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   void initState() {
-    _onboardingBloc = locator<OnboardingBloc>();
+    _onboardingBloc = ref.read(onboardingBlocProvider);
     super.initState();
   }
 

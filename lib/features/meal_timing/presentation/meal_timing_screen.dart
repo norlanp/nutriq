@@ -1,19 +1,20 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MealTimingScreen extends StatefulWidget {
+class MealTimingScreen extends ConsumerStatefulWidget {
   const MealTimingScreen({super.key});
 
   @override
-  State<MealTimingScreen> createState() => _MealTimingScreenState();
+  ConsumerState<MealTimingScreen> createState() => _MealTimingScreenState();
 }
 
-class _MealTimingScreenState extends State<MealTimingScreen> {
+class _MealTimingScreenState extends ConsumerState<MealTimingScreen> {
   late MealTimingBloc _bloc;
   DateTime _startDate = _startOfWeek(DateTime.now());
 
@@ -25,7 +26,7 @@ class _MealTimingScreenState extends State<MealTimingScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc = locator<MealTimingBloc>();
+    _bloc = ref.read(mealTimingBlocProvider);
     _bloc.add(LoadMealTimingWeek(startDate: _startDate));
   }
 

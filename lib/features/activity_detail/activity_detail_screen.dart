@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
 import 'package:nutriq/features/activity_detail/presentation/widget/activity_detail_bottom_sheet.dart';
@@ -14,14 +15,14 @@ import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class ActivityDetailScreen extends StatefulWidget {
+class ActivityDetailScreen extends ConsumerStatefulWidget {
   const ActivityDetailScreen({super.key});
 
   @override
-  State<ActivityDetailScreen> createState() => _ActivityDetailScreenState();
+  ConsumerState<ActivityDetailScreen> createState() => _ActivityDetailScreenState();
 }
 
-class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
+class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
   static const _containerSize = 250.0;
 
   final log = Logger('ItemDetailScreen');
@@ -38,7 +39,7 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
 
   @override
   void initState() {
-    _activityDetailBloc = locator<ActivityDetailBloc>();
+    _activityDetailBloc = ref.read(activityDetailBlocProvider);
     quantityTextController = TextEditingController();
     quantityTextController.text = "0";
     totalQuantity = 0; // TODO change to 60
@@ -193,11 +194,11 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
         context, quantityTextController.text, totalKcal, activityEntity, _day);
 
     // Refresh Home Page
-    locator<HomeBloc>().add(const LoadItemsEvent());
+    ref.read(homeBlocProvider).add(const LoadItemsEvent());
 
     // Refresh Diary Page
-    locator<DiaryBloc>().add(const LoadDiaryYearEvent());
-    locator<CalendarDayBloc>().add(RefreshCalendarDayEvent());
+    ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());
+    ref.read(calendarDayBlocProvider).add(RefreshCalendarDayEvent());
 
     // Show snackbar and return to dashboard
     ScaffoldMessenger.of(context).showSnackBar(

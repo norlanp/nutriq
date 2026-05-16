@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/presentation/widgets/error_dialog.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/add_activity/presentation/bloc/activities_bloc.dart';
 import 'package:nutriq/features/add_activity/presentation/bloc/recent_activities_bloc.dart';
 import 'package:nutriq/features/add_activity/presentation/widgets/activity_item_card.dart';
 import 'package:nutriq/features/add_meal/presentation/widgets/no_results_widget.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class AddActivityScreen extends StatefulWidget {
+class AddActivityScreen extends ConsumerStatefulWidget {
   const AddActivityScreen({super.key});
 
   @override
-  State<AddActivityScreen> createState() => _AddActivityScreenState();
+  ConsumerState<AddActivityScreen> createState() => _AddActivityScreenState();
 }
 
-class _AddActivityScreenState extends State<AddActivityScreen>
+class _AddActivityScreenState extends ConsumerState<AddActivityScreen>
     with SingleTickerProviderStateMixin {
   late DateTime _day;
 
@@ -26,8 +27,8 @@ class _AddActivityScreenState extends State<AddActivityScreen>
 
   @override
   void initState() {
-    _activitiesBloc = locator<ActivitiesBloc>();
-    _recentActivitiesBloc = locator<RecentActivitiesBloc>();
+    _activitiesBloc = ref.read(activitiesBlocProvider);
+    _recentActivitiesBloc = ref.read(recentActivitiesBlocProvider);
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }

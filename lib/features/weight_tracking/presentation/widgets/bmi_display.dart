@@ -1,19 +1,19 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/utils/locator.dart';
-import 'package:nutriq/core/domain/usecase/get_user_usecase.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class BMIDisplay extends StatelessWidget {
+class BMIDisplay extends ConsumerWidget {
   final double latestWeightKg;
 
   const BMIDisplay({super.key, required this.latestWeightKg});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder<double?>(
-      future: _getHeightCm(),
+      future: _getHeightCm(ref),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data == null) {
           return const SizedBox();
@@ -74,9 +74,9 @@ class BMIDisplay extends StatelessWidget {
     );
   }
 
-  Future<double?> _getHeightCm() async {
+  Future<double?> _getHeightCm(WidgetRef ref) async {
     try {
-      final user = await locator<GetUserUsecase>().getUserData();
+      final user = await ref.read(getUserUsecaseProvider).getUserData();
       return user.heightCM;
     } catch (_) {
       return null;

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/food_grade.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/menu_scan/domain/entity/scanned_menu_item.dart';
 import 'package:nutriq/features/menu_scan/presentation/menu_scan_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MenuItemsScreen extends StatelessWidget {
+class MenuItemsScreen extends ConsumerWidget {
   final List<ScannedMenuItem> items;
 
   const MenuItemsScreen({super.key, required this.items});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = S.of(context);
-    final bloc = locator<MenuScanBloc>();
+    final bloc = ref.read(menuScanBlocProvider);
     final selectedCount = items.where((i) => i.isSelected).length;
 
     return Column(

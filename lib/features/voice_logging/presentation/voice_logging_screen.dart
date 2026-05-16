@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/voice_logging/domain/entity/voice_food_entry_entity.dart';
 import 'package:nutriq/features/voice_logging/presentation/voice_logging_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class VoiceLoggingScreen extends StatefulWidget {
+class VoiceLoggingScreen extends ConsumerStatefulWidget {
   const VoiceLoggingScreen({super.key});
 
   @override
-  State<VoiceLoggingScreen> createState() => _VoiceLoggingScreenState();
+  ConsumerState<VoiceLoggingScreen> createState() => _VoiceLoggingScreenState();
 }
 
-class _VoiceLoggingScreenState extends State<VoiceLoggingScreen> {
+class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
   late VoiceLoggingBloc _bloc;
 
   @override
   void initState() {
-    _bloc = locator<VoiceLoggingBloc>();
+    _bloc = ref.read(voiceLoggingBlocProvider);
     _bloc.add(const InitializeVoiceLogging());
     super.initState();
   }

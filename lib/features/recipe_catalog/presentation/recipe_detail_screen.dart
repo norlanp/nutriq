@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/catalog_recipe_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/recipe_catalog/presentation/recipe_catalog_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class RecipeDetailScreen extends StatelessWidget {
+class RecipeDetailScreen extends ConsumerWidget {
   final String recipeId;
 
   const RecipeDetailScreen({super.key, required this.recipeId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).recipeCatalogDetailTitle),
       ),
       body: StreamBuilder<RecipeCatalogState>(
-        stream: locator<RecipeCatalogBloc>().stream,
-        initialData: locator<RecipeCatalogBloc>().state,
+        stream: ref.read(recipeCatalogBlocProvider).stream,
+        initialData: ref.read(recipeCatalogBlocProvider).state,
         builder: (context, snapshot) {
           final state = snapshot.data;
           if (state is RecipeDetailLoaded) {

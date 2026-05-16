@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/daily_note_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/daily_notes/presentation/daily_note_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class DailyNoteScreen extends StatefulWidget {
+class DailyNoteScreen extends ConsumerStatefulWidget {
   final DateTime date;
   final int userId;
 
@@ -17,10 +18,10 @@ class DailyNoteScreen extends StatefulWidget {
   });
 
   @override
-  State<DailyNoteScreen> createState() => _DailyNoteScreenState();
+  ConsumerState<DailyNoteScreen> createState() => _DailyNoteScreenState();
 }
 
-class _DailyNoteScreenState extends State<DailyNoteScreen> {
+class _DailyNoteScreenState extends ConsumerState<DailyNoteScreen> {
   late DailyNoteBloc _dailyNoteBloc;
   late TextEditingController _noteController;
   Timer? _debounce;
@@ -28,7 +29,7 @@ class _DailyNoteScreenState extends State<DailyNoteScreen> {
   @override
   void initState() {
     super.initState();
-    _dailyNoteBloc = locator<DailyNoteBloc>();
+    _dailyNoteBloc = ref.read(dailyNoteBlocProvider);
     _noteController = TextEditingController();
     _dailyNoteBloc.add(LoadNote(userId: widget.userId, date: widget.date));
   }

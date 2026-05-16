@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/medication_log_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MedicationLogScreen extends StatefulWidget {
+class MedicationLogScreen extends ConsumerStatefulWidget {
   const MedicationLogScreen({super.key});
 
   @override
-  State<MedicationLogScreen> createState() => _MedicationLogScreenState();
+  ConsumerState<MedicationLogScreen> createState() => _MedicationLogScreenState();
 }
 
-class _MedicationLogScreenState extends State<MedicationLogScreen> {
+class _MedicationLogScreenState extends ConsumerState<MedicationLogScreen> {
   late MedicationBloc _bloc;
 
   @override
   void initState() {
-    _bloc = locator<MedicationBloc>();
+    _bloc = ref.read(medicationBlocProvider);
     _bloc.add(LoadLog(date: DateTime.now()));
     super.initState();
   }

@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/utils/calc/unit_calc.dart';
 import 'package:nutriq/core/utils/custom_text_input_formatter.dart';
 import 'package:nutriq/core/utils/extensions.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
+import 'package:nutriq/core/providers/service_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/edit_meal/presentation/bloc/edit_meal_bloc.dart';
@@ -16,14 +17,14 @@ import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-class EditMealScreen extends StatefulWidget {
+class EditMealScreen extends ConsumerStatefulWidget {
   const EditMealScreen({super.key});
 
   @override
-  State<EditMealScreen> createState() => _EditMealScreenState();
+  ConsumerState<EditMealScreen> createState() => _EditMealScreenState();
 }
 
-class _EditMealScreenState extends State<EditMealScreen> {
+class _EditMealScreenState extends ConsumerState<EditMealScreen> {
   final log = Logger('EditMealScreen');
   late MealEntity _mealEntity;
   late DateTime _day;
@@ -61,7 +62,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   @override
   void initState() {
-    _editMealBloc = locator<EditMealBloc>();
+    _editMealBloc = ref.read(editMealBlocProvider);
     super.initState();
 
     _baseQuantityTextController.addListener(() {
@@ -151,7 +152,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
           ],
         ),
         body: BlocBuilder<EditMealBloc, EditMealState>(
-          bloc: locator<EditMealBloc>()..add(InitializeEditMealEvent()),
+          bloc: ref.read(editMealBlocProvider)!..add(InitializeEditMealEvent()),
           builder: (BuildContext context, EditMealState state) {
             if (state is EditMealLoadingState) {
               return _getLoadingContent();
@@ -179,7 +180,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
           Center(
               child: ClipOval(
             child: CachedNetworkImage(
-              cacheManager: locator<CacheManager>(),
+              cacheManager: ref.read(cacheManagerProvider),
               width: 120,
               height: 120,
               placeholder: (context, string) => const DefaultMealImage(),

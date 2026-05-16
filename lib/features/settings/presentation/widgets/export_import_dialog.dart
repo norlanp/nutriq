@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/features/settings/presentation/bloc/export_import_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class ExportImportDialog extends StatelessWidget {
-  final exportImportBloc = locator<ExportImportBloc>();
-
-  final _homeBloc = locator<HomeBloc>();
-  final _diaryBloc = locator<DiaryBloc>();
-  final _calendarDayBloc = locator<CalendarDayBloc>();
-
-  ExportImportDialog({super.key});
+class ExportImportDialog extends ConsumerWidget {
+  const ExportImportDialog({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final exportImportBloc = ref.read(exportImportBlocProvider);
+    final homeBloc = ref.read(homeBlocProvider);
+    final diaryBloc = ref.read(diaryBlocProvider);
+    final calendarDayBloc = ref.read(calendarDayBlocProvider);
     return AlertDialog(
       title: Text(S.of(context).exportImportLabel,
           overflow: TextOverflow.ellipsis, maxLines: 2),
@@ -36,7 +35,7 @@ class ExportImportDialog extends StatelessWidget {
                   } else if (state is ExportImportLoadingState) {
                     return const LinearProgressIndicator();
                   } else if (state is ExportImportSuccess) {
-                    refreshScreens();
+                    _refreshScreens(homeBloc, diaryBloc, calendarDayBloc);
                     return Row(
                       children: [
                         Icon(Icons.check_circle,
@@ -81,9 +80,10 @@ class ExportImportDialog extends StatelessWidget {
     );
   }
 
-  void refreshScreens() {
-    _homeBloc.add(const LoadItemsEvent());
-    _diaryBloc.add(const LoadDiaryYearEvent());
-    _calendarDayBloc.add(RefreshCalendarDayEvent());
+  void _refreshScreens(
+      HomeBloc homeBloc, DiaryBloc diaryBloc, CalendarDayBloc calendarDayBloc) {
+    homeBloc.add(const LoadItemsEvent());
+    diaryBloc.add(const LoadDiaryYearEvent());
+    calendarDayBloc.add(RefreshCalendarDayEvent());
   }
 }

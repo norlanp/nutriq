@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/bmr_calculation_entity.dart';
 import 'package:nutriq/core/domain/entity/user_bmi_entity.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
@@ -7,8 +8,8 @@ import 'package:nutriq/core/domain/entity/user_gender_entity.dart';
 import 'package:nutriq/core/domain/entity/user_pal_entity.dart';
 import 'package:nutriq/core/domain/entity/user_weight_goal_entity.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/calc/unit_calc.dart';
-import 'package:nutriq/core/utils/locator.dart';
 import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:nutriq/features/profile/presentation/widgets/bmi_overview.dart';
 import 'package:nutriq/features/profile/presentation/widgets/bmr_overview.dart';
@@ -19,19 +20,19 @@ import 'package:nutriq/features/profile/presentation/widgets/set_pal_category_di
 import 'package:nutriq/features/profile/presentation/widgets/set_weight_dialog.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends ConsumerState<ProfilePage> {
   late ProfileBloc _profileBloc;
 
   @override
   void initState() {
-    _profileBloc = locator<ProfileBloc>();
+    _profileBloc = ref.read(profileBlocProvider);
     super.initState();
   }
 

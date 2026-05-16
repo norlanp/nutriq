@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/ai_food_scanner/domain/entity/food_candidate_entity.dart';
 import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class ClassificationResultsScreen extends StatelessWidget {
+class ClassificationResultsScreen extends ConsumerWidget {
   final List<FoodCandidateEntity> results;
 
   const ClassificationResultsScreen({
@@ -13,9 +14,9 @@ class ClassificationResultsScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = S.of(context);
-    final bloc = locator<AiScannerBloc>();
+    final bloc = ref.read(aiScannerBlocProvider);
 
     return Scaffold(
       appBar: AppBar(

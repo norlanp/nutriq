@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/utils/id_generator.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
@@ -10,14 +11,14 @@ import 'package:nutriq/features/recipe_builder/domain/entity/recipe_item_entity.
 import 'package:nutriq/features/recipe_builder/presentation/bloc/recipe_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class RecipeBuilderScreen extends StatefulWidget {
+class RecipeBuilderScreen extends ConsumerStatefulWidget {
   const RecipeBuilderScreen({super.key});
 
   @override
-  State<RecipeBuilderScreen> createState() => _RecipeBuilderScreenState();
+  ConsumerState<RecipeBuilderScreen> createState() => _RecipeBuilderScreenState();
 }
 
-class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
+class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
   final _nameController = TextEditingController();
   final _servingsController = TextEditingController(text: '1');
   final List<_IngredientEntry> _ingredients = [];
@@ -180,7 +181,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
       items: items,
     );
 
-    locator<RecipeBloc>().add(AddRecipeEvent(recipe));
+    ref.read(recipeBlocProvider).add(AddRecipeEvent(recipe));
     Navigator.pop(context);
   }
 }

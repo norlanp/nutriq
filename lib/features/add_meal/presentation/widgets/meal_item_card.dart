@@ -1,18 +1,18 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/allergen_type.dart';
-import 'package:nutriq/core/domain/service/allergen_filter_service.dart';
 import 'package:nutriq/core/presentation/widgets/meal_value_unit_text.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/service_providers.dart';
+import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MealItemCard extends StatelessWidget {
+class MealItemCard extends ConsumerWidget {
   final DateTime day;
   final AddMealType addMealType;
   final MealEntity mealEntity;
@@ -27,14 +27,14 @@ class MealItemCard extends StatelessWidget {
       required this.usesImperialUnits,
       this.userAllergens});
 
-  Set<AllergenType> get _matchingAllergens {
+  Set<AllergenType> _matchingAllergens(WidgetRef ref) {
     if (userAllergens == null || userAllergens!.isEmpty) return {};
-    final service = locator<AllergenFilterService>();
+    final service = ref.read(allergenFilterServiceProvider);
     return service.getMatchingAllergens(mealEntity, userAllergens!);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -50,7 +50,7 @@ class MealItemCard extends StatelessWidget {
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: CachedNetworkImage(
-                      cacheManager: locator<CacheManager>(),
+                      cacheManager: ref.read(cacheManagerProvider),
                       fit: BoxFit.cover,
                       width: 60,
                       height: 60,
@@ -92,16 +92,16 @@ class MealItemCard extends StatelessWidget {
                           value: double.parse(mealEntity.mealQuantity ?? "0"),
                           meal: mealEntity,
                           usesImperialUnits: usesImperialUnits),
-                      if (_matchingAllergens.isNotEmpty) ...[
-                        const SizedBox(height: 2),
-                        _AllergenWarningChip(
-                            matchingAllergens: _matchingAllergens),
+                       if (_matchingAllergens(ref).isNotEmpty) ...[
+                         const SizedBox(height: 2),
+                         _AllergenWarningChip(
+                             matchingAllergens: _matchingAllergens(ref)),
                       ],
                     ],
                   )
-                : _matchingAllergens.isNotEmpty
+                : _matchingAllergens(ref).isNotEmpty
                     ? _AllergenWarningChip(
-                        matchingAllergens: _matchingAllergens)
+                        matchingAllergens: _matchingAllergens(ref))
                     : const SizedBox(),
             trailing: IconButton(
               style: IconButton.styleFrom(

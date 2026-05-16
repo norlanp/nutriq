@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nutriq/core/domain/entity/food_grade.dart';
 import 'package:nutriq/core/domain/service/grocery_check_service.dart';
 import 'package:nutriq/core/presentation/widgets/food_grade_badge.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/grocery_check/presentation/grocery_check_bloc.dart';
 import 'package:nutriq/features/grocery_check/presentation/widgets/product_card.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class GroceryCheckScreen extends StatefulWidget {
+class GroceryCheckScreen extends ConsumerStatefulWidget {
   const GroceryCheckScreen({super.key});
 
   @override
-  State<GroceryCheckScreen> createState() => _GroceryCheckScreenState();
+  ConsumerState<GroceryCheckScreen> createState() => _GroceryCheckScreenState();
 }
 
-class _GroceryCheckScreenState extends State<GroceryCheckScreen> {
+class _GroceryCheckScreenState extends ConsumerState<GroceryCheckScreen> {
   late GroceryCheckBloc _bloc;
 
   @override
   void initState() {
-    _bloc = locator<GroceryCheckBloc>();
+    _bloc = ref.read(groceryCheckBlocProvider);
     super.initState();
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
@@ -9,7 +10,7 @@ import 'package:nutriq/core/presentation/widgets/activity_vertial_list.dart';
 import 'package:nutriq/core/presentation/widgets/edit_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/delete_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/disclaimer_dialog.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/features/home/presentation/widgets/dashboard_widget.dart';
@@ -18,14 +19,14 @@ import 'package:nutriq/features/home/presentation/widgets/medication_summary_wid
 import 'package:nutriq/features/water_tracking/presentation/widgets/water_tracker_summary_widget.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver {
   final log = Logger('HomePage');
 
   late HomeBloc _homeBloc;
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    _homeBloc = locator<HomeBloc>();
+    _homeBloc = ref.read(homeBlocProvider);
     super.initState();
   }
 

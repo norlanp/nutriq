@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutriq/core/domain/entity/fasting_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/fasting_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class FastingHistoryScreen extends StatefulWidget {
+class FastingHistoryScreen extends ConsumerStatefulWidget {
   const FastingHistoryScreen({super.key});
 
   @override
-  State<FastingHistoryScreen> createState() => _FastingHistoryScreenState();
+  ConsumerState<FastingHistoryScreen> createState() => _FastingHistoryScreenState();
 }
 
-class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
+class _FastingHistoryScreenState extends ConsumerState<FastingHistoryScreen> {
   late FastingBloc _fastingBloc;
 
   @override
   void initState() {
-    _fastingBloc = locator<FastingBloc>();
+    _fastingBloc = ref.read(fastingBlocProvider);
     final now = DateTime.now();
     final startOfMonth = DateTime(now.year, now.month, 1);
     _fastingBloc.add(LoadHistory(startDate: startOfMonth, endDate: now));

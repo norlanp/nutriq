@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
 import 'package:nutriq/core/domain/entity/user_weight_goal_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
-import 'package:nutriq/core/domain/usecase/get_user_usecase.dart';
+import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class GoalProgressWidget extends StatelessWidget {
+class GoalProgressWidget extends ConsumerWidget {
   const GoalProgressWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder<UserEntity?>(
-      future: _getUser(),
+      future: _getUser(ref),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data == null) {
           return const SizedBox();
@@ -101,9 +101,9 @@ class GoalProgressWidget extends StatelessWidget {
     );
   }
 
-  Future<UserEntity?> _getUser() async {
+  Future<UserEntity?> _getUser(WidgetRef ref) async {
     try {
-      return await locator<GetUserUsecase>().getUserData();
+      return await ref.read(getUserUsecaseProvider).getUserData();
     } catch (_) {
       return null;
     }

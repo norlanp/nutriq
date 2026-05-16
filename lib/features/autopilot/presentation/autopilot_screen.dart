@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutriq/core/domain/entity/exercise_calorie_mode_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/autopilot/presentation/autopilot_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class AutopilotScreen extends StatefulWidget {
+class AutopilotScreen extends ConsumerStatefulWidget {
   const AutopilotScreen({super.key});
 
   @override
-  State<AutopilotScreen> createState() => _AutopilotScreenState();
+  ConsumerState<AutopilotScreen> createState() => _AutopilotScreenState();
 }
 
-class _AutopilotScreenState extends State<AutopilotScreen> {
+class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
   late AutopilotBloc _bloc;
 
   @override
   void initState() {
-    _bloc = locator<AutopilotBloc>();
+    _bloc = ref.read(autopilotBlocProvider);
     _bloc.add(const LoadAutopilotStatus(userId: 0));
     super.initState();
   }

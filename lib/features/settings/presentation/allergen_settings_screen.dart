@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/allergen_type.dart';
-import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class AllergenSettingsScreen extends StatefulWidget {
+class AllergenSettingsScreen extends ConsumerStatefulWidget {
   const AllergenSettingsScreen({super.key});
 
   @override
-  State<AllergenSettingsScreen> createState() => _AllergenSettingsScreenState();
+  ConsumerState<AllergenSettingsScreen> createState() => _AllergenSettingsScreenState();
 }
 
-class _AllergenSettingsScreenState extends State<AllergenSettingsScreen> {
+class _AllergenSettingsScreenState extends ConsumerState<AllergenSettingsScreen> {
   late Set<AllergenType> _selectedAllergens;
   bool _isLoading = true;
 
@@ -23,7 +23,7 @@ class _AllergenSettingsScreenState extends State<AllergenSettingsScreen> {
   }
 
   Future<void> _loadAllergens() async {
-    final addConfigUsecase = locator<AddConfigUsecase>();
+    final addConfigUsecase = ref.read(addConfigUsecaseProvider);
     final allergens = await addConfigUsecase.getConfigAllergens();
     if (mounted) {
       setState(() {
@@ -34,7 +34,7 @@ class _AllergenSettingsScreenState extends State<AllergenSettingsScreen> {
   }
 
   Future<void> _saveAllergens() async {
-    final addConfigUsecase = locator<AddConfigUsecase>();
+    final addConfigUsecase = ref.read(addConfigUsecaseProvider);
     await addConfigUsecase.setConfigAllergens(_selectedAllergens);
     if (mounted) {
       Navigator.of(context).pop();

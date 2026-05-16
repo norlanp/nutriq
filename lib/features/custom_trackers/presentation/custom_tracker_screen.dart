@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/custom_tracker_entity.dart';
 import 'package:nutriq/core/domain/entity/custom_tracker_entry_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_bloc.dart';
 import 'package:nutriq/features/custom_trackers/presentation/widgets/scale_slider_widget.dart';
 import 'package:nutriq/features/custom_trackers/presentation/widgets/boolean_toggle_widget.dart';
@@ -10,19 +11,19 @@ import 'package:nutriq/features/custom_trackers/presentation/widgets/text_input_
 import 'package:nutriq/features/custom_trackers/presentation/widgets/tracker_trend_chart.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class CustomTrackerScreen extends StatefulWidget {
+class CustomTrackerScreen extends ConsumerStatefulWidget {
   const CustomTrackerScreen({super.key});
 
   @override
-  State<CustomTrackerScreen> createState() => _CustomTrackerScreenState();
+  ConsumerState<CustomTrackerScreen> createState() => _CustomTrackerScreenState();
 }
 
-class _CustomTrackerScreenState extends State<CustomTrackerScreen> {
+class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
   late CustomTrackerBloc _bloc;
 
   @override
   void initState() {
-    _bloc = locator<CustomTrackerBloc>();
+    _bloc = ref.read(customTrackerBlocProvider);
     _bloc.add(const LoadTrackers(userId: 0));
     super.initState();
   }

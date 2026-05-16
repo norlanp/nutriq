@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutriq/core/domain/entity/blood_glucose_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/blood_glucose/presentation/blood_glucose_bloc.dart';
 import 'package:nutriq/features/blood_glucose/presentation/widgets/bg_trend_chart.dart';
 import 'package:nutriq/features/blood_glucose/presentation/widgets/bg_day_timeline.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class BloodGlucoseScreen extends StatefulWidget {
+class BloodGlucoseScreen extends ConsumerStatefulWidget {
   const BloodGlucoseScreen({super.key});
 
   @override
-  State<BloodGlucoseScreen> createState() => _BloodGlucoseScreenState();
+  ConsumerState<BloodGlucoseScreen> createState() => _BloodGlucoseScreenState();
 }
 
-class _BloodGlucoseScreenState extends State<BloodGlucoseScreen> {
+class _BloodGlucoseScreenState extends ConsumerState<BloodGlucoseScreen> {
   late BloodGlucoseBloc _bloc;
   BloodGlucoseLabelType _selectedLabel = BloodGlucoseLabelType.fasting;
   final _valueController = TextEditingController();
@@ -22,7 +23,7 @@ class _BloodGlucoseScreenState extends State<BloodGlucoseScreen> {
 
   @override
   void initState() {
-    _bloc = locator<BloodGlucoseBloc>();
+    _bloc = ref.read(bloodGlucoseBlocProvider);
     _bloc.add(LoadBloodGlucoseEntries(date: DateTime.now()));
     super.initState();
   }

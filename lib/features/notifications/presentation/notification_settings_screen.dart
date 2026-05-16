@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/notification_settings_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/notifications/presentation/notification_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class NotificationSettingsScreen extends StatelessWidget {
+class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return BlocProvider<NotificationBloc>(
       create: (_) =>
-          locator<NotificationBloc>()..add(const LoadNotificationSettings(0)),
+          ref.read(notificationBlocProvider)..add(const LoadNotificationSettings(0)),
       child: const _NotificationSettingsView(),
     );
   }

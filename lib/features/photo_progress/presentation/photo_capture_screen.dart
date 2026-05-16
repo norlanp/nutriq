@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nutriq/core/domain/entity/photo_progress_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/photo_progress/data/photo_storage_service.dart';
 import 'package:nutriq/features/photo_progress/presentation/photo_progress_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class PhotoCaptureScreen extends StatefulWidget {
+class PhotoCaptureScreen extends ConsumerStatefulWidget {
   const PhotoCaptureScreen({super.key});
 
   @override
-  State<PhotoCaptureScreen> createState() => _PhotoCaptureScreenState();
+  ConsumerState<PhotoCaptureScreen> createState() => _PhotoCaptureScreenState();
 }
 
-class _PhotoCaptureScreenState extends State<PhotoCaptureScreen> {
+class _PhotoCaptureScreenState extends ConsumerState<PhotoCaptureScreen> {
   late PhotoProgressBloc _bloc;
   final _noteController = TextEditingController();
   final _tagsController = TextEditingController();
@@ -25,7 +26,7 @@ class _PhotoCaptureScreenState extends State<PhotoCaptureScreen> {
 
   @override
   void initState() {
-    _bloc = locator<PhotoProgressBloc>();
+    _bloc = ref.read(photoProgressBlocProvider);
     super.initState();
   }
 

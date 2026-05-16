@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/add_meal/presentation/bloc/add_meal_bloc.dart';
@@ -17,14 +18,14 @@ import 'package:nutriq/features/add_meal/presentation/bloc/products_bloc.dart';
 import 'package:nutriq/features/scanner/scanner_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class AddMealScreen extends StatefulWidget {
+class AddMealScreen extends ConsumerStatefulWidget {
   const AddMealScreen({super.key});
 
   @override
-  State<AddMealScreen> createState() => _AddMealScreenState();
+  ConsumerState<AddMealScreen> createState() => _AddMealScreenState();
 }
 
-class _AddMealScreenState extends State<AddMealScreen>
+class _AddMealScreenState extends ConsumerState<AddMealScreen>
     with SingleTickerProviderStateMixin {
   final ValueNotifier<String> _searchStringListener = ValueNotifier('');
 
@@ -39,9 +40,9 @@ class _AddMealScreenState extends State<AddMealScreen>
 
   @override
   void initState() {
-    _productsBloc = locator<ProductsBloc>();
-    _foodBloc = locator<FoodBloc>();
-    _recentMealBloc = locator<RecentMealBloc>();
+    _productsBloc = ref.read(productsBlocProvider);
+    _foodBloc = ref.read(foodBlocProvider);
+    _recentMealBloc = ref.read(recentMealBlocProvider);
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       _onSearchSubmit(_searchStringListener.value);
@@ -71,7 +72,7 @@ class _AddMealScreenState extends State<AddMealScreen>
         title: Text(_mealType.getTypeName(context)),
         actions: [
           BlocBuilder<AddMealBloc, AddMealState>(
-            bloc: locator<AddMealBloc>()..add(InitializeAddMealEvent()),
+            bloc: ref.read(addMealBlocProvider)!..add(InitializeAddMealEvent()),
             builder: (BuildContext context, AddMealState state) {
               if (state is AddMealLoadedState) {
                 return IconButton(

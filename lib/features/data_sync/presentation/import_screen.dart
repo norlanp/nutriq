@@ -1,35 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/data/data_export_service.dart';
-import 'package:nutriq/core/data/data_import_service.dart';
-import 'package:nutriq/core/data/encrypted_backup_service.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/features/data_sync/presentation/data_sync_bloc.dart';
 import 'package:nutriq/features/data_sync/presentation/data_sync_event.dart';
 import 'package:nutriq/features/data_sync/presentation/data_sync_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class ImportScreen extends StatelessWidget {
+class ImportScreen extends ConsumerWidget {
   const ImportScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return BlocProvider<DataSyncBloc>(
       create: (_) => DataSyncBloc(
-        locator<DataExportService>(),
-        locator<DataImportService>(),
-        locator<EncryptedBackupService>(),
+        ref.read(dataExportServiceProvider),
+        ref.read(dataImportServiceProvider),
+        ref.read(encryptedBackupServiceProvider),
       ),
       child: const _ImportView(),
     );
   }
 }
 
-class _ImportView extends StatelessWidget {
+class _ImportView extends ConsumerWidget {
   const _ImportView();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = S.of(context);
 
     return Scaffold(
@@ -43,7 +41,7 @@ class _ImportView extends StatelessWidget {
               SnackBar(content: Text(l10n.dataSyncImportSuccess)),
             );
           } else if (state is DataSyncImportPreview) {
-            _showPreviewDialog(context, state.data);
+            _showPreviewDialog(context, ref, state.data);
           } else if (state is DataSyncError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
@@ -148,9 +146,9 @@ class _ImportView extends StatelessWidget {
     );
   }
 
-  void _showPreviewDialog(BuildContext context, Map<String, dynamic> data) {
+  void _showPreviewDialog(BuildContext context, WidgetRef ref, Map<String, dynamic> data) {
     final l10n = S.of(context);
-    final importService = locator<DataImportService>();
+    final importService = ref.read(dataImportServiceProvider);
     final entries = <Widget>[];
 
     final typeLabels = {

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutriq/core/domain/entity/weight_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/weight_tracking/presentation/bloc/weight_bloc.dart';
 import 'package:nutriq/features/weight_tracking/presentation/widgets/bmi_display.dart';
 import 'package:nutriq/features/weight_tracking/presentation/widgets/goal_progress_widget.dart';
 import 'package:nutriq/features/weight_tracking/presentation/widgets/weight_trend_chart.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class WeightTrackingScreen extends StatefulWidget {
+class WeightTrackingScreen extends ConsumerStatefulWidget {
   const WeightTrackingScreen({super.key});
 
   @override
-  State<WeightTrackingScreen> createState() => _WeightTrackingScreenState();
+  ConsumerState<WeightTrackingScreen> createState() => _WeightTrackingScreenState();
 }
 
-class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
+class _WeightTrackingScreenState extends ConsumerState<WeightTrackingScreen> {
   late WeightBloc _weightBloc;
   final _weightController = TextEditingController();
   final _noteController = TextEditingController();
@@ -23,7 +24,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
 
   @override
   void initState() {
-    _weightBloc = locator<WeightBloc>();
+    _weightBloc = ref.read(weightBlocProvider);
     _weightBloc.add(const LoadWeights());
     super.initState();
   }

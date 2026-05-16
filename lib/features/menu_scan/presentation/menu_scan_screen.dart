@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/menu_scan/presentation/menu_scan_bloc.dart';
 import 'package:nutriq/features/menu_scan/presentation/menu_items_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MenuScanScreen extends StatefulWidget {
+class MenuScanScreen extends ConsumerStatefulWidget {
   const MenuScanScreen({super.key});
 
   @override
-  State<MenuScanScreen> createState() => _MenuScanScreenState();
+  ConsumerState<MenuScanScreen> createState() => _MenuScanScreenState();
 }
 
-class _MenuScanScreenState extends State<MenuScanScreen> {
+class _MenuScanScreenState extends ConsumerState<MenuScanScreen> {
   late MenuScanBloc _bloc;
 
   @override
   void initState() {
-    _bloc = locator<MenuScanBloc>();
+    _bloc = ref.read(menuScanBlocProvider);
     super.initState();
   }
 

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/medication_entity.dart';
 import 'package:nutriq/core/domain/entity/medication_log_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MedicationSummaryWidget extends StatefulWidget {
+class MedicationSummaryWidget extends ConsumerStatefulWidget {
   const MedicationSummaryWidget({super.key});
 
   @override
-  State<MedicationSummaryWidget> createState() =>
+  ConsumerState<MedicationSummaryWidget> createState() =>
       _MedicationSummaryWidgetState();
 }
 
-class _MedicationSummaryWidgetState extends State<MedicationSummaryWidget> {
+class _MedicationSummaryWidgetState extends ConsumerState<MedicationSummaryWidget> {
   late MedicationBloc _medicationBloc;
   List<MedicationEntity> _medications = [];
   List<MedicationLogEntity> _logs = [];
@@ -23,7 +24,7 @@ class _MedicationSummaryWidgetState extends State<MedicationSummaryWidget> {
   @override
   void initState() {
     super.initState();
-    _medicationBloc = locator<MedicationBloc>();
+    _medicationBloc = ref.read(medicationBlocProvider);
     _medicationBloc.add(const LoadMedications(userId: 0));
     _medicationBloc.add(LoadLog(date: DateTime.now()));
   }

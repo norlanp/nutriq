@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_entity.dart';
 import 'package:nutriq/core/domain/entity/tracked_day_entity.dart';
 import 'package:nutriq/core/presentation/widgets/copy_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/delete_all_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/intake_card.dart';
 import 'package:nutriq/core/presentation/widgets/placeholder_card.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/core/utils/vertical_list_popup_menu_selections.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
@@ -16,7 +17,7 @@ import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
 import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class IntakeVerticalList extends StatefulWidget {
+class IntakeVerticalList extends ConsumerStatefulWidget {
   final DateTime day;
   final String title;
   final IconData listIcon;
@@ -49,17 +50,17 @@ class IntakeVerticalList extends StatefulWidget {
   });
 
   @override
-  State<IntakeVerticalList> createState() => _IntakeVerticalListState();
+  ConsumerState<IntakeVerticalList> createState() => _IntakeVerticalListState();
 }
 
-class _IntakeVerticalListState extends State<IntakeVerticalList> {
+class _IntakeVerticalListState extends ConsumerState<IntakeVerticalList> {
   late MealDetailBloc _mealDetailBloc;
   late HomeBloc _homeBloc;
 
   @override
   void initState() {
-    _mealDetailBloc = locator<MealDetailBloc>();
-    _homeBloc = locator<HomeBloc>();
+    _mealDetailBloc = ref.read(mealDetailBlocProvider);
+    _homeBloc = ref.read(homeBlocProvider);
     super.initState();
   }
 
@@ -230,10 +231,10 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
     _homeBloc.deleteIntakeItem(entity);
 
     // Refresh Home Page
-    locator<HomeBloc>().add(const LoadItemsEvent());
+    ref.read(homeBlocProvider).add(const LoadItemsEvent());
 
     // Refresh Diary Page
-    locator<DiaryBloc>().add(const LoadDiaryYearEvent());
-    locator<CalendarDayBloc>().add(RefreshCalendarDayEvent());
+    ref.read(diaryBlocProvider).add(const LoadDiaryYearEvent());
+    ref.read(calendarDayBlocProvider).add(RefreshCalendarDayEvent());
   }
 }

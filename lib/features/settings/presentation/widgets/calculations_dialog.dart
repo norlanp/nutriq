@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
-import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:nutriq/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:nutriq/features/home/presentation/bloc/home_bloc.dart';
@@ -9,7 +9,7 @@ import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class CalculationsDialog extends StatefulWidget {
+class CalculationsDialog extends ConsumerStatefulWidget {
   final SettingsBloc settingsBloc;
   final ProfileBloc profileBloc;
   final HomeBloc homeBloc;
@@ -26,10 +26,10 @@ class CalculationsDialog extends StatefulWidget {
   });
 
   @override
-  State<CalculationsDialog> createState() => _CalculationsDialogState();
+  ConsumerState<CalculationsDialog> createState() => _CalculationsDialogState();
 }
 
-class _CalculationsDialogState extends State<CalculationsDialog> {
+class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
   static const double _maxKcalAdjustment = 1000;
   static const double _minKcalAdjustment = -1000;
   static const int _kcalDivisions = 200;
@@ -57,7 +57,7 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
     final userCarbsPct = await widget.settingsBloc.getUserCarbGoalPct();
     final userProteinPct = await widget.settingsBloc.getUserProteinGoalPct();
     final userFatPct = await widget.settingsBloc.getUserFatGoalPct();
-    final tdeeMethod = await locator<AddConfigUsecase>().getConfigTDEEMethod();
+    final tdeeMethod = await ref.read(addConfigUsecaseProvider).getConfigTDEEMethod();
 
     setState(() {
       _kcalAdjustmentSelection = kcalAdjustment;
@@ -354,7 +354,7 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
         .setKcalAdjustment(_kcalAdjustmentSelection.toInt().toDouble());
     widget.settingsBloc.setMacroGoals(
         _carbsPctSelection, _proteinPctSelection, _fatPctSelection);
-    locator<AddConfigUsecase>().setConfigTDEEMethod(_tdeeMethodSelection);
+    ref.read(addConfigUsecaseProvider).setConfigTDEEMethod(_tdeeMethodSelection);
 
     widget.settingsBloc.add(LoadSettingsEvent());
     widget.profileBloc.add(LoadProfileEvent());

@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/catalog_recipe_entity.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/recipe_catalog/presentation/recipe_catalog_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class RecipeCatalogScreen extends StatefulWidget {
+class RecipeCatalogScreen extends ConsumerStatefulWidget {
   const RecipeCatalogScreen({super.key});
 
   @override
-  State<RecipeCatalogScreen> createState() => _RecipeCatalogScreenState();
+  ConsumerState<RecipeCatalogScreen> createState() => _RecipeCatalogScreenState();
 }
 
-class _RecipeCatalogScreenState extends State<RecipeCatalogScreen> {
+class _RecipeCatalogScreenState extends ConsumerState<RecipeCatalogScreen> {
   late RecipeCatalogBloc _bloc;
   final _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _bloc = locator<RecipeCatalogBloc>()..add(const LoadCatalog());
+    _bloc = ref.read(recipeCatalogBlocProvider)..add(const LoadCatalog());
   }
 
   @override
@@ -139,19 +140,19 @@ class _RecipeCatalogScreenState extends State<RecipeCatalogScreen> {
   }
 }
 
-class _RecipeCard extends StatelessWidget {
+class _RecipeCard extends ConsumerWidget {
   final CatalogRecipeEntity recipe;
 
   const _RecipeCard({required this.recipe});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          locator<RecipeCatalogBloc>().add(LoadRecipe(recipe.id));
+          ref.read(recipeCatalogBlocProvider).add(LoadRecipe(recipe.id));
           Navigator.pushNamed(
             context,
             NavigationOptions.recipeCatalogDetailRoute,

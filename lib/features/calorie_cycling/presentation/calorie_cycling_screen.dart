@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/calorie_cycling/presentation/calorie_cycling_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class CalorieCyclingScreen extends StatefulWidget {
+class CalorieCyclingScreen extends ConsumerStatefulWidget {
   const CalorieCyclingScreen({super.key, this.globalCalorieBudget});
 
   final double? globalCalorieBudget;
 
   @override
-  State<CalorieCyclingScreen> createState() => _CalorieCyclingScreenState();
+  ConsumerState<CalorieCyclingScreen> createState() => _CalorieCyclingScreenState();
 }
 
-class _CalorieCyclingScreenState extends State<CalorieCyclingScreen> {
+class _CalorieCyclingScreenState extends ConsumerState<CalorieCyclingScreen> {
   late CalorieCyclingBloc _bloc;
   final _weekdayLabels = <int, String>{};
   late Map<int, double> _weekdayTargets;
@@ -22,7 +23,7 @@ class _CalorieCyclingScreenState extends State<CalorieCyclingScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc = locator<CalorieCyclingBloc>();
+    _bloc = ref.read(calorieCyclingBlocProvider);
     _weekdayTargets = {};
     _bloc.add(const LoadCycle());
   }

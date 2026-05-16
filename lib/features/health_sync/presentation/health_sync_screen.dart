@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/utils/locator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/health_sync/presentation/health_sync_bloc.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class HealthSyncScreen extends StatelessWidget {
+class HealthSyncScreen extends ConsumerWidget {
   const HealthSyncScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return BlocProvider<HealthSyncBloc>(
-      create: (_) => locator<HealthSyncBloc>()..add(const LoadSyncStatus()),
+      create: (_) => ref.read(healthSyncBlocProvider)..add(const LoadSyncStatus()),
       child: const _HealthSyncView(),
     );
   }
