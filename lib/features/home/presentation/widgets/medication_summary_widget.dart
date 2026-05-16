@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/medication_entity.dart';
 import 'package:nutriq/core/domain/entity/medication_log_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
+import 'package:nutriq/features/medication/presentation/notifier/medication_notifier.dart';
+import 'package:nutriq/features/medication/presentation/notifier/medication_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MedicationSummaryWidget extends ConsumerStatefulWidget {
@@ -17,22 +16,12 @@ class MedicationSummaryWidget extends ConsumerStatefulWidget {
 }
 
 class _MedicationSummaryWidgetState extends ConsumerState<MedicationSummaryWidget> {
-  late MedicationBloc _medicationBloc;
-  List<MedicationEntity> _medications = [];
-  List<MedicationLogEntity> _logs = [];
-
   @override
   void initState() {
     super.initState();
-    _medicationBloc = ref.read(medicationBlocProvider);
-    _medicationBloc.add(const LoadMedications(userId: 0));
-    _medicationBloc.add(LoadLog(date: DateTime.now()));
-  }
-
-  @override
-  void dispose() {
-    _medicationBloc.close();
-    super.dispose();
+    final notifier = ref.read(medicationNotifierProvider.notifier);
+    notifier.loadMedications(0);
+    notifier.loadLog(DateTime.now());
   }
 
   void _toggleDose(MedicationLogEntity existing, bool taken) {
@@ -45,7 +34,7 @@ class _MedicationSummaryWidgetState extends ConsumerState<MedicationSummaryWidge
       doseTaken: taken,
       notes: existing.notes,
     );
-    _medicationBloc.add(LogDose(log: updated, date: DateTime.now()));
+    ref.read(medicationNotifierProvider.notifier).logDose(updated, DateTime.now());
   }
 
   void _addLogEntry(int medicationId, bool taken) {
@@ -58,39 +47,32 @@ class _MedicationSummaryWidgetState extends ConsumerState<MedicationSummaryWidge
       timestamp: now,
       doseTaken: taken,
     );
-    _medicationBloc.add(LogDose(log: log, date: now));
+    ref.read(medicationNotifierProvider.notifier).logDose(log, now);
   }
 
   void _navigateToMedication() async {
     await Navigator.of(context).pushNamed(NavigationOptions.medicationRoute);
     if (mounted) {
-      _medicationBloc.add(const LoadMedications(userId: 0));
-      _medicationBloc.add(LoadLog(date: DateTime.now()));
+      final notifier = ref.read(medicationNotifierProvider.notifier);
+      notifier.loadMedications(0);
+      notifier.loadLog(DateTime.now());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MedicationBloc, MedicationState>(
-      bloc: _medicationBloc,
-      builder: (context, state) {
-        if (state is MedicationsLoaded) {
-          _medications = state.medications;
-        }
-        if (state is MedicationLogLoaded) {
-          _logs = state.logs;
-        }
-        if (_medications.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        return _MedicationSummaryContent(
-          medications: _medications,
-          logs: _logs,
-          onToggleDose: _toggleDose,
-          onAddLogEntry: _addLogEntry,
-          onTap: _navigateToMedication,
-        );
-      },
+    final state = ref.watch(medicationNotifierProvider);
+
+    if (state.medications.isEmpty && !state.isLoading) {
+      return const SizedBox.shrink();
+    }
+
+    return _MedicationSummaryContent(
+      medications: state.medications,
+      logs: state.logs,
+      onToggleDose: _toggleDose,
+      onAddLogEntry: _addLogEntry,
+      onTap: _navigateToMedication,
     );
   }
 }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/medication_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
+import 'package:nutriq/features/medication/presentation/notifier/medication_notifier.dart';
+import 'package:nutriq/features/medication/presentation/notifier/medication_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MedicationScreen extends ConsumerStatefulWidget {
@@ -14,19 +13,10 @@ class MedicationScreen extends ConsumerStatefulWidget {
 }
 
 class _MedicationScreenState extends ConsumerState<MedicationScreen> {
-  late MedicationBloc _bloc;
-
   @override
   void initState() {
-    _bloc = ref.read(medicationBlocProvider);
-    _bloc.add(const LoadMedications(userId: 0));
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
+    ref.read(medicationNotifierProvider.notifier).loadMedications(0);
   }
 
   void _showAddMedicationDialog() {
@@ -120,7 +110,9 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
                       ? null
                       : notesController.text,
                 );
-                _bloc.add(AddMedication(medication: medication, userId: 0));
+                ref
+                    .read(medicationNotifierProvider.notifier)
+                    .addMedication(medication, 0);
                 Navigator.of(ctx).pop();
               },
               child: Text(S.of(context).addLabel),
@@ -144,62 +136,49 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _bloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).medicationTitle),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _showAddMedicationDialog,
-          child: const Icon(Icons.add),
-        ),
-        body: BlocBuilder<MedicationBloc, MedicationState>(
-          bloc: _bloc,
-          builder: (context, state) {
-            if (state is MedicationLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is MedicationError) {
-              return Center(child: Text(state.message));
-            }
-            if (state is MedicationsLoaded) {
-              final medications = state.medications;
-              if (medications.isEmpty) {
-                return Center(
-                  child: Text(S.of(context).noMedicationsAdded),
-                );
-              }
-              return ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: medications.length,
-                itemBuilder: (context, index) {
-                  final med = medications[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(med.name),
-                      subtitle: Text(
-                        '${med.dosage} · ${_frequencyLabel(med.frequency)}'
-                        '${med.timesPerDay > 1 ? ' · ${med.timesPerDay}x/${S.of(context).daily.toLowerCase()}' : ''}',
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        onPressed: () => _bloc.add(
-                          DeleteMedication(
-                            medicationId: med.id,
-                            userId: med.userId,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
+    final state = ref.watch(medicationNotifierProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: Text(S.of(context).medicationTitle)),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAddMedicationDialog,
+        child: const Icon(Icons.add),
       ),
+      body: _buildBody(context, state),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, MedicationState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    if (state.medications.isEmpty) {
+      return Center(child: Text(S.of(context).noMedicationsAdded));
+    }
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: state.medications.length,
+      itemBuilder: (context, index) {
+        final med = state.medications[index];
+        return Card(
+          child: ListTile(
+            title: Text(med.name),
+            subtitle: Text(
+              '${med.dosage} · ${_frequencyLabel(med.frequency)}'
+              '${med.timesPerDay > 1 ? ' · ${med.timesPerDay}x/${S.of(context).daily.toLowerCase()}' : ''}',
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: () => ref
+                  .read(medicationNotifierProvider.notifier)
+                  .deleteMedication(med.id, med.userId),
+            ),
+          ),
+        );
+      },
     );
   }
 }

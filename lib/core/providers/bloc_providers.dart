@@ -15,7 +15,7 @@ import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifie
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
-import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
+
 import 'package:nutriq/features/menu_scan/presentation/menu_scan_bloc.dart';
 
 
@@ -104,16 +104,6 @@ final symptomBlocProvider = Provider((ref) {
     ref.watch(getSymptomsUsecaseProvider),
     ref.watch(addSymptomUsecaseProvider),
     ref.watch(deleteSymptomUsecaseProvider),
-  );
-});
-
-final medicationBlocProvider = Provider((ref) {
-  return MedicationBloc(
-    ref.watch(addMedicationUsecaseProvider),
-    ref.watch(deleteMedicationUsecaseProvider),
-    ref.watch(logMedicationUsecaseProvider),
-    ref.watch(getMedicationLogUsecaseProvider),
-    ref.watch(getMedicationsUsecaseProvider),
   );
 });
 

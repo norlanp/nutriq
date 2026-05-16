@@ -47,7 +47,7 @@ Strategy: migrate one feature at a time, verify each, then delete BLoC files.
 [x] Migrate health_sync feature
 [x] Migrate body_measurements feature
 [x] Migrate blood_glucose feature
-[ ] Migrate medication feature
+[x] Migrate medication feature
 [ ] Migrate symptom_tracking feature
 [ ] Migrate custom_trackers feature
 [ ] Migrate daily_notes feature
