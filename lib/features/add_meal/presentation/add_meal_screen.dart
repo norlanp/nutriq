@@ -8,6 +8,7 @@ import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/add_meal/presentation/bloc/add_meal_bloc.dart';
 import 'package:nutriq/features/add_meal/presentation/bloc/food_bloc.dart';
 import 'package:nutriq/features/add_meal/presentation/bloc/recent_meal_bloc.dart';
+import 'package:nutriq/features/add_meal/presentation/custom_food_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/widgets/shimmer_loading.dart';
 import 'package:nutriq/features/add_meal/presentation/widgets/default_results_widget.dart';
 import 'package:nutriq/features/add_meal/presentation/widgets/error_results_widget.dart';
@@ -309,11 +310,4 @@ class AddMealScreenArguments {
   AddMealScreenArguments(this.mealType, this.day);
 }
 
-class CustomFoodScreenArguments {
-  final DateTime day;
-  final IntakeTypeEntity intakeTypeEntity;
-  final bool usesImperialUnits;
 
-  CustomFoodScreenArguments(
-      this.day, this.intakeTypeEntity, this.usesImperialUnits);
-}

@@ -15,10 +15,11 @@ class AddItemBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
@@ -374,6 +375,7 @@ class AddItemBottomSheet extends StatelessWidget {
             },
           ),
         ],
+        ),
       ),
     );
   }
