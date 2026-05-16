@@ -23,6 +23,12 @@ abstract class PhysicalActivityEntity with _$PhysicalActivityEntity {
 
   const PhysicalActivityEntity._();
 
+  PhysicalActivityEffort get effort {
+    if (mets < 4.0) return PhysicalActivityEffort.light;
+    if (mets < 7.0) return PhysicalActivityEffort.moderate;
+    return PhysicalActivityEffort.vigorous;
+  }
+
   IconData get displayIcon => getDisplayIcon();
 
   String getName(BuildContext context) {
@@ -548,5 +554,4 @@ enum PhysicalActivityTypeEntity {
   winterActivities,
 }
 
-// TODO GROUP activities in effort categories (light, moderate, vigorous)
 enum PhysicalActivityEffort { light, moderate, vigorous }

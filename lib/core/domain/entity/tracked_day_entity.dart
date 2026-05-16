@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 part 'tracked_day_entity.freezed.dart';
 
+enum DayRating { onTrack, offTrack }
+
 @freezed
 abstract class TrackedDayEntity with _$TrackedDayEntity {
   static const maxKcalDifferenceOverGoal = 500;
@@ -22,39 +24,36 @@ abstract class TrackedDayEntity with _$TrackedDayEntity {
 
   const TrackedDayEntity._();
 
-  // TODO: make enum class for rating
-  Color getCalendarDayRatingColor(BuildContext context) {
-    if (_hasExceededMaxKcalDifferenceGoal(calorieGoal, caloriesTracked)) {
-      return Theme.of(context).colorScheme.primary;
-    } else {
-      return Theme.of(context).colorScheme.error;
+  DayRating get rating {
+    final difference = calorieGoal - caloriesTracked;
+    if (calorieGoal < caloriesTracked) {
+      return difference.abs() < maxKcalDifferenceOverGoal
+          ? DayRating.onTrack
+          : DayRating.offTrack;
     }
+    return difference < maxKcalDifferenceUnderGoal
+        ? DayRating.onTrack
+        : DayRating.offTrack;
+  }
+
+  Color getCalendarDayRatingColor(BuildContext context) {
+    return switch (rating) {
+      DayRating.onTrack => Theme.of(context).colorScheme.primary,
+      DayRating.offTrack => Theme.of(context).colorScheme.error,
+    };
   }
 
   Color getRatingDayTextColor(BuildContext context) {
-    if (_hasExceededMaxKcalDifferenceGoal(calorieGoal, caloriesTracked)) {
-      return Theme.of(context).colorScheme.onSecondaryContainer;
-    } else {
-      return Theme.of(context).colorScheme.onErrorContainer;
-    }
+    return switch (rating) {
+      DayRating.onTrack => Theme.of(context).colorScheme.onSecondaryContainer,
+      DayRating.offTrack => Theme.of(context).colorScheme.onErrorContainer,
+    };
   }
 
   Color getRatingDayTextBackgroundColor(BuildContext context) {
-    if (_hasExceededMaxKcalDifferenceGoal(calorieGoal, caloriesTracked)) {
-      return Theme.of(context).colorScheme.secondaryContainer;
-    } else {
-      return Theme.of(context).colorScheme.errorContainer;
-    }
-  }
-
-  bool _hasExceededMaxKcalDifferenceGoal(
-      double calorieGoal, double caloriesTracked) {
-    double difference = calorieGoal - caloriesTracked;
-
-    if (calorieGoal < caloriesTracked) {
-      return difference.abs() < maxKcalDifferenceOverGoal;
-    } else {
-      return difference < maxKcalDifferenceUnderGoal;
-    }
+    return switch (rating) {
+      DayRating.onTrack => Theme.of(context).colorScheme.secondaryContainer,
+      DayRating.offTrack => Theme.of(context).colorScheme.errorContainer,
+    };
   }
 }

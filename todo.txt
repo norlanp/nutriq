@@ -116,12 +116,12 @@ Phase 6: Testing Infrastructure
 Phase 7: Entity Quality & Code Quality
 ----------------------------------------
 [x] Convert mutable entities to `freezed` immutable classes (UserEntity, UserDataMaskEntity, etc.)
-[ ] Fix `TrackedDayEntity.rating` — convert `int` to enum (TODO comment)
-[ ] Fix `PhysicalActivityEntity` — group activities into effort categories (TODO comment)
-[ ] Fix `FDC_CONST` — convert hardcoded strings to translation keys (TODO comment)
-[ ] Remove `drift` schema version discrepancy (docs say v22, code says v23 — verify)
-[ ] Eliminate remaining TODO comments in production code (13 found)
-[ ] Run `flutter analyze` — zero errors/warnings
+[x] Fix `TrackedDayEntity.rating` — introduce `DayRating` enum, replace bool logic with `rating` getter + switch expressions
+[x] Fix `PhysicalActivityEntity` — add `effort` getter computing `PhysicalActivityEffort` enum from METS thresholds
+[x] Fix `FDC_CONST` — removed unused `measureUnits` map (70+ hardcoded English strings), `fdcDefaultUnit`, `fdcPortionServingId`, `fdcPortionUnknownId` (all dead code)
+[x] Remove `drift` schema version discrepancy (docs updated v22→v23 to match code)
+[x] Eliminate remaining TODO comments in production code (3 of 5 resolved; 2 remain in `food_classifier_service.dart` — Phase 8 item)
+[x] Run `flutter analyze` — zero errors/warnings (0 errors, 0 warnings, 27 infos)
 
 Phase 8: Optional Enhancements (priority order)
 --------------------------------------------------

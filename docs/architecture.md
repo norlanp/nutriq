@@ -53,7 +53,7 @@ The implementation of data retrieval and persistence.
 | **Domain** | Use cases | 75 |
 | **Presentation** | Feature modules | 38 |
 | **Presentation** | Notifiers | 39 |
-| **Infrastructure** | DB schema version | 22 |
+| **Infrastructure** | DB schema version | 23 |
 | **Infrastructure** | Languages (i18n) | 3 |
 | **Infrastructure** | Platforms | 2 (iOS, Android) |
 
