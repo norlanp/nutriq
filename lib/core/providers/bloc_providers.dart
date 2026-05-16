@@ -13,24 +13,18 @@ import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_bloc
 import 'package:nutriq/features/daily_notes/presentation/daily_note_bloc.dart';
 import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
-import 'package:nutriq/features/edit_meal/presentation/bloc/edit_meal_bloc.dart';
 
-import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
 import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
 import 'package:nutriq/features/menu_scan/presentation/menu_scan_bloc.dart';
-import 'package:nutriq/features/notifications/presentation/notification_bloc.dart';
-import 'package:nutriq/features/photo_progress/presentation/photo_progress_bloc.dart';
-import 'package:nutriq/features/recipe_builder/presentation/bloc/recipe_bloc.dart';
-import 'package:nutriq/features/recipe_catalog/presentation/recipe_catalog_bloc.dart';
-import 'package:nutriq/features/recipe_import/presentation/recipe_import_bloc.dart';
+
 
 import 'package:nutriq/features/step_bonus/presentation/step_bonus_bloc.dart';
 import 'package:nutriq/features/symptom_tracking/presentation/symptom_bloc.dart';
 import 'package:nutriq/features/voice_logging/presentation/voice_logging_bloc.dart';
 
 
-import 'package:nutriq/features/progress_charts/presentation/progress_charts_bloc.dart';
+
 
 class _BlocCrossRefs {
   final Ref _ref;
@@ -58,55 +52,12 @@ final activityDetailBlocProvider = Provider((ref) {
 });
 
 
-final editMealBlocProvider = Provider((ref) {
-  return EditMealBloc(ref.watch(getConfigUsecaseProvider));
-});
-
-final recipeBlocProvider = Provider((ref) {
-  return RecipeBloc(
-    ref.watch(getRecipesUsecaseProvider),
-    ref.watch(addRecipeUsecaseProvider),
-    ref.watch(deleteRecipeUsecaseProvider),
-  );
-});
 
 
 
-final notificationBlocProvider = Provider((ref) {
-  return NotificationBloc(
-    ref.watch(getNotificationSettingsUsecaseProvider),
-    ref.watch(saveNotificationSettingsUsecaseProvider),
-  );
-});
 
 
 
-final progressChartsBlocProvider = Provider((ref) {
-  return ProgressChartsBloc(
-    ref.watch(getWeeklyNutritionUsecaseProvider),
-    ref.watch(getMonthlyNutritionUsecaseProvider),
-    ref.watch(getWeightsInRangeUsecaseProvider),
-  );
-});
-
-
-
-final mealPlanBlocProvider = Provider((ref) {
-  return MealPlanBloc(
-    ref.watch(getMealPlanUsecaseProvider),
-    ref.watch(saveMealPlanUsecaseProvider),
-    ref.watch(deleteMealPlanUsecaseProvider),
-    ref.watch(generateShoppingListUsecaseProvider),
-  );
-});
-
-final photoProgressBlocProvider = Provider((ref) {
-  return PhotoProgressBloc(
-    ref.watch(getPhotosUsecaseProvider),
-    ref.watch(addPhotoUsecaseProvider),
-    ref.watch(deletePhotoUsecaseProvider),
-  );
-});
 
 final bodyMeasurementBlocProvider = Provider((ref) {
   return BodyMeasurementBloc(
@@ -204,13 +155,7 @@ final menuScanBlocProvider = Provider((ref) {
   );
 });
 
-final recipeImportBlocProvider = Provider((ref) {
-  return RecipeImportBloc(ref.watch(importRecipeUsecaseProvider));
-});
 
-final recipeCatalogBlocProvider = Provider((ref) {
-  return RecipeCatalogBloc(ref.watch(recipeCatalogServiceProvider));
-});
 
 final voiceLoggingBlocProvider = Provider((ref) {
   return VoiceLoggingBloc(ref.watch(voiceLogUsecaseProvider));

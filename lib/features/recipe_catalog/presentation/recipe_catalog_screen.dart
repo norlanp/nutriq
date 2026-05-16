@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/catalog_recipe_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/features/recipe_catalog/presentation/recipe_catalog_bloc.dart';
+import 'package:nutriq/features/recipe_catalog/presentation/notifier/recipe_catalog_notifier.dart';
+import 'package:nutriq/features/recipe_catalog/presentation/notifier/recipe_catalog_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class RecipeCatalogScreen extends ConsumerStatefulWidget {
@@ -15,14 +14,7 @@ class RecipeCatalogScreen extends ConsumerStatefulWidget {
 }
 
 class _RecipeCatalogScreenState extends ConsumerState<RecipeCatalogScreen> {
-  late RecipeCatalogBloc _bloc;
   final _searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = ref.read(recipeCatalogBlocProvider)..add(const LoadCatalog());
-  }
 
   @override
   void dispose() {
@@ -32,47 +24,47 @@ class _RecipeCatalogScreenState extends ConsumerState<RecipeCatalogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _bloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).recipeCatalogTitle),
-        ),
-        body: BlocBuilder<RecipeCatalogBloc, RecipeCatalogState>(
-          builder: (context, state) {
-            if (state is RecipeCatalogLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is RecipeCatalogError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.error_outline,
-                        size: 48, color: Theme.of(context).colorScheme.error),
-                    const SizedBox(height: 16),
-                    Text(state.message,
-                        style: Theme.of(context).textTheme.bodyLarge),
-                    const SizedBox(height: 16),
-                    FilledButton(
-                      onPressed: () => _bloc.add(const LoadCatalog()),
-                      child: Text(S.of(context).retryLabel),
-                    ),
-                  ],
-                ),
-              );
-            }
-            if (state is RecipeCatalogLoaded) {
-              return _buildCatalog(context, state);
-            }
-            return const SizedBox();
-          },
-        ),
+    final catalogState = ref.watch(recipeCatalogNotifierProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).recipeCatalogTitle),
       ),
+      body: _buildBody(context, catalogState),
     );
   }
 
-  Widget _buildCatalog(BuildContext context, RecipeCatalogLoaded state) {
+  Widget _buildBody(BuildContext context, RecipeCatalogState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline,
+                size: 48, color: Theme.of(context).colorScheme.error),
+            const SizedBox(height: 16),
+            Text(state.errorMessage!,
+                style: Theme.of(context).textTheme.bodyLarge),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () =>
+                  ref.read(recipeCatalogNotifierProvider.notifier).loadCatalog(),
+              child: Text(S.of(context).retryLabel),
+            ),
+          ],
+        ),
+      );
+    }
+    if (state.isLoaded) {
+      return _buildCatalog(context, state);
+    }
+    return const SizedBox();
+  }
+
+  Widget _buildCatalog(BuildContext context, RecipeCatalogState state) {
     return Column(
       children: [
         Padding(
@@ -89,12 +81,13 @@ class _RecipeCatalogScreenState extends ConsumerState<RecipeCatalogScreen> {
                       icon: const Icon(Icons.clear),
                       onPressed: () {
                         _searchController.clear();
-                        _bloc.add(const SearchCatalog(''));
+                        ref.read(recipeCatalogNotifierProvider.notifier).searchCatalog('');
                       },
                     )
                   : null,
             ),
-            onChanged: (value) => _bloc.add(SearchCatalog(value)),
+            onChanged: (value) =>
+                ref.read(recipeCatalogNotifierProvider.notifier).searchCatalog(value),
           ),
         ),
         if (state.availableTags.isNotEmpty)
@@ -110,7 +103,8 @@ class _RecipeCatalogScreenState extends ConsumerState<RecipeCatalogScreen> {
                   child: FilterChip(
                     label: Text(tag),
                     selected: isActive,
-                    onSelected: (_) => _bloc.add(FilterByTag(tag)),
+                    onSelected: (_) =>
+                        ref.read(recipeCatalogNotifierProvider.notifier).filterByTag(tag),
                   ),
                 );
               }).toList(),
@@ -152,7 +146,7 @@ class _RecipeCard extends ConsumerWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          ref.read(recipeCatalogBlocProvider).add(LoadRecipe(recipe.id));
+          ref.read(recipeCatalogNotifierProvider.notifier).loadRecipe(recipe.id);
           Navigator.pushNamed(
             context,
             NavigationOptions.recipeCatalogDetailRoute,

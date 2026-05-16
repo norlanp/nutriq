@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/scraped_recipe_entity.dart';
 import 'package:nutriq/core/utils/id_generator.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 import 'package:nutriq/features/recipe_builder/domain/entity/recipe_entity.dart';
 import 'package:nutriq/features/recipe_builder/domain/entity/recipe_item_entity.dart';
-import 'package:nutriq/features/recipe_builder/presentation/bloc/recipe_bloc.dart';
-import 'package:nutriq/features/recipe_import/presentation/recipe_import_bloc.dart';
+import 'package:nutriq/features/recipe_builder/presentation/notifier/recipe_notifier.dart';
+import 'package:nutriq/features/recipe_import/presentation/notifier/recipe_import_notifier.dart';
+import 'package:nutriq/features/recipe_import/presentation/notifier/recipe_import_state.dart';
 import 'package:nutriq/generated/l10n.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RecipeImportScreen extends ConsumerStatefulWidget {
   const RecipeImportScreen({super.key});
@@ -20,16 +19,9 @@ class RecipeImportScreen extends ConsumerStatefulWidget {
 }
 
 class _RecipeImportScreenState extends ConsumerState<RecipeImportScreen> {
-  late RecipeImportBloc _recipeImportBloc;
   final _urlController = TextEditingController();
   final _nameController = TextEditingController();
   final _servingsController = TextEditingController(text: '1');
-
-  @override
-  void initState() {
-    super.initState();
-    _recipeImportBloc = ref.read(recipeImportBlocProvider);
-  }
 
   @override
   void dispose() {
@@ -41,31 +33,27 @@ class _RecipeImportScreenState extends ConsumerState<RecipeImportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _recipeImportBloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).recipeImportTitle),
-        ),
-        body: BlocConsumer<RecipeImportBloc, RecipeImportState>(
-          listener: (context, state) {
-            if (state is RecipeImportSuccess) {
-              Navigator.pop(context);
-            }
-          },
-          builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _buildBody(state),
-            );
-          },
-        ),
+    final importState = ref.watch(recipeImportNotifierProvider);
+
+    ref.listen<RecipeImportState>(recipeImportNotifierProvider, (prev, next) {
+      if (next.isImported) {
+        Navigator.pop(context);
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).recipeImportTitle),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: _buildBody(importState),
       ),
     );
   }
 
   Widget _buildBody(RecipeImportState state) {
-    if (state is RecipeImportLoading) {
+    if (state.isImporting) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -78,12 +66,12 @@ class _RecipeImportScreenState extends ConsumerState<RecipeImportScreen> {
       );
     }
 
-    if (state is RecipeImportError) {
-      return _buildErrorView(state.message);
+    if (state.hasError) {
+      return _buildErrorView(state.errorMessage!);
     }
 
-    if (state is RecipeImportPreview) {
-      return _buildPreview(state.recipe);
+    if (state.isPreview) {
+      return _buildPreview(state.previewRecipe!);
     }
 
     return _buildUrlInput();
@@ -136,16 +124,12 @@ class _RecipeImportScreenState extends ConsumerState<RecipeImportScreen> {
         ),
         const SizedBox(height: 24),
         FilledButton(
-          onPressed: () {
-            _recipeImportBloc.add(RecipeImportUrl(_urlController.text));
-          },
+          onPressed: _importUrl,
           child: Text(S.of(context).retryLabel),
         ),
         const SizedBox(height: 8),
         OutlinedButton(
-          onPressed: () {
-            _recipeImportBloc.add(RecipeImportUrl(_urlController.text));
-          },
+          onPressed: _importUrl,
           child: Text(S.of(context).dialogCancelLabel),
         ),
       ],
@@ -298,7 +282,7 @@ class _RecipeImportScreenState extends ConsumerState<RecipeImportScreen> {
   void _importUrl() {
     final url = _urlController.text.trim();
     if (url.isEmpty) return;
-    _recipeImportBloc.add(RecipeImportUrl(url));
+    ref.read(recipeImportNotifierProvider.notifier).importUrl(url);
   }
 
   void _confirmImport(ScrapedRecipeEntity recipe) {
@@ -325,8 +309,8 @@ class _RecipeImportScreenState extends ConsumerState<RecipeImportScreen> {
       }).toList(),
     );
 
-    ref.read(recipeBlocProvider).add(AddRecipeEvent(recipeEntity));
-    _recipeImportBloc.add(const RecipeImportConfirm());
+    ref.read(recipeNotifierProvider.notifier).addRecipe(recipeEntity);
+    ref.read(recipeImportNotifierProvider.notifier).confirmImport();
   }
 
   MealEntity _createMealFromIngredient(

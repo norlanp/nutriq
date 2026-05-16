@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/meal_plan_entity.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
+import 'package:nutriq/features/meal_planning/presentation/notifier/meal_plan_notifier.dart';
 import 'package:nutriq/features/meal_planning/presentation/widgets/meal_slot_widget.dart';
 import 'package:nutriq/features/meal_planning/presentation/widgets/nutrition_preview.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MealPlanScreen extends StatefulWidget {
+class MealPlanScreen extends ConsumerStatefulWidget {
   const MealPlanScreen({super.key});
 
   @override
-  State<MealPlanScreen> createState() => _MealPlanScreenState();
+  ConsumerState<MealPlanScreen> createState() => _MealPlanScreenState();
 }
 
-class _MealPlanScreenState extends State<MealPlanScreen> {
+class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
   late DateTime _startOfWeek;
 
   @override
@@ -28,9 +28,7 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
 
   void _loadWeek() {
     final endOfWeek = _startOfWeek.add(const Duration(days: 6));
-    context.read<MealPlanBloc>().add(
-          LoadWeek(startDate: _startOfWeek, endDate: endOfWeek),
-        );
+    ref.read(mealPlanNotifierProvider.notifier).loadWeek(_startOfWeek, endOfWeek);
   }
 
   void _previousWeek() {
@@ -50,6 +48,7 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
   @override
   Widget build(BuildContext context) {
     final slots = IntakeTypeEntity.values;
+    final mealPlanState = ref.watch(mealPlanNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -69,25 +68,17 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
         children: [
           _buildWeekNavigation(context),
           Expanded(
-            child: BlocBuilder<MealPlanBloc, MealPlanState>(
-              builder: (context, state) {
-                if (state is MealPlanLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (state is MealPlanError) {
-                  return Center(child: Text(state.message));
-                }
-                if (state is MealPlanLoaded) {
-                  return _buildWeekGrid(context, state.plans, slots);
-                }
-                return const SizedBox.shrink();
-              },
-            ),
+            child: mealPlanState.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : mealPlanState.hasError
+                    ? Center(child: Text(mealPlanState.errorMessage!))
+                    : mealPlanState.isPlansLoaded
+                        ? _buildWeekGrid(context, mealPlanState.plans, slots)
+                        : const SizedBox.shrink(),
           ),
-          if (context.watch<MealPlanBloc>().state is MealPlanLoaded)
+          if (mealPlanState.isPlansLoaded)
             NutritionPreview(
-              plans:
-                  (context.watch<MealPlanBloc>().state as MealPlanLoaded).plans,
+              plans: mealPlanState.plans,
             ),
         ],
       ),

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/progress_charts/data/chart_export_service.dart';
-import 'package:nutriq/features/progress_charts/presentation/progress_charts_bloc.dart';
+import 'package:nutriq/features/progress_charts/presentation/notifier/progress_charts_notifier.dart';
+import 'package:nutriq/features/progress_charts/presentation/notifier/progress_charts_state.dart';
 import 'package:nutriq/features/progress_charts/presentation/widgets/macro_trend_chart.dart';
 import 'package:nutriq/features/progress_charts/presentation/widgets/monthly_calorie_chart.dart';
 import 'package:nutriq/features/progress_charts/presentation/widgets/weekly_calorie_chart.dart';
@@ -20,7 +19,6 @@ class ProgressChartsScreen extends ConsumerStatefulWidget {
 
 class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
     with SingleTickerProviderStateMixin {
-  late ProgressChartsBloc _bloc;
   late TabController _tabController;
   late ScreenshotController _screenshotController;
   late ChartExportService _exportService;
@@ -39,8 +37,9 @@ class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
     _tabController = TabController(length: 3, vsync: this);
     _screenshotController = ScreenshotController();
     _exportService = ChartExportService(_screenshotController);
-    _bloc = ref.read(progressChartsBlocProvider);
-    _bloc.add(LoadWeeklyData(startDate: _startDate));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(progressChartsNotifierProvider.notifier).loadWeeklyData(_startDate);
+    });
   }
 
   @override
@@ -67,10 +66,9 @@ class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
       }
     });
     if (_viewMode == ViewMode.weekly) {
-      _bloc.add(LoadWeeklyData(startDate: _startDate));
+      ref.read(progressChartsNotifierProvider.notifier).loadWeeklyData(_startDate);
     } else {
-      _bloc
-          .add(LoadMonthlyData(year: _startDate.year, month: _startDate.month));
+      ref.read(progressChartsNotifierProvider.notifier).loadMonthlyData(_startDate.year, _startDate.month);
     }
   }
 
@@ -79,11 +77,11 @@ class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
       _viewMode = mode;
       if (_viewMode == ViewMode.weekly) {
         _startDate = _startOfWeek(DateTime.now());
-        _bloc.add(LoadWeeklyData(startDate: _startDate));
+        ref.read(progressChartsNotifierProvider.notifier).loadWeeklyData(_startDate);
       } else {
         final now = DateTime.now();
         _startDate = DateTime(now.year, now.month, 1);
-        _bloc.add(LoadMonthlyData(year: now.year, month: now.month));
+        ref.read(progressChartsNotifierProvider.notifier).loadMonthlyData(now.year, now.month);
       }
     });
   }
@@ -106,27 +104,24 @@ class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = S.of(context);
+    final chartState = ref.watch(progressChartsNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.progressChartsLabel),
         actions: [
-          BlocBuilder<ProgressChartsBloc, ProgressChartsState>(
-            bloc: _bloc,
-            builder: (context, state) {
-              if (state is! ProgressChartsLoaded) return const SizedBox();
-              return IconButton(
-                onPressed: _isExporting ? null : _exportChart,
-                icon: _isExporting
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.share),
-                tooltip: l10n.exportChartLabel,
-              );
-            },
-          ),
+          if (chartState.isLoaded)
+            IconButton(
+              onPressed: _isExporting ? null : _exportChart,
+              icon: _isExporting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.share),
+              tooltip: l10n.exportChartLabel,
+            ),
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -182,34 +177,7 @@ class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
           ),
           const SizedBox(height: 8),
           Expanded(
-            child: BlocBuilder<ProgressChartsBloc, ProgressChartsState>(
-              bloc: _bloc,
-              builder: (context, state) {
-                if (state is ProgressChartsLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (state is ProgressChartsError) {
-                  return Center(child: Text(state.message));
-                }
-                if (state is ProgressChartsLoaded) {
-                  return Screenshot(
-                    controller: _screenshotController,
-                    child: Material(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          _buildCaloriesTab(context, state),
-                          _buildMacrosTab(context, state),
-                          _buildWeightTab(context, state),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                return const SizedBox();
-              },
-            ),
+            child: _buildChartContent(chartState),
           ),
         ],
       ),
@@ -219,7 +187,7 @@ class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
   String _formatDateRange() {
     if (_viewMode == ViewMode.weekly) {
       final end = _startDate.add(const Duration(days: 6));
-      return '${_startDate.day}.${_startDate.month} - ${end.day}.${end.month}.${end.year}';
+      return '${_startDate.day}.${_startDate.month} - ${end.day}.${end.month}.${_startDate.year}';
     } else {
       final months = [
         '',
@@ -240,7 +208,33 @@ class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
     }
   }
 
-  Widget _buildCaloriesTab(BuildContext context, ProgressChartsLoaded state) {
+  Widget _buildChartContent(ProgressChartsState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    if (state.isLoaded) {
+      return Screenshot(
+        controller: _screenshotController,
+        child: Material(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildCaloriesTab(context, state),
+              _buildMacrosTab(context, state),
+              _buildWeightTab(context, state),
+            ],
+          ),
+        ),
+      );
+    }
+    return const SizedBox();
+  }
+
+  Widget _buildCaloriesTab(BuildContext context, ProgressChartsState state) {
     if (state.viewMode == ViewMode.weekly) {
       return SingleChildScrollView(
         child: WeeklyCalorieChart(
@@ -259,7 +253,7 @@ class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
     }
   }
 
-  Widget _buildMacrosTab(BuildContext context, ProgressChartsLoaded state) {
+  Widget _buildMacrosTab(BuildContext context, ProgressChartsState state) {
     if (state.viewMode == ViewMode.weekly) {
       return SingleChildScrollView(
         child: MacroTrendChart.weekly(
@@ -278,7 +272,7 @@ class _ProgressChartsScreenState extends ConsumerState<ProgressChartsScreen>
     }
   }
 
-  Widget _buildWeightTab(BuildContext context, ProgressChartsLoaded state) {
+  Widget _buildWeightTab(BuildContext context, ProgressChartsState state) {
     return SingleChildScrollView(
       child: ProgressWeightTrendChart(weights: state.weights),
     );

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/utils/id_generator.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/recipe_builder/domain/entity/recipe_entity.dart';
 import 'package:nutriq/features/recipe_builder/domain/entity/recipe_item_entity.dart';
-import 'package:nutriq/features/recipe_builder/presentation/bloc/recipe_bloc.dart';
+import 'package:nutriq/features/recipe_builder/presentation/notifier/recipe_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class RecipeBuilderScreen extends ConsumerStatefulWidget {
@@ -181,7 +180,7 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
       items: items,
     );
 
-    ref.read(recipeBlocProvider).add(AddRecipeEvent(recipe));
+    ref.read(recipeNotifierProvider.notifier).addRecipe(recipe);
     Navigator.pop(context);
   }
 }

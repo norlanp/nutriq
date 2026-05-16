@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/meal_plan_entity.dart';
-import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
+import 'package:nutriq/features/meal_planning/presentation/notifier/meal_plan_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class MealSlotWidget extends StatelessWidget {
+class MealSlotWidget extends ConsumerWidget {
   final IntakeTypeEntity mealSlot;
   final DateTime date;
   final List<MealPlanEntity> plans;
@@ -18,7 +18,7 @@ class MealSlotWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DragTarget<Map<String, dynamic>>(
       onAcceptWithDetails: (details) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -66,9 +66,7 @@ class MealSlotWidget extends StatelessWidget {
                         ),
                         deleteIcon: const Icon(Icons.close, size: 14),
                         onDeleted: () {
-                          context.read<MealPlanBloc>().add(
-                                RemoveMealFromSlot(id: plan.id),
-                              );
+                          ref.read(mealPlanNotifierProvider.notifier).removeMealFromSlot(plan.id);
                         },
                         visualDensity: VisualDensity.compact,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

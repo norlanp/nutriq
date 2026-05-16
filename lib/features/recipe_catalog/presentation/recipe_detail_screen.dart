@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/catalog_recipe_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/recipe_catalog/presentation/recipe_catalog_bloc.dart';
+import 'package:nutriq/features/recipe_catalog/presentation/notifier/recipe_catalog_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class RecipeDetailScreen extends ConsumerWidget {
@@ -12,28 +11,26 @@ class RecipeDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final catalogState = ref.watch(recipeCatalogNotifierProvider);
+
+    CatalogRecipeEntity? recipe;
+    if (catalogState.isDetailLoaded) {
+      recipe = catalogState.selectedRecipe;
+    } else if (catalogState.isLoaded) {
+      try {
+        recipe = catalogState.recipes.firstWhere((r) => r.id == recipeId);
+      } catch (_) {
+        recipe = catalogState.recipes.isNotEmpty ? catalogState.recipes.first : null;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).recipeCatalogDetailTitle),
       ),
-      body: StreamBuilder<RecipeCatalogState>(
-        stream: ref.read(recipeCatalogBlocProvider).stream,
-        initialData: ref.read(recipeCatalogBlocProvider).state,
-        builder: (context, snapshot) {
-          final state = snapshot.data;
-          if (state is RecipeDetailLoaded) {
-            return _buildDetail(context, state.recipe);
-          }
-          if (state is RecipeCatalogLoaded) {
-            final recipe = state.recipes.firstWhere(
-              (r) => r.id == recipeId,
-              orElse: () => state.recipes.first,
-            );
-            return _buildDetail(context, recipe);
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
+      body: recipe != null
+          ? _buildDetail(context, recipe)
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 

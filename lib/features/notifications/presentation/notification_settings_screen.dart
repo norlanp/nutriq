@@ -1,66 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/notification_settings_entity.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/notifications/presentation/notification_bloc.dart';
+import 'package:nutriq/features/notifications/presentation/notifier/notification_settings_notifier.dart';
+import 'package:nutriq/features/notifications/presentation/notifier/notification_settings_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class NotificationSettingsScreen extends ConsumerWidget {
+class NotificationSettingsScreen extends ConsumerStatefulWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return BlocProvider<NotificationBloc>(
-      create: (_) =>
-          ref.read(notificationBlocProvider)..add(const LoadNotificationSettings(0)),
-      child: const _NotificationSettingsView(),
-    );
-  }
+  ConsumerState<NotificationSettingsScreen> createState() => _NotificationSettingsScreenState();
 }
 
-class _NotificationSettingsView extends StatelessWidget {
-  const _NotificationSettingsView();
+class _NotificationSettingsScreenState extends ConsumerState<NotificationSettingsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(notificationSettingsNotifierProvider.notifier).loadSettings(0);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = S.of(context);
+    final state = ref.watch(notificationSettingsNotifierProvider);
+
+    ref.listen<NotificationSettingsState>(notificationSettingsNotifierProvider, (prev, next) {
+      if (next.hasError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.errorMessage!)),
+        );
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.notificationSettingsLabel),
+        title: Text(S.of(context).notificationSettingsLabel),
       ),
-      body: BlocConsumer<NotificationBloc, NotificationState>(
-        listener: (context, state) {
-          if (state is NotificationSettingsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is NotificationSettingsInitial ||
-              state is NotificationSettingsLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is NotificationSettingsLoaded) {
-            return _SettingsForm(settings: state.settings);
-          }
-          return const SizedBox();
-        },
-      ),
+      body: state.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : state.isLoaded
+              ? _SettingsForm(settings: state.settings!)
+              : const SizedBox(),
     );
   }
 }
 
-class _SettingsForm extends StatelessWidget {
+class _SettingsForm extends ConsumerWidget {
   final NotificationSettingsEntity settings;
 
   const _SettingsForm({required this.settings});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = S.of(context);
 
     return ListView(
@@ -89,9 +82,8 @@ class _SettingsForm extends StatelessWidget {
           title: Text(l10n.enableDailySummaryLabel),
           value: settings.dailySummaryEnabled,
           onChanged: (enabled) {
-            context.read<NotificationBloc>().add(
-                  ToggleDailySummary(settings.userId, enabled),
-                );
+            ref.read(notificationSettingsNotifierProvider.notifier)
+                .toggleDailySummary(settings.userId, enabled);
           },
         ),
         if (settings.dailySummaryEnabled)
@@ -102,17 +94,13 @@ class _SettingsForm extends StatelessWidget {
               _formatMinutes(settings.dailySummaryMinutes),
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            onTap: () => _pickSummaryTime(context, settings),
+            onTap: () => _pickSummaryTime(context, ref, settings),
           ),
         const SizedBox(height: 32.0),
         FilledButton(
           onPressed: () {
-            final currentState = context.read<NotificationBloc>().state;
-            if (currentState is NotificationSettingsLoaded) {
-              context.read<NotificationBloc>().add(
-                    SaveNotificationSettings(currentState.settings),
-                  );
-            }
+            ref.read(notificationSettingsNotifierProvider.notifier)
+                .saveSettings(settings);
           },
           child: Text(l10n.buttonSaveLabel),
         ),
@@ -128,6 +116,7 @@ class _SettingsForm extends StatelessWidget {
 
   Future<void> _pickSummaryTime(
     BuildContext context,
+    WidgetRef ref,
     NotificationSettingsEntity settings,
   ) async {
     final currentHour = settings.dailySummaryMinutes ~/ 60;
@@ -147,14 +136,13 @@ class _SettingsForm extends StatelessWidget {
         dailySummaryEnabled: settings.dailySummaryEnabled,
         dailySummaryMinutes: totalMinutes,
       );
-      context.read<NotificationBloc>().add(
-            SaveNotificationSettings(updatedSettings),
-          );
+      ref.read(notificationSettingsNotifierProvider.notifier)
+          .saveSettings(updatedSettings);
     }
   }
 }
 
-class _MealReminderTile extends StatelessWidget {
+class _MealReminderTile extends ConsumerWidget {
   final IntakeTypeEntity intakeType;
   final int? minutes;
 
@@ -165,7 +153,7 @@ class _MealReminderTile extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = S.of(context);
     final label = _mealLabel(l10n, intakeType);
     final icon = intakeType.getIconData();
@@ -182,7 +170,7 @@ class _MealReminderTile extends StatelessWidget {
               : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
         ),
       ),
-      onTap: () => _pickTime(context),
+      onTap: () => _pickTime(context, ref),
     );
   }
 
@@ -205,7 +193,7 @@ class _MealReminderTile extends StatelessWidget {
     }
   }
 
-  Future<void> _pickTime(BuildContext context) async {
+  Future<void> _pickTime(BuildContext context, WidgetRef ref) async {
     final initialHour = minutes != null ? minutes! ~/ 60 : 8;
     final initialMinute = minutes != null ? minutes! % 60 : 0;
 
@@ -216,16 +204,11 @@ class _MealReminderTile extends StatelessWidget {
 
     if (picked != null) {
       final totalMinutes = picked.hour * 60 + picked.minute;
-      final currentSettings =
-          (context.read<NotificationBloc>().state as NotificationSettingsLoaded)
-              .settings;
-      context.read<NotificationBloc>().add(
-            UpdateMealReminderTime(
-              currentSettings.userId,
-              intakeType,
-              totalMinutes,
-            ),
-          );
+      final currentSettings = ref.read(notificationSettingsNotifierProvider).settings;
+      if (currentSettings != null) {
+        ref.read(notificationSettingsNotifierProvider.notifier)
+            .updateMealReminderTime(currentSettings.userId, intakeType, totalMinutes);
+      }
     }
   }
 }

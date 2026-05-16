@@ -1,17 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/utils/calc/unit_calc.dart';
 import 'package:nutriq/core/utils/custom_text_input_formatter.dart';
 import 'package:nutriq/core/utils/extensions.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/providers/service_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
-import 'package:nutriq/features/edit_meal/presentation/bloc/edit_meal_bloc.dart';
+import 'package:nutriq/features/edit_meal/domain/meal_entity_builder.dart';
+import 'package:nutriq/features/edit_meal/presentation/notifier/edit_meal_notifier.dart';
 import 'package:nutriq/features/edit_meal/presentation/widgets/default_meal_image.dart';
 import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -30,8 +29,6 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
   late DateTime _day;
   late IntakeTypeEntity _intakeTypeEntity;
   late bool _usesImperialUnits;
-
-  late EditMealBloc _editMealBloc;
 
   final _nameTextController = TextEditingController();
   final _brandsTextController = TextEditingController();
@@ -62,7 +59,6 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
 
   @override
   void initState() {
-    _editMealBloc = ref.read(editMealBlocProvider);
     super.initState();
 
     _baseQuantityTextController.addListener(() {
@@ -105,7 +101,6 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
         _mealEntity.nutriments.potassium100.toStringOrEmpty();
     selectedUnit = _switchButtonUnit(_mealEntity.mealUnit);
 
-    // Convert meal size to imperial units if necessary
     if (_usesImperialUnits) {
       _mealQuantityTextController.text = _convertToImperial(
           _mealQuantityTextController.text, _mealEntity.mealUnit ?? "0");
@@ -136,6 +131,8 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final editMealState = ref.watch(editMealNotifierProvider);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -151,16 +148,10 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
             )
           ],
         ),
-        body: BlocBuilder<EditMealBloc, EditMealState>(
-          bloc: ref.read(editMealBlocProvider)!..add(InitializeEditMealEvent()),
-          builder: (BuildContext context, EditMealState state) {
-            if (state is EditMealLoadingState) {
-              return _getLoadingContent();
-            } else if (state is EditMealLoadedState) {
-              return _getLoadedContent(state.usesImperialUnits);
-            }
-            return const SizedBox.shrink();
-          },
+        body: editMealState.when(
+          loading: () => _getLoadingContent(),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (state) => _getLoadedContent(state.usesImperialUnits),
         ),
       ),
     );
@@ -353,13 +344,12 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
 
   void _onSavePressed(bool usesImperialUnits) {
     try {
-      // Convert meal size back to metric units if necessary
       final mealQuantity = usesImperialUnits
           ? _convertToMetric(
               _mealQuantityTextController.text, _mealEntity.mealUnit ?? "0")
           : _mealQuantityTextController.text;
 
-      final newMealEntity = _editMealBloc.createNewMealEntity(
+      final newMealEntity = buildMealEntity(
           _mealEntity,
           _nameTextController.text,
           _brandsTextController.text,
@@ -394,7 +384,7 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
   String? _switchButtonUnit(String? unit) {
     String? selectedUnit;
     if (!_units.contains(unit)) {
-      selectedUnit = _units[2]; // Default to g/ml
+      selectedUnit = _units[2];
     } else {
       selectedUnit = unit;
     }

@@ -1,12 +1,10 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nutriq/core/domain/entity/photo_progress_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/photo_progress/data/photo_storage_service.dart';
-import 'package:nutriq/features/photo_progress/presentation/photo_progress_bloc.dart';
+import 'package:nutriq/features/photo_progress/presentation/notifier/photo_progress_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class PhotoCaptureScreen extends ConsumerStatefulWidget {
@@ -17,18 +15,11 @@ class PhotoCaptureScreen extends ConsumerStatefulWidget {
 }
 
 class _PhotoCaptureScreenState extends ConsumerState<PhotoCaptureScreen> {
-  late PhotoProgressBloc _bloc;
   final _noteController = TextEditingController();
   final _tagsController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   String? _selectedImagePath;
   final _photoStorageService = PhotoStorageService();
-
-  @override
-  void initState() {
-    _bloc = ref.read(photoProgressBlocProvider);
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -41,49 +32,44 @@ class _PhotoCaptureScreenState extends ConsumerState<PhotoCaptureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).photoProgressTitle)),
-      body: BlocBuilder<PhotoProgressBloc, PhotoProgressState>(
-        bloc: _bloc,
-        builder: (context, state) {
-          return ListView(
-            padding: const EdgeInsets.all(16.0),
-            children: [
-              _buildPhotoPreview(context),
-              const SizedBox(height: 16.0),
-              _buildPhotoPickerButtons(context),
-              const SizedBox(height: 16.0),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(S.of(context).date),
-                subtitle: Text(_formatDate(_selectedDate)),
-                trailing: const Icon(Icons.calendar_today),
-                onTap: _pickDate,
-              ),
-              const SizedBox(height: 8.0),
-              TextField(
-                controller: _tagsController,
-                decoration: InputDecoration(
-                  labelText: S.of(context).photoTagsLabel,
-                  hintText: S.of(context).photoTagsHint,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 12.0),
-              TextField(
-                controller: _noteController,
-                decoration: InputDecoration(
-                  labelText: S.of(context).note,
-                  border: const OutlineInputBorder(),
-                ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 16.0),
-              FilledButton(
-                onPressed: _selectedImagePath != null ? _savePhoto : null,
-                child: Text(S.of(context).save),
-              ),
-            ],
-          );
-        },
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          _buildPhotoPreview(context),
+          const SizedBox(height: 16.0),
+          _buildPhotoPickerButtons(context),
+          const SizedBox(height: 16.0),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(S.of(context).date),
+            subtitle: Text(_formatDate(_selectedDate)),
+            trailing: const Icon(Icons.calendar_today),
+            onTap: _pickDate,
+          ),
+          const SizedBox(height: 8.0),
+          TextField(
+            controller: _tagsController,
+            decoration: InputDecoration(
+              labelText: S.of(context).photoTagsLabel,
+              hintText: S.of(context).photoTagsHint,
+              border: const OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12.0),
+          TextField(
+            controller: _noteController,
+            decoration: InputDecoration(
+              labelText: S.of(context).note,
+              border: const OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          const SizedBox(height: 16.0),
+          FilledButton(
+            onPressed: _selectedImagePath != null ? _savePhoto : null,
+            child: Text(S.of(context).save),
+          ),
+        ],
       ),
     );
   }
@@ -194,7 +180,7 @@ class _PhotoCaptureScreenState extends ConsumerState<PhotoCaptureScreen> {
           ? null
           : _noteController.text.trim(),
     );
-    _bloc.add(AddPhoto(entity));
+    ref.read(photoProgressNotifierProvider.notifier).addPhoto(entity);
     if (mounted) Navigator.of(context).pop();
   }
 

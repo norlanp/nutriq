@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nutriq/features/meal_planning/presentation/notifier/meal_plan_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
-class ShoppingListScreen extends StatefulWidget {
+class ShoppingListScreen extends ConsumerStatefulWidget {
   const ShoppingListScreen({super.key});
 
   @override
-  State<ShoppingListScreen> createState() => _ShoppingListScreenState();
+  ConsumerState<ShoppingListScreen> createState() => _ShoppingListScreenState();
 }
 
-class _ShoppingListScreenState extends State<ShoppingListScreen> {
+class _ShoppingListScreenState extends ConsumerState<ShoppingListScreen> {
   final Set<int> _checkedIndices = {};
 
   @override
@@ -23,66 +23,55 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     final now = DateTime.now();
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
     final endOfWeek = startOfWeek.add(const Duration(days: 6));
-    context.read<MealPlanBloc>().add(
-          GenerateShoppingList(
-            startDate: startOfWeek,
-            endDate: endOfWeek,
-          ),
-        );
+    ref.read(mealPlanNotifierProvider.notifier).generateShoppingList(startOfWeek, endOfWeek);
   }
 
   @override
   Widget build(BuildContext context) {
+    final mealPlanState = ref.watch(mealPlanNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).shoppingListLabel),
       ),
-      body: BlocBuilder<MealPlanBloc, MealPlanState>(
-        builder: (context, state) {
-          if (state is MealPlanLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is MealPlanError) {
-            return Center(child: Text(state.message));
-          }
-          if (state is ShoppingListLoaded) {
-            if (state.items.isEmpty) {
-              return Center(
-                child: Text(S.of(context).emptyShoppingListLabel),
-              );
-            }
-            return ListView.builder(
-              itemCount: state.items.length,
-              itemBuilder: (context, index) {
-                final item = state.items[index];
-                final isChecked = _checkedIndices.contains(index);
-                return CheckboxListTile(
-                  value: isChecked,
-                  title: Text(
-                    item.name,
-                    style: TextStyle(
-                      decoration: isChecked ? TextDecoration.lineThrough : null,
-                    ),
-                  ),
-                  subtitle: Text(
-                    '${item.totalAmount.toStringAsFixed(1)} ${item.unit}',
-                  ),
-                  onChanged: (checked) {
-                    setState(() {
-                      if (checked == true) {
-                        _checkedIndices.add(index);
-                      } else {
-                        _checkedIndices.remove(index);
-                      }
-                    });
-                  },
-                );
-              },
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+      body: mealPlanState.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : mealPlanState.hasError
+              ? Center(child: Text(mealPlanState.errorMessage!))
+              : mealPlanState.isShoppingListLoaded
+                  ? mealPlanState.shoppingItems.isEmpty
+                      ? Center(
+                          child: Text(S.of(context).emptyShoppingListLabel),
+                        )
+                      : ListView.builder(
+                          itemCount: mealPlanState.shoppingItems.length,
+                          itemBuilder: (context, index) {
+                            final item = mealPlanState.shoppingItems[index];
+                            final isChecked = _checkedIndices.contains(index);
+                            return CheckboxListTile(
+                              value: isChecked,
+                              title: Text(
+                                item.name,
+                                style: TextStyle(
+                                  decoration: isChecked ? TextDecoration.lineThrough : null,
+                                ),
+                              ),
+                              subtitle: Text(
+                                '${item.totalAmount.toStringAsFixed(1)} ${item.unit}',
+                              ),
+                              onChanged: (checked) {
+                                setState(() {
+                                  if (checked == true) {
+                                    _checkedIndices.add(index);
+                                  } else {
+                                    _checkedIndices.remove(index);
+                                  }
+                                });
+                              },
+                            );
+                          },
+                        )
+                  : const SizedBox.shrink(),
     );
   }
 }
