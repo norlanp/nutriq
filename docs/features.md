@@ -41,7 +41,7 @@
  |  +---------------------------------------------------+           |
  |                                                                   |
  |  [ Meal Planning ]  [ Recipes ]  [ Health Sync ]  [ Reminders ]  |
- |  [ Data Export ]   [ i18n ]     [ Onboarding ]  [ Web Support ] |
+ |  [ Data Export ]   [ i18n ]     [ Onboarding ]                 |
  +-------------------------------------------------------------------+
  |  [ Autopilot ]  [ Food Grade ]  [ Allergens ]  [ Symptom Log ] |
  |  [ Daily Notes ] [ Blood Glucose ] [ Meds ] [ Custom Trackers ] |
@@ -89,7 +89,7 @@
 | **Custom Trackers** | **Yes** (user-defined metrics) | -- |
 | **Autopilot** | **Yes** (AI suggestions from history) | -- |
 | **Internationalization** | 3 languages (EN/DE/TR) | 20+ |
-| **Web Support** | **Yes** (iOS + Android + Web) | Mobile only | Web + Mobile |
+| **Web Support** | -- | Mobile only | Web + Mobile |
 | **Ad-Free** | **Yes** (always) | Yes | No (freemium) |
 | **No Subscription** | **Yes** (all features free) | Yes | Premium required |
 | **Open Source** | **Yes** (GPL-3.0) | Yes (GPL-3.0) | No |
@@ -373,18 +373,18 @@
 | | Detail |
 |:---|:---|
 | **Framework** | Flutter / Dart |
-| **State Management** | flutter_bloc |
+| **State Management** | flutter_bloc + flutter_riverpod (migrating) |
 | **Local DB** | Drift (SQLite) |
 | **Schema Version** | 22 (23 tables) |
-| **DI** | GetIt |
+| **DI** | Riverpod |
 | **i18n** | flutter_intl (EN / DE / TR) |
-| **Platforms** | iOS, Android, Web |
+| **Platforms** | iOS, Android |
 | **Food DBs** | Open Food Facts, USDA FDC, USDA FDC-SR |
 | **AI Model** | TensorFlow Lite (on-device) |
 | **Health APIs** | HealthKit, Health Connect |
 | **License** | GPL-3.0 |
 | **Use Cases** | 75 |
-| **Feature Modules** | 33 |
+| **Feature Modules** | 38 |
 
 ---
 

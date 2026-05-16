@@ -694,6 +694,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "insufficientWeightData": MessageLookupByLibrary.simpleMessage(
       "Trendi göstermek için yeterli kilo verisi yok",
     ),
+    "invalidMax100Label": MessageLookupByLibrary.simpleMessage(
+      "100g başına 100g\'ı aşamaz",
+    ),
+    "invalidNegativeLabel": MessageLookupByLibrary.simpleMessage(
+      "Değer negatif olamaz",
+    ),
+    "invalidNumberLabel": MessageLookupByLibrary.simpleMessage(
+      "Lütfen geçerli bir sayı girin",
+    ),
     "itemDeletedSnackbar": MessageLookupByLibrary.simpleMessage("Öğe silindi"),
     "itemUpdatedSnackbar": MessageLookupByLibrary.simpleMessage(
       "Öğe güncellendi",

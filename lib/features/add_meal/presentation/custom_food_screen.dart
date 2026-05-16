@@ -114,6 +114,7 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
+              validator: _nonNegativeValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -125,6 +126,7 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
+              validator: _macroValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -136,6 +138,7 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
+              validator: _macroValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -147,6 +150,7 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
+              validator: _macroValidator,
             ),
             const SizedBox(height: 24),
             TextFormField(
@@ -158,6 +162,7 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
+              validator: _macroValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -169,6 +174,7 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
+              validator: _macroValidator,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -180,6 +186,7 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
+              validator: _macroValidator,
             ),
             const SizedBox(height: 24),
             Text(
@@ -196,11 +203,29 @@ class _CustomFoodScreenState extends State<CustomFoodScreen> {
               ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
+              validator: _nonNegativeValidator,
             ),
           ],
         ),
       ),
     );
+  }
+
+  String? _nonNegativeValidator(String? value) {
+    if (value == null || value.isEmpty) return null;
+    final num = double.tryParse(value);
+    if (num == null) return S.of(context).invalidNumberLabel;
+    if (num < 0) return S.of(context).invalidNegativeLabel;
+    return null;
+  }
+
+  String? _macroValidator(String? value) {
+    if (value == null || value.isEmpty) return null;
+    final num = double.tryParse(value);
+    if (num == null) return S.of(context).invalidNumberLabel;
+    if (num < 0) return S.of(context).invalidNegativeLabel;
+    if (num > 100) return S.of(context).invalidMax100Label;
+    return null;
   }
 
   void _onSave() {

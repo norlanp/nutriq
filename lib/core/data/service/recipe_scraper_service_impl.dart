@@ -6,6 +6,35 @@ import 'package:nutriq/core/domain/exception/recipe_import_exception.dart';
 import 'package:nutriq/core/domain/service/recipe_scraper_service.dart';
 
 class RecipeScraperServiceImpl implements RecipeScraperService {
+  static const _blockedHosts = [
+    'localhost',
+    '127.0.0.1',
+    '::1',
+    '0.0.0.0',
+    '169.254.169.254',
+  ];
+
+  static const _blockedPrefixes = [
+    '10.',
+    '172.16.',
+    '172.17.',
+    '172.18.',
+    '172.19.',
+    '172.20.',
+    '172.21.',
+    '172.22.',
+    '172.23.',
+    '172.24.',
+    '172.25.',
+    '172.26.',
+    '172.27.',
+    '172.28.',
+    '172.29.',
+    '172.30.',
+    '172.31.',
+    '192.168.',
+  ];
+
   final http.Client _client;
 
   RecipeScraperServiceImpl([http.Client? client])
@@ -13,9 +42,27 @@ class RecipeScraperServiceImpl implements RecipeScraperService {
 
   @override
   Future<ScrapedRecipeEntity?> scrapeRecipe(String url) async {
+    final uri = Uri.parse(url);
+
+    if (uri.scheme != 'https') {
+      throw RecipeImportException(
+        'Only HTTPS URLs are allowed',
+        RecipeImportErrorType.networkError,
+      );
+    }
+
+    final host = uri.host;
+    if (_blockedHosts.contains(host) ||
+        _blockedPrefixes.any((prefix) => host.startsWith(prefix))) {
+      throw RecipeImportException(
+        'Internal or local URLs are not allowed',
+        RecipeImportErrorType.networkError,
+      );
+    }
+
     http.Response response;
     try {
-      response = await _client.get(Uri.parse(url));
+      response = await _client.get(uri);
     } catch (e) {
       throw RecipeImportException(
         'Failed to fetch URL: $e',

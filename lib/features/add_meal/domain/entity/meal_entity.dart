@@ -80,9 +80,9 @@ class MealEntity extends Equatable {
       thumbnailImageUrl: offProduct.image_front_thumb_url,
       mainImageUrl: offProduct.image_front_url,
       url: offProduct.url,
-      mealQuantity: offProduct.product_quantity?.toString(),
+      mealQuantity: offProduct.product_quantity,
       mealUnit: _tryGetUnit(offProduct.quantity),
-      servingQuantity: _tryQuantityCast(offProduct.serving_quantity),
+      servingQuantity: offProduct.serving_quantity,
       servingUnit: _tryGetUnit(offProduct.quantity),
       servingSize: offProduct.serving_size,
       nutriments: MealNutrimentsEntity.fromOffNutriments(offProduct.nutriments),
@@ -106,26 +106,6 @@ class MealEntity extends Equatable {
       nutriments: MealNutrimentsEntity.fromFDCNutriments(fdcFood.foodNutrients),
       source: MealSourceEntity.fdc,
     );
-  }
-
-  /// Value returned from OFF can either be String, int or double.
-  /// Try casting it to a double value for calculation
-  static double? _tryQuantityCast(dynamic value) {
-    double? parsedValue;
-
-    if (value == null) {
-      parsedValue = null;
-    } else if (value is double) {
-      parsedValue = value;
-    } else if (value is int) {
-      parsedValue = value.toDouble();
-    } else if (value is String) {
-      value.replaceAll(RegExp("mg|g|kg|ml|cl|l| "), ""); // TODO extract
-      final doubleParsed =
-          double.tryParse(value) ?? int.tryParse(value)?.toDouble();
-      parsedValue = doubleParsed;
-    }
-    return parsedValue;
   }
 
   /// TODO extract correct unit

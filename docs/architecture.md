@@ -21,7 +21,7 @@ The core of the application, containing purely business logic and rules. It is i
 ### 3. Data Layer
 The implementation of data retrieval and persistence.
 - **Repositories**: Implement the interfaces defined in the Domain layer. They decide whether to fetch data from a local source or a remote API.
-- **Data Sources**: Low-level implementations for network calls (`http`, `supabase`) or local database operations (`drift`/SQLite).
+- **Data Sources**: Low-level implementations for network calls (`http`) or local database operations (`drift`/SQLite).
 - **DTOs/DBOs (Data Transfer/Database Objects)**: Specialized objects used for serialization/deserialization. These are converted to Entities before entering the Domain layer.
 
 ## Data Flow
@@ -29,10 +29,12 @@ The implementation of data retrieval and persistence.
 
 ## Key Technical Choices
 - **State Management**: `flutter_bloc` for predictable state transitions and separation of logic.
-- **Dependency Injection**: `get_it` (via `locator.dart`) for decoupling components and improving testability.
+- **Dependency Injection**: `flutter_riverpod` for decoupling components and improving testability.
 - **Local Persistence**: `drift` (SQLite) for type-safe relational storage.
 - **Localization**: `flutter_intl` for multi-language support (EN/DE/TR).
-- **Networking**: `http` and `supabase_flutter` for remote data interaction.
+- **Networking**: `http` for remote data interaction.
+
+> **Note**: Firebase Analytics, Firebase Crashlytics, and Sentry are available in the codebase but gated behind explicit user consent. They are disabled by default and only activate if the user opts in. This preserves the privacy-first principle (see NFR-1.3).
 
 ## Project Structure
 - `lib/core/`: Shared logic, utilities, styles, and common domain/data components.
@@ -50,11 +52,11 @@ The implementation of data retrieval and persistence.
 | **Domain** | Entities | 35 |
 | **Domain** | Repository interfaces | 20 |
 | **Domain** | Use cases | 75 |
-| **Presentation** | Feature modules | 33 |
+| **Presentation** | Feature modules | 38 |
 | **Presentation** | BLoCs | 39 |
 | **Infrastructure** | DB schema version | 22 |
 | **Infrastructure** | Languages (i18n) | 3 |
-| **Infrastructure** | Platforms | 3 (iOS, Android, Web) |
+| **Infrastructure** | Platforms | 2 (iOS, Android) |
 
 ## Feature Modules
 

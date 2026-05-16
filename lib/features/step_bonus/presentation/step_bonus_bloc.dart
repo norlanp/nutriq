@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/usecase/add_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/get_config_usecase.dart';
 import 'package:nutriq/core/domain/usecase/step_bonus/calculate_step_bonus_usecase.dart';
@@ -8,6 +9,7 @@ part 'step_bonus_event.dart';
 part 'step_bonus_state.dart';
 
 class StepBonusBloc extends Bloc<StepBonusEvent, StepBonusState> {
+  final log = Logger('StepBonusBloc');
   final GetConfigUsecase _getConfigUsecase;
   final AddConfigUsecase _addConfigUsecase;
   final CalculateStepBonusUsecase _calculateStepBonusUsecase;
@@ -96,6 +98,8 @@ class StepBonusBloc extends Bloc<StepBonusEvent, StepBonusState> {
         todaySteps: steps,
         calorieCredit: credit,
       ));
-    } catch (_) {}
+    } catch (e) {
+      log.warning('Failed to refresh step credit: $e');
+    }
   }
 }

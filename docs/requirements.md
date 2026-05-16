@@ -171,6 +171,8 @@
 - NFR-1.1: All data stored locally on-device (Drift/SQLite)
 - NFR-1.2: No mandatory cloud account or sync
 - NFR-1.3: No telemetry, analytics, or tracking
+
+> **Note**: Firebase Analytics/Crashlytics and Sentry are available but gated behind explicit user consent. They are disabled by default; NFR-1.3 remains the default behavior.
 - NFR-1.4: No data shared with third parties
 
 ### NFR-2: Performance
@@ -185,13 +187,13 @@
 
 ### NFR-4: Usability
 - NFR-4.1: Responsive layout with adaptive navigation (drawer on desktop/tablet, bottom nav on mobile)
-- NFR-4.2: Support iOS, Android, and Web platforms
+- NFR-4.2: Support iOS and Android platforms
 - NFR-4.3: Accessible to screen readers (semantics on interactive elements)
 
 ### NFR-5: Maintainability
 - NFR-5.1: Clean Architecture layer separation (Presentation / Domain / Data)
 - NFR-5.2: BLoC pattern for all state management
-- NFR-5.3: Dependency injection via GetIt
+- NFR-5.3: Dependency injection via Riverpod
 - NFR-5.4: Zero lint warnings (`flutter analyze`)
 
 ### NFR-6: Licensing

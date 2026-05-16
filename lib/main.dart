@@ -54,6 +54,12 @@ import 'package:nutriq/features/recipe_catalog/presentation/recipe_detail_screen
 import 'package:nutriq/features/menu_scan/presentation/menu_scan_screen.dart';
 import 'package:nutriq/features/voice_logging/presentation/voice_logging_screen.dart';
 import 'package:nutriq/features/grocery_check/presentation/grocery_check_screen.dart';
+import 'package:nutriq/features/daily_notes/presentation/daily_note_screen.dart';
+import 'package:nutriq/features/autopilot/presentation/autopilot_screen.dart';
+import 'package:nutriq/features/calorie_cycling/presentation/calorie_cycling_screen.dart';
+import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_screen.dart';
+import 'package:nutriq/features/food_grade/presentation/food_grade_info_screen.dart';
+import 'package:nutriq/features/step_bonus/presentation/step_bonus_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     hide ChangeNotifierProvider, Provider;
@@ -68,31 +74,38 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 Future<void> main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
     LoggerConfig.intiLogger();
     final log = Logger('main');
-
-    FlutterError.onError = (details) {
-      log.severe('FlutterError', details.exception, details.stack);
-      FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-      FlutterError.presentError(details);
-    };
 
     final container = ProviderContainer();
     await container.read(appInitializerProvider);
 
+    final hasAcceptedAnonymousData =
+        await container.read(configRepositoryProvider).getConfigHasAcceptedAnonymousData();
+
+    if (hasAcceptedAnonymousData) {
+      await Firebase.initializeApp();
+      FlutterError.onError = (details) {
+        log.severe('FlutterError', details.exception, details.stack);
+        FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+        FlutterError.presentError(details);
+      };
+    } else {
+      FlutterError.onError = (details) {
+        log.severe('FlutterError', details.exception, details.stack);
+        FlutterError.presentError(details);
+      };
+    }
+
     try {
       await HomeWidget.setAppGroupId('group.com.nutriq.app');
-    } catch (_) {}
+    } catch (e) {
+      log.warning('Failed to set HomeWidget group ID: $e');
+    }
 
     final isUserInitialized = await container.read(userDataSourceProvider).hasUserData();
-    final configRepo = container.read(configRepositoryProvider);
-    final hasAcceptedAnonymousData =
-        await configRepo.getConfigHasAcceptedAnonymousData();
-    final savedAppTheme = await configRepo.getConfigAppTheme();
+    final savedAppTheme = await container.read(configRepositoryProvider).getConfigAppTheme();
 
-    // If the user has accepted anonymous data collection, run the app with
-    // sentry enabled, else run without it
     if (kReleaseMode && hasAcceptedAnonymousData) {
       log.info('Starting App with Sentry enabled ...');
       _runAppWithSentryReporting(isUserInitialized, savedAppTheme, container);
@@ -101,9 +114,8 @@ Future<void> main() async {
       runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, container);
     }
   }, (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    print('UNCAUGHT ERROR: $error');
-    print('STACK: $stack');
+    final log = Logger('main');
+    log.severe('UNCAUGHT ERROR', error, stack);
   });
 }
 
@@ -112,7 +124,7 @@ void _runAppWithSentryReporting(
     [ProviderContainer? container]) async {
   await SentryFlutter.init((options) {
     options.dsn = Env.sentryDns;
-    options.tracesSampleRate = 1.0;
+    options.tracesSampleRate = 0.1;
   },
       appRunner: () =>
           runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, container));
@@ -258,6 +270,24 @@ class NutriqApp extends StatelessWidget {
             const VoiceLoggingScreen(),
         NavigationOptions.groceryCheckRoute: (context) =>
             const GroceryCheckScreen(),
+        NavigationOptions.dailyNoteRoute: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          return DailyNoteScreen(
+            date: args['date'] as DateTime,
+            userId: args['userId'] as int,
+          );
+        },
+        NavigationOptions.autopilotRoute: (context) =>
+            const AutopilotScreen(),
+        NavigationOptions.calorieCyclingRoute: (context) =>
+            const CalorieCyclingScreen(),
+        NavigationOptions.customTrackersRoute: (context) =>
+            const CustomTrackerScreen(),
+        NavigationOptions.foodGradeRoute: (context) =>
+            const FoodGradeInfoScreen(),
+        NavigationOptions.stepBonusRoute: (context) =>
+            const StepBonusScreen(),
       },
     );
   }

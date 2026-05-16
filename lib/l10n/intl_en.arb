@@ -870,5 +870,8 @@
   "widgetKcalLeft": "kcal left",
   "widgetCarbsShort": "C",
   "widgetFatsShort": "F",
-  "widgetProteinsShort": "P"
+  "widgetProteinsShort": "P",
+  "invalidNumberLabel": "Please enter a valid number",
+  "invalidNegativeLabel": "Value cannot be negative",
+  "invalidMax100Label": "Value cannot exceed 100g per 100g"
 }

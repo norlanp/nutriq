@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
-import 'package:nutriq/core/utils/file_helper_stub.dart'
-    if (dart.library.html) 'package:nutriq/core/utils/file_helper_web.dart'
+import 'package:nutriq/core/utils/file_helper_io.dart'
     as file_helper;
 import 'package:nutriq/features/ai_food_scanner/domain/entity/food_candidate_entity.dart';
 
@@ -14,10 +12,6 @@ class FoodClassifierService {
   bool get isModelLoaded => _isModelLoaded;
 
   Future<void> loadModel() async {
-    if (kIsWeb) {
-      _isModelLoaded = false;
-      return;
-    }
     try {
       final modelPath = await _getModelFilePath();
       if (modelPath == null) {
@@ -32,8 +26,6 @@ class FoodClassifierService {
   }
 
   Future<String?> _getModelFilePath() async {
-    if (kIsWeb) return null;
-    if (!file_helper.hasFileSupport) return null;
     try {
       final data = await rootBundle.load(_modelAssetPath);
       final bytes = data.buffer.asUint8List();

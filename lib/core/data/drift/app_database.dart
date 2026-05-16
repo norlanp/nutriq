@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 
 import 'package:nutriq/core/data/drift/database_connection_io.dart'
-    if (dart.library.html) 'package:nutriq/core/data/drift/database_connection_web.dart'
     as conn;
 
 import 'package:nutriq/core/data/drift/tables/config_table.dart';

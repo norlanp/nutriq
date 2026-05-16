@@ -1,0 +1,71 @@
+Nutriq Audit Fix Plan
+=====================
+
+Phase 1: Critical Security Fixes [DONE]
+-----------------------------------------
+[x] Remove .env from git tracking (git rm --cached .env executed)
+[ ] Rotate FDC_API_KEY and SENTRY_DNS (manual action required)
+[x] Gate Firebase.initializeApp() behind hasAcceptedAnonymousData consent
+[x] Add URL validation to recipe import (HTTPS-only, block internal IPs)
+[x] Add PBKDF2 key derivation + AES-GCM to encrypted_backup_service.dart
+[x] Sanitize FDC API key from log output in fdc_data_source.dart
+[x] Remove print() in main.dart error handler, use Logger
+[x] Set logger level to WARNING in release mode
+[x] Reduce Sentry tracesSampleRate from 1.0 to 0.1
+
+Phase 2: Critical Wiring Fixes [DONE]
+--------------------------------------
+[x] Add 6 missing routes to main.dart: daily_notes, autopilot, calorie_cycling,
+    custom_trackers, food_grade, step_bonus
+[x] Add stepBonusRoute constant to NavigationOptions
+[x] Create meal_mapper.dart in data layer, move DTO→Entity mapping out of domain
+[x] Remove DTO imports from meal_entity.dart and meal_nutriments_entity.dart
+
+Phase 3: Remove Redundant State Management [DEFERRED]
+------------------------------------------------------
+[ ] Remove flutter_bloc from pubspec.yaml
+[ ] Remove provider from pubspec.yaml (migrate ThemeModeProvider to Riverpod)
+[ ] Convert all 39 BLoC classes to Riverpod Notifier/AsyncNotifier
+[ ] Convert all BLoC Event/State files to Riverpod state models
+[ ] Update all 54 screen files from BlocBuilder/BlocListener to Riverpod
+[ ] Remove bloc_providers.dart, replace with feature-level providers
+[ ] Remove all BLoC-related imports across lib/
+[ ] Run flutter analyze to confirm zero errors
+[ ] NOTE: Partial migration attempt was reverted. Full migration requires
+    systematic conversion of each screen individually. Estimated 2-3 days.
+
+Phase 4: Stale Code & Docs Cleanup [DONE]
+------------------------------------------
+[x] Remove 8 web-orphaned files (database_connection_web, notification_init_web,
+    file_helper_web, database_connection, platform_info_web,
+    platform_health_service_factory_web, stubs)
+[x] Simplify conditional imports to direct io imports across 12 files
+[x] Remove kIsWeb guard clauses from all affected files
+[x] Fix 4 silent empty catch blocks (main.dart, step_bonus_bloc.dart,
+    scan_menu_usecase.dart, activity_detail_screen.dart)
+[x] Update docs/architecture.md: Riverpod DI, no supabase, iOS+Android only
+[x] Update docs/requirements.md: NFR-4.2, NFR-5.3
+[x] Update docs/features.md: DI, platforms, module count
+[x] Remove unused dependencies: firebase_analytics, permission_handler
+[ ] Remove ThemeModeProvider ChangeNotifier — blocked on Phase 3
+
+Phase 5: Code Quality [DONE]
+---------------------------------
+[x] Add range validation to custom_food_screen.dart (negative values, macros > 100g)
+[x] Add l10n strings for validation errors (en, de, tr)
+[x] Split mappers.dart (1012 lines) into 20 domain-entity mapper files + barrel
+[x] Split grocery_check_screen.dart (493 lines) into widget files
+[x] Split settings_screen.dart — N/A (file doesn't exist; allergen_settings is only 143 lines)
+[x] Split usecase_providers.dart (587 lines) into core + per-feature provider files + barrel
+[x] Fix dynamic types in off_product_dto.dart (JsonConverter for 17 fields)
+[x] Remove 5 sized_box_for_whitespace lint suppressions in add_item_bottom_sheet.dart
+[x] Convert 14 TODO comments to GitHub issues (blocked: repo has issues disabled)
+
+Phase 6: Test Coverage
+------------------------
+[ ] Add BLoC/Notifier tests for core features (home, diary, add_meal, profile, settings)
+[ ] Add use-case tests for calorie goal calculation, step bonus, import/export
+
+Remaining Audit Items (not started)
+-------------------------------------
+[ ] iOS encryption compliance flag (ITSAppUsesNonExemptEncryption should be true in Info.plist)

@@ -45,13 +45,10 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            // ignore: sized_box_for_whitespace
-            leading: Container(
-                height: double.infinity,
-                child: Icon(
+            leading: Icon(
                   UserActivityEntity.getIconData(),
                   color: Theme.of(context).colorScheme.onSurface,
-                )),
+                ),
             onTap: () {
               _showAddActivityScreen(context);
             },
@@ -73,10 +70,7 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            // ignore: sized_box_for_whitespace
-            leading: Container(
-                height: double.infinity,
-                child: Icon(IntakeTypeEntity.breakfast.getIconData())),
+            leading: Icon(IntakeTypeEntity.breakfast.getIconData()),
             onTap: () {
               _showAddItemScreen(context, AddMealType.breakfastType);
             },
@@ -97,10 +91,7 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            // ignore: sized_box_for_whitespace
-            leading: Container(
-                height: double.infinity,
-                child: Icon(IntakeTypeEntity.lunch.getIconData())),
+            leading: Icon(IntakeTypeEntity.lunch.getIconData()),
             onTap: () {
               _showAddItemScreen(context, AddMealType.lunchType);
             },
@@ -121,10 +112,7 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            // ignore: sized_box_for_whitespace
-            leading: Container(
-                height: double.infinity,
-                child: Icon(IntakeTypeEntity.dinner.getIconData())),
+            leading: Icon(IntakeTypeEntity.dinner.getIconData()),
             onTap: () {
               _showAddItemScreen(context, AddMealType.dinnerType);
             },
@@ -145,10 +133,7 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            // ignore: sized_box_for_whitespace
-            leading: Container(
-                height: double.infinity,
-                child: Icon(IntakeTypeEntity.snack.getIconData())),
+            leading: Icon(IntakeTypeEntity.snack.getIconData()),
             onTap: () {
               _showAddItemScreen(context, AddMealType.snackType);
             },
@@ -170,10 +155,8 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.photo_camera_outlined,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.photo_camera_outlined,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed(NavigationOptions.aiScannerRoute);
@@ -195,10 +178,8 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.mic_outlined,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.mic_outlined,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context)
@@ -213,10 +194,8 @@ class AddItemBottomSheet extends StatelessWidget {
                   .titleLarge
                   ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.restaurant,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.restaurant,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context)
@@ -240,10 +219,8 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.monitor_weight_outlined,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.monitor_weight_outlined,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context)
@@ -258,10 +235,8 @@ class AddItemBottomSheet extends StatelessWidget {
                   .titleLarge
                   ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.straighten,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.straighten,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context)
@@ -276,10 +251,8 @@ class AddItemBottomSheet extends StatelessWidget {
                   .titleLarge
                   ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.bar_chart,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.bar_chart,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context)
@@ -294,10 +267,8 @@ class AddItemBottomSheet extends StatelessWidget {
                   .titleLarge
                   ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.timer_outlined,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.timer_outlined,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context)
@@ -321,10 +292,8 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.calendar_month,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.calendar_month,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed(NavigationOptions.mealPlanRoute);
@@ -346,10 +315,8 @@ class AddItemBottomSheet extends StatelessWidget {
                       .onSurface
                       .withValues(alpha: 0.7)),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.photo_camera_front_outlined,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.photo_camera_front_outlined,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context)
@@ -364,10 +331,8 @@ class AddItemBottomSheet extends StatelessWidget {
                   .titleLarge
                   ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
-            leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.schedule_outlined,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            leading: Icon(Icons.schedule_outlined,
+                    color: Theme.of(context).colorScheme.onSurface),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context)

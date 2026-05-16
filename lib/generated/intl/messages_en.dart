@@ -675,6 +675,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "insufficientWeightData": MessageLookupByLibrary.simpleMessage(
       "Not enough weight data to show trend",
     ),
+    "invalidMax100Label": MessageLookupByLibrary.simpleMessage(
+      "Value cannot exceed 100g per 100g",
+    ),
+    "invalidNegativeLabel": MessageLookupByLibrary.simpleMessage(
+      "Value cannot be negative",
+    ),
+    "invalidNumberLabel": MessageLookupByLibrary.simpleMessage(
+      "Please enter a valid number",
+    ),
     "itemDeletedSnackbar": MessageLookupByLibrary.simpleMessage("Item deleted"),
     "itemUpdatedSnackbar": MessageLookupByLibrary.simpleMessage("Item updated"),
     "kcalLabel": MessageLookupByLibrary.simpleMessage("kcal"),

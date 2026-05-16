@@ -719,6 +719,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "insufficientWeightData": MessageLookupByLibrary.simpleMessage(
       "Nicht genug Gewichtsdaten für den Trend",
     ),
+    "invalidMax100Label": MessageLookupByLibrary.simpleMessage(
+      "Wert darf 100g pro 100g nicht überschreiten",
+    ),
+    "invalidNegativeLabel": MessageLookupByLibrary.simpleMessage(
+      "Wert darf nicht negativ sein",
+    ),
+    "invalidNumberLabel": MessageLookupByLibrary.simpleMessage(
+      "Bitte geben Sie eine gültige Zahl ein",
+    ),
     "itemDeletedSnackbar": MessageLookupByLibrary.simpleMessage(
       "Eintrag gelöscht",
     ),

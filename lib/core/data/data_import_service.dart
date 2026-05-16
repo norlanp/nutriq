@@ -2,10 +2,8 @@ import 'dart:convert';
 
 import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:nutriq/core/data/drift/app_database.dart';
-import 'package:nutriq/core/utils/file_helper_stub.dart'
-    if (dart.library.html) 'package:nutriq/core/utils/file_helper_web.dart'
+import 'package:nutriq/core/utils/file_helper_io.dart'
     as file_helper;
 
 enum ImportResult { success, error, cancelled }
@@ -19,7 +17,7 @@ class DataImportService {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['json'],
-      withData: kIsWeb,
+      withData: false,
     );
 
     if (result == null || result.files.isEmpty) return ImportResult.cancelled;
@@ -27,14 +25,9 @@ class DataImportService {
 
     try {
       String jsonString;
-      if (kIsWeb) {
-        if (file.bytes == null) return ImportResult.error;
-        jsonString = utf8.decode(file.bytes!);
-      } else {
-        if (file.path == null) return ImportResult.error;
-        final bytes = await file_helper.readFileBytes(file.path!);
-        jsonString = utf8.decode(bytes);
-      }
+      if (file.path == null) return ImportResult.error;
+      final bytes = await file_helper.readFileBytes(file.path!);
+      jsonString = utf8.decode(bytes);
       final data = jsonDecode(jsonString) as Map<String, dynamic>;
       await importDataFromMap(data);
       return ImportResult.success;
@@ -47,7 +40,7 @@ class DataImportService {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['zip'],
-      withData: kIsWeb,
+      withData: false,
     );
 
     if (result == null || result.files.isEmpty) return ImportResult.cancelled;
@@ -55,13 +48,8 @@ class DataImportService {
 
     try {
       List<int> zipBytes;
-      if (kIsWeb) {
-        if (file.bytes == null) return ImportResult.error;
-        zipBytes = file.bytes!;
-      } else {
-        if (file.path == null) return ImportResult.error;
-        zipBytes = await file_helper.readFileBytes(file.path!);
-      }
+      if (file.path == null) return ImportResult.error;
+      zipBytes = await file_helper.readFileBytes(file.path!);
       final archive = ZipDecoder().decodeBytes(zipBytes);
       final data = <String, dynamic>{};
 
@@ -84,7 +72,7 @@ class DataImportService {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['json'],
-      withData: kIsWeb,
+      withData: false,
     );
 
     if (result == null || result.files.isEmpty) return null;
@@ -92,14 +80,9 @@ class DataImportService {
 
     try {
       String jsonString;
-      if (kIsWeb) {
-        if (file.bytes == null) return null;
-        jsonString = utf8.decode(file.bytes!);
-      } else {
-        if (file.path == null) return null;
-        final bytes = await file_helper.readFileBytes(file.path!);
-        jsonString = utf8.decode(bytes);
-      }
+      if (file.path == null) return null;
+      final bytes = await file_helper.readFileBytes(file.path!);
+      jsonString = utf8.decode(bytes);
       return jsonDecode(jsonString) as Map<String, dynamic>;
     } catch (e) {
       return null;
@@ -110,7 +93,7 @@ class DataImportService {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['zip'],
-      withData: kIsWeb,
+      withData: false,
     );
 
     if (result == null || result.files.isEmpty) return null;
@@ -118,13 +101,8 @@ class DataImportService {
 
     try {
       List<int> zipBytes;
-      if (kIsWeb) {
-        if (file.bytes == null) return null;
-        zipBytes = file.bytes!;
-      } else {
-        if (file.path == null) return null;
-        zipBytes = await file_helper.readFileBytes(file.path!);
-      }
+      if (file.path == null) return null;
+      zipBytes = await file_helper.readFileBytes(file.path!);
       final archive = ZipDecoder().decodeBytes(zipBytes);
       final data = <String, dynamic>{};
 

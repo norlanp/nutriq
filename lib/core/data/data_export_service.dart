@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:nutriq/core/data/drift/app_database.dart';
-import 'package:nutriq/core/utils/file_helper_stub.dart'
-    if (dart.library.html) 'package:nutriq/core/utils/file_helper_web.dart'
+import 'package:nutriq/core/utils/file_helper_io.dart'
     as file_helper;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
@@ -105,11 +103,6 @@ class DataExportService {
 
     if (format == ExportFormat.json) {
       final jsonString = const JsonEncoder.withIndent('  ').convert(allData);
-      if (kIsWeb || !file_helper.hasFileSupport) {
-        // On web, return a data URI or handle differently
-        throw UnsupportedError(
-            'File export not supported on web — use share instead');
-      }
       final dir = await getTemporaryDirectory();
       final filePath = p.join(dir.path, 'nutriq_export_$timestamp.json');
       await file_helper.writeTempFile('nutriq_export_$timestamp.json',
@@ -126,11 +119,6 @@ class DataExportService {
     }
 
     final zipBytes = Uint8List.fromList(ZipEncoder().encode(archive));
-
-    if (kIsWeb || !file_helper.hasFileSupport) {
-      throw UnsupportedError(
-          'File export not supported on web — use share instead');
-    }
 
     final dir = await getTemporaryDirectory();
     final filePath = p.join(dir.path, 'nutriq_export_$timestamp.zip');

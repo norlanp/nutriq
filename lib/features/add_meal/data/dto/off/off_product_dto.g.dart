@@ -21,8 +21,10 @@ OFFProductDTO _$OFFProductDTOFromJson(Map<String, dynamic> json) =>
       image_url: json['image_url'] as String?,
       url: json['url'] as String?,
       quantity: json['quantity'] as String?,
-      product_quantity: json['product_quantity'],
-      serving_quantity: json['serving_quantity'],
+      product_quantity:
+          const DynamicToStringConverter().fromJson(json['product_quantity']),
+      serving_quantity: const DynamicQuantityToDoubleConverter()
+          .fromJson(json['serving_quantity']),
       serving_size: json['serving_size'] as String?,
       nutriments: OFFProductNutrimentsDTO.fromJson(
           json['nutriments'] as Map<String, dynamic>),
@@ -43,8 +45,10 @@ Map<String, dynamic> _$OFFProductDTOToJson(OFFProductDTO instance) =>
       'image_url': instance.image_url,
       'url': instance.url,
       'quantity': instance.quantity,
-      'product_quantity': instance.product_quantity,
-      'serving_quantity': instance.serving_quantity,
+      'product_quantity':
+          const DynamicToStringConverter().toJson(instance.product_quantity),
+      'serving_quantity': const DynamicQuantityToDoubleConverter()
+          .toJson(instance.serving_quantity),
       'serving_size': instance.serving_size,
       'nutriments': instance.nutriments,
     };

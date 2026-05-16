@@ -1,10 +1,32 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:nutriq/core/utils/extensions.dart';
 import 'package:nutriq/core/utils/supported_language.dart';
+import 'package:nutriq/features/add_meal/data/dto/off/json_converters.dart';
 import 'package:nutriq/features/add_meal/data/dto/off/off_product_nutriments_dto.dart';
 
 part 'off_product_dto.g.dart';
+
+class DynamicQuantityToDoubleConverter
+    implements JsonConverter<double?, dynamic> {
+  const DynamicQuantityToDoubleConverter();
+
+  @override
+  double? fromJson(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      final cleaned = value.replaceAll(RegExp(r'mg|g|kg|ml|cl|l| '), '');
+      return double.tryParse(cleaned) ?? int.tryParse(cleaned)?.toDouble();
+    }
+    return null;
+  }
+
+  @override
+  dynamic toJson(double? value) => value;
+}
 
 @JsonSerializable()
 class OFFProductDTO {
@@ -25,9 +47,15 @@ class OFFProductDTO {
   final String? url;
 
   final String? quantity;
-  final dynamic product_quantity; // Can either be int or String
-  final dynamic serving_quantity; // Can either be int or String
-  final String? serving_size; // E.g. 2 Tbsp (32 g)
+
+  @DynamicToStringConverter()
+  final String? product_quantity;
+
+  @DynamicQuantityToDoubleConverter()
+  final double? serving_quantity;
+
+  @JsonKey(name: 'serving_size')
+  final String? serving_size;
 
   final OFFProductNutrimentsDTO nutriments;
 

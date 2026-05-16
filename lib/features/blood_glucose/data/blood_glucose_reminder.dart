@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nutriq/core/utils/platform_info_io.dart'
-    if (dart.library.html) 'package:nutriq/core/utils/platform_info_web.dart'
     as platform_info;
 import 'package:timezone/timezone.dart' as tz;
 

@@ -179,8 +179,8 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
         totalKcal = newTotalKcal;
         scrollToCalorieText();
       });
-    } on FormatException catch (_) {
-      log.warning("Error while parsing: \"$quantityString\"");
+    } on FormatException catch (e) {
+      log.warning('Error parsing quantity "$quantityString": $e');
     }
   }
 

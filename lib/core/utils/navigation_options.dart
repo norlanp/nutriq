@@ -46,4 +46,5 @@ class NavigationOptions {
   static const menuScanRoute = "menuScan";
   static const voiceLoggingRoute = "voiceLogging";
   static const groceryCheckRoute = "groceryCheck";
+  static const stepBonusRoute = "stepBonus";
 }

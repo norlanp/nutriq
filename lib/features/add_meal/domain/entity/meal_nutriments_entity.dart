@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:nutriq/core/utils/extensions.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_const.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_food_nutriment_dto.dart';
 import 'package:nutriq/features/add_meal/data/dto/off/off_product_nutriments_dto.dart';
@@ -89,29 +88,22 @@ class MealNutrimentsEntity extends Equatable {
   factory MealNutrimentsEntity.fromOffNutriments(
     OFFProductNutrimentsDTO offNutriments,
   ) {
-    // 1. OFF product nutriments can either be String, int, double or null
-    // 2. Extension function asDoubleOrNull does not work on a dynamic data
-    // type, so cast to it Object?
     return MealNutrimentsEntity(
-      energyKcal100:
-          (offNutriments.energy_kcal_100g as Object?).asDoubleOrNull(),
-      carbohydrates100:
-          (offNutriments.carbohydrates_100g as Object?).asDoubleOrNull(),
-      fat100: (offNutriments.fat_100g as Object?).asDoubleOrNull(),
-      proteins100: (offNutriments.proteins_100g as Object?).asDoubleOrNull(),
-      sugars100: (offNutriments.sugars_100g as Object?).asDoubleOrNull(),
-      saturatedFat100:
-          (offNutriments.saturated_fat_100g as Object?).asDoubleOrNull(),
-      fiber100: (offNutriments.fiber_100g as Object?).asDoubleOrNull(),
-      sodium100: (offNutriments.sodium_100g as Object?).asDoubleOrNull(),
-      potassium100: (offNutriments.potassium_100g as Object?).asDoubleOrNull(),
-      cholesterol100:
-          (offNutriments.cholesterol_100g as Object?).asDoubleOrNull(),
-      vitaminA100: (offNutriments.vitamin_a_100g as Object?).asDoubleOrNull(),
-      vitaminC100: (offNutriments.vitamin_c_100g as Object?).asDoubleOrNull(),
-      vitaminD100: (offNutriments.vitamin_d_100g as Object?).asDoubleOrNull(),
-      calcium100: (offNutriments.calcium_100g as Object?).asDoubleOrNull(),
-      iron100: (offNutriments.iron_100g as Object?).asDoubleOrNull(),
+      energyKcal100: offNutriments.energy_kcal_100g,
+      carbohydrates100: offNutriments.carbohydrates_100g,
+      fat100: offNutriments.fat_100g,
+      proteins100: offNutriments.proteins_100g,
+      sugars100: offNutriments.sugars_100g,
+      saturatedFat100: offNutriments.saturated_fat_100g,
+      fiber100: offNutriments.fiber_100g,
+      sodium100: offNutriments.sodium_100g,
+      potassium100: offNutriments.potassium_100g,
+      cholesterol100: offNutriments.cholesterol_100g,
+      vitaminA100: offNutriments.vitamin_a_100g,
+      vitaminC100: offNutriments.vitamin_c_100g,
+      vitaminD100: offNutriments.vitamin_d_100g,
+      calcium100: offNutriments.calcium_100g,
+      iron100: offNutriments.iron_100g,
     );
   }
 

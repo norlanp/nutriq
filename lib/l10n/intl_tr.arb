@@ -852,5 +852,8 @@
   "widgetKcalLeft": "kcal kaldı",
   "widgetCarbsShort": "K",
   "widgetFatsShort": "Y",
-  "widgetProteinsShort": "P"
+  "widgetProteinsShort": "P",
+  "invalidNumberLabel": "Lütfen geçerli bir sayı girin",
+  "invalidNegativeLabel": "Değer negatif olamaz",
+  "invalidMax100Label": "100g başına 100g'ı aşamaz"
 }

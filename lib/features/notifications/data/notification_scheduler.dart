@@ -3,7 +3,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/notification_settings_entity.dart';
 import 'package:nutriq/core/utils/platform_info_io.dart'
-    if (dart.library.html) 'package:nutriq/core/utils/platform_info_web.dart'
     as platform_info;
 import 'package:nutriq/features/notifications/data/notification_init.dart';
 import 'package:timezone/timezone.dart' as tz;

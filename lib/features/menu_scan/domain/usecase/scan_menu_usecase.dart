@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/service/food_grade_calculator.dart';
 import 'package:nutriq/features/add_meal/domain/usecase/search_products_usecase.dart';
 import 'package:nutriq/features/menu_scan/data/menu_item_parser_service.dart';
@@ -5,6 +6,7 @@ import 'package:nutriq/features/menu_scan/data/menu_scanner_service.dart';
 import 'package:nutriq/features/menu_scan/domain/entity/scanned_menu_item.dart';
 
 class ScanMenuUsecase {
+  final log = Logger('ScanMenuUsecase');
   final MenuScannerService _scannerService;
   final MenuItemParserService _parserService;
   final SearchProductsUseCase _searchProductsUseCase;
@@ -88,7 +90,9 @@ class ScanMenuUsecase {
           matchConfidence: 0.7,
         );
       }
-    } catch (_) {}
+    } catch (e) {
+      log.warning('Product match failed: $e');
+    }
 
     return ScannedMenuItem(
       name: parsed.name,

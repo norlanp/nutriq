@@ -7457,6 +7457,36 @@ class S {
   String get widgetProteinsShort {
     return Intl.message('P', name: 'widgetProteinsShort', desc: '', args: []);
   }
+
+  /// `Please enter a valid number`
+  String get invalidNumberLabel {
+    return Intl.message(
+      'Please enter a valid number',
+      name: 'invalidNumberLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Value cannot be negative`
+  String get invalidNegativeLabel {
+    return Intl.message(
+      'Value cannot be negative',
+      name: 'invalidNegativeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Value cannot exceed 100g per 100g`
+  String get invalidMax100Label {
+    return Intl.message(
+      'Value cannot exceed 100g per 100g',
+      name: 'invalidMax100Label',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
