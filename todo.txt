@@ -15,11 +15,9 @@ Phase 1: Foundation (no breaking changes, additive only)
 
 Phase 2: BLoC → Riverpod Migration (systematic, feature-by-feature)
 --------------------------------------------------------------------
-This replaces the old "Phase 3" from previous todo. The migration doc
-(bloc-to-riverpod-migration.md) describes the target state but was never
-committed. All 44 BLoCs and 132 BLoC files remain. 215+ screen usages.
-
-Strategy: migrate one feature at a time, verify each, then delete BLoC files.
+All features migrated from BLoC to Riverpod Notifier. `flutter_bloc`,
+`provider`, and `bloc_test` removed from pubspec. `bloc_providers.dart`
+deleted. Old BLoC files and `test/unit_test/bloc_test/` removed.
 
 [x] Create `lib/core/providers/notifier_providers.dart` (central Riverpod notifier registry)
 [x] Convert `ThemeModeProvider` from ChangeNotifier to Riverpod `Notifier`
@@ -49,22 +47,22 @@ Strategy: migrate one feature at a time, verify each, then delete BLoC files.
 [x] Migrate blood_glucose feature
 [x] Migrate medication feature
 [x] Migrate symptom_tracking feature
-[ ] Migrate custom_trackers feature
-[ ] Migrate daily_notes feature
-[ ] Migrate calorie_cycling feature
-[ ] Migrate food_grade feature
-[ ] Migrate autopilot feature
-[ ] Migrate ai_food_scanner feature
-[ ] Migrate voice_logging feature
-[ ] Migrate menu_scan feature
-[ ] Migrate grocery_check feature
-[ ] Migrate step_bonus feature
-[ ] Migrate meal_timing feature
-[ ] Migrate data_sync feature
-[ ] Migrate activity_detail feature
-[ ] Delete `lib/core/providers/bloc_providers.dart` after all features migrated
-[ ] Remove `flutter_bloc` and `provider` from pubspec.yaml
-[ ] Remove `bloc_test` from dev_dependencies
+[x] Migrate custom_trackers feature
+[x] Migrate daily_notes feature
+[x] Migrate calorie_cycling feature
+[x] Migrate food_grade feature
+[x] Migrate autopilot feature
+[x] Migrate ai_food_scanner feature
+[x] Migrate voice_logging feature
+[x] Migrate menu_scan feature
+[x] Migrate grocery_check feature
+[x] Migrate step_bonus feature
+[x] Migrate meal_timing feature
+[x] Migrate data_sync feature
+[x] Migrate activity_detail feature
+[x] Delete `lib/core/providers/bloc_providers.dart` after all features migrated
+[x] Remove `flutter_bloc` and `provider` from pubspec.yaml
+[x] Remove `bloc_test` from dev_dependencies
 [ ] Update `docs/requirements.md` NFR-5.2: "BLoC pattern" → "Riverpod Notifier pattern"
 [ ] Update `docs/architecture.md`: reflect Riverpod state management
 [ ] Run `flutter analyze` — zero errors/warnings
@@ -104,7 +102,7 @@ Phase 6: Testing Infrastructure
 [ ] Create shared mock infrastructure in `test/helpers/mocks.dart` (currently empty)
 [ ] Create mock Drift database for integration tests
 [ ] Write notifier unit tests for each migrated Riverpod notifier (replaces BLoC tests)
-[ ] Delete existing BLoC unit tests (`test/unit_test/bloc_test/`) as features are migrated
+[x] Delete existing BLoC unit tests (`test/unit_test/bloc_test/`) as features are migrated
 [ ] Add repository contract tests for remaining repositories (5 of 21 have contracts)
 [ ] Add use-case unit tests for remaining use cases (2 of 75 have tests)
 [ ] Run `flutter test` — all pass

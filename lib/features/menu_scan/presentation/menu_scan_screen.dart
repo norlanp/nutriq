@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/features/menu_scan/presentation/menu_scan_bloc.dart';
 import 'package:nutriq/features/menu_scan/presentation/menu_items_screen.dart';
+import 'package:nutriq/features/menu_scan/presentation/notifier/menu_scan_notifier.dart';
+import 'package:nutriq/features/menu_scan/presentation/notifier/menu_scan_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MenuScanScreen extends ConsumerStatefulWidget {
@@ -15,66 +14,52 @@ class MenuScanScreen extends ConsumerStatefulWidget {
 }
 
 class _MenuScanScreenState extends ConsumerState<MenuScanScreen> {
-  late MenuScanBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = ref.read(menuScanBlocProvider);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = S.of(context);
-    return BlocProvider.value(
-      value: _bloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.menuScanTitle),
-        ),
-        body: BlocConsumer<MenuScanBloc, MenuScanState>(
-          bloc: _bloc,
-          listener: (context, state) {
-            if (state is MenuScanAdded) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(l10n.menuScanAddedCount(state.count)),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-              Navigator.of(context).pop();
-            }
-            if (state is MenuScanScanCancelled) {
-              Navigator.of(context).pop();
-            }
-          },
-          builder: (context, state) {
-            if (state is MenuScanScanning) {
-              return _buildScanningView(context, l10n);
-            }
-            if (state is MenuScanParsed) {
-              return MenuItemsScreen(items: state.items);
-            }
-            if (state is MenuScanAdding) {
-              return _buildAddingView(context, l10n);
-            }
-            if (state is MenuScanError) {
-              return _buildErrorView(context, state, l10n);
-            }
-            return _buildInitialView(context, l10n);
-          },
-        ),
+    final state = ref.watch(menuScanNotifierProvider);
+    final notifier = ref.read(menuScanNotifierProvider.notifier);
+
+    ref.listen<MenuScanState>(menuScanNotifierProvider, (prev, next) {
+      if (next.status == MenuScanStatus.added) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.menuScanAddedCount(next.addedCount)),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        Navigator.of(context).pop();
+      }
+      if (next.status == MenuScanStatus.scanCancelled) {
+        Navigator.of(context).pop();
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.menuScanTitle),
       ),
+      body: _buildBody(context, l10n, state, notifier),
     );
   }
 
-  Widget _buildInitialView(BuildContext context, S l10n) {
+  Widget _buildBody(BuildContext context, S l10n, MenuScanState state, MenuScanNotifier notifier) {
+    if (state.status == MenuScanStatus.scanning) {
+      return _buildScanningView(context, l10n);
+    }
+    if (state.status == MenuScanStatus.parsed) {
+      return MenuItemsScreen(items: state.items);
+    }
+    if (state.status == MenuScanStatus.adding) {
+      return _buildAddingView(context, l10n);
+    }
+    if (state.status == MenuScanStatus.error) {
+      return _buildErrorView(context, l10n, state, notifier);
+    }
+    return _buildInitialView(context, l10n, notifier);
+  }
+
+  Widget _buildInitialView(BuildContext context, S l10n, MenuScanNotifier notifier) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -101,21 +86,20 @@ class _MenuScanScreenState extends ConsumerState<MenuScanScreen> {
           ),
           const SizedBox(height: 40),
           FilledButton.icon(
-            onPressed: () => _bloc.add(const CaptureMenu()),
+            onPressed: () => notifier.captureMenu(),
             icon: const Icon(Icons.camera_alt),
             label: Text(l10n.menuScanCaptureButton),
           ),
           const SizedBox(height: 12),
           OutlinedButton.icon(
-            onPressed: () => _bloc.add(const PickMenuFromGallery()),
+            onPressed: () => notifier.pickMenuFromGallery(),
             icon: const Icon(Icons.photo_library),
             label: Text(l10n.menuScanGalleryButton),
           ),
           const SizedBox(height: 24),
           TextButton.icon(
             onPressed: () {
-              Navigator.of(context)
-                  .pushReplacementNamed(NavigationOptions.addMealRoute);
+              Navigator.of(context).pushReplacementNamed(NavigationOptions.addMealRoute);
             },
             icon: const Icon(Icons.search),
             label: Text(l10n.menuScanSearchManually),
@@ -151,11 +135,7 @@ class _MenuScanScreenState extends ConsumerState<MenuScanScreen> {
     );
   }
 
-  Widget _buildErrorView(
-    BuildContext context,
-    MenuScanError state,
-    S l10n,
-  ) {
+  Widget _buildErrorView(BuildContext context, S l10n, MenuScanState state, MenuScanNotifier notifier) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -169,19 +149,19 @@ class _MenuScanScreenState extends ConsumerState<MenuScanScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Text(
-              state.message,
+              state.errorMessage ?? '',
               style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: () => _bloc.add(const CaptureMenu()),
+            onPressed: () => notifier.captureMenu(),
             child: Text(l10n.retryLabel),
           ),
           const SizedBox(height: 12),
           TextButton.icon(
-            onPressed: () => _bloc.add(const PickMenuFromGallery()),
+            onPressed: () => notifier.pickMenuFromGallery(),
             icon: const Icon(Icons.photo_library),
             label: Text(l10n.menuScanGalleryButton),
           ),

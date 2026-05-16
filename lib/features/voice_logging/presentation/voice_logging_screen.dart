@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/voice_logging/domain/entity/voice_food_entry_entity.dart';
-import 'package:nutriq/features/voice_logging/presentation/voice_logging_bloc.dart';
+import 'package:nutriq/features/voice_logging/presentation/notifier/voice_logging_notifier.dart';
+import 'package:nutriq/features/voice_logging/presentation/notifier/voice_logging_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class VoiceLoggingScreen extends ConsumerStatefulWidget {
@@ -15,72 +14,53 @@ class VoiceLoggingScreen extends ConsumerStatefulWidget {
 }
 
 class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
-  late VoiceLoggingBloc _bloc;
-
   @override
   void initState() {
-    _bloc = ref.read(voiceLoggingBlocProvider);
-    _bloc.add(const InitializeVoiceLogging());
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
+    Future.microtask(() {
+      ref.read(voiceLoggingNotifierProvider.notifier).initialize();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = S.of(context);
-    return BlocProvider.value(
-      value: _bloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.voiceLoggingTitle),
-        ),
-        body: BlocConsumer<VoiceLoggingBloc, VoiceLoggingState>(
-          bloc: _bloc,
-          listener: (context, state) {
-            if (state is VoiceLoggingError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-            }
-            if (state is VoiceLoggingConfirmed) {
-              Navigator.of(context).pop(state.selectedEntries);
-            }
-          },
-          builder: (context, state) {
-            return switch (state) {
-              VoiceLoggingInitializing() => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              VoiceLoggingReady() => _buildReadyView(context, l10n, state),
-              VoiceListening() => _buildListeningView(context, l10n, state),
-              VoiceLoggingParsing() => _buildParsingView(context, l10n, state),
-              VoiceLoggingParsed() => _buildParsedView(context, l10n, state),
-              VoiceLoggingConfirmed() => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              VoiceLoggingError() => _buildErrorView(context, l10n, state),
-              _ => _buildReadyView(
-                  context,
-                  l10n,
-                  const VoiceLoggingReady(transcription: ''),
-                ),
-            };
-          },
-        ),
+    final state = ref.watch(voiceLoggingNotifierProvider);
+    final notifier = ref.read(voiceLoggingNotifierProvider.notifier);
+
+    ref.listen<VoiceLoggingState>(voiceLoggingNotifierProvider, (prev, next) {
+      if (next.status == VoiceLoggingStatus.error && next.errorMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.errorMessage!)),
+        );
+      }
+      if (next.status == VoiceLoggingStatus.confirmed) {
+        Navigator.of(context).pop(next.selectedEntries);
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.voiceLoggingTitle),
       ),
+      body: _buildBody(context, l10n, state, notifier),
     );
   }
 
-  Widget _buildReadyView(
-    BuildContext context,
-    S l10n,
-    VoiceLoggingReady state,
-  ) {
+  Widget _buildBody(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
+    return switch (state.status) {
+      VoiceLoggingStatus.initializing => const Center(child: CircularProgressIndicator()),
+      VoiceLoggingStatus.ready => _buildReadyView(context, l10n, state, notifier),
+      VoiceLoggingStatus.listening => _buildListeningView(context, l10n, state, notifier),
+      VoiceLoggingStatus.parsing => _buildParsingView(context, l10n),
+      VoiceLoggingStatus.parsed => _buildParsedView(context, l10n, state, notifier),
+      VoiceLoggingStatus.confirmed => const Center(child: CircularProgressIndicator()),
+      VoiceLoggingStatus.error => _buildErrorView(context, l10n, state, notifier),
+      _ => _buildReadyView(context, l10n, const VoiceLoggingState(status: VoiceLoggingStatus.ready), notifier),
+    };
+  }
+
+  Widget _buildReadyView(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +94,7 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
           ],
           const SizedBox(height: 40),
           FilledButton.icon(
-            onPressed: () => _bloc.add(const StartListening()),
+            onPressed: () => notifier.startListening(),
             icon: const Icon(Icons.mic),
             label: Text(l10n.voiceLoggingStartButton),
           ),
@@ -129,11 +109,7 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
     );
   }
 
-  Widget _buildListeningView(
-    BuildContext context,
-    S l10n,
-    VoiceListening state,
-  ) {
+  Widget _buildListeningView(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -174,7 +150,7 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
           ],
           const SizedBox(height: 40),
           FilledButton.icon(
-            onPressed: () => _bloc.add(const StopListening()),
+            onPressed: () => notifier.stopListening(),
             icon: const Icon(Icons.stop),
             label: Text(l10n.voiceLoggingStopButton),
           ),
@@ -183,11 +159,7 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
     );
   }
 
-  Widget _buildParsingView(
-    BuildContext context,
-    S l10n,
-    VoiceLoggingParsing state,
-  ) {
+  Widget _buildParsingView(BuildContext context, S l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -203,11 +175,7 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
     );
   }
 
-  Widget _buildParsedView(
-    BuildContext context,
-    S l10n,
-    VoiceLoggingParsed state,
-  ) {
+  Widget _buildParsedView(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
     final allSelected = state.entries.every(
       (e) => state.selectedEntries.containsKey(e),
     );
@@ -263,13 +231,10 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
                 candidates: candidates,
                 selectedCandidate: selected,
                 onCandidateSelected: (candidate) {
-                  _bloc.add(SelectFoodCandidate(
-                    entry: entry,
-                    candidate: candidate,
-                  ));
+                  notifier.selectFoodCandidate(entry, candidate);
                 },
                 onRemove: () {
-                  _bloc.add(RemoveVoiceEntry(entry: entry));
+                  notifier.removeVoiceEntry(entry);
                 },
               );
             },
@@ -281,16 +246,14 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () => _bloc.add(const ResetVoiceLogging()),
+                  onPressed: () => notifier.reset(),
                   child: Text(l10n.voiceLoggingRetryButton),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton(
-                  onPressed: allSelected
-                      ? () => _bloc.add(const ConfirmEntries())
-                      : null,
+                  onPressed: allSelected ? () => notifier.confirmEntries() : null,
                   child: Text(l10n.voiceLoggingConfirmButton),
                 ),
               ),
@@ -301,11 +264,7 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
     );
   }
 
-  Widget _buildErrorView(
-    BuildContext context,
-    S l10n,
-    VoiceLoggingError state,
-  ) {
+  Widget _buildErrorView(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -317,13 +276,13 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            state.message,
+            state.errorMessage ?? '',
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: () => _bloc.add(const InitializeVoiceLogging()),
+            onPressed: () => notifier.initialize(),
             child: Text(l10n.retryLabel),
           ),
         ],

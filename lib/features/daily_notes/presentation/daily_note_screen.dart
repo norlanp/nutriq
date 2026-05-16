@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/daily_note_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/daily_notes/presentation/daily_note_bloc.dart';
+import 'package:nutriq/features/daily_notes/presentation/notifier/daily_note_notifier.dart';
+import 'package:nutriq/features/daily_notes/presentation/notifier/daily_note_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class DailyNoteScreen extends ConsumerStatefulWidget {
@@ -22,23 +21,20 @@ class DailyNoteScreen extends ConsumerStatefulWidget {
 }
 
 class _DailyNoteScreenState extends ConsumerState<DailyNoteScreen> {
-  late DailyNoteBloc _dailyNoteBloc;
   late TextEditingController _noteController;
   Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
-    _dailyNoteBloc = ref.read(dailyNoteBlocProvider);
     _noteController = TextEditingController();
-    _dailyNoteBloc.add(LoadNote(userId: widget.userId, date: widget.date));
+    ref.read(dailyNoteNotifierProvider.notifier).loadNote(widget.userId, widget.date);
   }
 
   @override
   void dispose() {
     _debounce?.cancel();
     _noteController.dispose();
-    _dailyNoteBloc.close();
     super.dispose();
   }
 
@@ -51,7 +47,7 @@ class _DailyNoteScreenState extends ConsumerState<DailyNoteScreen> {
         date: DateTime(widget.date.year, widget.date.month, widget.date.day),
         note: value,
       );
-      _dailyNoteBloc.add(SaveNote(entity: entity));
+      ref.read(dailyNoteNotifierProvider.notifier).saveNote(entity);
     });
   }
 
@@ -61,67 +57,64 @@ class _DailyNoteScreenState extends ConsumerState<DailyNoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _dailyNoteBloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).dailyNoteLabel),
-        ),
-        body: BlocConsumer<DailyNoteBloc, DailyNoteState>(
-          bloc: _dailyNoteBloc,
-          listener: (context, state) {
-            if (state is DailyNoteSaved) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(S.of(context).dailyNoteSaved),
-                  duration: const Duration(seconds: 1),
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is DailyNoteLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is DailyNoteError) {
-              return Center(child: Text(state.message));
-            }
-            if (state is DailyNoteLoaded) {
-              if (!_noteController.text.isNotEmpty &&
-                  state.note != null &&
-                  state.note!.note.isNotEmpty) {
-                _noteController.text = state.note!.note;
-              }
-            }
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _formatDate(widget.date),
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: TextField(
-                      controller: _noteController,
-                      onChanged: _onNoteChanged,
-                      maxLines: null,
-                      expands: true,
-                      textAlignVertical: TextAlignVertical.top,
-                      decoration: InputDecoration(
-                        hintText: S.of(context).dailyNoteHint,
-                        border: const OutlineInputBorder(),
-                        filled: true,
-                      ),
-                    ),
-                  ),
-                ],
+    final state = ref.watch(dailyNoteNotifierProvider);
+
+    ref.listen<DailyNoteState>(dailyNoteNotifierProvider, (prev, next) {
+      if (next.saved && !(prev?.saved ?? false)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).dailyNoteSaved),
+            duration: const Duration(seconds: 1),
+          ),
+        );
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).dailyNoteLabel),
+      ),
+      body: _buildBody(context, state),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, DailyNoteState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    if (state.note != null &&
+        state.note!.note.isNotEmpty &&
+        _noteController.text.isEmpty) {
+      _noteController.text = state.note!.note;
+    }
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _formatDate(widget.date),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: TextField(
+              controller: _noteController,
+              onChanged: _onNoteChanged,
+              maxLines: null,
+              expands: true,
+              textAlignVertical: TextAlignVertical.top,
+              decoration: InputDecoration(
+                hintText: S.of(context).dailyNoteHint,
+                border: const OutlineInputBorder(),
+                filled: true,
               ),
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

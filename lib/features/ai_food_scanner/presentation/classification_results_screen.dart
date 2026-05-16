@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/ai_food_scanner/domain/entity/food_candidate_entity.dart';
-import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
+import 'package:nutriq/features/ai_food_scanner/presentation/notifier/ai_scanner_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class ClassificationResultsScreen extends ConsumerWidget {
@@ -16,7 +15,6 @@ class ClassificationResultsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = S.of(context);
-    final bloc = ref.read(aiScannerBlocProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +70,7 @@ class ClassificationResultsScreen extends ConsumerWidget {
               width: double.infinity,
               child: OutlinedButton.icon(
                 onPressed: () {
-                  bloc.add(const ManualSearchFallback());
+                  ref.read(aiScannerNotifierProvider.notifier).manualSearchFallback();
                   Navigator.of(context).pop();
                 },
                 icon: const Icon(Icons.search),

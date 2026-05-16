@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/data/data_export_service.dart';
-import 'package:nutriq/core/providers/usecase_providers.dart';
-import 'package:nutriq/features/data_sync/presentation/data_sync_bloc.dart';
-import 'package:nutriq/features/data_sync/presentation/data_sync_event.dart';
-import 'package:nutriq/features/data_sync/presentation/data_sync_state.dart';
+import 'package:nutriq/features/data_sync/presentation/notifier/data_sync_notifier.dart';
+import 'package:nutriq/features/data_sync/presentation/notifier/data_sync_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class CloudBackupSettingsScreen extends ConsumerWidget {
@@ -13,118 +10,108 @@ class CloudBackupSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return BlocProvider<DataSyncBloc>(
-      create: (_) => DataSyncBloc(
-        ref.read(dataExportServiceProvider),
-        ref.read(dataImportServiceProvider),
-        ref.read(encryptedBackupServiceProvider),
-      )..add(const LoadBackupStatusEvent()),
-      child: const _CloudBackupSettingsView(),
-    );
+    final notifier = ref.read(dataSyncNotifierProvider.notifier);
+    notifier.loadBackupStatus();
+    return const _CloudBackupSettingsView();
   }
 }
 
-class _CloudBackupSettingsView extends StatelessWidget {
+class _CloudBackupSettingsView extends ConsumerWidget {
   const _CloudBackupSettingsView();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = S.of(context);
+    final state = ref.watch(dataSyncNotifierProvider);
+    final notifier = ref.read(dataSyncNotifierProvider.notifier);
+
+    ref.listen<DataSyncState>(dataSyncNotifierProvider, (prev, next) {
+      if (next.status == DataSyncStatus.backupSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.dataSyncBackupCreated)),
+        );
+        notifier.loadBackupStatus();
+      } else if (next.status == DataSyncStatus.error && next.errorMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.errorMessage!)),
+        );
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.dataSyncCloudBackupTitle),
       ),
-      body: BlocConsumer<DataSyncBloc, DataSyncState>(
-        listener: (context, state) {
-          if (state is DataSyncBackupSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.dataSyncBackupCreated)),
-            );
-            context.read<DataSyncBloc>().add(const LoadBackupStatusEvent());
-          } else if (state is DataSyncError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is DataSyncLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is DataSyncBackupStatus) {
-            return ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.dataSyncLastBackup,
-                          style: Theme.of(context).textTheme.titleMedium,
+      body: state.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : state.status == DataSyncStatus.backupStatus
+              ? ListView(
+                  padding: const EdgeInsets.all(16.0),
+                  children: [
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.dataSyncLastBackup,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              state.lastBackupDate != null
+                                  ? _formatDate(state.lastBackupDate!)
+                                  : l10n.dataSyncNoBackup,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          state.lastBackupDate != null
-                              ? _formatDate(state.lastBackupDate!)
-                              : l10n.dataSyncNoBackup,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  l10n.dataSyncCloudProvider,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                ListTile(
-                  leading: const Icon(Icons.cloud_outlined),
-                  title: const Text('iCloud'),
-                  subtitle: Text(l10n.dataSyncComingSoon),
-                  enabled: false,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.cloud_outlined),
-                  title: const Text('Google Drive'),
-                  subtitle: Text(l10n.dataSyncComingSoon),
-                  enabled: false,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  l10n.dataSyncLocalEncryption,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.dataSyncLocalEncryptionDescription,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                const SizedBox(height: 8),
-                FilledButton.icon(
-                  onPressed: () => _showCreateBackupDialog(context),
-                  icon: const Icon(Icons.lock_outline),
-                  label: Text(l10n.dataSyncCreateEncryptedBackup),
-                ),
-                const SizedBox(height: 8),
-                OutlinedButton.icon(
-                  onPressed: () => _showRestoreBackupDialog(context),
-                  icon: const Icon(Icons.restore),
-                  label: Text(l10n.dataSyncRestoreFromBackup),
-                ),
-              ],
-            );
-          }
-
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
+                    const SizedBox(height: 16),
+                    Text(
+                      l10n.dataSyncCloudProvider,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    ListTile(
+                      leading: const Icon(Icons.cloud_outlined),
+                      title: const Text('iCloud'),
+                      subtitle: Text(l10n.dataSyncComingSoon),
+                      enabled: false,
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.cloud_outlined),
+                      title: const Text('Google Drive'),
+                      subtitle: Text(l10n.dataSyncComingSoon),
+                      enabled: false,
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      l10n.dataSyncLocalEncryption,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      l10n.dataSyncLocalEncryptionDescription,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 8),
+                    FilledButton.icon(
+                      onPressed: () => _showCreateBackupDialog(context, notifier),
+                      icon: const Icon(Icons.lock_outline),
+                      label: Text(l10n.dataSyncCreateEncryptedBackup),
+                    ),
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      onPressed: () => _showRestoreBackupDialog(context, notifier),
+                      icon: const Icon(Icons.restore),
+                      label: Text(l10n.dataSyncRestoreFromBackup),
+                    ),
+                  ],
+                )
+              : const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -133,7 +120,7 @@ class _CloudBackupSettingsView extends StatelessWidget {
         '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }
 
-  void _showCreateBackupDialog(BuildContext context) {
+  void _showCreateBackupDialog(BuildContext context, DataSyncNotifier notifier) {
     final passwordController = TextEditingController();
     final confirmController = TextEditingController();
 
@@ -171,18 +158,15 @@ class _CloudBackupSettingsView extends StatelessWidget {
               if (passwordController.text.isEmpty ||
                   passwordController.text != confirmController.text) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(S.of(context).dataSyncPasswordMismatch)),
+                  SnackBar(content: Text(S.of(context).dataSyncPasswordMismatch)),
                 );
                 return;
               }
               Navigator.of(dialogContext).pop();
-              context.read<DataSyncBloc>().add(
-                    CreateEncryptedBackupEvent(
-                      DataType.values.toSet(),
-                      passwordController.text,
-                    ),
-                  );
+              notifier.createEncryptedBackup(
+                DataType.values.toSet(),
+                passwordController.text,
+              );
             },
             child: Text(S.of(context).dialogOKLabel),
           ),
@@ -191,7 +175,7 @@ class _CloudBackupSettingsView extends StatelessWidget {
     );
   }
 
-  void _showRestoreBackupDialog(BuildContext context) {
+  void _showRestoreBackupDialog(BuildContext context, DataSyncNotifier notifier) {
     final pathController = TextEditingController();
     final passwordController = TextEditingController();
 
@@ -227,12 +211,7 @@ class _CloudBackupSettingsView extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<DataSyncBloc>().add(
-                    RestoreEncryptedBackupEvent(
-                      pathController.text,
-                      passwordController.text,
-                    ),
-                  );
+              notifier.restoreEncryptedBackup(pathController.text, passwordController.text);
             },
             child: Text(S.of(context).dialogOKLabel),
           ),

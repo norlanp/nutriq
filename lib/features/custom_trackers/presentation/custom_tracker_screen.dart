@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/custom_tracker_entity.dart';
 import 'package:nutriq/core/domain/entity/custom_tracker_entry_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/custom_trackers/presentation/custom_tracker_bloc.dart';
+import 'package:nutriq/features/custom_trackers/presentation/notifier/custom_tracker_notifier.dart';
+import 'package:nutriq/features/custom_trackers/presentation/notifier/custom_tracker_state.dart';
 import 'package:nutriq/features/custom_trackers/presentation/widgets/scale_slider_widget.dart';
 import 'package:nutriq/features/custom_trackers/presentation/widgets/boolean_toggle_widget.dart';
 import 'package:nutriq/features/custom_trackers/presentation/widgets/text_input_widget.dart';
@@ -15,23 +14,15 @@ class CustomTrackerScreen extends ConsumerStatefulWidget {
   const CustomTrackerScreen({super.key});
 
   @override
-  ConsumerState<CustomTrackerScreen> createState() => _CustomTrackerScreenState();
+  ConsumerState<CustomTrackerScreen> createState() =>
+      _CustomTrackerScreenState();
 }
 
 class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
-  late CustomTrackerBloc _bloc;
-
   @override
   void initState() {
-    _bloc = ref.read(customTrackerBlocProvider);
-    _bloc.add(const LoadTrackers(userId: 0));
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
+    ref.read(customTrackerNotifierProvider.notifier).loadTrackers(0);
   }
 
   void _showCreateTrackerDialog() {
@@ -91,7 +82,8 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                             labelText: S.of(context).minValue,
                           ),
                           keyboardType: TextInputType.number,
-                          onChanged: (v) => minVal = double.tryParse(v) ?? 0,
+                          onChanged: (v) =>
+                              minVal = double.tryParse(v) ?? 0,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -101,7 +93,8 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                             labelText: S.of(context).maxValue,
                           ),
                           keyboardType: TextInputType.number,
-                          onChanged: (v) => maxVal = double.tryParse(v) ?? 10,
+                          onChanged: (v) =>
+                              maxVal = double.tryParse(v) ?? 10,
                         ),
                       ),
                     ],
@@ -137,10 +130,13 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                   min: minVal,
                   max: maxVal,
                   icon: iconController.text,
-                  unit:
-                      unitController.text.isEmpty ? null : unitController.text,
+                  unit: unitController.text.isEmpty
+                      ? null
+                      : unitController.text,
                 );
-                _bloc.add(CreateTracker(entity: entity));
+                ref
+                    .read(customTrackerNotifierProvider.notifier)
+                    .createTracker(entity);
                 Navigator.of(ctx).pop();
               },
               child: Text(S.of(context).buttonSaveLabel),
@@ -184,7 +180,9 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                   date: date,
                   value: currentValue,
                 );
-                _bloc.add(LogEntry(entity: entry));
+                ref
+                    .read(customTrackerNotifierProvider.notifier)
+                    .logEntry(entry);
                 Navigator.of(ctx).pop();
               },
               child: Text(S.of(context).buttonSaveLabel),
@@ -218,7 +216,9 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                   date: date,
                   value: currentValue ? 1.0 : 0.0,
                 );
-                _bloc.add(LogEntry(entity: entry));
+                ref
+                    .read(customTrackerNotifierProvider.notifier)
+                    .logEntry(entry);
                 Navigator.of(ctx).pop();
               },
               child: Text(S.of(context).buttonSaveLabel),
@@ -251,7 +251,9 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                   value: 0,
                   textValue: controller.text,
                 );
-                _bloc.add(LogEntry(entity: entry));
+                ref
+                    .read(customTrackerNotifierProvider.notifier)
+                    .logEntry(entry);
                 Navigator.of(ctx).pop();
               },
               child: Text(S.of(context).buttonSaveLabel),
@@ -264,87 +266,84 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _bloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).customTrackersLabel),
-        ),
-        body: BlocBuilder<CustomTrackerBloc, CustomTrackerState>(
-          bloc: _bloc,
-          builder: (context, state) {
-            if (state is CustomTrackerLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is CustomTrackerError) {
-              return Center(child: Text(state.message));
-            }
-            if (state is CustomTrackerLoaded) {
-              if (state.trackers.isEmpty) {
-                return Center(
-                  child: Text(S.of(context).createTracker),
-                );
-              }
-              return ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: state.trackers.length,
-                itemBuilder: (context, index) {
-                  final tracker = state.trackers[index];
-                  final trackerEntries = state.entries
-                      .where((e) => e.trackerId == tracker.id)
-                      .toList();
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: InkWell(
-                      onTap: () => _showLogEntryDialog(tracker),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  tracker.icon,
-                                  style: const TextStyle(fontSize: 24),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    tracker.name,
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete_outline),
-                                  onPressed: () {
-                                    _bloc.add(DeleteTracker(id: tracker.id));
-                                  },
-                                ),
-                              ],
-                            ),
-                            if (trackerEntries.isNotEmpty)
-                              TrackerTrendChart(
-                                entries: trackerEntries,
-                                trackerName: tracker.name,
-                              ),
-                          ],
+    final state = ref.watch(customTrackerNotifierProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).customTrackersLabel),
+      ),
+      body: _buildBody(context, state),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showCreateTrackerDialog,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, CustomTrackerState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    if (state.trackers.isEmpty) {
+      return Center(
+        child: Text(S.of(context).createTracker),
+      );
+    }
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: state.trackers.length,
+      itemBuilder: (context, index) {
+        final tracker = state.trackers[index];
+        final trackerEntries = state.entries
+            .where((e) => e.trackerId == tracker.id)
+            .toList();
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: InkWell(
+            onTap: () => _showLogEntryDialog(tracker),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        tracker.icon,
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          tracker.name,
+                          style:
+                              Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline),
+                        onPressed: () {
+                          ref
+                              .read(customTrackerNotifierProvider.notifier)
+                              .deleteTracker(tracker.id);
+                        },
+                      ),
+                    ],
+                  ),
+                  if (trackerEntries.isNotEmpty)
+                    TrackerTrendChart(
+                      entries: trackerEntries,
+                      trackerName: tracker.name,
                     ),
-                  );
-                },
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _showCreateTrackerDialog,
-          child: const Icon(Icons.add),
-        ),
-      ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

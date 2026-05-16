@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/data/data_export_service.dart';
-import 'package:nutriq/core/providers/usecase_providers.dart';
-import 'package:nutriq/features/data_sync/presentation/data_sync_bloc.dart';
-import 'package:nutriq/features/data_sync/presentation/data_sync_event.dart';
-import 'package:nutriq/features/data_sync/presentation/data_sync_state.dart';
+import 'package:nutriq/features/data_sync/presentation/notifier/data_sync_notifier.dart';
+import 'package:nutriq/features/data_sync/presentation/notifier/data_sync_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class ExportScreen extends ConsumerWidget {
@@ -13,115 +10,104 @@ class ExportScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return BlocProvider<DataSyncBloc>(
-      create: (_) => DataSyncBloc(
-        ref.read(dataExportServiceProvider),
-        ref.read(dataImportServiceProvider),
-        ref.read(encryptedBackupServiceProvider),
-      ),
-      child: const _ExportView(),
-    );
+    return const _ExportView();
   }
 }
 
-class _ExportView extends StatefulWidget {
+class _ExportView extends ConsumerStatefulWidget {
   const _ExportView();
 
   @override
-  State<_ExportView> createState() => _ExportViewState();
+  ConsumerState<_ExportView> createState() => _ExportViewState();
 }
 
-class _ExportViewState extends State<_ExportView> {
+class _ExportViewState extends ConsumerState<_ExportView> {
   final Set<DataType> _selectedTypes = DataType.values.toSet();
   ExportFormat _format = ExportFormat.json;
 
   @override
   Widget build(BuildContext context) {
     final l10n = S.of(context);
+    final state = ref.watch(dataSyncNotifierProvider);
+    final notifier = ref.read(dataSyncNotifierProvider.notifier);
+
+    ref.listen<DataSyncState>(dataSyncNotifierProvider, (prev, next) {
+      if (next.status == DataSyncStatus.exportSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.dataSyncExportSuccess)),
+        );
+      } else if (next.status == DataSyncStatus.error && next.errorMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.errorMessage!)),
+        );
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.dataSyncExportTitle),
       ),
-      body: BlocConsumer<DataSyncBloc, DataSyncState>(
-        listener: (context, state) {
-          if (state is DataSyncExportSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.dataSyncExportSuccess)),
-            );
-          } else if (state is DataSyncError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is DataSyncLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return ListView(
-            padding: const EdgeInsets.all(16.0),
-            children: [
-              Text(
-                l10n.dataSyncSelectDataTypes,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              ...DataType.values.map((type) => _buildTypeCheckbox(type, l10n)),
-              const SizedBox(height: 24),
-              Text(
-                l10n.dataSyncSelectFormat,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              SegmentedButton<ExportFormat>(
-                segments: [
-                  ButtonSegment(
-                    value: ExportFormat.json,
-                    label: Text(l10n.dataSyncFormatJson),
-                  ),
-                  ButtonSegment(
-                    value: ExportFormat.csv,
-                    label: Text(l10n.dataSyncFormatZip),
-                  ),
-                ],
-                selected: {_format},
-                onSelectionChanged: (selection) {
-                  setState(() => _format = selection.first);
-                },
-              ),
-              const SizedBox(height: 24),
-              FilledButton(
-                onPressed: _selectedTypes.isEmpty
-                    ? null
-                    : () {
-                        context
-                            .read<DataSyncBloc>()
-                            .add(ExportDataEvent(_selectedTypes, _format));
-                      },
-                child: Text(l10n.exportAction),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                l10n.dataSyncEncryptBackup,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.dataSyncEncryptBackupDescription,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              const SizedBox(height: 8),
-              OutlinedButton(
-                onPressed: _selectedTypes.isEmpty
-                    ? null
-                    : () => _showEncryptDialog(context),
-                child: Text(l10n.dataSyncCreateEncryptedBackup),
-              ),
-            ],
-          );
-        },
-      ),
+      body: state.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                Text(
+                  l10n.dataSyncSelectDataTypes,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                ...DataType.values.map((type) => _buildTypeCheckbox(type, l10n)),
+                const SizedBox(height: 24),
+                Text(
+                  l10n.dataSyncSelectFormat,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                SegmentedButton<ExportFormat>(
+                  segments: [
+                    ButtonSegment(
+                      value: ExportFormat.json,
+                      label: Text(l10n.dataSyncFormatJson),
+                    ),
+                    ButtonSegment(
+                      value: ExportFormat.csv,
+                      label: Text(l10n.dataSyncFormatZip),
+                    ),
+                  ],
+                  selected: {_format},
+                  onSelectionChanged: (selection) {
+                    setState(() => _format = selection.first);
+                  },
+                ),
+                const SizedBox(height: 24),
+                FilledButton(
+                  onPressed: _selectedTypes.isEmpty
+                      ? null
+                      : () {
+                          notifier.exportData(_selectedTypes, _format);
+                        },
+                  child: Text(l10n.exportAction),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.dataSyncEncryptBackup,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.dataSyncEncryptBackupDescription,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 8),
+                OutlinedButton(
+                  onPressed: _selectedTypes.isEmpty
+                      ? null
+                      : () => _showEncryptDialog(context, notifier),
+                  child: Text(l10n.dataSyncCreateEncryptedBackup),
+                ),
+              ],
+            ),
     );
   }
 
@@ -171,7 +157,7 @@ class _ExportViewState extends State<_ExportView> {
     }
   }
 
-  void _showEncryptDialog(BuildContext context) {
+  void _showEncryptDialog(BuildContext context, DataSyncNotifier notifier) {
     final passwordController = TextEditingController();
     final confirmController = TextEditingController();
 
@@ -209,18 +195,12 @@ class _ExportViewState extends State<_ExportView> {
               if (passwordController.text.isEmpty ||
                   passwordController.text != confirmController.text) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(S.of(context).dataSyncPasswordMismatch)),
+                  SnackBar(content: Text(S.of(context).dataSyncPasswordMismatch)),
                 );
                 return;
               }
               Navigator.of(dialogContext).pop();
-              context.read<DataSyncBloc>().add(
-                    CreateEncryptedBackupEvent(
-                      _selectedTypes,
-                      passwordController.text,
-                    ),
-                  );
+              notifier.createEncryptedBackup(_selectedTypes, passwordController.text);
             },
             child: Text(S.of(context).dialogOKLabel),
           ),

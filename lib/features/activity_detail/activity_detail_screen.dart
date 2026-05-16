@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
 import 'package:nutriq/core/domain/entity/user_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
+import 'package:nutriq/features/activity_detail/presentation/notifier/activity_detail_notifier.dart';
+import 'package:nutriq/features/activity_detail/presentation/notifier/activity_detail_state.dart';
 import 'package:nutriq/features/activity_detail/presentation/widget/activity_detail_bottom_sheet.dart';
 import 'package:nutriq/features/activity_detail/presentation/widget/activity_info_button.dart';
 import 'package:nutriq/features/activity_detail/presentation/widget/activity_title_expanded.dart';
@@ -32,17 +31,14 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
   late DateTime _day;
   late TextEditingController quantityTextController;
 
-  late ActivityDetailBloc _activityDetailBloc;
-
   late double totalQuantity;
   late double totalKcal;
 
   @override
   void initState() {
-    _activityDetailBloc = ref.read(activityDetailBlocProvider);
     quantityTextController = TextEditingController();
     quantityTextController.text = "0";
-    totalQuantity = 0; // TODO change to 60
+    totalQuantity = 0;
     totalKcal = 0;
     super.initState();
   }
@@ -54,42 +50,40 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
     activityEntity = args.activityEntity;
     _day = args.day;
     quantityTextController.addListener(() {});
+    ref.read(activityDetailNotifierProvider.notifier).loadActivityDetail(activityEntity);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(activityDetailNotifierProvider);
+    final notifier = ref.read(activityDetailNotifierProvider.notifier);
+
     return Scaffold(
-      body: BlocBuilder<ActivityDetailBloc, ActivityDetailState>(
-        bloc: _activityDetailBloc,
-        builder: (context, state) {
-          if (state is ActivityDetailInitial) {
-            _activityDetailBloc
-                .add(LoadActivityDetailEvent(context, activityEntity));
-            return getLoadingContent();
-          } else if (state is ActivityDetailLoadingState) {
-            return getLoadingContent();
-          } else if (state is ActivityDetailLoadedState) {
-            quantityTextController.addListener(() {
-              _onQuantityChanged(quantityTextController.text, state.userEntity);
-            });
-            return getLoadedContent(state.totalKcalBurned, state.userEntity);
-          } else {
-            return const SizedBox();
-          }
-        },
-      ),
+      body: _buildBody(context, state, notifier),
       bottomSheet: ActivityDetailBottomSheet(
         onAddButtonPressed: onAddButtonPressed,
         quantityTextController: quantityTextController,
         activityEntity: activityEntity,
-        activityDetailBloc: _activityDetailBloc,
+        notifier: notifier,
       ),
     );
   }
 
-  Widget getLoadingContent() {
-    return const Center(child: CircularProgressIndicator());
+  Widget _buildBody(BuildContext context, ActivityDetailState state, ActivityDetailNotifier notifier) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    if (state.isLoaded && state.userEntity != null) {
+      quantityTextController.addListener(() {
+        _onQuantityChanged(quantityTextController.text, state.userEntity!, notifier);
+      });
+      return getLoadedContent(state.totalKcalBurned, state.userEntity!);
+    }
+    return const SizedBox();
   }
 
   Widget getLoadedContent(double totalKcalBurned, UserEntity userEntity) {
@@ -106,7 +100,7 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
                     MediaQuery.of(context).padding.top + kToolbarHeight;
                 const offset = 10;
                 return FlexibleSpaceBar(
-                  expandedTitleScale: 1, // don't scale title
+                  expandedTitleScale: 1,
                   background: ActivityTitleExpanded(activity: activityEntity),
                   title: AnimatedOpacity(
                     opacity: 1.0,
@@ -150,7 +144,6 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
               children: [
                 Row(
                   children: [
-                    // set Focus
                     Text('~${totalKcal.toInt()} ${S.of(context).kcalLabel}',
                         style: Theme.of(context).textTheme.headlineSmall),
                     Text(' / ${totalQuantity.toInt()} min')
@@ -160,7 +153,7 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
                 const Divider(),
                 const SizedBox(height: 48.0),
                 const ActivityInfoButton(),
-                const SizedBox(height: 200.0) // height added to scroll
+                const SizedBox(height: 200.0)
               ],
             ),
           )
@@ -169,11 +162,10 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
     );
   }
 
-  void _onQuantityChanged(String quantityString, UserEntity userEntity) async {
+  void _onQuantityChanged(String quantityString, UserEntity userEntity, ActivityDetailNotifier notifier) async {
     try {
       final newQuantity = double.parse(quantityString);
-      final newTotalKcal = _activityDetailBloc.getTotalKcalBurned(
-          userEntity, activityEntity, newQuantity);
+      final newTotalKcal = notifier.getTotalKcalBurned(userEntity, activityEntity, newQuantity);
       setState(() {
         totalQuantity = newQuantity;
         totalKcal = newTotalKcal;
@@ -190,17 +182,13 @@ class _ActivityDetailScreenState extends ConsumerState<ActivityDetailScreen> {
   }
 
   void onAddButtonPressed(BuildContext context) {
-    _activityDetailBloc.persistActivity(
-        context, quantityTextController.text, totalKcal, activityEntity, _day);
+    ref.read(activityDetailNotifierProvider.notifier).persistActivity(
+        quantityTextController.text, totalKcal, activityEntity, _day);
 
-    // Refresh Home Page
     ref.read(homeNotifierProvider.notifier).loadItems();
-
-    // Refresh Diary Page
     ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
     ref.read(calendarDayNotifierProvider.notifier).refreshCalendarDay();
 
-    // Show snackbar and return to dashboard
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.of(context).infoAddedActivityLabel)));
     Navigator.of(context)

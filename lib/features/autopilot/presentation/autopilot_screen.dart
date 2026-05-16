@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutriq/core/domain/entity/exercise_calorie_mode_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/autopilot/presentation/autopilot_bloc.dart';
+import 'package:nutriq/core/domain/entity/exercise_calorie_mode_entity.dart';
+import 'package:nutriq/features/autopilot/presentation/notifier/autopilot_notifier.dart';
+import 'package:nutriq/features/autopilot/presentation/notifier/autopilot_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class AutopilotScreen extends ConsumerStatefulWidget {
@@ -14,51 +13,41 @@ class AutopilotScreen extends ConsumerStatefulWidget {
 }
 
 class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
-  late AutopilotBloc _bloc;
-
   @override
   void initState() {
-    _bloc = ref.read(autopilotBlocProvider);
-    _bloc.add(const LoadAutopilotStatus(userId: 0));
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
+    Future.microtask(() {
+      ref.read(autopilotNotifierProvider.notifier).loadStatus(0);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = S.of(context);
+    final state = ref.watch(autopilotNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.autopilotLabel),
       ),
-      body: BlocBuilder<AutopilotBloc, AutopilotState>(
-        bloc: _bloc,
-        builder: (context, state) {
-          if (state is AutopilotLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is AutopilotError) {
-            return Center(child: Text(state.message));
-          }
-          if (state is AutopilotLoaded) {
-            return _buildContent(context, state, l10n);
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+      body: _buildBody(context, l10n, state),
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    AutopilotLoaded state,
-    S l10n,
-  ) {
+  Widget _buildBody(BuildContext context, S l10n, AutopilotState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    if (!state.isLoaded) {
+      return const SizedBox.shrink();
+    }
+    return _buildContent(context, l10n, state);
+  }
+
+  Widget _buildContent(BuildContext context, S l10n, AutopilotState state) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -74,11 +63,11 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
           ),
           value: state.isEnabled,
           onChanged: (value) {
-            _bloc.add(ToggleAutopilot(
-              userId: 0,
-              enabled: value,
-              baselineCalories: state.baselineCalories,
-            ));
+            ref.read(autopilotNotifierProvider.notifier).toggleAutopilot(
+                  0,
+                  value,
+                  state.baselineCalories,
+                );
           },
         ),
         const Divider(),
@@ -118,7 +107,9 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
         ListTile(
           title: Text(l10n.lastAdjustment),
           subtitle: Text(
-            '${state.lastAdjustmentDate.day}.${state.lastAdjustmentDate.month}.${state.lastAdjustmentDate.year}',
+            state.lastAdjustmentDate != null
+                ? '${state.lastAdjustmentDate!.day}.${state.lastAdjustmentDate!.month}.${state.lastAdjustmentDate!.year}'
+                : '',
           ),
         ),
         const SizedBox(height: 16),
@@ -135,7 +126,7 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
             groupValue: state.exerciseCalorieMode,
             onChanged: (value) {
               if (value != null) {
-                _bloc.add(ToggleExerciseCredit(mode: value));
+                ref.read(autopilotNotifierProvider.notifier).toggleExerciseCredit(value);
               }
             },
           ),
@@ -153,7 +144,7 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
                     divisions: 20,
                     label: '${(state.exerciseCreditPercent * 100).round()}%',
                     onChanged: (value) {
-                      _bloc.add(SetExerciseCreditPercent(percent: value));
+                      ref.read(autopilotNotifierProvider.notifier).setExerciseCreditPercent(value);
                     },
                   ),
                 ),
@@ -171,10 +162,10 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
         FilledButton.icon(
           onPressed: state.isEnabled
               ? () {
-                  _bloc.add(RecalculateBudget(
-                    userId: 0,
-                    baselineCalories: state.baselineCalories,
-                  ));
+                  ref.read(autopilotNotifierProvider.notifier).recalculateBudget(
+                        0,
+                        state.baselineCalories,
+                      );
                 }
               : null,
           icon: const Icon(Icons.refresh),

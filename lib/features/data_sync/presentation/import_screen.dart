@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
-import 'package:nutriq/features/data_sync/presentation/data_sync_bloc.dart';
-import 'package:nutriq/features/data_sync/presentation/data_sync_event.dart';
-import 'package:nutriq/features/data_sync/presentation/data_sync_state.dart';
+import 'package:nutriq/features/data_sync/presentation/notifier/data_sync_notifier.dart';
+import 'package:nutriq/features/data_sync/presentation/notifier/data_sync_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class ImportScreen extends ConsumerWidget {
@@ -12,14 +10,7 @@ class ImportScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return BlocProvider<DataSyncBloc>(
-      create: (_) => DataSyncBloc(
-        ref.read(dataExportServiceProvider),
-        ref.read(dataImportServiceProvider),
-        ref.read(encryptedBackupServiceProvider),
-      ),
-      child: const _ImportView(),
-    );
+    return const _ImportView();
   }
 }
 
@@ -29,75 +20,65 @@ class _ImportView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = S.of(context);
+    final state = ref.watch(dataSyncNotifierProvider);
+    final notifier = ref.read(dataSyncNotifierProvider.notifier);
+
+    ref.listen<DataSyncState>(dataSyncNotifierProvider, (prev, next) {
+      if (next.status == DataSyncStatus.importSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.dataSyncImportSuccess)),
+        );
+      } else if (next.status == DataSyncStatus.importPreview && next.previewData != null) {
+        _showPreviewDialog(context, ref, next.previewData!);
+      } else if (next.status == DataSyncStatus.error && next.errorMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.errorMessage!)),
+        );
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.dataSyncImportTitle),
       ),
-      body: BlocConsumer<DataSyncBloc, DataSyncState>(
-        listener: (context, state) {
-          if (state is DataSyncImportSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.dataSyncImportSuccess)),
-            );
-          } else if (state is DataSyncImportPreview) {
-            _showPreviewDialog(context, ref, state.data);
-          } else if (state is DataSyncError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is DataSyncLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return ListView(
-            padding: const EdgeInsets.all(16.0),
-            children: [
-              Text(
-                l10n.dataSyncImportDescription,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 24),
-              FilledButton.icon(
-                onPressed: () => _handleJsonImport(context),
-                icon: const Icon(Icons.description_outlined),
-                label: Text(l10n.dataSyncImportJson),
-              ),
-              const SizedBox(height: 12),
-              FilledButton.icon(
-                onPressed: () => _handleZipImport(context),
-                icon: const Icon(Icons.folder_zip_outlined),
-                label: Text(l10n.dataSyncImportZip),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                l10n.dataSyncEncryptedRestore,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              OutlinedButton.icon(
-                onPressed: () => _handleEncryptedRestore(context),
-                icon: const Icon(Icons.lock_outline),
-                label: Text(l10n.dataSyncRestoreEncrypted),
-              ),
-            ],
-          );
-        },
-      ),
+      body: state.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                Text(
+                  l10n.dataSyncImportDescription,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 24),
+                FilledButton.icon(
+                  onPressed: () => notifier.importData(isZip: false),
+                  icon: const Icon(Icons.description_outlined),
+                  label: Text(l10n.dataSyncImportJson),
+                ),
+                const SizedBox(height: 12),
+                FilledButton.icon(
+                  onPressed: () => notifier.importData(isZip: true),
+                  icon: const Icon(Icons.folder_zip_outlined),
+                  label: Text(l10n.dataSyncImportZip),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  l10n.dataSyncEncryptedRestore,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                OutlinedButton.icon(
+                  onPressed: () => _handleEncryptedRestore(context, notifier),
+                  icon: const Icon(Icons.lock_outline),
+                  label: Text(l10n.dataSyncRestoreEncrypted),
+                ),
+              ],
+            ),
     );
   }
 
-  void _handleJsonImport(BuildContext context) {
-    context.read<DataSyncBloc>().add(const ImportDataEvent(isZip: false));
-  }
-
-  void _handleZipImport(BuildContext context) {
-    context.read<DataSyncBloc>().add(const ImportDataEvent(isZip: true));
-  }
-
-  void _handleEncryptedRestore(BuildContext context) {
+  void _handleEncryptedRestore(BuildContext context, DataSyncNotifier notifier) {
     final passwordController = TextEditingController();
     final pathController = TextEditingController();
 
@@ -132,12 +113,7 @@ class _ImportView extends ConsumerWidget {
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<DataSyncBloc>().add(
-                    RestoreEncryptedBackupEvent(
-                      pathController.text,
-                      passwordController.text,
-                    ),
-                  );
+              notifier.restoreEncryptedBackup(pathController.text, passwordController.text);
             },
             child: Text(S.of(context).dialogOKLabel),
           ),
@@ -149,6 +125,7 @@ class _ImportView extends ConsumerWidget {
   void _showPreviewDialog(BuildContext context, WidgetRef ref, Map<String, dynamic> data) {
     final l10n = S.of(context);
     final importService = ref.read(dataImportServiceProvider);
+    final notifier = ref.read(dataSyncNotifierProvider.notifier);
     final entries = <Widget>[];
 
     final typeLabels = {
@@ -195,7 +172,7 @@ class _ImportView extends ConsumerWidget {
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<DataSyncBloc>().add(const ImportDataEvent());
+              notifier.importData();
             },
             child: Text(l10n.importAction),
           ),

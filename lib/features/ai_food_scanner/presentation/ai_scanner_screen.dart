@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
-import 'package:nutriq/features/ai_food_scanner/presentation/ai_scanner_bloc.dart';
+import 'package:nutriq/features/ai_food_scanner/presentation/notifier/ai_scanner_notifier.dart';
+import 'package:nutriq/features/ai_food_scanner/presentation/notifier/ai_scanner_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class AiScannerScreen extends ConsumerStatefulWidget {
@@ -14,58 +13,43 @@ class AiScannerScreen extends ConsumerStatefulWidget {
 }
 
 class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
-  late AiScannerBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = ref.read(aiScannerBlocProvider);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = S.of(context);
-    return BlocProvider.value(
-      value: _bloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.aiScannerTitle),
-        ),
-        body: BlocConsumer<AiScannerBloc, AiScannerState>(
-          bloc: _bloc,
-          listener: (context, state) {
-            if (state is AiScannerResultSelected) {
-              Navigator.of(context).pop(state.candidate);
-            }
-            if (state is AiScannerManualSearch) {
-              Navigator.of(context)
-                  .pushReplacementNamed(NavigationOptions.addMealRoute);
-            }
-          },
-          builder: (context, state) {
-            if (state is AiScannerCapturing) {
-              return _buildCapturingView(context);
-            }
-            if (state is AiScannerClassified) {
-              return _buildClassifiedView(context, state, l10n);
-            }
-            if (state is AiScannerError) {
-              return _buildErrorView(context, state, l10n);
-            }
-            return _buildInitialView(context, l10n);
-          },
-        ),
+    final state = ref.watch(aiScannerNotifierProvider);
+    final notifier = ref.read(aiScannerNotifierProvider.notifier);
+
+    ref.listen<AiScannerState>(aiScannerNotifierProvider, (prev, next) {
+      if (next.status == AiScannerStatus.resultSelected && next.selectedCandidate != null) {
+        Navigator.of(context).pop(next.selectedCandidate);
+      }
+      if (next.status == AiScannerStatus.manualSearch) {
+        Navigator.of(context).pushReplacementNamed(NavigationOptions.addMealRoute);
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.aiScannerTitle),
       ),
+      body: _buildBody(context, l10n, state, notifier),
     );
   }
 
-  Widget _buildInitialView(BuildContext context, S l10n) {
+  Widget _buildBody(BuildContext context, S l10n, AiScannerState state, AiScannerNotifier notifier) {
+    if (state.status == AiScannerStatus.capturing || state.isLoading) {
+      return _buildCapturingView(context);
+    }
+    if (state.status == AiScannerStatus.classified) {
+      return _buildClassifiedView(context, l10n, state, notifier);
+    }
+    if (state.status == AiScannerStatus.error) {
+      return _buildErrorView(context, l10n, state, notifier);
+    }
+    return _buildInitialView(context, l10n, notifier);
+  }
+
+  Widget _buildInitialView(BuildContext context, S l10n, AiScannerNotifier notifier) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -83,19 +67,19 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
           ),
           const SizedBox(height: 40),
           FilledButton.icon(
-            onPressed: () => _bloc.add(const CaptureAndClassify()),
+            onPressed: () => notifier.captureAndClassify(),
             icon: const Icon(Icons.camera_alt),
             label: Text(l10n.aiScannerCaptureButton),
           ),
           const SizedBox(height: 12),
           OutlinedButton.icon(
-            onPressed: () => _bloc.add(const PickFromGallery()),
+            onPressed: () => notifier.pickFromGallery(),
             icon: const Icon(Icons.photo_library),
             label: Text(l10n.aiScannerGalleryButton),
           ),
           const SizedBox(height: 24),
           TextButton.icon(
-            onPressed: () => _bloc.add(const ManualSearchFallback()),
+            onPressed: () => notifier.manualSearchFallback(),
             icon: const Icon(Icons.search),
             label: Text(l10n.aiScannerSearchManually),
           ),
@@ -104,7 +88,6 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
     );
   }
 
-  // TODO: Replace with live camera viewfinder using camera plugin
   Widget _buildCapturingView(BuildContext context) {
     return const Center(
       child: Column(
@@ -118,11 +101,7 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
     );
   }
 
-  Widget _buildClassifiedView(
-    BuildContext context,
-    AiScannerClassified state,
-    S l10n,
-  ) {
+  Widget _buildClassifiedView(BuildContext context, S l10n, AiScannerState state, AiScannerNotifier notifier) {
     return Column(
       children: [
         Padding(
@@ -137,12 +116,10 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
             itemCount: state.results.length,
             itemBuilder: (context, index) {
               final candidate = state.results[index];
-              final confidencePct =
-                  (candidate.confidence * 100).toStringAsFixed(0);
+              final confidencePct = (candidate.confidence * 100).toStringAsFixed(0);
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.primaryContainer,
+                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                   child: Text(
                     '$confidencePct%',
                     style: TextStyle(
@@ -152,17 +129,15 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
                   ),
                 ),
                 title: Text(candidate.name),
-                subtitle: Text(
-                  l10n.aiScannerConfidence(confidencePct),
-                ),
+                subtitle: Text(l10n.aiScannerConfidence(confidencePct)),
                 trailing: IconButton(
                   icon: const Icon(Icons.add_circle_outline),
                   onPressed: () {
-                    _bloc.add(SelectResult(candidate: candidate));
+                    notifier.selectResult(candidate);
                   },
                 ),
                 onTap: () {
-                  _bloc.add(SelectResult(candidate: candidate));
+                  notifier.selectResult(candidate);
                 },
               );
             },
@@ -171,7 +146,7 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextButton.icon(
-            onPressed: () => _bloc.add(const ManualSearchFallback()),
+            onPressed: () => notifier.manualSearchFallback(),
             icon: const Icon(Icons.search),
             label: Text(l10n.aiScannerSearchManually),
           ),
@@ -180,11 +155,7 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
     );
   }
 
-  Widget _buildErrorView(
-    BuildContext context,
-    AiScannerError state,
-    S l10n,
-  ) {
+  Widget _buildErrorView(BuildContext context, S l10n, AiScannerState state, AiScannerNotifier notifier) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -196,18 +167,18 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            state.message,
+            state.errorMessage ?? '',
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: () => _bloc.add(const CaptureAndClassify()),
+            onPressed: () => notifier.captureAndClassify(),
             child: Text(l10n.retryLabel),
           ),
           const SizedBox(height: 12),
           TextButton.icon(
-            onPressed: () => _bloc.add(const ManualSearchFallback()),
+            onPressed: () => notifier.manualSearchFallback(),
             icon: const Icon(Icons.search),
             label: Text(l10n.aiScannerSearchManually),
           ),

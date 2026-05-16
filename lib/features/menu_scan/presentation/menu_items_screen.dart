@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/food_grade.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/features/menu_scan/domain/entity/scanned_menu_item.dart';
-import 'package:nutriq/features/menu_scan/presentation/menu_scan_bloc.dart';
+import 'package:nutriq/features/menu_scan/presentation/notifier/menu_scan_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MenuItemsScreen extends ConsumerWidget {
@@ -14,7 +13,7 @@ class MenuItemsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = S.of(context);
-    final bloc = ref.read(menuScanBlocProvider);
+    final notifier = ref.read(menuScanNotifierProvider.notifier);
     final selectedCount = items.where((i) => i.isSelected).length;
 
     return Column(
@@ -45,9 +44,9 @@ class MenuItemsScreen extends ConsumerWidget {
                 item: item,
                 onTap: () {
                   if (item.isSelected) {
-                    bloc.add(DeselectItem(item: item));
+                    notifier.deselectItem(item);
                   } else {
-                    bloc.add(SelectItem(item: item));
+                    notifier.selectItem(item);
                   }
                 },
               );
@@ -59,7 +58,7 @@ class MenuItemsScreen extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: FilledButton.icon(
-                onPressed: () => bloc.add(const AddSelected()),
+                onPressed: () => notifier.addSelected(),
                 icon: const Icon(Icons.add_shopping_cart),
                 label: Text(l10n.menuScanAddSelected(selectedCount)),
               ),
@@ -109,8 +108,8 @@ class _MenuItemCard extends StatelessWidget {
                     child: Text(
                       item.name,
                       style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                   ),
                   if (item.menuPrice != null) ...[

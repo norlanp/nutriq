@@ -1,10 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
+import 'package:nutriq/features/meal_timing/presentation/notifier/meal_timing_notifier.dart';
+import 'package:nutriq/features/meal_timing/presentation/notifier/meal_timing_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MealTimingScreen extends ConsumerStatefulWidget {
@@ -15,7 +14,6 @@ class MealTimingScreen extends ConsumerStatefulWidget {
 }
 
 class _MealTimingScreenState extends ConsumerState<MealTimingScreen> {
-  late MealTimingBloc _bloc;
   DateTime _startDate = _startOfWeek(DateTime.now());
 
   static DateTime _startOfWeek(DateTime date) {
@@ -26,54 +24,56 @@ class _MealTimingScreenState extends ConsumerState<MealTimingScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc = ref.read(mealTimingBlocProvider);
-    _bloc.add(LoadMealTimingWeek(startDate: _startDate));
+    Future.microtask(() {
+      ref.read(mealTimingNotifierProvider.notifier).loadMealTimingWeek(_startDate);
+    });
   }
 
   void _changeWeek(int offset) {
     setState(() {
       _startDate = _startDate.add(Duration(days: 7 * offset));
     });
-    _bloc.add(LoadMealTimingWeek(startDate: _startDate));
+    ref.read(mealTimingNotifierProvider.notifier).loadMealTimingWeek(_startDate);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = S.of(context);
+    final state = ref.watch(mealTimingNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.mealTimingLabel),
       ),
-      body: BlocBuilder<MealTimingBloc, MealTimingState>(
-        bloc: _bloc,
-        builder: (context, state) {
-          if (state is MealTimingLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is MealTimingError) {
-            return Center(child: Text(state.message));
-          }
-          if (state is MealTimingLoaded) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildWeekNavigator(context),
-                  const SizedBox(height: 16),
-                  _buildAvgMealTimesCard(context, state),
-                  const SizedBox(height: 16),
-                  _buildDistributionChart(context, state),
-                  const SizedBox(height: 16),
-                  _buildIntakeList(context, state),
-                ],
-              ),
-            );
-          }
-          return const SizedBox();
-        },
-      ),
+      body: _buildBody(context, l10n, state),
     );
+  }
+
+  Widget _buildBody(BuildContext context, S l10n, MealTimingState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    if (state.isLoaded) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildWeekNavigator(context),
+            const SizedBox(height: 16),
+            _buildAvgMealTimesCard(context, state),
+            const SizedBox(height: 16),
+            _buildDistributionChart(context, state),
+            const SizedBox(height: 16),
+            _buildIntakeList(context, state),
+          ],
+        ),
+      );
+    }
+    return const SizedBox();
   }
 
   Widget _buildWeekNavigator(BuildContext context) {
@@ -100,7 +100,7 @@ class _MealTimingScreenState extends ConsumerState<MealTimingScreen> {
     );
   }
 
-  Widget _buildAvgMealTimesCard(BuildContext context, MealTimingLoaded state) {
+  Widget _buildAvgMealTimesCard(BuildContext context, MealTimingState state) {
     final l10n = S.of(context);
     if (state.avgMealTimes.isEmpty) {
       return Card(
@@ -144,7 +144,7 @@ class _MealTimingScreenState extends ConsumerState<MealTimingScreen> {
     );
   }
 
-  Widget _buildDistributionChart(BuildContext context, MealTimingLoaded state) {
+  Widget _buildDistributionChart(BuildContext context, MealTimingState state) {
     final l10n = S.of(context);
     if (state.intakes.where((i) => i.time != null).isEmpty) {
       return const SizedBox();
@@ -168,7 +168,7 @@ class _MealTimingScreenState extends ConsumerState<MealTimingScreen> {
     );
   }
 
-  Widget _buildIntakeList(BuildContext context, MealTimingLoaded state) {
+  Widget _buildIntakeList(BuildContext context, MealTimingState state) {
     final l10n = S.of(context);
     final intakesWithTime = state.intakes.where((i) => i.time != null).toList();
     if (intakesWithTime.isEmpty) {
@@ -247,7 +247,7 @@ class _MealTimingScreenState extends ConsumerState<MealTimingScreen> {
 }
 
 class _MealTimingScatterChart extends StatelessWidget {
-  final MealTimingLoaded state;
+  final MealTimingState state;
 
   const _MealTimingScatterChart({required this.state});
 
@@ -256,8 +256,8 @@ class _MealTimingScatterChart extends StatelessWidget {
     final spots = <ScatterSpot>[];
 
     for (final intake in state.intakes) {
-      if (intake.time != null) {
-        final dayOffset = intake.dateTime.difference(state.startDate).inDays;
+      if (intake.time != null && state.startDate != null) {
+        final dayOffset = intake.dateTime.difference(state.startDate!).inDays;
         if (dayOffset >= 0 && dayOffset < 7) {
           spots.add(ScatterSpot(
             dayOffset.toDouble(),

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nutriq/core/domain/entity/physical_activity_entity.dart';
-import 'package:nutriq/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
+import 'package:nutriq/features/activity_detail/presentation/notifier/activity_detail_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class ActivityDetailBottomSheet extends StatefulWidget {
   final Function(BuildContext) onAddButtonPressed;
   final PhysicalActivityEntity activityEntity;
   final TextEditingController quantityTextController;
-  final ActivityDetailBloc activityDetailBloc;
+  final ActivityDetailNotifier notifier;
 
-  const ActivityDetailBottomSheet(
-      {super.key,
-      required this.onAddButtonPressed,
-      required this.quantityTextController,
-      required this.activityEntity,
-      required this.activityDetailBloc});
+  const ActivityDetailBottomSheet({
+    super.key,
+    required this.onAddButtonPressed,
+    required this.quantityTextController,
+    required this.activityEntity,
+    required this.notifier,
+  });
 
   @override
   State<ActivityDetailBottomSheet> createState() =>
@@ -83,7 +84,7 @@ class _ActivityDetailBottomSheetState extends State<ActivityDetailBottomSheet> {
                       ],
                     ),
                     SizedBox(
-                      width: double.infinity, // Make button full width
+                      width: double.infinity,
                       child: ElevatedButton.icon(
                           onPressed: () {
                             widget.onAddButtonPressed(context);

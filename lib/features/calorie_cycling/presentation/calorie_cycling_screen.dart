@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/calorie_cycling/presentation/calorie_cycling_bloc.dart';
+import 'package:nutriq/features/calorie_cycling/presentation/notifier/calorie_cycling_notifier.dart';
+import 'package:nutriq/features/calorie_cycling/presentation/notifier/calorie_cycling_state.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class CalorieCyclingScreen extends ConsumerStatefulWidget {
@@ -15,7 +14,6 @@ class CalorieCyclingScreen extends ConsumerStatefulWidget {
 }
 
 class _CalorieCyclingScreenState extends ConsumerState<CalorieCyclingScreen> {
-  late CalorieCyclingBloc _bloc;
   final _weekdayLabels = <int, String>{};
   late Map<int, double> _weekdayTargets;
   bool _isEnabled = false;
@@ -23,15 +21,10 @@ class _CalorieCyclingScreenState extends ConsumerState<CalorieCyclingScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc = ref.read(calorieCyclingBlocProvider);
     _weekdayTargets = {};
-    _bloc.add(const LoadCycle());
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
+    Future.microtask(() {
+      ref.read(calorieCyclingNotifierProvider.notifier).loadCycle();
+    });
   }
 
   String _getWeekdayLabel(int weekday, S l10n) {
@@ -65,37 +58,37 @@ class _CalorieCyclingScreenState extends ConsumerState<CalorieCyclingScreen> {
   Widget build(BuildContext context) {
     final l10n = S.of(context);
     _initWeekdayLabels(l10n);
+    final state = ref.watch(calorieCyclingNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.calorieCyclingLabel),
       ),
-      body: BlocBuilder<CalorieCyclingBloc, CalorieCyclingState>(
-        bloc: _bloc,
-        builder: (context, state) {
-          if (state is CalorieCyclingLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is CalorieCyclingError) {
-            return Center(child: Text(state.message));
-          }
-          if (state is CalorieCyclingLoaded) {
-            _isEnabled = state.isEnabled;
-            _weekdayTargets = Map.from(state.weekdayCalorieMap);
-            if (_weekdayTargets.isEmpty && widget.globalCalorieBudget != null) {
-              for (int i = 1; i <= 7; i++) {
-                _weekdayTargets[i] = widget.globalCalorieBudget!;
-              }
-            }
-            return _buildContent(context, l10n);
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+      body: _buildBody(context, l10n, state),
     );
   }
 
-  Widget _buildContent(BuildContext context, S l10n) {
+  Widget _buildBody(BuildContext context, S l10n, CalorieCyclingState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.hasError) {
+      return Center(child: Text(state.errorMessage!));
+    }
+    if (!state.isEnabled && state.weekdayCalorieMap.isEmpty && !state.isLoading) {
+      return const SizedBox.shrink();
+    }
+    _isEnabled = state.isEnabled;
+    _weekdayTargets = Map.from(state.weekdayCalorieMap);
+    if (_weekdayTargets.isEmpty && widget.globalCalorieBudget != null) {
+      for (int i = 1; i <= 7; i++) {
+        _weekdayTargets[i] = widget.globalCalorieBudget!;
+      }
+    }
+    return _buildContent(context, l10n, state);
+  }
+
+  Widget _buildContent(BuildContext context, S l10n, CalorieCyclingState state) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -108,7 +101,7 @@ class _CalorieCyclingScreenState extends ConsumerState<CalorieCyclingScreen> {
           title: Text(l10n.enableCalorieCycling),
           value: _isEnabled,
           onChanged: (value) {
-            _bloc.add(ToggleCycling(enabled: value));
+            ref.read(calorieCyclingNotifierProvider.notifier).toggleCycling(value);
           },
         ),
         const Divider(),
@@ -147,8 +140,7 @@ class _CalorieCyclingScreenState extends ConsumerState<CalorieCyclingScreen> {
             isEnabled: _isEnabled,
             onChanged: (value) {
               _weekdayTargets[weekday] = value;
-              _bloc
-                  .add(SaveCycle(weekdayCalorieMap: Map.from(_weekdayTargets)));
+              ref.read(calorieCyclingNotifierProvider.notifier).saveCycle(Map.from(_weekdayTargets));
             },
           );
         }),

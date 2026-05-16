@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/service/grocery_check_service.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
-import 'package:nutriq/features/grocery_check/presentation/grocery_check_bloc.dart';
+import 'package:nutriq/features/grocery_check/presentation/notifier/grocery_check_notifier.dart';
+import 'package:nutriq/features/grocery_check/presentation/notifier/grocery_check_state.dart';
 import 'package:nutriq/features/grocery_check/presentation/widgets/barcode_scanner_page.dart';
 import 'package:nutriq/features/grocery_check/presentation/widgets/comparison_sheet.dart';
 import 'package:nutriq/features/grocery_check/presentation/widgets/product_card.dart';
@@ -17,65 +16,54 @@ class GroceryCheckScreen extends ConsumerStatefulWidget {
 }
 
 class _GroceryCheckScreenState extends ConsumerState<GroceryCheckScreen> {
-  late GroceryCheckBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = ref.read(groceryCheckBlocProvider);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    return BlocProvider<GroceryCheckBloc>(
-      create: (_) => _bloc,
-      child: BlocConsumer<GroceryCheckBloc, GroceryCheckState>(
-        listener: (context, state) {
-          if (state is GroceryCheckError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.message.contains('not found')
-                      ? s.groceryCheckProductNotFound
-                      : state.message,
-                ),
-              ),
-            );
-          } else if (state is GroceryCheckLoaded && state.items.isNotEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(s.groceryCheckItemAdded)),
-            );
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(s.groceryCheckTitle),
-              actions: [
-                if (state.items.isNotEmpty)
-                  IconButton(
-                    icon: const Icon(Icons.delete_sweep),
-                    tooltip: s.groceryCheckClearAll,
-                    onPressed: () {
-                      _bloc.add(const GroceryCheckClearList());
-                    },
-                  ),
-              ],
+    final state = ref.watch(groceryCheckNotifierProvider);
+    final notifier = ref.read(groceryCheckNotifierProvider.notifier);
+
+    ref.listen<GroceryCheckState>(groceryCheckNotifierProvider, (prev, next) {
+      if (next.status == GroceryCheckStatus.error && next.errorMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              next.errorMessage!.contains('not found')
+                  ? s.groceryCheckProductNotFound
+                  : next.errorMessage!,
             ),
-            body: _buildBody(context, state, s),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () => _scanBarcode(context),
-              child: const Icon(Icons.barcode_reader),
+          ),
+        );
+      } else if (next.status == GroceryCheckStatus.loaded && next.items.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(s.groceryCheckItemAdded)),
+        );
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(s.groceryCheckTitle),
+        actions: [
+          if (state.items.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.delete_sweep),
+              tooltip: s.groceryCheckClearAll,
+              onPressed: () {
+                notifier.clearList();
+              },
             ),
-          );
-        },
+        ],
+      ),
+      body: _buildBody(context, state, s, notifier),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _scanBarcode(context, notifier),
+        child: const Icon(Icons.barcode_reader),
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, GroceryCheckState state, S s) {
-    if (state is GroceryCheckInitial) {
+  Widget _buildBody(BuildContext context, GroceryCheckState state, S s, GroceryCheckNotifier notifier) {
+    if (state.status == GroceryCheckStatus.initial) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -93,12 +81,12 @@ class _GroceryCheckScreenState extends ConsumerState<GroceryCheckScreen> {
       );
     }
 
-    if (state is GroceryCheckLoading && state.items.isEmpty) {
+    if (state.isLoading && state.items.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
     final items = state.items;
-    final isLoading = state is GroceryCheckLoading;
+    final isLoading = state.isLoading;
 
     return Stack(
       children: [
@@ -129,7 +117,7 @@ class _GroceryCheckScreenState extends ConsumerState<GroceryCheckScreen> {
                     item: items[index],
                     index: index,
                     onRemove: () {
-                      _bloc.add(GroceryCheckRemoveProduct(index: index));
+                      notifier.removeProduct(index);
                     },
                   );
                 },
@@ -141,14 +129,14 @@ class _GroceryCheckScreenState extends ConsumerState<GroceryCheckScreen> {
     );
   }
 
-  void _scanBarcode(BuildContext context) async {
+  void _scanBarcode(BuildContext context, GroceryCheckNotifier notifier) async {
     final barcode = await Navigator.of(context).push<String>(
       MaterialPageRoute(
         builder: (context) => const BarcodeScannerPage(),
       ),
     );
     if (barcode != null && mounted) {
-      _bloc.add(GroceryCheckScanProduct(barcode: barcode));
+      notifier.scanProduct(barcode);
     }
   }
 
