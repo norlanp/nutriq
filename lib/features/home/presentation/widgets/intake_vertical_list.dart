@@ -6,7 +6,6 @@ import 'package:nutriq/core/presentation/widgets/copy_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/delete_all_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/intake_card.dart';
 import 'package:nutriq/core/presentation/widgets/placeholder_card.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/core/utils/vertical_list_popup_menu_selections.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
@@ -14,7 +13,7 @@ import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
-import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
+import 'package:nutriq/features/meal_detail/presentation/notifier/meal_detail_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class IntakeVerticalList extends ConsumerStatefulWidget {
@@ -54,11 +53,8 @@ class IntakeVerticalList extends ConsumerStatefulWidget {
 }
 
 class _IntakeVerticalListState extends ConsumerState<IntakeVerticalList> {
-  late MealDetailBloc _mealDetailBloc;
-
   @override
   void initState() {
-    _mealDetailBloc = ref.read(mealDetailBlocProvider);
     super.initState();
   }
 
@@ -223,8 +219,12 @@ class _IntakeVerticalListState extends ConsumerState<IntakeVerticalList> {
   }
 
   void _onItemDropped(IntakeEntity entity) {
-    _mealDetailBloc.addIntake(context, entity.unit, entity.amount.toString(),
-        widget.addMealType.getIntakeType(), entity.meal, entity.dateTime,
+    ref.read(mealDetailNotifierProvider.notifier).addIntake(
+        entity.unit,
+        entity.amount.toString(),
+        widget.addMealType.getIntakeType(),
+        entity.meal,
+        entity.dateTime,
         time: entity.time);
     ref.read(homeNotifierProvider.notifier).deleteIntakeItem(entity);
 

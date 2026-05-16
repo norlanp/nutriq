@@ -35,7 +35,7 @@ Strategy: migrate one feature at a time, verify each, then delete BLoC files.
 [x] Migrate weight_tracking feature
 [x] Migrate water_tracking feature
 [x] Migrate fasting_tracker feature
-[ ] Migrate meal_detail feature
+[x] Migrate meal_detail feature
 [ ] Migrate edit_meal feature
 [ ] Migrate recipe_builder feature
 [ ] Migrate recipe_catalog feature

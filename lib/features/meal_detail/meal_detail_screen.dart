@@ -1,19 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/domain/entity/allergen_type.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/presentation/widgets/meal_value_unit_text.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/providers/service_providers.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/edit_meal/presentation/edit_meal_screen.dart';
-import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
+import 'package:nutriq/features/meal_detail/presentation/notifier/meal_detail_notifier.dart';
 import 'package:nutriq/features/meal_detail/presentation/widgets/meal_detail_bottom_sheet.dart';
 import 'package:nutriq/features/meal_detail/presentation/widgets/meal_detail_macro_nutrients.dart';
 import 'package:nutriq/features/meal_detail/presentation/widgets/meal_detail_nutriments_table.dart';
@@ -38,7 +36,6 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
 
   final log = Logger('ItemDetailScreen');
 
-  late MealDetailBloc _mealDetailBloc;
   final _scrollController = ScrollController();
 
   late MealEntity meal;
@@ -54,9 +51,7 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
 
   @override
   void initState() {
-    _mealDetailBloc = ref.read(mealDetailBlocProvider);
     _loadNetCarbsConfig();
-
     super.initState();
   }
 
@@ -78,7 +73,6 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
     intakeTypeEntity = args.intakeTypeEntity;
     _usesImperialUnits = args.usesImperialUnits;
 
-    // Set initial unit
     if (_initialUnit == "") {
       if (meal.hasServingValues) {
         _initialUnit = UnitDropdownItem.serving.toString();
@@ -93,11 +87,11 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
       } else {
         _initialUnit = UnitDropdownItem.gml.toString();
       }
-      _mealDetailBloc
-          .add(UpdateKcalEvent(meal: meal, selectedUnit: _initialUnit));
+      ref
+          .read(mealDetailNotifierProvider.notifier)
+          .updateKcal(meal, selectedUnit: _initialUnit);
     }
 
-    // Set initial quantity
     if (_initialQuantity == "") {
       if (meal.hasServingValues) {
         _initialQuantity = "1";
@@ -109,8 +103,8 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
         _initialQuantity = _initialQuantityMetric;
         quantityTextController.text = _initialQuantityMetric;
       }
-      _mealDetailBloc.add(UpdateKcalEvent(
-          meal: meal, totalQuantity: quantityTextController.text));
+      ref.read(mealDetailNotifierProvider.notifier).updateKcal(
+          meal, totalQuantity: quantityTextController.text);
     }
 
     super.didChangeDependencies();
@@ -118,38 +112,27 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mealDetailState = ref.watch(mealDetailNotifierProvider);
     return SafeArea(
-      child: BlocBuilder<MealDetailBloc, MealDetailState>(
-        bloc: _mealDetailBloc,
-        builder: (context, state) {
-          if (state is MealDetailInitial) {
-            return Scaffold(
-              body: _getLoadedContent(
-                context,
-                state.totalQuantityConverted,
-                state.totalKcal,
-                state.totalCarbs,
-                state.totalNetCarbs,
-                state.totalFat,
-                state.totalProtein,
-                state.selectedUnit,
-              ),
-              bottomSheet: MealDetailBottomSheet(
-                product: meal,
-                day: _day,
-                intakeTypeEntity: intakeTypeEntity,
-                selectedUnit: state.selectedUnit,
-                mealDetailBloc: _mealDetailBloc,
-                quantityTextController: quantityTextController,
-                onQuantityOrUnitChanged: onQuantityOrUnitChanged,
-              ),
-            );
-          } else {
-            return Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-        },
+      child: Scaffold(
+        body: _getLoadedContent(
+          context,
+          mealDetailState.totalQuantityConverted,
+          mealDetailState.totalKcal,
+          mealDetailState.totalCarbs,
+          mealDetailState.totalNetCarbs,
+          mealDetailState.totalFat,
+          mealDetailState.totalProtein,
+          mealDetailState.selectedUnit,
+        ),
+        bottomSheet: MealDetailBottomSheet(
+          product: meal,
+          day: _day,
+          intakeTypeEntity: intakeTypeEntity,
+          selectedUnit: mealDetailState.selectedUnit,
+          quantityTextController: quantityTextController,
+          onQuantityOrUnitChanged: onQuantityOrUnitChanged,
+        ),
       ),
     );
   }
@@ -176,7 +159,7 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
                 MediaQuery.of(context).padding.top + kToolbarHeight;
             const offset = 10;
             return FlexibleSpaceBar(
-                expandedTitleScale: 1, // don't scale title
+                expandedTitleScale: 1,
                 background: MealTitleExpanded(
                     meal: meal, usesImperialUnits: _usesImperialUnits),
                 title: AnimatedOpacity(
@@ -288,7 +271,7 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
                         ],
                       )
                     : const SizedBox(),
-                const SizedBox(height: 200.0) // height added to scroll
+                const SizedBox(height: 200.0)
               ],
             ),
           )
@@ -301,8 +284,8 @@ class _MealDetailScreenState extends ConsumerState<MealDetailScreen> {
     if (quantityString == null || unit == null) {
       return;
     }
-    _mealDetailBloc.add(UpdateKcalEvent(
-        meal: meal, totalQuantity: quantityString, selectedUnit: unit));
+    ref.read(mealDetailNotifierProvider.notifier).updateKcal(
+        meal, totalQuantity: quantityString, selectedUnit: unit);
     _scrollToCalorieText();
   }
 

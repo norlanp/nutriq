@@ -7,7 +7,7 @@ import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
-import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
+import 'package:nutriq/features/meal_detail/presentation/notifier/meal_detail_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MealDetailBottomSheet extends ConsumerStatefulWidget {
@@ -15,7 +15,6 @@ class MealDetailBottomSheet extends ConsumerStatefulWidget {
   final DateTime day;
   final IntakeTypeEntity intakeTypeEntity;
   final TextEditingController quantityTextController;
-  final MealDetailBloc mealDetailBloc;
 
   final String selectedUnit;
 
@@ -28,7 +27,6 @@ class MealDetailBottomSheet extends ConsumerStatefulWidget {
       required this.intakeTypeEntity,
       required this.quantityTextController,
       required this.onQuantityOrUnitChanged,
-      required this.mealDetailBloc,
       required this.selectedUnit});
 
   @override
@@ -206,23 +204,19 @@ class _MealDetailBottomSheetState extends ConsumerState<MealDetailBottomSheet> {
   }
 
   void onAddButtonPressed(BuildContext context) {
-    widget.mealDetailBloc.addIntake(
-        context,
-        widget.mealDetailBloc.state.selectedUnit,
-        widget.mealDetailBloc.state.totalQuantityConverted,
+    final mealDetailState = ref.read(mealDetailNotifierProvider);
+    ref.read(mealDetailNotifierProvider.notifier).addIntake(
+        mealDetailState.selectedUnit,
+        mealDetailState.totalQuantityConverted,
         widget.intakeTypeEntity,
         widget.product,
         widget.day,
         time: _selectedTime);
 
-    // Refresh Home Page
     ref.read(homeNotifierProvider.notifier).loadItems();
-
-    // Refresh Diary Page
     ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
     ref.read(calendarDayNotifierProvider.notifier).refreshCalendarDay();
 
-    // Show snackbar and return to dashboard
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.of(context).infoAddedIntakeLabel)));
     Navigator.of(context)

@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/app_theme_entity.dart';
 import 'package:nutriq/core/presentation/widgets/app_banner_version.dart';
 import 'package:nutriq/core/presentation/widgets/disclaimer_dialog.dart';
-import 'package:nutriq/core/providers/bloc_providers.dart';
 import 'package:nutriq/core/utils/app_const.dart';
 import 'package:nutriq/core/utils/navigation_options.dart';
 import 'package:nutriq/core/providers/notifier_providers.dart';
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
 import 'package:nutriq/core/utils/url_const.dart';
-
-import 'package:nutriq/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:nutriq/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:nutriq/features/profile/presentation/notifier/profile_notifier.dart';
+import 'package:nutriq/features/settings/presentation/notifier/settings_notifier.dart';
 import 'package:nutriq/features/settings/presentation/widgets/export_import_dialog.dart';
 import 'package:nutriq/generated/l10n.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -21,6 +18,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:nutriq/features/settings/presentation/widgets/calculations_dialog.dart';
+
+enum SystemDropDownType { metric, imperial }
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -30,110 +29,94 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  late SettingsBloc _settingsBloc;
-  late ProfileBloc _profileBloc;
-
-  @override
-  void initState() {
-    _settingsBloc = ref.read(settingsBlocProvider);
-    _profileBloc = ref.read(profileBlocProvider);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final settingsAsync = ref.watch(settingsNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).settingsLabel),
       ),
-      body: BlocBuilder<SettingsBloc, SettingsState>(
-        bloc: _settingsBloc,
-        builder: (context, state) {
-          if (state is SettingsInitial) {
-            _settingsBloc.add(LoadSettingsEvent());
-          } else if (state is SettingsLoadingState) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is SettingsLoadedState) {
-            return ListView(
-              children: [
-                const SizedBox(height: 16.0),
-                ListTile(
-                  leading: const Icon(Icons.notifications_outlined),
-                  title: Text(S.of(context).notificationSettingsLabel),
-                  onTap: () => Navigator.of(context).pushNamed(
-                    NavigationOptions.notificationSettingsRoute,
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.health_and_safety_outlined),
-                  title: Text(S.of(context).healthSyncTitle),
-                  onTap: () => Navigator.of(context).pushNamed(
-                    NavigationOptions.healthSyncRoute,
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.warning_amber_outlined),
-                  title: Text(S.of(context).allergenSettingsLabel),
-                  onTap: () => Navigator.of(context).pushNamed(
-                    NavigationOptions.allergenSettingsRoute,
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.ac_unit_outlined),
-                  title: Text(S.of(context).settingsUnitsLabel),
-                  onTap: () =>
-                      _showUnitsDialog(context, state.usesImperialUnits),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.grain_outlined),
-                  title: Text(S.of(context).netCarbsSettingsLabel),
-                  subtitle: Text(S.of(context).netCarbsDescription),
-                  onTap: () =>
-                      _showNetCarbsDialog(context, state.netCarbsEnabled),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.calculate_outlined),
-                  title: Text(S.of(context).settingsCalculationsLabel),
-                  onTap: () => _showCalculationsDialog(context),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.brightness_medium_outlined),
-                  title: Text(S.of(context).settingsThemeLabel),
-                  onTap: () => _showThemeDialog(context, state.appTheme),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.import_export),
-                  title: Text(S.of(context).exportImportLabel),
-                  onTap: () => _showExportImportDialog(context),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.description_outlined),
-                  title: Text(S.of(context).settingsDisclaimerLabel),
-                  onTap: () => _showDisclaimerDialog(context),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.bug_report_outlined),
-                  title: Text(S.of(context).settingsReportErrorLabel),
-                  onTap: () => _showReportErrorDialog(context),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.policy_outlined),
-                  title: Text(S.of(context).settingsPrivacySettings),
-                  onTap: () =>
-                      _showPrivacyDialog(context, state.sendAnonymousData),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.error_outline_outlined),
-                  title: Text(S.of(context).settingAboutLabel),
-                  onTap: () => _showAboutDialog(context),
-                ),
-                const SizedBox(height: 32.0),
-                AppBannerVersion(versionNumber: state.versionNumber)
-              ],
-            );
-          }
-          return const SizedBox();
-        },
+      body: settingsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, __) => const Center(child: CircularProgressIndicator()),
+        data: (state) => ListView(
+          children: [
+            const SizedBox(height: 16.0),
+            ListTile(
+              leading: const Icon(Icons.notifications_outlined),
+              title: Text(S.of(context).notificationSettingsLabel),
+              onTap: () => Navigator.of(context).pushNamed(
+                NavigationOptions.notificationSettingsRoute,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.health_and_safety_outlined),
+              title: Text(S.of(context).healthSyncTitle),
+              onTap: () => Navigator.of(context).pushNamed(
+                NavigationOptions.healthSyncRoute,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.warning_amber_outlined),
+              title: Text(S.of(context).allergenSettingsLabel),
+              onTap: () => Navigator.of(context).pushNamed(
+                NavigationOptions.allergenSettingsRoute,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.ac_unit_outlined),
+              title: Text(S.of(context).settingsUnitsLabel),
+              onTap: () =>
+                  _showUnitsDialog(context, state.usesImperialUnits),
+            ),
+            ListTile(
+              leading: const Icon(Icons.grain_outlined),
+              title: Text(S.of(context).netCarbsSettingsLabel),
+              subtitle: Text(S.of(context).netCarbsDescription),
+              onTap: () =>
+                  _showNetCarbsDialog(context, state.netCarbsEnabled),
+            ),
+            ListTile(
+              leading: const Icon(Icons.calculate_outlined),
+              title: Text(S.of(context).settingsCalculationsLabel),
+              onTap: () => _showCalculationsDialog(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.brightness_medium_outlined),
+              title: Text(S.of(context).settingsThemeLabel),
+              onTap: () => _showThemeDialog(context, state.appTheme),
+            ),
+            ListTile(
+              leading: const Icon(Icons.import_export),
+              title: Text(S.of(context).exportImportLabel),
+              onTap: () => _showExportImportDialog(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.description_outlined),
+              title: Text(S.of(context).settingsDisclaimerLabel),
+              onTap: () => _showDisclaimerDialog(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.bug_report_outlined),
+              title: Text(S.of(context).settingsReportErrorLabel),
+              onTap: () => _showReportErrorDialog(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.policy_outlined),
+              title: Text(S.of(context).settingsPrivacySettings),
+              onTap: () =>
+                  _showPrivacyDialog(context, state.sendAnonymousData),
+            ),
+            ListTile(
+              leading: const Icon(Icons.error_outline_outlined),
+              title: Text(S.of(context).settingAboutLabel),
+              onTap: () => _showAboutDialog(context),
+            ),
+            const SizedBox(height: 32.0),
+            AppBannerVersion(versionNumber: state.versionNumber)
+          ],
+        ),
       ),
     );
   }
@@ -181,12 +164,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ]);
         });
     if (shouldUpdate == true) {
-      _settingsBloc
+      await ref
+          .read(settingsNotifierProvider.notifier)
           .setUsesImperialUnits(selectedUnit == SystemDropDownType.imperial);
-      _settingsBloc.add(LoadSettingsEvent());
 
-      // Update blocs
-      _profileBloc.add(LoadProfileEvent());
+      ref.read(profileNotifierProvider.notifier).loadProfile();
       ref.read(homeNotifierProvider.notifier).loadItems();
       ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
     }
@@ -234,8 +216,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ]);
         });
     if (shouldUpdate == true) {
-      _settingsBloc.setNetCarbsEnabled(switchActive);
-      _settingsBloc.add(LoadSettingsEvent());
+      await ref
+          .read(settingsNotifierProvider.notifier)
+          .setNetCarbsEnabled(switchActive);
 
       ref.read(homeNotifierProvider.notifier).loadItems();
       ref.read(diaryNotifierProvider.notifier).loadDiaryYear();
@@ -245,17 +228,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void _showCalculationsDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => CalculationsDialog(
-        settingsBloc: _settingsBloc,
-        profileBloc: _profileBloc,
-      ),
+      builder: (context) => const CalculationsDialog(),
     );
   }
 
   void _showExportImportDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => ExportImportDialog(),
+      builder: (context) => const ExportImportDialog(),
     );
   }
 
@@ -316,12 +296,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   child: Text(S.of(context).dialogCancelLabel)),
               TextButton(
                   onPressed: () async {
-                    _settingsBloc.setAppTheme(selectedTheme);
-                    _settingsBloc.add(LoadSettingsEvent());
-                    setState(() {
-                      // Update Theme
+                    await ref
+                        .read(settingsNotifierProvider.notifier)
+                        .setAppTheme(selectedTheme);
                     ref.read(themeModeProvider.notifier).setTheme(selectedTheme);
-                    });
                     Navigator.of(context).pop();
                   },
                   child: Text(S.of(context).dialogOKLabel)),
@@ -369,7 +347,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (await canLaunchUrl(reportUri)) {
       launchUrl(reportUri);
     } else {
-      // Cannot open email app, show error snackbar
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).errorOpeningEmail)));
@@ -407,9 +384,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   child: Text(S.of(context).dialogCancelLabel)),
               TextButton(
                   onPressed: () async {
-                    _settingsBloc.setHasAcceptedAnonymousData(switchActive);
+                    await ref
+                        .read(settingsNotifierProvider.notifier)
+                        .setHasAcceptedAnonymousData(switchActive);
                     if (!switchActive) Sentry.close();
-                    _settingsBloc.add(LoadSettingsEvent());
                     Navigator.of(context).pop();
                   },
                   child: Text(S.of(context).dialogOKLabel))
@@ -469,7 +447,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (await canLaunchUrl(url)) {
       launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
-      // Cannot open browser app, show error snackbar
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).errorOpeningBrowser)));

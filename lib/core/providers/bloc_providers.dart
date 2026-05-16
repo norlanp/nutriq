@@ -14,7 +14,7 @@ import 'package:nutriq/features/daily_notes/presentation/daily_note_bloc.dart';
 import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/edit_meal/presentation/bloc/edit_meal_bloc.dart';
-import 'package:nutriq/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
+
 import 'package:nutriq/features/meal_planning/presentation/meal_plan_bloc.dart';
 import 'package:nutriq/features/meal_timing/presentation/meal_timing_bloc.dart';
 import 'package:nutriq/features/medication/presentation/medication_bloc.dart';
@@ -56,16 +56,6 @@ final activityDetailBlocProvider = Provider((ref) {
     ref.watch(getMacroGoalUsecaseProvider),
   );
 });
-
-final mealDetailBlocProvider = Provider((ref) {
-  return MealDetailBloc(
-    ref.watch(addIntakeUsecaseProvider),
-    ref.watch(addTrackedDayUsecaseProvider),
-    ref.watch(getKcalGoalUsecaseProvider),
-    ref.watch(getMacroGoalUsecaseProvider),
-  );
-});
-
 
 
 final editMealBlocProvider = Provider((ref) {
