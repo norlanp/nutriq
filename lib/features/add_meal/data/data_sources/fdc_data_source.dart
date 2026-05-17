@@ -1,7 +1,7 @@
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/network/fdc_api_client.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_word_response_dto.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:nutriq/core/utils/app_reporter.dart';
 
 class FDCDataSource {
   final FDCApiClient _apiClient;
@@ -17,7 +17,7 @@ class FDCDataSource {
       return result;
     } catch (exception, stacktrace) {
       log.severe('Exception while getting FDC word search $exception');
-      Sentry.captureException(exception, stackTrace: stacktrace);
+      AppReporter.captureException(exception, stackTrace: stacktrace);
       rethrow;
     }
   }

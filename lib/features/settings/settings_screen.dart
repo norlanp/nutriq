@@ -16,7 +16,7 @@ import 'package:nutriq/features/settings/presentation/widgets/export_import_dial
 import 'package:nutriq/generated/l10n.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:nutriq/core/utils/app_reporter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:nutriq/features/settings/presentation/widgets/calculations_dialog.dart';
 
@@ -388,7 +388,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     await ref
                         .read(settingsNotifierProvider.notifier)
                         .setHasAcceptedAnonymousData(switchActive);
-                    if (!switchActive) Sentry.close();
+                    if (!switchActive) AppReporter.close();
                     Navigator.of(context).pop();
                   },
                   child: Text(S.of(context).dialogOKLabel))

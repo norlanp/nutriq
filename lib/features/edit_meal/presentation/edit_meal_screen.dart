@@ -15,7 +15,7 @@ import 'package:nutriq/features/edit_meal/presentation/notifier/edit_meal_notifi
 import 'package:nutriq/features/edit_meal/presentation/widgets/default_meal_image.dart';
 import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
 import 'package:nutriq/generated/l10n.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:nutriq/core/utils/app_reporter.dart';
 
 class EditMealScreen extends ConsumerStatefulWidget {
   final EditMealScreenArguments arguments;
@@ -371,7 +371,7 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
               newMealEntity, _intakeTypeEntity, _day, usesImperialUnits));
     } catch (exception, stacktrace) {
       log.warning("Error while creating new meal entity");
-      Sentry.captureException(exception, stackTrace: stacktrace);
+      AppReporter.captureException(exception, stackTrace: stacktrace);
 
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(S.of(context).errorMealSave)));

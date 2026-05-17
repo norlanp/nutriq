@@ -8,7 +8,7 @@ import 'package:nutriq/core/utils/calc/unit_calc.dart';
 import 'package:nutriq/core/utils/id_generator.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:nutriq/features/meal_detail/presentation/notifier/meal_detail_state.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:nutriq/core/utils/app_reporter.dart';
 
 class MealDetailNotifier extends Notifier<MealDetailState> {
   final _log = Logger('MealDetailNotifier');
@@ -68,7 +68,7 @@ class MealDetailNotifier extends Notifier<MealDetailState> {
       );
     } catch (e) {
       _log.severe('Error calculating kcal: $e');
-      Sentry.captureException(e);
+      AppReporter.captureException(e);
     }
   }
 

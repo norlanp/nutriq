@@ -18,9 +18,8 @@ import 'package:nutriq/core/providers/data_source_providers.dart';
 import 'package:nutriq/core/providers/database_provider.dart';
 import 'package:nutriq/core/providers/notifier_providers.dart';
 import 'package:nutriq/core/providers/repository_providers.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:nutriq/core/utils/app_reporter.dart';
+import 'package:nutriq/core/utils/background_task_scheduler.dart';
 
 Future<void> main() async {
   await runZonedGuarded(() async {
@@ -34,25 +33,18 @@ Future<void> main() async {
     final hasAcceptedAnonymousData =
         await container.read(configRepositoryProvider).getConfigHasAcceptedAnonymousData();
 
-    if (hasAcceptedAnonymousData) {
-      await Firebase.initializeApp();
-      FlutterError.onError = (details) {
-        log.severe('FlutterError', details.exception, details.stack);
-        FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-        FlutterError.presentError(details);
-      };
-    } else {
-      FlutterError.onError = (details) {
-        log.severe('FlutterError', details.exception, details.stack);
-        FlutterError.presentError(details);
-      };
-    }
+    FlutterError.onError = (details) {
+      log.severe('FlutterError', details.exception, details.stack);
+      FlutterError.presentError(details);
+    };
 
     try {
       await HomeWidget.setAppGroupId('group.com.nutriq.app');
     } catch (e) {
       log.warning('Failed to set HomeWidget group ID: $e');
     }
+
+    await BackgroundTaskScheduler.init();
 
     final isUserInitialized = await container.read(userDataSourceProvider).hasUserData();
     final savedAppTheme = await container.read(configRepositoryProvider).getConfigAppTheme();
@@ -61,7 +53,8 @@ Future<void> main() async {
 
     if (kReleaseMode && hasAcceptedAnonymousData) {
       log.info('Starting App with Sentry enabled ...');
-      _runAppWithSentryReporting(isUserInitialized, container);
+      await AppReporter.init(Env.sentryDns);
+      runAppWithChangeNotifiers(isUserInitialized, container);
     } else {
       log.info('Starting App ...');
       runAppWithChangeNotifiers(isUserInitialized, container);
@@ -70,17 +63,6 @@ Future<void> main() async {
     final log = Logger('main');
     log.severe('UNCAUGHT ERROR', error, stack);
   });
-}
-
-void _runAppWithSentryReporting(
-    bool isUserInitialized,
-    [ProviderContainer? container]) async {
-  await SentryFlutter.init((options) {
-    options.dsn = Env.sentryDns;
-    options.tracesSampleRate = 0.1;
-  },
-    appRunner: () =>
-        runAppWithChangeNotifiers(isUserInitialized, container));
 }
 
 void runAppWithChangeNotifiers(
