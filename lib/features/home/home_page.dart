@@ -8,6 +8,7 @@ import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
 import 'package:nutriq/core/presentation/widgets/activity_vertial_list.dart';
 import 'package:nutriq/core/presentation/widgets/delete_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/disclaimer_dialog.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/core/presentation/widgets/edit_dialog.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
@@ -154,11 +155,11 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
                     });
                   },
                   builder: (context, candidateData, rejectedData) {
-                    return const Center(
+                    return Center(
                       child: Icon(
                         Icons.delete_outline,
                         size: 36,
-                        color: Colors.white,
+                        color: context.nutriqColors.onOverlay,
                       ),
                     );
                   },

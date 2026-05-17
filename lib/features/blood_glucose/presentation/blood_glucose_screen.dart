@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/blood_glucose_entity.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/blood_glucose/presentation/notifier/blood_glucose_notifier.dart';
 import 'package:nutriq/features/blood_glucose/presentation/notifier/blood_glucose_state.dart';
 import 'package:nutriq/features/blood_glucose/presentation/widgets/bg_day_timeline.dart';
@@ -33,9 +34,10 @@ class _BloodGlucoseScreenState extends ConsumerState<BloodGlucoseScreen> {
   }
 
   Color _valueColor(int valueMgDl) {
-    if (valueMgDl < 70) return Colors.red;
-    if (valueMgDl <= 180) return Colors.green;
-    return Colors.orange;
+    final nc = context.nutriqColors;
+    if (valueMgDl < 70) return Theme.of(context).colorScheme.error;
+    if (valueMgDl <= 180) return nc.success;
+    return nc.warning;
   }
 
   void _addEntry() {
@@ -134,42 +136,46 @@ class _BloodGlucoseScreenState extends ConsumerState<BloodGlucoseScreen> {
           Card(
             child: Padding(
               padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+              child: Builder(builder: (context) {
+                final nc = context.nutriqColors;
+                final errorColor = Theme.of(context).colorScheme.error;
+                return Row(
+                  children: [
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: errorColor,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Text('< 70', style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(width: 12),
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: const BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
+                    const SizedBox(width: 4),
+                    Text('< 70', style: Theme.of(context).textTheme.bodySmall),
+                    const SizedBox(width: 12),
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: nc.success,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Text('70-180', style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(width: 12),
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: const BoxDecoration(
-                      color: Colors.orange,
-                      shape: BoxShape.circle,
+                    const SizedBox(width: 4),
+                    Text('70-180', style: Theme.of(context).textTheme.bodySmall),
+                    const SizedBox(width: 12),
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: nc.warning,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Text('> 180', style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
+                    const SizedBox(width: 4),
+                    Text('> 180', style: Theme.of(context).textTheme.bodySmall),
+                  ],
+                );
+              }),
             ),
           ),
           const SizedBox(height: 16),
@@ -199,7 +205,7 @@ class _BloodGlucoseScreenState extends ConsumerState<BloodGlucoseScreen> {
                       backgroundColor: _valueColor(entry.valueMgDl),
                       child: Text(
                         '${entry.valueMgDl}',
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 12),
                       ),
                     ),
                     title: Text(

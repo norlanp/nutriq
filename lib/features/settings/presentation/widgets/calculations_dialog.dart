@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/tdee_method_entity.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/diary/presentation/notifier/calendar_day_notifier.dart';
 import 'package:nutriq/features/diary/presentation/notifier/diary_notifier.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
@@ -144,7 +145,7 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
           _buildMacroSlider(
             S.of(context).carbsLabel,
             _carbsPctSelection,
-            Colors.orange,
+            context.nutriqColors.carbsColor,
             (value) {
               setState(() {
                 double delta = value - _carbsPctSelection;
@@ -174,7 +175,7 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
           _buildMacroSlider(
             S.of(context).proteinLabel,
             _proteinPctSelection,
-            Colors.blue,
+            context.nutriqColors.proteinColor,
             (value) {
               setState(() {
                 double delta = value - _proteinPctSelection;
@@ -204,7 +205,7 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
           _buildMacroSlider(
             S.of(context).fatLabel,
             _fatPctSelection,
-            Colors.green,
+            context.nutriqColors.fatColor,
             (value) {
               setState(() {
                 double delta = value - _fatPctSelection;

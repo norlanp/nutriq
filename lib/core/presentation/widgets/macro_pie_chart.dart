@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MacroPieChart extends StatelessWidget {
@@ -73,14 +74,15 @@ class MacroPieChart extends StatelessWidget {
 
   List<PieChartSectionData> _buildSections(
       BuildContext context, double totalGrams) {
+    final nc = context.nutriqColors;
     final carbPct = totalGrams > 0 ? (carbsGram / totalGrams) * 100 : 0.0;
     final fatPct = totalGrams > 0 ? (fatsGram / totalGrams) * 100 : 0.0;
     final proteinPct = totalGrams > 0 ? (proteinsGram / totalGrams) * 100 : 0.0;
 
     return [
-      _makeSection(carbPct, Theme.of(context).colorScheme.primary),
-      _makeSection(fatPct, Theme.of(context).colorScheme.tertiary),
-      _makeSection(proteinPct, Theme.of(context).colorScheme.error),
+      _makeSection(carbPct, nc.carbsColor),
+      _makeSection(fatPct, nc.fatColor),
+      _makeSection(proteinPct, nc.proteinColor),
     ];
   }
 
@@ -93,7 +95,7 @@ class MacroPieChart extends StatelessWidget {
       titleStyle: const TextStyle(
         fontSize: 10,
         fontWeight: FontWeight.bold,
-        color: Colors.white,
+        color: Color(0xFFFFFFFF),
       ),
     );
   }
@@ -111,6 +113,7 @@ class MacroPieChart extends StatelessWidget {
 
   Widget _buildLegend(BuildContext context, double totalGrams) {
     final l10n = S.of(context);
+    final nc = context.nutriqColors;
     final carbPct = totalGrams > 0 ? (carbsGram / totalGrams) * 100 : 0.0;
     final fatPct = totalGrams > 0 ? (fatsGram / totalGrams) * 100 : 0.0;
     final proteinPct = totalGrams > 0 ? (proteinsGram / totalGrams) * 100 : 0.0;
@@ -119,21 +122,21 @@ class MacroPieChart extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _LegendItem(
-          color: Theme.of(context).colorScheme.primary,
+          color: nc.carbsColor,
           label: l10n.carbsLabel,
           grams: carbsGram,
           pct: carbPct,
         ),
         const SizedBox(width: 16),
         _LegendItem(
-          color: Theme.of(context).colorScheme.tertiary,
+          color: nc.fatColor,
           label: l10n.fatLabel,
           grams: fatsGram,
           pct: fatPct,
         ),
         const SizedBox(width: 16),
         _LegendItem(
-          color: Theme.of(context).colorScheme.error,
+          color: nc.proteinColor,
           label: l10n.proteinLabel,
           grams: proteinsGram,
           pct: proteinPct,

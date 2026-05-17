@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:nutriq/core/router/app_router.dart';
 import 'package:nutriq/core/styles/color_schemes.dart';
 import 'package:nutriq/core/styles/fonts.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/core/utils/env.dart';
 import 'package:nutriq/core/utils/logger_config.dart';
 
@@ -94,11 +95,13 @@ class NutriqApp extends ConsumerWidget {
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: lightColorScheme,
-          textTheme: appTextTheme),
+          textTheme: appTextTheme,
+          extensions: const [lightNutriqColors]),
       darkTheme: ThemeData(
           useMaterial3: true,
           colorScheme: darkColorScheme,
-          textTheme: appTextTheme),
+          textTheme: appTextTheme,
+          extensions: const [darkNutriqColors]),
       themeMode: themeMode,
       localizationsDelegates: const [
         S.delegate,

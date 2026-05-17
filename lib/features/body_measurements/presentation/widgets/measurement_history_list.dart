@@ -33,7 +33,7 @@ class MeasurementHistoryList extends StatelessWidget {
                   if (m.thighCm != null) '${s.thighCm}: ${m.thighCm}',
                 ].join(', ')),
                 trailing: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
+                  icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
                   onPressed: () => onDelete(m),
                 ),
               ),

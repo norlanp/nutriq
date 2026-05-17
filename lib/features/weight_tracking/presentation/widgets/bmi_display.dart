@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/providers/usecase_providers.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class BMIDisplay extends ConsumerWidget {
@@ -104,13 +105,14 @@ class BMIDisplay extends ConsumerWidget {
   }
 
   Color _getCategoryColor(BuildContext context, _BMICategory category) {
+    final nc = context.nutriqColors;
     switch (category) {
       case _BMICategory.underweight:
-        return Colors.orange;
+        return nc.warning;
       case _BMICategory.normal:
         return Theme.of(context).colorScheme.primary;
       case _BMICategory.overweight:
-        return Colors.deepOrange;
+        return nc.warning;
       case _BMICategory.obese:
         return Theme.of(context).colorScheme.error;
     }

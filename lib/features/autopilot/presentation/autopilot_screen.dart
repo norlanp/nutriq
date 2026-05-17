@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/exercise_calorie_mode_entity.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/autopilot/presentation/notifier/autopilot_notifier.dart';
 import 'package:nutriq/features/autopilot/presentation/notifier/autopilot_state.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -85,8 +86,8 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: state.adjustmentDelta != 0
                       ? (state.adjustmentDelta > 0
-                          ? Colors.green
-                          : Colors.orange)
+                          ? context.nutriqColors.success
+                          : context.nutriqColors.warning)
                       : null,
                 ),
           ),
@@ -98,8 +99,8 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
               '${state.adjustmentDelta > 0 ? '+' : ''}${state.adjustmentDelta} kcal',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: state.adjustmentDelta > 0
-                        ? Colors.green
-                        : Colors.orange,
+                        ? context.nutriqColors.success
+                        : context.nutriqColors.warning,
                   ),
             ),
           ),

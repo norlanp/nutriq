@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:nutriq/core/domain/entity/photo_progress_entity.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/photo_progress/data/photo_storage_service.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -68,7 +69,7 @@ class _PhotoComparisonScreenState extends State<PhotoComparisonScreen> {
                             bottom: 0,
                             child: Container(
                               width: 2,
-                              color: Colors.white,
+                              color: context.nutriqColors.onOverlay,
                             ),
                           ),
                           Positioned(
@@ -77,14 +78,14 @@ class _PhotoComparisonScreenState extends State<PhotoComparisonScreen> {
                             child: Container(
                               width: 32,
                               height: 32,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
+                              decoration: BoxDecoration(
+                                color: context.nutriqColors.onOverlay,
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.compare_arrows,
                                 size: 20,
-                                color: Colors.black87,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                           ),

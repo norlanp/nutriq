@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MicroNutrientProgress extends StatelessWidget {
@@ -132,8 +133,7 @@ class _MicroNutrientRow extends StatelessWidget {
   }
 
   Color _getColor(BuildContext context, double pct) {
-    if (pct < 50) return Theme.of(context).colorScheme.error;
-    if (pct <= 100) return Colors.amber.shade700;
-    return Colors.green.shade600;
+    if (pct <= 100) return context.nutriqColors.warning;
+    return context.nutriqColors.success;
   }
 }

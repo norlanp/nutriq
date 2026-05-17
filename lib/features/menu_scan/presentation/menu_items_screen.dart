@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/food_grade.dart';
+import 'package:nutriq/core/presentation/extensions/food_grade_color.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/menu_scan/domain/entity/scanned_menu_item.dart';
 import 'package:nutriq/features/menu_scan/presentation/notifier/menu_scan_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -152,13 +154,14 @@ class _MenuItemCard extends StatelessWidget {
   }
 
   Widget _buildGradeBadge(BuildContext context, FoodGrade grade) {
+    final gradeColor = grade.color(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         color: Color.fromRGBO(
-          (grade.color.r * 255).round(),
-          (grade.color.g * 255).round(),
-          (grade.color.b * 255).round(),
+          (gradeColor.r * 255).round(),
+          (gradeColor.g * 255).round(),
+          (gradeColor.b * 255).round(),
           0.2,
         ),
         borderRadius: BorderRadius.circular(4),
@@ -166,7 +169,7 @@ class _MenuItemCard extends StatelessWidget {
       child: Text(
         grade.label,
         style: TextStyle(
-          color: grade.color,
+          color: gradeColor,
           fontWeight: FontWeight.bold,
           fontSize: 12,
         ),
@@ -176,6 +179,7 @@ class _MenuItemCard extends StatelessWidget {
 
   Widget _buildNutritionRow(BuildContext context, S l10n) {
     final theme = Theme.of(context);
+    final nc = context.nutriqColors;
     final calories = item.calories;
     final protein = item.protein;
     final carbs = item.carbs;
@@ -197,21 +201,21 @@ class _MenuItemCard extends StatelessWidget {
             context,
             label: l10n.menuScanProtein,
             value: '${protein.toStringAsFixed(1)}g',
-            color: Colors.blue,
+            color: nc.proteinColor,
           ),
         if (carbs != null)
           _buildNutrientChip(
             context,
             label: l10n.menuScanCarbs,
             value: '${carbs.toStringAsFixed(1)}g',
-            color: Colors.orange,
+            color: nc.carbsColor,
           ),
         if (fat != null)
           _buildNutrientChip(
             context,
             label: l10n.menuScanFat,
             value: '${fat.toStringAsFixed(1)}g',
-            color: Colors.yellow.shade800,
+            color: nc.fatColor,
           ),
       ],
     );

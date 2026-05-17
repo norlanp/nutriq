@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class StreakDisplay extends StatelessWidget {
@@ -16,7 +17,7 @@ class StreakDisplay extends StatelessWidget {
           children: [
             Icon(
               Icons.local_fire_department,
-              color: streak > 0 ? Colors.orange : Colors.grey,
+              color: streak > 0 ? context.nutriqColors.warning : context.nutriqColors.inactive,
               size: 28,
             ),
             const SizedBox(width: 8),

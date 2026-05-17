@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 enum FoodGrade {
   a,
   b,
@@ -16,19 +14,6 @@ enum FoodGrade {
         return 'C';
       case FoodGrade.d:
         return 'D';
-    }
-  }
-
-  Color get color {
-    switch (this) {
-      case FoodGrade.a:
-        return Colors.green;
-      case FoodGrade.b:
-        return Colors.lightGreen;
-      case FoodGrade.c:
-        return Colors.orange;
-      case FoodGrade.d:
-        return Colors.red;
     }
   }
 }

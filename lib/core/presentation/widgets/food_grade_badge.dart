@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutriq/core/domain/entity/food_grade.dart';
+import 'package:nutriq/core/presentation/extensions/food_grade_color.dart';
 
 class FoodGradeBadge extends StatelessWidget {
   final FoodGrade grade;
@@ -17,14 +18,14 @@ class FoodGradeBadge extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: grade.color,
+        color: grade.color(context),
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,
       child: Text(
         grade.label,
         style: TextStyle(
-          color: Colors.white,
+          color: grade.onColor(context),
           fontSize: size * 0.45,
           fontWeight: FontWeight.bold,
         ),

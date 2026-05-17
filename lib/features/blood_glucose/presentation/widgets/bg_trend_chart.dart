@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:nutriq/core/domain/entity/blood_glucose_entity.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 
 class BgTrendChart extends StatelessWidget {
   final List<BloodGlucoseEntity> entries;
@@ -49,12 +50,12 @@ class BgTrendChart extends StatelessWidget {
             horizontalLines: [
               HorizontalLine(
                   y: 70,
-                  color: Colors.red.withOpacity(0.4),
+                  color: Theme.of(context).colorScheme.error.withOpacity(0.4),
                   strokeWidth: 1,
                   dashArray: [4, 4]),
               HorizontalLine(
                   y: 180,
-                  color: Colors.orange.withOpacity(0.4),
+                  color: context.nutriqColors.warning.withOpacity(0.4),
                   strokeWidth: 1,
                   dashArray: [4, 4]),
             ],
@@ -70,13 +71,6 @@ class BgTrendChart extends StatelessWidget {
                 show: true,
                 color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
               ),
-            ),
-          ],
-          betweenBarsData: [
-            BetweenBarsData(
-              fromIndex: 0,
-              toIndex: 0,
-              color: Colors.transparent,
             ),
           ],
         ),

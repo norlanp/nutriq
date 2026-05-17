@@ -6,6 +6,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/presentation/widgets/error_dialog.dart';
 import 'package:nutriq/core/router/app_routes.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/meal_detail/meal_detail_screen.dart';
 import 'package:nutriq/features/scanner/presentation/notifier/scanner_notifier.dart';
 import 'package:nutriq/features/scanner/presentation/notifier/scanner_state.dart';
@@ -84,8 +85,8 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
               builder: (context, state, child) {
                 switch (state.torchState) {
                   case TorchState.off || TorchState.unavailable:
-                    return const Icon(Icons.flash_off_outlined,
-                        color: Colors.grey);
+                    return Icon(Icons.flash_off_outlined,
+                        color: context.nutriqColors.inactive);
                   case TorchState.on || TorchState.auto:
                     return const Icon(Icons.flash_on_outlined);
                 }

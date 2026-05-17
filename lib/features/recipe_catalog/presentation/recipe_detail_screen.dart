@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/catalog_recipe_entity.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/recipe_catalog/presentation/notifier/recipe_catalog_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -109,17 +110,17 @@ class RecipeDetailScreen extends ConsumerWidget {
                     _MacroItem(
                       label: S.of(context).proteinLabel,
                       value: '${recipe.macros.proteinG.toStringAsFixed(1)}g',
-                      color: Colors.blue,
+                      color: context.nutriqColors.proteinColor,
                     ),
                     _MacroItem(
                       label: S.of(context).carbsLabel,
                       value: '${recipe.macros.carbsG.toStringAsFixed(1)}g',
-                      color: Colors.orange,
+                      color: context.nutriqColors.carbsColor,
                     ),
                     _MacroItem(
                       label: S.of(context).fatLabel,
                       value: '${recipe.macros.fatG.toStringAsFixed(1)}g',
-                      color: Colors.green,
+                      color: context.nutriqColors.fatColor,
                     ),
                   ],
                 ),

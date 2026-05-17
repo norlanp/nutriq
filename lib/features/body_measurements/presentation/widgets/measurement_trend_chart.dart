@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:nutriq/core/domain/entity/body_measurement_entity.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MeasurementTrendChart extends StatefulWidget {
@@ -55,22 +56,23 @@ class _MeasurementTrendChartState extends State<MeasurementTrendChart> {
     }
   }
 
-  Color _getColor(String key) {
+  Color _getColor(BuildContext context, String key) {
+    final nc = context.nutriqColors;
     switch (key) {
       case 'waist':
-        return Colors.blue;
+        return nc.measurementWaist;
       case 'neck':
-        return Colors.orange;
+        return nc.measurementNeck;
       case 'hip':
-        return Colors.purple;
+        return nc.measurementHip;
       case 'chest':
-        return Colors.green;
+        return nc.measurementChest;
       case 'bicep':
-        return Colors.red;
+        return nc.measurementBicep;
       case 'thigh':
-        return Colors.teal;
+        return nc.measurementThigh;
       default:
-        return Colors.grey;
+        return nc.inactive;
     }
   }
 
@@ -114,7 +116,7 @@ class _MeasurementTrendChartState extends State<MeasurementTrendChart> {
       return LineChartBarData(
         spots: points,
         isCurved: true,
-        color: _getColor(key),
+        color: _getColor(context, key),
         barWidth: 2,
         dotData: const FlDotData(show: true),
         belowBarData: BarAreaData(show: false),
@@ -131,11 +133,12 @@ class _MeasurementTrendChartState extends State<MeasurementTrendChart> {
           spacing: 8,
           children: _keys.map((key) {
             final enabled = _enabled.contains(key);
+            final chipColor = _getColor(context, key);
             return FilterChip(
               label: Text(_getLabel(s, key)),
               selected: enabled,
-              selectedColor: _getColor(key).withValues(alpha: 0.3),
-              checkmarkColor: _getColor(key),
+              selectedColor: chipColor.withValues(alpha: 0.3),
+              checkmarkColor: chipColor,
               onSelected: (selected) {
                 setState(() {
                   if (selected) {

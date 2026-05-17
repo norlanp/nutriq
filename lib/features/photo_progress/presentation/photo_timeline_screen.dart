@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/photo_progress_entity.dart';
 import 'package:nutriq/core/presentation/widgets/image_full_screen.dart';
 import 'package:nutriq/core/router/app_routes.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/photo_progress/data/photo_storage_service.dart';
 import 'package:nutriq/features/photo_progress/presentation/notifier/photo_progress_notifier.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -187,10 +188,10 @@ class _PhotoThumbnail extends StatelessWidget {
                     bottom: 0, left: 0, right: 0,
                     child: Container(
                       padding: const EdgeInsets.all(4),
-                      color: Colors.black54,
+                      color: context.nutriqColors.overlayBackground,
                       child: Text(
                         '${photo.date.day.toString().padLeft(2, '0')}.${photo.date.month.toString().padLeft(2, '0')}',
-                        style: const TextStyle(color: Colors.white, fontSize: 11),
+                        style: TextStyle(color: context.nutriqColors.onOverlay, fontSize: 11),
                       ),
                     ),
                   ),

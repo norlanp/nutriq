@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class BarcodeScannerPage extends StatefulWidget {
@@ -25,8 +26,8 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
               builder: (context, state, child) {
                 switch (state.torchState) {
                   case TorchState.off || TorchState.unavailable:
-                    return const Icon(Icons.flash_off_outlined,
-                        color: Colors.grey);
+                    return Icon(Icons.flash_off_outlined,
+                        color: context.nutriqColors.inactive);
                   case TorchState.on || TorchState.auto:
                     return const Icon(Icons.flash_on_outlined);
                 }

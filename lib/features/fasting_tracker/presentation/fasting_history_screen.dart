@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nutriq/core/domain/entity/fasting_entity.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/notifier/fasting_notifier.dart';
 import 'package:nutriq/features/fasting_tracker/presentation/notifier/fasting_state.dart';
 import 'package:nutriq/generated/l10n.dart';
@@ -78,7 +79,7 @@ class _FastingHistoryScreenState extends ConsumerState<FastingHistoryScreen> {
         return ListTile(
           leading: Icon(
             completed ? Icons.check_circle : Icons.cancel_outlined,
-            color: completed ? Colors.green : Colors.red,
+            color: completed ? context.nutriqColors.success : Theme.of(context).colorScheme.error,
           ),
           title: Text(_presetLabel(fast.presetType, l10n)),
           subtitle: Text(

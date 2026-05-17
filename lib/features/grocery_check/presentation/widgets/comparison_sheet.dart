@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nutriq/core/domain/entity/food_grade.dart';
 import 'package:nutriq/core/domain/service/grocery_check_service.dart';
+import 'package:nutriq/core/presentation/extensions/food_grade_color.dart';
 import 'package:nutriq/core/presentation/widgets/food_grade_badge.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class ComparisonSheet extends StatelessWidget {
@@ -196,9 +198,9 @@ class ComparisonRow extends StatelessWidget {
               valueA != null ? '${valueA!.toStringAsFixed(1)} $unit' : '-',
               textAlign: TextAlign.end,
               style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: aWins ? FontWeight.bold : FontWeight.normal,
-                color: aWins ? Colors.green : null,
-              ),
+                 fontWeight: aWins ? FontWeight.bold : FontWeight.normal,
+                 color: aWins ? context.nutriqColors.success : null,
+               ),
             ),
           ),
           Expanded(
@@ -217,9 +219,9 @@ class ComparisonRow extends StatelessWidget {
               valueB != null ? '${valueB!.toStringAsFixed(1)} $unit' : '-',
               textAlign: TextAlign.start,
               style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: bWins ? FontWeight.bold : FontWeight.normal,
-                color: bWins ? Colors.green : null,
-              ),
+                 fontWeight: bWins ? FontWeight.bold : FontWeight.normal,
+                 color: bWins ? context.nutriqColors.success : null,
+               ),
             ),
           ),
         ],
@@ -253,13 +255,13 @@ class WinnerBadge extends StatelessWidget {
       return Chip(
         avatar: const Icon(Icons.emoji_events, size: 18),
         label: Text(s.groceryCheckWinner),
-        backgroundColor: gradeA.color.withValues(alpha: 0.2),
+        backgroundColor: gradeA.color(context).withValues(alpha: 0.2),
       );
     } else if (gradeB.index < gradeA.index) {
       return Chip(
         avatar: const Icon(Icons.emoji_events, size: 18),
         label: Text(s.groceryCheckWinner),
-        backgroundColor: gradeB.color.withValues(alpha: 0.2),
+        backgroundColor: gradeB.color(context).withValues(alpha: 0.2),
       );
     }
 
