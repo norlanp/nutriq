@@ -335,7 +335,7 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                     children: [
                       Text(
                         tracker.icon,
-                        style: const TextStyle(fontSize: 24),
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const SizedBox(width: 12),
                        Expanded(

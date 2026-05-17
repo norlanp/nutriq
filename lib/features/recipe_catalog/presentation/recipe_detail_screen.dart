@@ -186,12 +186,11 @@ class RecipeDetailScreen extends ConsumerWidget {
                                   .primaryContainer,
                               child: Text(
                                 '${entry.key + 1}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimaryContainer,
+                                    ),
                               ),
                             ),
                             const SizedBox(width: 12),

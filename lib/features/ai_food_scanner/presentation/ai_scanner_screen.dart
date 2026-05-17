@@ -121,13 +121,12 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
               return ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                  child: Text(
-                    '$confidencePct%',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
+                    child: Text(
+                     '$confidencePct%',
+                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                           color: Theme.of(context).colorScheme.onPrimaryContainer,
+                         ),
+                   ),
                 ),
                 title: Text(candidate.name),
                 subtitle: Text(l10n.aiScannerConfidence(confidencePct)),

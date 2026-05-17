@@ -38,11 +38,10 @@ class ClassificationResultsScreen extends ConsumerWidget {
                           Theme.of(context).colorScheme.primaryContainer,
                       child: Text(
                         '$confidencePct%',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color:
+                                  Theme.of(context).colorScheme.onPrimaryContainer,
+                            ),
                       ),
                     ),
                     title: Text(

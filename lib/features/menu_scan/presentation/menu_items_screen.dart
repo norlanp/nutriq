@@ -158,21 +158,15 @@ class _MenuItemCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: Color.fromRGBO(
-          (gradeColor.r * 255).round(),
-          (gradeColor.g * 255).round(),
-          (gradeColor.b * 255).round(),
-          0.2,
-        ),
+        color: gradeColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         grade.label,
-        style: TextStyle(
-          color: gradeColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-        ),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: gradeColor,
+              fontWeight: FontWeight.bold,
+            ),
       ),
     );
   }
@@ -230,21 +224,16 @@ class _MenuItemCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Color.fromRGBO(
-          (color.r * 255).round(),
-          (color.g * 255).round(),
-          (color.b * 255).round(),
-          0.1,
-        ),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         '$label: $value',
-        style: TextStyle(
-          fontSize: 11,
-          color: color,
-          fontWeight: FontWeight.w500,
-        ),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontSize: 11,
+              color: color,
+              fontWeight: FontWeight.w500,
+            ),
       ),
     );
   }

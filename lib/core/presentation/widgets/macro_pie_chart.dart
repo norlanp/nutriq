@@ -95,7 +95,7 @@ class MacroPieChart extends StatelessWidget {
       titleStyle: const TextStyle(
         fontSize: 10,
         fontWeight: FontWeight.bold,
-        color: Color(0xFFFFFFFF),
+        color: Colors.white,
       ),
     );
   }

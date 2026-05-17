@@ -283,7 +283,7 @@ class _MealTimingScatterChart extends StatelessWidget {
                 const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
                 if (value.toInt() < 7) {
                   return Text(days[value.toInt()],
-                      style: const TextStyle(fontSize: 10));
+                      style: Theme.of(context).textTheme.labelSmall);
                 }
                 return const SizedBox();
               },
@@ -295,7 +295,7 @@ class _MealTimingScatterChart extends StatelessWidget {
               interval: 4,
               getTitlesWidget: (value, _) {
                 return Text('${value.toInt()}:00',
-                    style: const TextStyle(fontSize: 10));
+                    style: Theme.of(context).textTheme.labelSmall);
               },
             ),
           ),

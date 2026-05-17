@@ -205,7 +205,7 @@ class _BloodGlucoseScreenState extends ConsumerState<BloodGlucoseScreen> {
                       backgroundColor: _valueColor(entry.valueMgDl),
                       child: Text(
                         '${entry.valueMgDl}',
-                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 12),
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
                       ),
                     ),
                     title: Text(

@@ -40,7 +40,7 @@ class BgTrendChart extends StatelessWidget {
                 showTitles: true,
                 reservedSize: 40,
                 getTitlesWidget: (value, meta) => Text('${value.toInt()}',
-                    style: const TextStyle(fontSize: 10)),
+                    style: Theme.of(context).textTheme.labelSmall ?? const TextStyle(fontSize: 10)),
               ),
             ),
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -50,12 +50,12 @@ class BgTrendChart extends StatelessWidget {
             horizontalLines: [
               HorizontalLine(
                   y: 70,
-                  color: Theme.of(context).colorScheme.error.withOpacity(0.4),
+                  color: Theme.of(context).colorScheme.error.withValues(alpha: 0.4),
                   strokeWidth: 1,
                   dashArray: [4, 4]),
               HorizontalLine(
                   y: 180,
-                  color: context.nutriqColors.warning.withOpacity(0.4),
+                  color: context.nutriqColors.warning.withValues(alpha: 0.4),
                   strokeWidth: 1,
                   dashArray: [4, 4]),
             ],
@@ -69,7 +69,7 @@ class BgTrendChart extends StatelessWidget {
               dotData: FlDotData(show: true),
               belowBarData: BarAreaData(
                 show: true,
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
               ),
             ),
           ],

@@ -169,11 +169,9 @@ class WeeklyNutritionSummary extends StatelessWidget {
                             intakes.fold(0.0, (sum, it) => sum + it.totalKcal);
                         return BarTooltipItem(
                           '${totalKcal.toInt()} ${l10n.kcalLabel}',
-                          TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
+                          Theme.of(context).textTheme.bodySmall!.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         );
                       },
                     ),

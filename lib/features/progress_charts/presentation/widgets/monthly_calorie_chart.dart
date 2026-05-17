@@ -179,11 +179,9 @@ class MonthlyCalorieChart extends StatelessWidget {
                         final kcal = td?.caloriesTracked ?? 0;
                         return BarTooltipItem(
                           '$dayNum. ${td?.day.month ?? month}\n${kcal.toInt()} ${l10n.kcalLabel}',
-                          TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
+                          Theme.of(context).textTheme.bodySmall!.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         );
                       },
                     ),

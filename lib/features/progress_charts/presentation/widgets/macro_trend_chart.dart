@@ -193,11 +193,9 @@ class MacroTrendChart extends StatelessWidget {
                           '${l10n.carbsLabel}: ${carbs}g\n'
                           '${l10n.fatLabel}: ${fats}g\n'
                           '${l10n.proteinLabel}: ${proteins}g',
-                          TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
+                          Theme.of(context).textTheme.bodySmall!.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         );
                       },
                     ),

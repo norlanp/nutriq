@@ -192,7 +192,10 @@ class _PhotoThumbnail extends StatelessWidget {
                       color: context.nutriqColors.overlayBackground,
                       child: Text(
                         '${photo.date.day.toString().padLeft(2, '0')}.${photo.date.month.toString().padLeft(2, '0')}',
-                        style: TextStyle(color: context.nutriqColors.onOverlay, fontSize: 11),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: context.nutriqColors.onOverlay,
+                              fontSize: 11,
+                            ),
                       ),
                     ),
                   ),
