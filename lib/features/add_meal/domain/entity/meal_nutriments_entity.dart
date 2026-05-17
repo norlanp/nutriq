@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_const.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_food_nutriment_dto.dart';
-import 'package:nutriq/features/add_meal/data/dto/off/off_product_nutriments_dto.dart';
 
 part 'meal_nutriments_entity.freezed.dart';
 
@@ -72,28 +71,6 @@ abstract class MealNutrimentsEntity with _$MealNutrimentsEntity {
         saturatedFat100: null,
         fiber100: null,
       );
-
-  factory MealNutrimentsEntity.fromOffNutriments(
-    OFFProductNutrimentsDTO offNutriments,
-  ) {
-    return MealNutrimentsEntity(
-      energyKcal100: offNutriments.energy_kcal_100g,
-      carbohydrates100: offNutriments.carbohydrates_100g,
-      fat100: offNutriments.fat_100g,
-      proteins100: offNutriments.proteins_100g,
-      sugars100: offNutriments.sugars_100g,
-      saturatedFat100: offNutriments.saturated_fat_100g,
-      fiber100: offNutriments.fiber_100g,
-      sodium100: offNutriments.sodium_100g,
-      potassium100: offNutriments.potassium_100g,
-      cholesterol100: offNutriments.cholesterol_100g,
-      vitaminA100: offNutriments.vitamin_a_100g,
-      vitaminC100: offNutriments.vitamin_c_100g,
-      vitaminD100: offNutriments.vitamin_d_100g,
-      calcium100: offNutriments.calcium_100g,
-      iron100: offNutriments.iron_100g,
-    );
-  }
 
   factory MealNutrimentsEntity.fromFDCNutriments(
     List<FDCFoodNutrimentDTO> fdcNutriment,

@@ -89,5 +89,5 @@ final bloodGlucoseDataSourceProvider = Provider((ref) => BloodGlucoseDataSource(
 
 // --- Feature data source providers ---
 
-final offDataSourceProvider = Provider((ref) => OFFDataSource(ref.watch(offApiClientProvider)));
+final offDataSourceProvider = Provider((ref) => OFFDataSource());
 final fdcDataSourceProvider = Provider((ref) => FDCDataSource(ref.watch(fdcApiClientProvider)));

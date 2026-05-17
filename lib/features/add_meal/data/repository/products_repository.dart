@@ -9,14 +9,7 @@ class ProductsRepository {
   ProductsRepository(this._offDataSource, this._fdcDataSource);
 
   Future<List<MealEntity>> getOFFProductsByString(String searchString) async {
-    final offWordResponse =
-        await _offDataSource.fetchSearchWordResults(searchString);
-
-    final products = offWordResponse.products
-        .map((offProduct) => MealEntity.fromOFFProduct(offProduct))
-        .toList();
-
-    return products;
+    return _offDataSource.searchProducts(searchString);
   }
 
   Future<List<MealEntity>> getFDCFoodsByString(String searchString) async {
@@ -29,8 +22,6 @@ class ProductsRepository {
   }
 
   Future<MealEntity> getOFFProductByBarcode(String barcode) async {
-    final productResponse = await _offDataSource.fetchBarcodeResults(barcode);
-
-    return MealEntity.fromOFFProduct(productResponse.product);
+    return _offDataSource.getProductByBarcode(barcode);
   }
 }

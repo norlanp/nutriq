@@ -1,13 +1,9 @@
-import 'dart:ui' as ui;
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:nutriq/core/utils/id_generator.dart';
-import 'package:nutriq/core/utils/supported_language.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_const.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_food_dto.dart';
 
-import 'package:nutriq/features/add_meal/data/dto/off/off_product_dto.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 
 part 'meal_entity.freezed.dart';
@@ -56,27 +52,6 @@ abstract class MealEntity with _$MealEntity {
         source: MealSourceEntity.custom,
       );
 
-  factory MealEntity.fromOFFProduct(OFFProductDTO offProduct) {
-    return MealEntity(
-      code: offProduct.code,
-      name: offProduct.getLocaleName(
-        SupportedLanguage.fromCode(
-            ui.PlatformDispatcher.instance.locale.toString()),
-      ),
-      brands: offProduct.brands,
-      thumbnailImageUrl: offProduct.image_front_thumb_url,
-      mainImageUrl: offProduct.image_front_url,
-      url: offProduct.url,
-      mealQuantity: offProduct.product_quantity,
-      mealUnit: _tryGetUnit(offProduct.quantity),
-      servingQuantity: offProduct.serving_quantity,
-      servingUnit: _tryGetUnit(offProduct.quantity),
-      servingSize: offProduct.serving_size,
-      nutriments: MealNutrimentsEntity.fromOffNutriments(offProduct.nutriments),
-      source: MealSourceEntity.off,
-    );
-  }
-
   factory MealEntity.fromFDCFood(FDCFoodDTO fdcFood) {
     final fdcId = fdcFood.fdcId?.toInt().toString();
 
@@ -93,18 +68,5 @@ abstract class MealEntity with _$MealEntity {
       nutriments: MealNutrimentsEntity.fromFDCNutriments(fdcFood.foodNutrients),
       source: MealSourceEntity.fdc,
     );
-  }
-
-  /// Unit can either be 100g or 100ml
-  static String? _tryGetUnit(String? quantityString) {
-    if (quantityString == null) return null;
-
-    final isLiter = quantityString.toUpperCase().contains("L");
-
-    if (isLiter) {
-      return "ml";
-    } else {
-      return "g";
-    }
   }
 }

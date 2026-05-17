@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -29,6 +31,7 @@ class AddMealScreen extends ConsumerStatefulWidget {
 class _AddMealScreenState extends ConsumerState<AddMealScreen>
     with SingleTickerProviderStateMixin {
   final ValueNotifier<String> _searchStringListener = ValueNotifier('');
+  Timer? _debounce;
 
   late AddMealType _mealType;
   late DateTime _day;
@@ -48,6 +51,7 @@ class _AddMealScreenState extends ConsumerState<AddMealScreen>
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _tabController.dispose();
     super.dispose();
   }
@@ -236,14 +240,17 @@ class _AddMealScreenState extends ConsumerState<AddMealScreen>
   }
 
   void _onSearchSubmit(String inputText) {
-    switch (_tabController.index) {
-      case 0:
-        ref.read(productsNotifierProvider.notifier).searchProducts(inputText);
-      case 1:
-        ref.read(foodNotifierProvider.notifier).searchFood(inputText);
-      case 2:
-        ref.read(recentMealNotifierProvider.notifier).loadRecentMeals(inputText);
-    }
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      switch (_tabController.index) {
+        case 0:
+          ref.read(productsNotifierProvider.notifier).searchProducts(inputText);
+        case 1:
+          ref.read(foodNotifierProvider.notifier).searchFood(inputText);
+        case 2:
+          ref.read(recentMealNotifierProvider.notifier).loadRecentMeals(inputText);
+      }
+    });
   }
 
   void _onBarcodeIconPressed() {
