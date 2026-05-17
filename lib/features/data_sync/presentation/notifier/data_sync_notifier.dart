@@ -17,7 +17,7 @@ class DataSyncNotifier extends Notifier<DataSyncState> {
       await Share.shareXFiles([XFile(filePath)]);
       state = DataSyncState(status: DataSyncStatus.exportSuccess, filePath: filePath);
     } catch (e) {
-      state = DataSyncState(status: DataSyncStatus.error, errorMessage: e.toString());
+      state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Export failed. Please try again.');
     }
   }
 
@@ -37,10 +37,10 @@ class DataSyncNotifier extends Notifier<DataSyncState> {
       } else if (result == ImportResult.cancelled) {
         state = const DataSyncState();
       } else {
-        state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Import failed');
+        state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Import failed. The file may be corrupted or in an unsupported format.');
       }
     } catch (e) {
-      state = DataSyncState(status: DataSyncStatus.error, errorMessage: e.toString());
+      state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Import failed. Please check the file and try again.');
     }
   }
 
@@ -61,7 +61,7 @@ class DataSyncNotifier extends Notifier<DataSyncState> {
         state = const DataSyncState();
       }
     } catch (e) {
-      state = DataSyncState(status: DataSyncStatus.error, errorMessage: e.toString());
+      state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Could not preview data. Please check the file and try again.');
     }
   }
 
@@ -72,7 +72,7 @@ class DataSyncNotifier extends Notifier<DataSyncState> {
       final filePath = await backupService.createEncryptedBackup(dataTypes, password);
       state = DataSyncState(status: DataSyncStatus.backupSuccess, filePath: filePath);
     } catch (e) {
-      state = DataSyncState(status: DataSyncStatus.error, errorMessage: e.toString());
+      state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Backup creation failed. Please try again.');
     }
   }
 
@@ -84,10 +84,10 @@ class DataSyncNotifier extends Notifier<DataSyncState> {
       if (result == ImportResult.success) {
         state = const DataSyncState(status: DataSyncStatus.importSuccess);
       } else {
-        state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Failed to decrypt backup');
+        state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Could not decrypt backup. Check your password and try again.');
       }
     } catch (e) {
-      state = DataSyncState(status: DataSyncStatus.error, errorMessage: e.toString());
+      state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Restore failed. Check your password and file path, then try again.');
     }
   }
 
@@ -102,7 +102,7 @@ class DataSyncNotifier extends Notifier<DataSyncState> {
         lastBackupPath: lastPath,
       );
     } catch (e) {
-      state = DataSyncState(status: DataSyncStatus.error, errorMessage: e.toString());
+      state = const DataSyncState(status: DataSyncStatus.error, errorMessage: 'Could not load backup status.');
     }
   }
 }

@@ -103,7 +103,7 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: iconController,
-                  decoration: const InputDecoration(labelText: 'Icon'),
+                  decoration: InputDecoration(labelText: S.of(context).iconLabel),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -275,6 +275,7 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
       body: _buildBody(context, state),
       floatingActionButton: FloatingActionButton(
         onPressed: _showCreateTrackerDialog,
+        tooltip: S.of(context).createTracker,
         child: const Icon(Icons.add),
       ),
     );
@@ -289,7 +290,28 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
     }
     if (state.trackers.isEmpty) {
       return Center(
-        child: Text(S.of(context).createTracker),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.track_changes_outlined,
+                size: 64,
+                color: Theme.of(context).colorScheme.outline,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                S.of(context).createTrackerHint,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface
+                          .withValues(alpha: 0.7),
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       );
     }
     return ListView.builder(
@@ -316,21 +338,41 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                         style: const TextStyle(fontSize: 24),
                       ),
                       const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          tracker.name,
-                          style:
-                              Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        onPressed: () {
-                          ref
-                              .read(customTrackerNotifierProvider.notifier)
-                              .deleteTracker(tracker.id);
-                        },
-                      ),
+                       Expanded(
+                         child: Text(
+                           tracker.name,
+                           style:
+                               Theme.of(context).textTheme.titleMedium,
+                         ),
+                       ),
+                       IconButton(
+                         icon: const Icon(Icons.delete_outline),
+                         tooltip: S.of(context).deleteTracker,
+                         onPressed: () {
+                           showDialog(
+                             context: context,
+                             builder: (ctx) => AlertDialog(
+                               title: Text(S.of(context).deleteTracker),
+                               content: Text(S.of(context).deleteDialogContent),
+                               actions: [
+                                 TextButton(
+                                   onPressed: () => Navigator.pop(ctx),
+                                   child: Text(S.of(context).dialogCancelLabel),
+                                 ),
+                                 TextButton(
+                                   onPressed: () {
+                                     Navigator.pop(ctx);
+                                     ref
+                                         .read(customTrackerNotifierProvider.notifier)
+                                         .deleteTracker(tracker.id);
+                                   },
+                                   child: Text(S.of(context).dialogDeleteLabel),
+                                 ),
+                               ],
+                             ),
+                           );
+                         },
+                       ),
                     ],
                   ),
                   if (trackerEntries.isNotEmpty)

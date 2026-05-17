@@ -7487,6 +7487,151 @@ class S {
       args: [],
     );
   }
+
+  /// `Value`
+  String get trackerValueLabel {
+    return Intl.message('Value', name: 'trackerValueLabel', desc: '', args: []);
+  }
+
+  /// `Icon`
+  String get iconLabel {
+    return Intl.message('Icon', name: 'iconLabel', desc: '', args: []);
+  }
+
+  /// `Delete item`
+  String get deleteItemLabel {
+    return Intl.message(
+      'Delete item',
+      name: 'deleteItemLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{current} of {goal} ml water consumed`
+  String waterProgressLabel(int current, int goal) {
+    return Intl.message(
+      '$current of $goal ml water consumed',
+      name: 'waterProgressLabel',
+      desc: '',
+      args: [current, goal],
+    );
+  }
+
+  /// `{percent}% of daily water goal`
+  String waterProgressPercent(int percent) {
+    return Intl.message(
+      '$percent% of daily water goal',
+      name: 'waterProgressPercent',
+      desc: '',
+      args: [percent],
+    );
+  }
+
+  /// `Body Mass Index: {value} ({category})`
+  String bmiLabelLong(String value, String category) {
+    return Intl.message(
+      'Body Mass Index: $value ($category)',
+      name: 'bmiLabelLong',
+      desc: '',
+      args: [value, category],
+    );
+  }
+
+  /// `{percent}% progress toward goal weight`
+  String goalProgressLabel(int percent) {
+    return Intl.message(
+      '$percent% progress toward goal weight',
+      name: 'goalProgressLabel',
+      desc: '',
+      args: [percent],
+    );
+  }
+
+  /// `{percent}% of fasting goal completed`
+  String fastingProgressLabel(int percent) {
+    return Intl.message(
+      '$percent% of fasting goal completed',
+      name: 'fastingProgressLabel',
+      desc: '',
+      args: [percent],
+    );
+  }
+
+  /// `Food grade: {grade}`
+  String foodGradeLabelLong(String grade) {
+    return Intl.message(
+      'Food grade: $grade',
+      name: 'foodGradeLabelLong',
+      desc: '',
+      args: [grade],
+    );
+  }
+
+  /// `Fasting streak: {count} days`
+  String streakLabelLong(int count) {
+    return Intl.message(
+      'Fasting streak: $count days',
+      name: 'streakLabelLong',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Add {amount} ml of water`
+  String addWaterLabel(int amount) {
+    return Intl.message(
+      'Add $amount ml of water',
+      name: 'addWaterLabel',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `This action cannot be undone.`
+  String get deleteDialogContent {
+    return Intl.message(
+      'This action cannot be undone.',
+      name: 'deleteDialogContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm`
+  String get confirmLabel {
+    return Intl.message('Confirm', name: 'confirmLabel', desc: '', args: []);
+  }
+
+  /// `No trackers yet. Tap + to create your first tracker.`
+  String get createTrackerHint {
+    return Intl.message(
+      'No trackers yet. Tap + to create your first tracker.',
+      name: 'createTrackerHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter the same password in both fields.`
+  String get encryptedBackupMismatchHint {
+    return Intl.message(
+      'Please enter the same password in both fields.',
+      name: 'encryptedBackupMismatchHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select your encrypted backup file`
+  String get dataSyncBackupPathHint {
+    return Intl.message(
+      'Select your encrypted backup file',
+      name: 'dataSyncBackupPathHint',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

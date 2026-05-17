@@ -51,49 +51,52 @@ class GoalProgressWidget extends ConsumerWidget {
           progress = (currentChange / totalChange).clamp(0.0, 1.0);
         }
 
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  S.of(context).goalWeight,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 12.0),
-                LinearPercentIndicator(
-                  percent: progress,
-                  lineHeight: 12.0,
-                  barRadius: const Radius.circular(6),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.surfaceContainerHighest,
-                  progressColor: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(height: 8.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${S.of(context).startWeight}: ${startWeight.toStringAsFixed(1)} kg',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    Text(
-                      '${S.of(context).goalWeight}: ${goalWeightKg.toStringAsFixed(1)} kg',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4.0),
-                Center(
-                  child: Text(
-                    '${S.of(context).currentWeight}: ${currentWeight.toStringAsFixed(1)} kg',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+        return Semantics(
+          label: S.of(context).goalProgressLabel((progress * 100).toInt()),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    S.of(context).goalWeight,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                ),
-              ],
+                  const SizedBox(height: 12.0),
+                  LinearPercentIndicator(
+                    percent: progress,
+                    lineHeight: 12.0,
+                    barRadius: const Radius.circular(6),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                    progressColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${S.of(context).startWeight}: ${startWeight.toStringAsFixed(1)} kg',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      Text(
+                        '${S.of(context).goalWeight}: ${goalWeightKg.toStringAsFixed(1)} kg',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4.0),
+                  Center(
+                    child: Text(
+                      '${S.of(context).currentWeight}: ${currentWeight.toStringAsFixed(1)} kg',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );

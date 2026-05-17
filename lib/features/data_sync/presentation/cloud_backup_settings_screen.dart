@@ -190,7 +190,7 @@ class _CloudBackupSettingsView extends ConsumerWidget {
               controller: pathController,
               decoration: InputDecoration(
                 labelText: S.of(context).dataSyncBackupFilePath,
-                hintText: '/path/to/nutriq_backup.enc',
+                hintText: S.of(context).dataSyncBackupPathHint,
               ),
             ),
             const SizedBox(height: 8),

@@ -167,33 +167,36 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
           SizedBox(
             width: 220,
             height: 220,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                CircularProgressIndicator(
-                  value: progress,
-                  backgroundColor:
-                      Theme.of(context).colorScheme.surfaceContainerHighest,
-                  color: Theme.of(context).colorScheme.primary,
-                  strokeWidth: 12,
-                ),
-                Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        _formatDuration(elapsed),
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        l10n.elapsedTimeLabel,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
+            child: Semantics(
+              label: l10n.fastingProgressLabel((progress * 100).toInt()),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  CircularProgressIndicator(
+                    value: progress,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(context).colorScheme.primary,
+                    strokeWidth: 12,
                   ),
-                ),
-              ],
+                  Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _formatDuration(elapsed),
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.elapsedTimeLabel,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 24),

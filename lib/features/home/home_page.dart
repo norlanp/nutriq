@@ -145,25 +145,28 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
                 height: 70,
                 color: Theme.of(context).colorScheme.error
                   ..withValues(alpha: 0.3),
-                child: DragTarget<IntakeEntity>(
-                  onAcceptWithDetails: (data) {
-                    _confirmDelete(context, data.data);
-                  },
-                  onLeave: (data) {
-                    setState(() {
-                      _isDragging = false;
-                    });
-                  },
-                  builder: (context, candidateData, rejectedData) {
-                    return Center(
-                      child: Icon(
-                        Icons.delete_outline,
-                        size: 36,
-                        color: context.nutriqColors.onOverlay,
-                      ),
-                    );
-                  },
-                ),
+                  child: DragTarget<IntakeEntity>(
+                   onAcceptWithDetails: (data) {
+                     _confirmDelete(context, data.data);
+                   },
+                   onLeave: (data) {
+                     setState(() {
+                       _isDragging = false;
+                     });
+                   },
+                   builder: (context, candidateData, rejectedData) {
+                     return Center(
+                       child: Semantics(
+                         label: S.of(context).deleteItemLabel,
+                         child: Icon(
+                           Icons.delete_outline,
+                           size: 36,
+                           color: context.nutriqColors.onOverlay,
+                         ),
+                       ),
+                     );
+                   },
+                 ),
               )))
     ]);
   }

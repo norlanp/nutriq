@@ -25,49 +25,55 @@ class BMIDisplay extends ConsumerWidget {
         final status = _getCategory(bmi);
         final color = _getCategoryColor(context, status);
 
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        S.of(context).bmi,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        bmi.toStringAsFixed(1),
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium
-                            ?.copyWith(
-                              color: color,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    _getCategoryLabel(context, status),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: color,
-                          fontWeight: FontWeight.w600,
+        return Semantics(
+          label: S.of(context).bmiLabelLong(
+                bmi.toStringAsFixed(1),
+                _getCategoryLabel(context, status),
+              ),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          S.of(context).bmi,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          bmi.toStringAsFixed(1),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                                color: color,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      _getCategoryLabel(context, status),
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: color,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );

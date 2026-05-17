@@ -166,10 +166,14 @@ class _QuickAddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onTap,
-      icon: const Icon(Icons.add),
-      label: Text(label),
+    return Semantics(
+      button: true,
+      label: S.of(context).addWaterLabel(amount),
+      child: ElevatedButton.icon(
+        onPressed: onTap,
+        icon: const Icon(Icons.add),
+        label: Text(label),
+      ),
     );
   }
 }

@@ -855,5 +855,21 @@
   "widgetProteinsShort": "P",
   "invalidNumberLabel": "Lütfen geçerli bir sayı girin",
   "invalidNegativeLabel": "Değer negatif olamaz",
-  "invalidMax100Label": "100g başına 100g'ı aşamaz"
+  "invalidMax100Label": "100g başına 100g'ı aşamaz",
+  "trackerValueLabel": "Değer",
+  "iconLabel": "Simge",
+  "deleteItemLabel": "Öğeyi sil",
+  "waterProgressLabel": "{goal} ml'nin {current} ml'si içildi",
+  "waterProgressPercent": "Günlük su hedefinin %{percent}'i",
+  "bmiLabelLong": "Vücut Kitle İndeksi: {value} ({category})",
+  "goalProgressLabel": "Hedef ağırlığa %{percent} ilerleme",
+  "fastingProgressLabel": "Oruç hedefinin %{percent}'i tamamlandı",
+  "foodGradeLabelLong": "Gıda notu: {grade}",
+  "streakLabelLong": "Oruç serisi: {count} gün",
+  "addWaterLabel": "{amount} ml su ekle",
+  "deleteDialogContent": "Bu işlem geri alınamaz.",
+  "confirmLabel": "Onayla",
+  "createTrackerHint": "Henüz takipçi yok. İlk takipçinizi oluşturmak için + tuşuna basın.",
+  "encryptedBackupMismatchHint": "Lütfen her iki alana da aynı parolayı girin.",
+  "dataSyncBackupPathHint": "Şifrelenmiş yedekleme dosyanızı seçin"
 }

@@ -873,5 +873,63 @@
   "widgetProteinsShort": "P",
   "invalidNumberLabel": "Please enter a valid number",
   "invalidNegativeLabel": "Value cannot be negative",
-  "invalidMax100Label": "Value cannot exceed 100g per 100g"
+  "invalidMax100Label": "Value cannot exceed 100g per 100g",
+  "trackerValueLabel": "Value",
+  "iconLabel": "Icon",
+  "deleteItemLabel": "Delete item",
+  "waterProgressLabel": "{current} of {goal} ml water consumed",
+  "@waterProgressLabel": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "waterProgressPercent": "{percent}% of daily water goal",
+  "@waterProgressPercent": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "bmiLabelLong": "Body Mass Index: {value} ({category})",
+  "@bmiLabelLong": {
+    "placeholders": {
+      "value": { "type": "String" },
+      "category": { "type": "String" }
+    }
+  },
+  "goalProgressLabel": "{percent}% progress toward goal weight",
+  "@goalProgressLabel": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "fastingProgressLabel": "{percent}% of fasting goal completed",
+  "@fastingProgressLabel": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "foodGradeLabelLong": "Food grade: {grade}",
+  "@foodGradeLabelLong": {
+    "placeholders": {
+      "grade": { "type": "String" }
+    }
+  },
+  "streakLabelLong": "Fasting streak: {count} days",
+  "@streakLabelLong": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "addWaterLabel": "Add {amount} ml of water",
+  "@addWaterLabel": {
+    "placeholders": {
+      "amount": { "type": "int" }
+    }
+  },
+  "deleteDialogContent": "This action cannot be undone.",
+  "confirmLabel": "Confirm",
+  "createTrackerHint": "No trackers yet. Tap + to create your first tracker.",
+  "encryptedBackupMismatchHint": "Please enter the same password in both fields.",
+  "dataSyncBackupPathHint": "Select your encrypted backup file"
 }

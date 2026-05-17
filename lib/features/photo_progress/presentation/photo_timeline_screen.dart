@@ -41,6 +41,7 @@ class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
         onPressed: () => context.push(
           AppRoutes.photoCapture,
         ),
+        tooltip: S.of(context).photoProgressLabel,
         child: const Icon(Icons.add_a_photo),
       ),
       body: photoState.isLoading

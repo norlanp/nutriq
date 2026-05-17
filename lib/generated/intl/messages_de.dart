@@ -20,34 +20,52 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de';
 
-  static String m0(pct) => "${pct}% Konfidenz";
+  static String m0(amount) => "${amount} ml Wasser hinzufügen";
 
-  static String m1(count) => "${count} Allergene-Filter aktiv";
+  static String m1(pct) => "${pct}% Konfidenz";
 
-  static String m2(versionNumber) => "Version ${versionNumber}";
+  static String m2(count) => "${count} Allergene-Filter aktiv";
 
-  static String m3(pctCarbs, pctFats, pctProteins) =>
+  static String m3(versionNumber) => "Version ${versionNumber}";
+
+  static String m4(value, category) =>
+      "Body-Mass-Index: ${value} (${category})";
+
+  static String m5(pctCarbs, pctFats, pctProteins) =>
       "${pctCarbs}% Kohlenhydrate, ${pctFats}% Fette, ${pctProteins}% Proteine";
 
-  static String m4(timestamp) => "Zuletzt synchronisiert: ${timestamp}";
+  static String m6(percent) => "${percent}% des Fastenziels erreicht";
 
-  static String m5(steps) => "${steps} Schritte synchronisiert";
+  static String m7(grade) => "Lebensmittelnote: ${grade}";
 
-  static String m6(taken, total) => "${taken} / ${total} Dosen eingenommen";
+  static String m8(percent) => "${percent}% Fortschritt zum Zielgewicht";
 
-  static String m7(count) => "${count} zum Tagebuch hinzufügen";
+  static String m9(timestamp) => "Zuletzt synchronisiert: ${timestamp}";
 
-  static String m8(count) =>
+  static String m10(steps) => "${steps} Schritte synchronisiert";
+
+  static String m11(taken, total) => "${taken} / ${total} Dosen eingenommen";
+
+  static String m12(count) => "${count} zum Tagebuch hinzufügen";
+
+  static String m13(count) =>
       "${count} Eintrag/Einträge zum Tagebuch hinzugefügt";
 
-  static String m9(count) => "${count} Positionen gefunden";
+  static String m14(count) => "${count} Positionen gefunden";
 
-  static String m10(riskValue) =>
+  static String m15(riskValue) =>
       "Risiko für Begleiterkrankungen: ${riskValue}";
 
-  static String m11(current, goal) => "${current} / ${goal} ml";
+  static String m16(count) => "Fastenstreak: ${count} Tage";
 
-  static String m12(age) => "${age} Jahre";
+  static String m17(current, goal) => "${current} / ${goal} ml";
+
+  static String m18(current, goal) =>
+      "${current} von ${goal} ml Wasser getrunken";
+
+  static String m19(percent) => "${percent}% des täglichen Wasserziels";
+
+  static String m20(age) => "${age} Jahre";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -80,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "addSymptom": MessageLookupByLibrary.simpleMessage("Symptom hinzufügen"),
     "addWater": MessageLookupByLibrary.simpleMessage("Wasser hinzufügen"),
+    "addWaterLabel": m0,
     "additionalInfoLabelCompendium2011": MessageLookupByLibrary.simpleMessage(
       "Informationen bereitgestellt von\n\'2011 Compendium\n of Physical Activities\'",
     ),
@@ -104,7 +123,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "aiScannerCaptureButton": MessageLookupByLibrary.simpleMessage(
       "Foto aufnehmen",
     ),
-    "aiScannerConfidence": m0,
+    "aiScannerConfidence": m1,
     "aiScannerExample": MessageLookupByLibrary.simpleMessage(
       "Lebensmittel mit KI erkennen",
     ),
@@ -139,7 +158,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "allergenEggsDesc": MessageLookupByLibrary.simpleMessage(
       "Eier und eihaltige Produkte",
     ),
-    "allergenFilterEnabled": m1,
+    "allergenFilterEnabled": m2,
     "allergenFish": MessageLookupByLibrary.simpleMessage("Fisch"),
     "allergenFishDesc": MessageLookupByLibrary.simpleMessage(
       "Fisch und Fischprodukte",
@@ -200,7 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "appLicenseLabel": MessageLookupByLibrary.simpleMessage("GPL-3.0 Lizenz"),
     "appTitle": MessageLookupByLibrary.simpleMessage("Nutriq"),
-    "appVersionName": m2,
+    "appVersionName": m3,
     "asNeeded": MessageLookupByLibrary.simpleMessage("Bei Bedarf"),
     "autopilotDescription": MessageLookupByLibrary.simpleMessage(
       "Passt Ihr tägliches Kalorienbudget automatisch basierend auf Ihren Gewichtstrend an. Zu schneller Verlust erhöht das Budget; zu langsamer Verlust senkt es.",
@@ -232,6 +251,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Der Body-Mass-Index (BMI) ist ein Index zur Klassifizierung von Übergewicht und Fettleibigkeit bei Erwachsenen. Er wird berechnet, indem das Gewicht in Kilogramm durch das Quadrat der Körpergröße in Metern (kg/m²) geteilt wird.\n\nDer BMI unterscheidet nicht zwischen Fett- und Muskelmasse und kann für einige Personen irreführend sein.",
     ),
     "bmiLabel": MessageLookupByLibrary.simpleMessage("BMI"),
+    "bmiLabelLong": m4,
     "bmiNormal": MessageLookupByLibrary.simpleMessage("Normal"),
     "bmiObese": MessageLookupByLibrary.simpleMessage("Adipositas"),
     "bmiOverweight": MessageLookupByLibrary.simpleMessage("Übergewicht"),
@@ -256,7 +276,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "calculationsMacronutrientsDistributionLabel":
         MessageLookupByLibrary.simpleMessage("Verteilung der Makronährstoffe"),
-    "calculationsMacrosDistribution": m3,
+    "calculationsMacrosDistribution": m5,
     "calculationsRecommendedLabel": MessageLookupByLibrary.simpleMessage(
       "(empfohlen)",
     ),
@@ -293,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cmLabel": MessageLookupByLibrary.simpleMessage("cm"),
     "compareLabel": MessageLookupByLibrary.simpleMessage("Vergleichen"),
     "confirmImport": MessageLookupByLibrary.simpleMessage("Import bestätigen"),
+    "confirmLabel": MessageLookupByLibrary.simpleMessage("Bestätigen"),
     "consumedLabel": MessageLookupByLibrary.simpleMessage("Verzehrt"),
     "containsAllergen": MessageLookupByLibrary.simpleMessage("Enthält"),
     "cookTimeLabel": MessageLookupByLibrary.simpleMessage("Kochzeit"),
@@ -315,6 +336,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Eigenes Lebensmittel erstellen",
     ),
     "createTracker": MessageLookupByLibrary.simpleMessage("Tracker erstellen"),
+    "createTrackerHint": MessageLookupByLibrary.simpleMessage(
+      "Noch keine Tracker. Tippen Sie auf +, um Ihren ersten Tracker zu erstellen.",
+    ),
     "currentWeight": MessageLookupByLibrary.simpleMessage("Aktuell"),
     "custom": MessageLookupByLibrary.simpleMessage("Benutzerdefiniert"),
     "customFoodEnergyLabel": MessageLookupByLibrary.simpleMessage(
@@ -352,6 +376,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "dataSyncBackupFilePath": MessageLookupByLibrary.simpleMessage(
       "Backup-Dateipfad",
+    ),
+    "dataSyncBackupPathHint": MessageLookupByLibrary.simpleMessage(
+      "Wählen Sie Ihre verschlüsselte Backup-Datei aus",
     ),
     "dataSyncCloudBackupTitle": MessageLookupByLibrary.simpleMessage(
       "Cloud-Backup",
@@ -463,6 +490,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteBloodGlucoseEntry": MessageLookupByLibrary.simpleMessage(
       "Eintrag löschen",
     ),
+    "deleteDialogContent": MessageLookupByLibrary.simpleMessage(
+      "Diese Aktion kann nicht rückgängig gemacht werden.",
+    ),
+    "deleteItemLabel": MessageLookupByLibrary.simpleMessage("Eintrag löschen"),
     "deleteMedication": MessageLookupByLibrary.simpleMessage(
       "Medikament löschen",
     ),
@@ -518,6 +549,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "enableDailySummaryLabel": MessageLookupByLibrary.simpleMessage(
       "Tägliche Zusammenfassung aktivieren",
+    ),
+    "encryptedBackupMismatchHint": MessageLookupByLibrary.simpleMessage(
+      "Bitte geben Sie dasselbe Passwort in beide Felder ein.",
     ),
     "endFastLabel": MessageLookupByLibrary.simpleMessage("Fasten beenden"),
     "energyLabel": MessageLookupByLibrary.simpleMessage("Energie"),
@@ -579,6 +613,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "fastingHistoryLabel": MessageLookupByLibrary.simpleMessage(
       "Fastenverlauf",
     ),
+    "fastingProgressLabel": m6,
     "fastingStartedNotificationBody": MessageLookupByLibrary.simpleMessage(
       "Ihre Fastenperiode hat begonnen. Bleiben Sie stark!",
     ),
@@ -599,6 +634,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Die Lebensmittelnote bewertet Lebensmittel von A (beste) bis D (schlechteste) basierend auf der Nährstoffdichte. Höherer Proteingehalt und Ballaststoffe verbessern die Note, während hoher Zucker-, Natrium- und gesättigter Fettgehalt sie senken.",
     ),
     "foodGradeLabel": MessageLookupByLibrary.simpleMessage("Lebensmittelnote"),
+    "foodGradeLabelLong": m7,
     "fridayLabel": MessageLookupByLibrary.simpleMessage("Freitag"),
     "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("♀ weiblich"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("Geschlecht"),
@@ -612,6 +648,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "goalMaintainWeight": MessageLookupByLibrary.simpleMessage(
       "Gewicht halten",
     ),
+    "goalProgressLabel": m8,
     "goalWeight": MessageLookupByLibrary.simpleMessage("Zielgewicht"),
     "gradeA": MessageLookupByLibrary.simpleMessage("Note A - Ausgezeichnet"),
     "gradeAExplain": MessageLookupByLibrary.simpleMessage(
@@ -673,7 +710,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "healthSyncGrantPermission": MessageLookupByLibrary.simpleMessage(
       "Berechtigung erteilen",
     ),
-    "healthSyncLastSync": m4,
+    "healthSyncLastSync": m9,
     "healthSyncNeverSynced": MessageLookupByLibrary.simpleMessage(
       "Nie synchronisiert",
     ),
@@ -684,7 +721,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Berechtigung erforderlich, um auf Gesundheitsdaten zuzugreifen",
     ),
     "healthSyncSteps": MessageLookupByLibrary.simpleMessage("Schritte"),
-    "healthSyncStepsResult": m5,
+    "healthSyncStepsResult": m10,
     "healthSyncTitle": MessageLookupByLibrary.simpleMessage("Gesundheitssync"),
     "healthSyncWeight": MessageLookupByLibrary.simpleMessage("Gewicht"),
     "healthSyncWorkouts": MessageLookupByLibrary.simpleMessage("Workouts"),
@@ -695,6 +732,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "hipCm": MessageLookupByLibrary.simpleMessage("Hüfte (cm)"),
     "homeLabel": MessageLookupByLibrary.simpleMessage("Startseite"),
     "hoursLabel": MessageLookupByLibrary.simpleMessage("Stunden"),
+    "iconLabel": MessageLookupByLibrary.simpleMessage("Symbol"),
     "importAction": MessageLookupByLibrary.simpleMessage("Importieren"),
     "importFromUrl": MessageLookupByLibrary.simpleMessage(
       "Von URL importieren",
@@ -805,7 +843,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Medikamentenprotokoll",
     ),
     "medicationName": MessageLookupByLibrary.simpleMessage("Medikamentenname"),
-    "medicationProgress": m6,
+    "medicationProgress": m11,
     "medicationReminder": MessageLookupByLibrary.simpleMessage(
       "Medikamentenerinnerung",
     ),
@@ -813,8 +851,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Medikamente",
     ),
     "medicationTitle": MessageLookupByLibrary.simpleMessage("Medikamente"),
-    "menuScanAddSelected": m7,
-    "menuScanAddedCount": m8,
+    "menuScanAddSelected": m12,
+    "menuScanAddedCount": m13,
     "menuScanAddingItems": MessageLookupByLibrary.simpleMessage(
       "Einträge werden zum Tagebuch hinzugefügt...",
     ),
@@ -830,7 +868,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "menuScanGalleryButton": MessageLookupByLibrary.simpleMessage(
       "Aus Galerie wählen",
     ),
-    "menuScanItemCount": m9,
+    "menuScanItemCount": m14,
     "menuScanNoNutritionInfo": MessageLookupByLibrary.simpleMessage(
       "Nährwertinfos nicht verfügbar",
     ),
@@ -956,7 +994,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nutritionalStatusRiskIncreased": MessageLookupByLibrary.simpleMessage(
       "Erhöht",
     ),
-    "nutritionalStatusRiskLabel": m10,
+    "nutritionalStatusRiskLabel": m15,
     "nutritionalStatusRiskLow": MessageLookupByLibrary.simpleMessage(
       "Niedrig \n(aber erhöhtes Risiko für andere \nklinische Probleme)",
     ),
@@ -1601,6 +1639,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Heutiger Schrittbonus",
     ),
     "streakLabel": MessageLookupByLibrary.simpleMessage("Serie"),
+    "streakLabelLong": m16,
     "sugarLabel": MessageLookupByLibrary.simpleMessage("Zucker"),
     "sugarsPer100Label": MessageLookupByLibrary.simpleMessage("Zucker pro "),
     "summaryTimeLabel": MessageLookupByLibrary.simpleMessage(
@@ -1640,6 +1679,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackerName": MessageLookupByLibrary.simpleMessage("Tracker-Name"),
     "trackerTrend": MessageLookupByLibrary.simpleMessage("Trend"),
     "trackerType": MessageLookupByLibrary.simpleMessage("Typ"),
+    "trackerValueLabel": MessageLookupByLibrary.simpleMessage("Wert"),
     "tuesdayLabel": MessageLookupByLibrary.simpleMessage("Dienstag"),
     "unitLabel": MessageLookupByLibrary.simpleMessage("Einheit"),
     "viewPhotoLabel": MessageLookupByLibrary.simpleMessage("Foto ansehen"),
@@ -1678,7 +1718,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sprachgesteuerte Lebensmittelerfassung",
     ),
     "waistCm": MessageLookupByLibrary.simpleMessage("Taille (cm)"),
-    "waterProgress": m11,
+    "waterProgress": m17,
+    "waterProgressLabel": m18,
+    "waterProgressPercent": m19,
     "waterTrackerTitle": MessageLookupByLibrary.simpleMessage("Wasser-Tracker"),
     "wednesdayLabel": MessageLookupByLibrary.simpleMessage("Mittwoch"),
     "weekdayTargets": MessageLookupByLibrary.simpleMessage("Wochentagsziele"),
@@ -1711,6 +1753,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "widgetLockTitle": MessageLookupByLibrary.simpleMessage("Nutriq Kalorien"),
     "widgetProteinsShort": MessageLookupByLibrary.simpleMessage("P"),
-    "yearsLabel": m12,
+    "yearsLabel": m20,
   };
 }

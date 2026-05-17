@@ -8,18 +8,18 @@ class DeleteDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(S.of(context).deleteTimeDialogTitle),
-      content: Text(S.of(context).deleteTimeDialogContent),
+      content: Text(S.of(context).deleteDialogContent),
       actions: [
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-            },
-            child: Text(S.of(context).dialogOKLabel)),
         TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text(S.of(context).dialogCancelLabel))
+            child: Text(S.of(context).dialogCancelLabel)),
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: Text(S.of(context).dialogDeleteLabel))
       ],
     );
   }

@@ -9,23 +9,27 @@ class StreakDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.local_fire_department,
-              color: streak > 0 ? context.nutriqColors.warning : context.nutriqColors.inactive,
-              size: 28,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '${S.of(context).streakLabel}: $streak',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
+    return Semantics(
+      label: S.of(context).streakLabelLong(streak),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.local_fire_department,
+                color: streak > 0 ? context.nutriqColors.warning : context.nutriqColors.inactive,
+                size: 28,
+                semanticLabel: streak > 0 ? S.of(context).streakLabel : null,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${S.of(context).streakLabel}: $streak',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+          ),
         ),
       ),
     );

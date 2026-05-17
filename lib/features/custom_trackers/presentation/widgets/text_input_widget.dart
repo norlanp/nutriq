@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutriq/generated/l10n.dart';
 
 class TextInputWidget extends StatelessWidget {
   final String? value;
@@ -15,9 +16,9 @@ class TextInputWidget extends StatelessWidget {
     final controller = TextEditingController(text: value);
     return TextField(
       controller: controller,
-      decoration: const InputDecoration(
-        labelText: 'Value',
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        labelText: S.of(context).trackerValueLabel,
+        border: const OutlineInputBorder(),
       ),
       onSubmitted: onChanged,
     );

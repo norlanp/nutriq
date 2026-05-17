@@ -847,5 +847,21 @@
   "widgetProteinsShort": "P",
   "invalidNumberLabel": "Bitte geben Sie eine gültige Zahl ein",
   "invalidNegativeLabel": "Wert darf nicht negativ sein",
-  "invalidMax100Label": "Wert darf 100g pro 100g nicht überschreiten"
+  "invalidMax100Label": "Wert darf 100g pro 100g nicht überschreiten",
+  "trackerValueLabel": "Wert",
+  "iconLabel": "Symbol",
+  "deleteItemLabel": "Eintrag löschen",
+  "waterProgressLabel": "{current} von {goal} ml Wasser getrunken",
+  "waterProgressPercent": "{percent}% des täglichen Wasserziels",
+  "bmiLabelLong": "Body-Mass-Index: {value} ({category})",
+  "goalProgressLabel": "{percent}% Fortschritt zum Zielgewicht",
+  "fastingProgressLabel": "{percent}% des Fastenziels erreicht",
+  "foodGradeLabelLong": "Lebensmittelnote: {grade}",
+  "streakLabelLong": "Fastenstreak: {count} Tage",
+  "addWaterLabel": "{amount} ml Wasser hinzufügen",
+  "deleteDialogContent": "Diese Aktion kann nicht rückgängig gemacht werden.",
+  "confirmLabel": "Bestätigen",
+  "createTrackerHint": "Noch keine Tracker. Tippen Sie auf +, um Ihren ersten Tracker zu erstellen.",
+  "encryptedBackupMismatchHint": "Bitte geben Sie dasselbe Passwort in beide Felder ein.",
+  "dataSyncBackupPathHint": "Wählen Sie Ihre verschlüsselte Backup-Datei aus"
 }

@@ -92,10 +92,12 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                 }
               },
             ),
+            tooltip: S.of(context).scanProductLabel,
             onPressed: () => cameraController.toggleTorch(),
           ),
           IconButton(
             icon: const Icon(Icons.flip_camera_android_outlined),
+            tooltip: S.of(context).scanProductLabel,
             onPressed: () => cameraController.switchCamera(),
           ),
         ],
