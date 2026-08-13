@@ -10,6 +10,7 @@ import 'package:nutriq/core/router/app_router.dart';
 import 'package:nutriq/core/styles/color_schemes.dart';
 import 'package:nutriq/core/styles/fonts.dart';
 import 'package:nutriq/core/styles/nutriq_colors.dart';
+import 'package:nutriq/core/styles/nutriq_spacing.dart';
 import 'package:nutriq/core/utils/env.dart';
 import 'package:nutriq/core/utils/logger_config.dart';
 
@@ -96,12 +97,12 @@ class NutriqApp extends ConsumerWidget {
           useMaterial3: true,
           colorScheme: lightColorScheme,
           textTheme: appTextTheme,
-          extensions: const [lightNutriqColors]),
+          extensions: const [lightNutriqColors, NutriqSpacing.standard]),
       darkTheme: ThemeData(
           useMaterial3: true,
           colorScheme: darkColorScheme,
           textTheme: appTextTheme,
-          extensions: const [darkNutriqColors]),
+          extensions: const [darkNutriqColors, NutriqSpacing.standard]),
       themeMode: themeMode,
       localizationsDelegates: const [
         S.delegate,

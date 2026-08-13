@@ -9,6 +9,7 @@ import 'package:nutriq/core/presentation/widgets/activity_vertial_list.dart';
 import 'package:nutriq/core/presentation/widgets/delete_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/disclaimer_dialog.dart';
 import 'package:nutriq/core/styles/nutriq_colors.dart';
+import 'package:nutriq/core/styles/nutriq_spacing.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/core/presentation/widgets/edit_dialog.dart';
 import 'package:nutriq/features/home/presentation/notifier/home_notifier.dart';
@@ -66,6 +67,7 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
     if (state.showDisclaimerDialog) {
       _showDisclaimerDialog(context);
     }
+    final sp = context.spacing;
     return Stack(children: [
       ListView(children: [
         DashboardWidget(
@@ -83,8 +85,11 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
           netCarbsEnabled: state.netCarbsEnabled,
           stepBonusCredit: state.stepBonusCredit,
         ),
+        SizedBox(height: sp.md),
         const WaterTrackerSummaryWidget(),
+        SizedBox(height: sp.md),
         const MedicationSummaryWidget(),
+        SizedBox(height: sp.section),
         ActivityVerticalList(
           day: DateTime.now(),
           title: S.of(context).activityLabel,
@@ -135,7 +140,7 @@ class _HomePageState extends ConsumerState<HomePage> with WidgetsBindingObserver
           onItemTappedCallback: onIntakeItemTapped,
           usesImperialUnits: state.usesImperialUnits,
         ),
-        const SizedBox(height: 48.0)
+        SizedBox(height: sp.section)
       ]),
       Align(
           alignment: Alignment.bottomCenter,

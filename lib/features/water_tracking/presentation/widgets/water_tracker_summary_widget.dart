@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/water_entity.dart';
 import 'package:nutriq/core/router/app_routes.dart';
+import 'package:nutriq/core/styles/nutriq_spacing.dart';
 import 'package:nutriq/features/water_tracking/presentation/notifier/water_notifier.dart';
 
 import 'package:nutriq/generated/l10n.dart';
@@ -95,16 +96,18 @@ class _WaterSummaryContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final sp = context.spacing;
     final percent =
         dailyGoal > 0 ? (dailyTotal / dailyGoal).clamp(0.0, 1.0) : 0.0;
 
     return Card(
       elevation: 1,
+      margin: EdgeInsets.symmetric(horizontal: sp.lg),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(sp.lg),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -126,7 +129,7 @@ class _WaterSummaryContent extends StatelessWidget {
                       color: theme.colorScheme.primary,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: sp.lg),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +140,7 @@ class _WaterSummaryContent extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: sp.xs),
                         Text(
                           S
                               .of(context)
@@ -151,7 +154,7 @@ class _WaterSummaryContent extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: sp.md),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -160,7 +163,7 @@ class _WaterSummaryContent extends StatelessWidget {
                     label: '250',
                     onTap: () => onAddWater(250),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: sp.sm),
                   _QuickAddChip(
                     icon: Icons.local_drink_outlined,
                     label: '500',

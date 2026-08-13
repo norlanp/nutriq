@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nutriq/core/domain/entity/medication_entity.dart';
 import 'package:nutriq/core/domain/entity/medication_log_entity.dart';
 import 'package:nutriq/core/router/app_routes.dart';
+import 'package:nutriq/core/styles/nutriq_spacing.dart';
 import 'package:nutriq/features/medication/presentation/notifier/medication_notifier.dart';
 
 import 'package:nutriq/generated/l10n.dart';
@@ -20,9 +21,10 @@ class _MedicationSummaryWidgetState extends ConsumerState<MedicationSummaryWidge
   @override
   void initState() {
     super.initState();
-    final notifier = ref.read(medicationNotifierProvider.notifier);
-    notifier.loadMedications(0);
-    notifier.loadLog(DateTime.now());
+    Future(() {
+      ref.read(medicationNotifierProvider.notifier).loadMedications(0);
+      ref.read(medicationNotifierProvider.notifier).loadLog(DateTime.now());
+    });
   }
 
   void _toggleDose(MedicationLogEntity existing, bool taken) {
@@ -96,6 +98,7 @@ class _MedicationSummaryContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final sp = context.spacing;
     final takenCount = logs.where((l) => l.doseTaken).length;
     final totalCount =
         medications.fold<int>(0, (sum, m) => sum + m.timesPerDay);
@@ -104,11 +107,12 @@ class _MedicationSummaryContent extends StatelessWidget {
 
     return Card(
       elevation: 1,
+      margin: EdgeInsets.symmetric(horizontal: sp.lg),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(sp.lg),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -137,7 +141,7 @@ class _MedicationSummaryContent extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: sp.lg),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +152,7 @@ class _MedicationSummaryContent extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: sp.xs),
                         Text(
                           S
                               .of(context)
@@ -162,7 +166,7 @@ class _MedicationSummaryContent extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: sp.sm),
               ...medications.map((med) => _MedicationTile(
                     medication: med,
                     logs: logs,
@@ -193,12 +197,13 @@ class _MedicationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final sp = context.spacing;
     final medLogs = logs.where((l) => l.medicationId == medication.id).toList();
     final takenCount = medLogs.where((l) => l.doseTaken).length;
     final totalDoses = medication.timesPerDay;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: sp.xs),
       child: Row(
         children: [
           Expanded(
@@ -227,7 +232,7 @@ class _MedicationTile extends StatelessWidget {
             final isTaken = doseIndex < takenCount;
 
             return Padding(
-              padding: const EdgeInsets.only(left: 4),
+              padding: EdgeInsets.only(left: sp.xs),
               child: InkWell(
                 onTap: () {
                   if (existingLog != null) {

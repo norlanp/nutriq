@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:nutriq/core/styles/nutriq_colors.dart';
+import 'package:nutriq/core/styles/nutriq_spacing.dart';
 import 'package:nutriq/generated/l10n.dart';
 
 class MacroNutrientsView extends StatefulWidget {
@@ -84,6 +85,7 @@ class _MacroRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final sp = context.spacing;
     final percent = _getPercent(goal, value);
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -98,7 +100,7 @@ class _MacroRing extends StatelessWidget {
           backgroundColor: color.withValues(alpha: 0.15),
           circularStrokeCap: CircularStrokeCap.round,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: sp.sm),
         Text(
           '${value.toInt()}/${goal.toInt()} g',
           style: theme.textTheme.titleSmall?.copyWith(
@@ -107,7 +109,7 @@ class _MacroRing extends StatelessWidget {
             letterSpacing: -0.3,
           ),
         ),
-        const SizedBox(height: 1),
+        SizedBox(height: sp.xs / 2),
         Text(
           label,
           style: theme.textTheme.labelSmall?.copyWith(

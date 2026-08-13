@@ -11,6 +11,7 @@ import 'package:nutriq/core/presentation/widgets/delete_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/exercise_calorie_impact_list.dart';
 import 'package:nutriq/core/presentation/widgets/exercise_quick_add_button.dart';
 import 'package:nutriq/core/presentation/widgets/remaining_budget_row.dart';
+import 'package:nutriq/core/styles/nutriq_spacing.dart';
 import 'package:nutriq/core/utils/custom_icons.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
 import 'package:nutriq/features/home/presentation/widgets/intake_vertical_list.dart';
@@ -61,21 +62,22 @@ class DayInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final trackedDay = trackedDayEntity;
+    final sp = context.spacing;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: sp.lg),
           child: Text(DateFormat.yMMMMEEEEd().format(selectedDay),
               style: Theme.of(context).textTheme.headlineSmall),
         ),
-        const SizedBox(height: 8.0),
+        SizedBox(height: sp.sm),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             trackedDay == null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: sp.lg),
                     child: Text(S.of(context).nothingAddedLabel,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context)
@@ -86,7 +88,7 @@ class DayInfoWidget extends StatelessWidget {
                 : const SizedBox(),
             trackedDay != null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: sp.lg),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -96,8 +98,8 @@ class DayInfoWidget extends StatelessWidget {
                           color: trackedDayEntity
                               ?.getRatingDayTextBackgroundColor(context),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 8.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: sp.sm, vertical: sp.sm),
                             child: Text(
                               _getCaloriesTrackedDisplayString(
                                   context, trackedDay),
@@ -111,7 +113,7 @@ class DayInfoWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 4.0),
+                        SizedBox(height: sp.xs),
                         Text(_getMacroTrackedDisplayString(trackedDay),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -127,17 +129,17 @@ class DayInfoWidget extends StatelessWidget {
                     ),
                   )
                 : const SizedBox(),
-            const SizedBox(height: 8.0),
+            SizedBox(height: sp.sm),
             if (burnedCalories > 0)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: sp.lg),
                 child: Card(
                   elevation: 0.0,
                   margin: const EdgeInsets.all(0.0),
                   color: Theme.of(context).colorScheme.tertiaryContainer,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 8.0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: sp.sm, vertical: sp.sm),
                     child: Row(
                       children: [
                         Icon(Icons.local_fire_department_outlined,
@@ -145,7 +147,7 @@ class DayInfoWidget extends StatelessWidget {
                             color: Theme.of(context)
                                 .colorScheme
                                 .onTertiaryContainer),
-                        const SizedBox(width: 8.0),
+                        SizedBox(width: sp.sm),
                         Expanded(
                           child: Text(
                             '${S.of(context).exerciseCalorieImpact}: ${S.of(context).burnedCaloriesLabel} ${burnedCalories.toInt()} kcal | ${S.of(context).netCaloriesLabel} ${netCalories.toInt()} kcal',
@@ -169,25 +171,25 @@ class DayInfoWidget extends StatelessWidget {
                 consumedCalories: trackedDay.caloriesTracked,
                 burnedCalories: burnedCalories,
               ),
-            const SizedBox(height: 4.0),
+            SizedBox(height: sp.xs),
             if (userActivities.isNotEmpty)
               ExerciseCalorieImpactList(
                 userActivities: userActivities,
                 totalBurnedCalories: burnedCalories,
               ),
-            const SizedBox(height: 4.0),
+            SizedBox(height: sp.xs),
             DailyNutritionSummary(
               trackedDay: trackedDay,
               intakes: _allIntakes,
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: sp.sm),
             ActivityVerticalList(
                 day: selectedDay,
                 title: S.of(context).activityLabel,
                 userActivityList: userActivities,
                 onItemLongPressedCallback: onActivityItemLongPressed),
             ExerciseQuickAddButton(day: selectedDay),
-            const SizedBox(height: 8.0),
+            SizedBox(height: sp.sm),
             IntakeVerticalList(
               day: selectedDay,
               title: S.of(context).breakfastLabel,
@@ -247,9 +249,9 @@ class DayInfoWidget extends StatelessWidget {
                       : onCopyIntake,
               trackedDayEntity: trackedDay,
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: sp.sm),
             _WeeklySummaryButton(selectedDay: selectedDay),
-            const SizedBox(height: 16.0)
+            SizedBox(height: sp.lg)
           ],
         )
       ],
@@ -341,8 +343,9 @@ class _WeeklySummaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sp = context.spacing;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: sp.lg),
       child: OutlinedButton.icon(
         onPressed: () => _showWeeklySummary(context),
         icon: const Icon(Icons.bar_chart_outlined),

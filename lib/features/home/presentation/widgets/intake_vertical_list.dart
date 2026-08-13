@@ -8,6 +8,7 @@ import 'package:nutriq/core/presentation/widgets/delete_all_dialog.dart';
 import 'package:nutriq/core/presentation/widgets/intake_card.dart';
 import 'package:nutriq/core/presentation/widgets/placeholder_card.dart';
 import 'package:nutriq/core/router/app_routes.dart';
+import 'package:nutriq/core/styles/nutriq_spacing.dart';
 import 'package:nutriq/core/utils/vertical_list_popup_menu_selections.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_screen.dart';
 import 'package:nutriq/features/add_meal/presentation/add_meal_type.dart';
@@ -66,16 +67,17 @@ class _IntakeVerticalListState extends ConsumerState<IntakeVerticalList> {
 
   @override
   Widget build(BuildContext context) {
+    final sp = context.spacing;
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          padding: EdgeInsets.fromLTRB(sp.lg, sp.xl, sp.lg, sp.sm),
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
               Icon(widget.listIcon,
                   size: 24, color: Theme.of(context).colorScheme.onSurface),
-              const SizedBox(width: 4.0),
+              SizedBox(width: sp.sm),
               Text(
                 widget.title,
                 style: Theme.of(context)

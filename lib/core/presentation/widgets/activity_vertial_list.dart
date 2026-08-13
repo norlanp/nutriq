@@ -4,6 +4,7 @@ import 'package:nutriq/core/domain/entity/user_activity_entity.dart';
 import 'package:nutriq/core/presentation/widgets/activity_card.dart';
 import 'package:nutriq/core/presentation/widgets/placeholder_card.dart';
 import 'package:nutriq/core/router/app_routes.dart';
+import 'package:nutriq/core/styles/nutriq_spacing.dart';
 import 'package:nutriq/features/add_activity/presentation/add_activity_screen.dart';
 
 class ActivityVerticalList extends StatelessWidget {
@@ -21,16 +22,17 @@ class ActivityVerticalList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sp = context.spacing;
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          padding: EdgeInsets.fromLTRB(sp.lg, sp.xl, sp.lg, sp.sm),
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
               Icon(UserActivityEntity.getIconData(),
                   size: 24, color: Theme.of(context).colorScheme.onSurface),
-              const SizedBox(width: 4.0),
+              SizedBox(width: sp.sm),
               Text(
                 title,
                 style: Theme.of(context)
