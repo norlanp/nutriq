@@ -47,9 +47,9 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
                 _controller.value.clamp(0.0, 1.0),
                 (_controller.value + 0.3).clamp(0.0, 1.0),
               ],
-              begin: AlignmentDirectional.topStart,
-              end: AlignmentDirectional.bottomEnd,
-            ).createShader(bounds);
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ).createShader(bounds, textDirection: TextDirection.ltr);
           },
           child: widget.child,
         );
