@@ -1,0 +1,19 @@
+# Nutriq TODO
+
+## Release blockers
+
+## Product correctness
+
+
+! blocked: AI food scanner requires a compatible `food_classifier.tflite` FlatBuffer model, labels file, and documented input preprocessing contract.
+  ! blocked: no approved model source is documented, and product-owner input is required.
+  ! blocked: no model provider or approved source is identified for the required assets and contract.
+    - unblock: Ask the product owner to name an approved source for the model assets and preprocessing contract.
+  ! blocked: no compatible model assets or preprocessing contract are available in the repository.
+    - unblock: Request the compatible model assets and preprocessing contract from the model provider.
+  ! blocked: the bundled `food_classifier.tflite` is a placeholder, and no labels file or preprocessing contract is in the repository.
+    - unblock: Add a valid FlatBuffer model, labels file, and documented preprocessing contract to the project.
+  - Unblock: provide the model assets and contract, then implement on-device image preprocessing and label loading.
+  - Requirement: never fabricate predictions when initialization or inference fails; show a localized error and keep manual search available.
+
+## Quality and documentation
