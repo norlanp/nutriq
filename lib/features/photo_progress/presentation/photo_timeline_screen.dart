@@ -14,7 +14,8 @@ class PhotoTimelineScreen extends ConsumerStatefulWidget {
   const PhotoTimelineScreen({super.key});
 
   @override
-  ConsumerState<PhotoTimelineScreen> createState() => _PhotoTimelineScreenState();
+  ConsumerState<PhotoTimelineScreen> createState() =>
+      _PhotoTimelineScreenState();
 }
 
 class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
@@ -24,10 +25,12 @@ class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(photoProgressNotifierProvider.notifier).loadPhotos(
-        DateTime.now().subtract(const Duration(days: 365)),
-        DateTime.now(),
-      );
+      ref
+          .read(photoProgressNotifierProvider.notifier)
+          .loadPhotos(
+            DateTime.now().subtract(const Duration(days: 365)),
+            DateTime.now(),
+          );
     });
   }
 
@@ -38,35 +41,39 @@ class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).photoProgressTitle)),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push(
-          AppRoutes.photoCapture,
-        ),
+        onPressed: () => context.push(AppRoutes.photoCapture),
         tooltip: S.of(context).photoProgressLabel,
         child: const Icon(Icons.add_a_photo),
       ),
       body: photoState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : photoState.hasError
-              ? Center(child: Text(photoState.errorMessage!))
-              : photoState.isLoaded
-                  ? photoState.photos.isEmpty
-                      ? Center(
-                          child: Text(
-                            S.of(context).noPhotosLabel,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                                ),
-                          ),
-                        )
-                      : _buildTimeline(context, photoState.photos)
-                  : const SizedBox(),
+          ? Center(child: Text(photoState.errorMessage!))
+          : photoState.isLoaded
+          ? photoState.photos.isEmpty
+                ? Center(
+                    child: Text(
+                      S.of(context).noPhotosLabel,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  )
+                : _buildTimeline(context, photoState.photos)
+          : const SizedBox(),
     );
   }
 
-  Widget _buildTimeline(BuildContext context, List<PhotoProgressEntity> photos) {
+  Widget _buildTimeline(
+    BuildContext context,
+    List<PhotoProgressEntity> photos,
+  ) {
     final grouped = <String, List<PhotoProgressEntity>>{};
     for (final photo in photos) {
-      final key = '${photo.date.year}-${photo.date.month.toString().padLeft(2, '0')}';
+      final key =
+          '${photo.date.year}-${photo.date.month.toString().padLeft(2, '0')}';
       grouped.putIfAbsent(key, () => []).add(photo);
     }
 
@@ -81,7 +88,12 @@ class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(key, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+              child: Text(
+                key,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              ),
             ),
             SizedBox(
               height: 160,
@@ -113,16 +125,36 @@ class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
             ListTile(
               leading: const Icon(Icons.visibility),
               title: Text(S.of(context).viewPhotoLabel),
-              onTap: () { Navigator.pop(ctx); _viewPhoto(context, photo); },
+              onTap: () {
+                Navigator.pop(ctx);
+                _viewPhoto(context, photo);
+              },
             ),
             if (photo.note != null && photo.note!.isNotEmpty)
-              ListTile(leading: const Icon(Icons.notes), title: Text(photo.note!), enabled: false),
+              ListTile(
+                leading: const Icon(Icons.notes),
+                title: Text(photo.note!),
+                enabled: false,
+              ),
             if (photo.tags.isNotEmpty)
-              ListTile(leading: const Icon(Icons.label), title: Text(photo.tags), enabled: false),
+              ListTile(
+                leading: const Icon(Icons.label),
+                title: Text(photo.tags),
+                enabled: false,
+              ),
             ListTile(
-              leading: Icon(Icons.delete, color: Theme.of(ctx).colorScheme.error),
-              title: Text(S.of(context).dialogDeleteLabel, style: TextStyle(color: Theme.of(ctx).colorScheme.error)),
-              onTap: () { Navigator.pop(ctx); _confirmDelete(context, photo); },
+              leading: Icon(
+                Icons.delete,
+                color: Theme.of(ctx).colorScheme.error,
+              ),
+              title: Text(
+                S.of(context).dialogDeleteLabel,
+                style: TextStyle(color: Theme.of(ctx).colorScheme.error),
+              ),
+              onTap: () {
+                Navigator.pop(ctx);
+                _confirmDelete(context, photo);
+              },
             ),
           ],
         ),
@@ -132,8 +164,11 @@ class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
 
   void _viewPhoto(BuildContext context, PhotoProgressEntity photo) async {
     final fullPath = await _photoStorageService.getFullPath(photo.filePath);
-    if (!mounted) return;
-    context.push(AppRoutes.imageFullscreen, extra: ImageFullScreenArguments(fullPath));
+    if (!context.mounted) return;
+    context.push(
+      AppRoutes.imageFullscreen,
+      extra: ImageFullScreenArguments(fullPath),
+    );
   }
 
   void _confirmDelete(BuildContext context, PhotoProgressEntity photo) {
@@ -143,9 +178,17 @@ class _PhotoTimelineScreenState extends ConsumerState<PhotoTimelineScreen> {
         title: Text(S.of(context).deletePhotoLabel),
         content: Text(S.of(context).deletePhotoDialogContent),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(S.of(context).dialogCancelLabel)),
           TextButton(
-            onPressed: () { Navigator.pop(ctx); ref.read(photoProgressNotifierProvider.notifier).deletePhoto(photo); },
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(S.of(context).dialogCancelLabel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              ref
+                  .read(photoProgressNotifierProvider.notifier)
+                  .deletePhoto(photo);
+            },
             child: Text(S.of(context).dialogDeleteLabel),
           ),
         ],
@@ -159,7 +202,11 @@ class _PhotoThumbnail extends StatelessWidget {
   final PhotoStorageService photoStorageService;
   final VoidCallback onTap;
 
-  const _PhotoThumbnail({required this.photo, required this.photoStorageService, required this.onTap});
+  const _PhotoThumbnail({
+    required this.photo,
+    required this.photoStorageService,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -168,8 +215,12 @@ class _PhotoThumbnail extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
-            width: 120, height: 160,
-            decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(8)),
+            width: 120,
+            height: 160,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: const Center(child: CircularProgressIndicator()),
           );
         }
@@ -178,24 +229,37 @@ class _PhotoThumbnail extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: SizedBox(
-              width: 120, height: 160,
+              width: 120,
+              height: 160,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
                   kIsWeb
-                      ? Image.network(snapshot.data!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.broken_image))
-                      : Image.asset(snapshot.data!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.broken_image)),
+                      ? Image.network(
+                          snapshot.data!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) =>
+                              const Icon(Icons.broken_image),
+                        )
+                      : Image.asset(
+                          snapshot.data!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) =>
+                              const Icon(Icons.broken_image),
+                        ),
                   Positioned(
-                    bottom: 0, left: 0, right: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       color: context.nutriqColors.overlayBackground,
                       child: Text(
                         '${photo.date.day.toString().padLeft(2, '0')}.${photo.date.month.toString().padLeft(2, '0')}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: context.nutriqColors.onOverlay,
-                              fontSize: 11,
-                            ),
+                          color: context.nutriqColors.onOverlay,
+                          fontSize: 11,
+                        ),
                       ),
                     ),
                   ),

@@ -59,7 +59,9 @@ class _BloodGlucoseScreenState extends ConsumerState<BloodGlucoseScreen> {
   }
 
   void _deleteEntry(BloodGlucoseEntity entry) {
-    ref.read(bloodGlucoseNotifierProvider.notifier).deleteEntry(entry, entry.date);
+    ref
+        .read(bloodGlucoseNotifierProvider.notifier)
+        .deleteEntry(entry, entry.date);
   }
 
   String _labelDisplayName(BloodGlucoseLabelType label) {
@@ -110,13 +112,15 @@ class _BloodGlucoseScreenState extends ConsumerState<BloodGlucoseScreen> {
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<BloodGlucoseLabelType>(
-            value: _selectedLabel,
+            initialValue: _selectedLabel,
             decoration: InputDecoration(labelText: s.bloodGlucoseLabel),
             items: BloodGlucoseLabelType.values
-                .map((label) => DropdownMenuItem(
-                      value: label,
-                      child: Text(_labelDisplayName(label)),
-                    ))
+                .map(
+                  (label) => DropdownMenuItem(
+                    value: label,
+                    child: Text(_labelDisplayName(label)),
+                  ),
+                )
                 .toList(),
             onChanged: (value) {
               if (value != null) {
@@ -136,46 +140,57 @@ class _BloodGlucoseScreenState extends ConsumerState<BloodGlucoseScreen> {
           Card(
             child: Padding(
               padding: const EdgeInsets.all(12),
-              child: Builder(builder: (context) {
-                final nc = context.nutriqColors;
-                final errorColor = Theme.of(context).colorScheme.error;
-                return Row(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: errorColor,
-                        shape: BoxShape.circle,
+              child: Builder(
+                builder: (context) {
+                  final nc = context.nutriqColors;
+                  final errorColor = Theme.of(context).colorScheme.error;
+                  return Row(
+                    children: [
+                      Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: errorColor,
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text('< 70', style: Theme.of(context).textTheme.bodySmall),
-                    const SizedBox(width: 12),
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: nc.success,
-                        shape: BoxShape.circle,
+                      const SizedBox(width: 4),
+                      Text(
+                        '< 70',
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text('70-180', style: Theme.of(context).textTheme.bodySmall),
-                    const SizedBox(width: 12),
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: nc.warning,
-                        shape: BoxShape.circle,
+                      const SizedBox(width: 12),
+                      Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: nc.success,
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text('> 180', style: Theme.of(context).textTheme.bodySmall),
-                  ],
-                );
-              }),
+                      const SizedBox(width: 4),
+                      Text(
+                        '70-180',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(width: 12),
+                      Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: nc.warning,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '> 180',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -185,41 +200,47 @@ class _BloodGlucoseScreenState extends ConsumerState<BloodGlucoseScreen> {
           ),
           const SizedBox(height: 24),
           if (state.entries.isNotEmpty) ...[
-            Text(s.bloodGlucoseTimeline,
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              s.bloodGlucoseTimeline,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
             BgDayTimeline(entries: state.entries, valueColor: _valueColor),
             const SizedBox(height: 24),
           ],
           if (state.entries.isNotEmpty) ...[
-            Text(s.bloodGlucoseTrend,
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              s.bloodGlucoseTrend,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
             BgTrendChart(entries: state.entries),
             const SizedBox(height: 24),
           ],
           if (state.entries.isNotEmpty)
-            ...state.entries.map((entry) => Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: _valueColor(entry.valueMgDl),
-                      child: Text(
-                        '${entry.valueMgDl}',
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+            ...state.entries.map(
+              (entry) => Card(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: _valueColor(entry.valueMgDl),
+                    child: Text(
+                      '${entry.valueMgDl}',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
-                    title: Text(
-                      '${entry.valueMgDl} ${s.bloodGlucoseMgdL}',
-                    ),
-                    subtitle: Text(
-                      '${_labelDisplayName(entry.label)}${entry.notes != null ? ' — ${entry.notes}' : ''}',
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete_outline, size: 20),
-                      onPressed: () => _deleteEntry(entry),
-                    ),
                   ),
-                )),
+                  title: Text('${entry.valueMgDl} ${s.bloodGlucoseMgdL}'),
+                  subtitle: Text(
+                    '${_labelDisplayName(entry.label)}${entry.notes != null ? ' — ${entry.notes}' : ''}',
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete_outline, size: 20),
+                    onPressed: () => _deleteEntry(entry),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

@@ -35,9 +35,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final settingsAsync = ref.watch(settingsNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).settingsLabel),
-      ),
+      appBar: AppBar(title: Text(S.of(context).settingsLabel)),
       body: settingsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, __) => const Center(child: CircularProgressIndicator()),
@@ -47,36 +45,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ListTile(
               leading: const Icon(Icons.notifications_outlined),
               title: Text(S.of(context).notificationSettingsLabel),
-              onTap: () => context.push(
-                AppRoutes.notificationSettings,
-              ),
+              onTap: () => context.push(AppRoutes.notificationSettings),
             ),
             ListTile(
               leading: const Icon(Icons.health_and_safety_outlined),
               title: Text(S.of(context).healthSyncTitle),
-              onTap: () => context.push(
-                AppRoutes.healthSync,
-              ),
+              onTap: () => context.push(AppRoutes.healthSync),
             ),
             ListTile(
               leading: const Icon(Icons.warning_amber_outlined),
               title: Text(S.of(context).allergenSettingsLabel),
-              onTap: () => context.push(
-                AppRoutes.allergenSettings,
-              ),
+              onTap: () => context.push(AppRoutes.allergenSettings),
             ),
             ListTile(
               leading: const Icon(Icons.ac_unit_outlined),
               title: Text(S.of(context).settingsUnitsLabel),
-              onTap: () =>
-                  _showUnitsDialog(context, state.usesImperialUnits),
+              onTap: () => _showUnitsDialog(context, state.usesImperialUnits),
             ),
             ListTile(
               leading: const Icon(Icons.grain_outlined),
               title: Text(S.of(context).netCarbsSettingsLabel),
               subtitle: Text(S.of(context).netCarbsDescription),
-              onTap: () =>
-                  _showNetCarbsDialog(context, state.netCarbsEnabled),
+              onTap: () => _showNetCarbsDialog(context, state.netCarbsEnabled),
             ),
             ListTile(
               leading: const Icon(Icons.calculate_outlined),
@@ -106,8 +96,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ListTile(
               leading: const Icon(Icons.policy_outlined),
               title: Text(S.of(context).settingsPrivacySettings),
-              onTap: () =>
-                  _showPrivacyDialog(context, state.sendAnonymousData),
+              onTap: () => _showPrivacyDialog(context, state.sendAnonymousData),
             ),
             ListTile(
               leading: const Icon(Icons.error_outline_outlined),
@@ -115,7 +104,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onTap: () => _showAboutDialog(context),
             ),
             const SizedBox(height: 32.0),
-            AppBannerVersion(versionNumber: state.versionNumber)
+            AppBannerVersion(versionNumber: state.versionNumber),
           ],
         ),
       ),
@@ -127,43 +116,50 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ? SystemDropDownType.imperial
         : SystemDropDownType.metric;
     final shouldUpdate = await showDialog<bool?>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-              title: Text(S.of(context).settingsUnitsLabel),
-              content: Wrap(children: [
-                Column(
-                  children: [
-                    DropdownButtonFormField(
-                      value: selectedUnit,
-                      decoration: InputDecoration(
-                        enabled: true,
-                        filled: false,
-                        labelText: S.of(context).settingsSystemLabel,
-                      ),
-                      onChanged: (value) {
-                        selectedUnit = value ?? SystemDropDownType.metric;
-                      },
-                      items: [
-                        DropdownMenuItem(
-                            value: SystemDropDownType.metric,
-                            child: Text(S.of(context).settingsMetricLabel)),
-                        DropdownMenuItem(
-                            value: SystemDropDownType.imperial,
-                            child: Text(S.of(context).settingsImperialLabel))
-                      ],
-                    )
-                  ],
-                ),
-              ]),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(S.of(context).settingsUnitsLabel),
+          content: Wrap(
+            children: [
+              Column(
+                children: [
+                  DropdownButtonFormField(
+                    initialValue: selectedUnit,
+                    decoration: InputDecoration(
+                      enabled: true,
+                      filled: false,
+                      labelText: S.of(context).settingsSystemLabel,
+                    ),
+                    onChanged: (value) {
+                      selectedUnit = value ?? SystemDropDownType.metric;
                     },
-                    child: Text(S.of(context).dialogOKLabel))
-              ]);
-        });
+                    items: [
+                      DropdownMenuItem(
+                        value: SystemDropDownType.metric,
+                        child: Text(S.of(context).settingsMetricLabel),
+                      ),
+                      DropdownMenuItem(
+                        value: SystemDropDownType.imperial,
+                        child: Text(S.of(context).settingsImperialLabel),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
     if (shouldUpdate == true) {
       await ref
           .read(settingsNotifierProvider.notifier)
@@ -178,13 +174,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void _showNetCarbsDialog(BuildContext context, bool netCarbsEnabled) async {
     bool switchActive = netCarbsEnabled;
     final shouldUpdate = await showDialog<bool?>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-              title: Text(S.of(context).netCarbsSettingsLabel),
-              content: StatefulBuilder(
-                builder: (BuildContext context,
-                    void Function(void Function()) setState) {
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(S.of(context).netCarbsSettingsLabel),
+          content: StatefulBuilder(
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -202,20 +201,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ],
                   );
                 },
-              ),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                    child: Text(S.of(context).dialogCancelLabel)),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                    },
-                    child: Text(S.of(context).dialogOKLabel))
-              ]);
-        });
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text(S.of(context).dialogCancelLabel),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
     if (shouldUpdate == true) {
       await ref
           .read(settingsNotifierProvider.notifier)
@@ -243,194 +246,218 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void _showThemeDialog(BuildContext context, AppThemeEntity currentAppTheme) {
     AppThemeEntity selectedTheme = currentAppTheme;
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            title: Text(S.of(context).settingsThemeLabel),
-            content: StatefulBuilder(
-              builder: (BuildContext context,
-                  void Function(void Function()) setState) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile(
-                      title:
-                          Text(S.of(context).settingsThemeSystemDefaultLabel),
-                      value: AppThemeEntity.system,
-                      groupValue: selectedTheme,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedTheme = value as AppThemeEntity;
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text(S.of(context).settingsThemeLightLabel),
-                      value: AppThemeEntity.light,
-                      groupValue: selectedTheme,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedTheme = value as AppThemeEntity;
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text(S.of(context).settingsThemeDarkLabel),
-                      value: AppThemeEntity.dark,
-                      groupValue: selectedTheme,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedTheme = value as AppThemeEntity;
-                        });
-                      },
-                    ),
-                  ],
-                );
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          title: Text(S.of(context).settingsThemeLabel),
+          content: StatefulBuilder(
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RadioGroup<AppThemeEntity>(
+                        groupValue: selectedTheme,
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() => selectedTheme = value);
+                          }
+                        },
+                        child: Column(
+                          children: [
+                            RadioListTile(
+                              title: Text(
+                                S.of(context).settingsThemeSystemDefaultLabel,
+                              ),
+                              value: AppThemeEntity.system,
+                            ),
+                            RadioListTile(
+                              title: Text(
+                                S.of(context).settingsThemeLightLabel,
+                              ),
+                              value: AppThemeEntity.light,
+                            ),
+                            RadioListTile(
+                              title: Text(S.of(context).settingsThemeDarkLabel),
+                              value: AppThemeEntity.dark,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
               },
+              child: Text(S.of(context).dialogCancelLabel),
             ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(S.of(context).dialogCancelLabel)),
-              TextButton(
-                  onPressed: () async {
-                    await ref
-                        .read(settingsNotifierProvider.notifier)
-                        .setAppTheme(selectedTheme);
-                    ref.read(themeModeProvider.notifier).setTheme(selectedTheme);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(S.of(context).dialogOKLabel)),
-            ],
-          );
-        });
+            TextButton(
+              onPressed: () async {
+                await ref
+                    .read(settingsNotifierProvider.notifier)
+                    .setAppTheme(selectedTheme);
+                ref.read(themeModeProvider.notifier).setTheme(selectedTheme);
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showDisclaimerDialog(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return const DisclaimerDialog();
-        });
+      context: context,
+      builder: (context) {
+        return const DisclaimerDialog();
+      },
+    );
   }
 
   void _showReportErrorDialog(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(S.of(context).settingsReportErrorLabel),
-            content: Text(S.of(context).reportErrorDialogText),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(S.of(context).dialogCancelLabel)),
-              TextButton(
-                  onPressed: () async {
-                    _reportError(context);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(S.of(context).dialogOKLabel))
-            ],
-          );
-        });
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(S.of(context).settingsReportErrorLabel),
+          content: Text(S.of(context).reportErrorDialogText),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).dialogCancelLabel),
+            ),
+            TextButton(
+              onPressed: () async {
+                _reportError(context);
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _reportError(BuildContext context) async {
-    final reportUri =
-        Uri.parse("mailto:${AppConst.reportErrorEmail}?subject=Report_Error");
+    final reportUri = Uri.parse(
+      "mailto:${AppConst.reportErrorEmail}?subject=Report_Error",
+    );
 
     if (await canLaunchUrl(reportUri)) {
       launchUrl(reportUri);
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(S.of(context).errorOpeningEmail)));
+          SnackBar(content: Text(S.of(context).errorOpeningEmail)),
+        );
       }
     }
   }
 
   void _showPrivacyDialog(
-      BuildContext context, bool hasAcceptedAnonymousData) async {
+    BuildContext context,
+    bool hasAcceptedAnonymousData,
+  ) async {
     bool switchActive = hasAcceptedAnonymousData;
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(S.of(context).settingsPrivacySettings),
-            content: StatefulBuilder(
-              builder: (BuildContext context,
-                  void Function(void Function()) setState) {
-                return SwitchListTile(
-                  title: Text(S.of(context).sendAnonymousUserData),
-                  value: switchActive,
-                  onChanged: (bool value) {
-                    setState(() {
-                      switchActive = value;
-                    });
-                  },
-                );
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(S.of(context).settingsPrivacySettings),
+          content: StatefulBuilder(
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return SwitchListTile(
+                    title: Text(S.of(context).sendAnonymousUserData),
+                    value: switchActive,
+                    onChanged: (bool value) {
+                      setState(() {
+                        switchActive = value;
+                      });
+                    },
+                  );
+                },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
               },
+              child: Text(S.of(context).dialogCancelLabel),
             ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(S.of(context).dialogCancelLabel)),
-              TextButton(
-                  onPressed: () async {
-                    await ref
-                        .read(settingsNotifierProvider.notifier)
-                        .setHasAcceptedAnonymousData(switchActive);
-                    if (!switchActive) AppReporter.close();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(S.of(context).dialogOKLabel))
-            ],
-          );
-        });
+            TextButton(
+              onPressed: () async {
+                await ref
+                    .read(settingsNotifierProvider.notifier)
+                    .setHasAcceptedAnonymousData(switchActive);
+                if (!switchActive) AppReporter.close();
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showAboutDialog(BuildContext context) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     if (context.mounted) {
       showAboutDialog(
-          context: context,
-          applicationName: S.of(context).appTitle,
-          applicationIcon: SizedBox(
-              width: 40, child: Image.asset('assets/icon/ont_logo_square.png')),
-          applicationVersion: packageInfo.version,
-          applicationLegalese: S.of(context).appLicenseLabel,
-          children: [
-            TextButton(
-                onPressed: () {
-                  _launchSourceCodeUrl(context);
-                },
-                child: Row(
-                  children: [
-                    const Icon(Icons.code_outlined),
-                    const SizedBox(width: 8.0),
-                    Text(S.of(context).settingsSourceCodeLabel),
-                  ],
-                )),
-            TextButton(
-                onPressed: () {
-                  _launchPrivacyPolicyUrl(context);
-                },
-                child: Row(
-                  children: [
-                    const Icon(Icons.policy_outlined),
-                    const SizedBox(width: 8.0),
-                    Text(S.of(context).privacyPolicyLabel),
-                  ],
-                ))
-          ]);
+        context: context,
+        applicationName: S.of(context).appTitle,
+        applicationIcon: SizedBox(
+          width: 40,
+          child: Image.asset('assets/icon/ont_logo_square.png'),
+        ),
+        applicationVersion: packageInfo.version,
+        applicationLegalese: S.of(context).appLicenseLabel,
+        children: [
+          TextButton(
+            onPressed: () {
+              _launchSourceCodeUrl(context);
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.code_outlined),
+                const SizedBox(width: 8.0),
+                Text(S.of(context).settingsSourceCodeLabel),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              _launchPrivacyPolicyUrl(context);
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.policy_outlined),
+                const SizedBox(width: 8.0),
+                Text(S.of(context).privacyPolicyLabel),
+              ],
+            ),
+          ),
+        ],
+      );
     }
   }
 
@@ -450,7 +477,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(S.of(context).errorOpeningBrowser)));
+          SnackBar(content: Text(S.of(context).errorOpeningBrowser)),
+        );
       }
     }
   }

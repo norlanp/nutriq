@@ -50,15 +50,17 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<MedicationFrequencyType>(
-                  value: frequency,
+                  initialValue: frequency,
                   decoration: InputDecoration(
                     labelText: S.of(context).medicationFrequency,
                   ),
                   items: MedicationFrequencyType.values
-                      .map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(_frequencyLabel(e)),
-                          ))
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(_frequencyLabel(e)),
+                        ),
+                      )
                       .toList(),
                   onChanged: (v) =>
                       setDialogState(() => frequency = v ?? frequency),
@@ -72,9 +74,12 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
                       DropdownButton<int>(
                         value: timesPerDay,
                         items: List.generate(
-                            10,
-                            (i) => DropdownMenuItem(
-                                value: i + 1, child: Text('${i + 1}'))),
+                          10,
+                          (i) => DropdownMenuItem(
+                            value: i + 1,
+                            child: Text('${i + 1}'),
+                          ),
+                        ),
                         onChanged: (v) =>
                             setDialogState(() => timesPerDay = v ?? 1),
                       ),
@@ -83,9 +88,7 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
                 const SizedBox(height: 8),
                 TextField(
                   controller: notesController,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).notes,
-                  ),
+                  decoration: InputDecoration(labelText: S.of(context).notes),
                   maxLines: 2,
                 ),
               ],

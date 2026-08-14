@@ -50,7 +50,7 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<TrackerType>(
-                  value: selectedType,
+                  initialValue: selectedType,
                   decoration: InputDecoration(
                     labelText: S.of(context).trackerType,
                   ),
@@ -82,8 +82,7 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                             labelText: S.of(context).minValue,
                           ),
                           keyboardType: TextInputType.number,
-                          onChanged: (v) =>
-                              minVal = double.tryParse(v) ?? 0,
+                          onChanged: (v) => minVal = double.tryParse(v) ?? 0,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -93,8 +92,7 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                             labelText: S.of(context).maxValue,
                           ),
                           keyboardType: TextInputType.number,
-                          onChanged: (v) =>
-                              maxVal = double.tryParse(v) ?? 10,
+                          onChanged: (v) => maxVal = double.tryParse(v) ?? 10,
                         ),
                       ),
                     ],
@@ -103,13 +101,16 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: iconController,
-                  decoration: InputDecoration(labelText: S.of(context).iconLabel),
+                  decoration: InputDecoration(
+                    labelText: S.of(context).iconLabel,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: unitController,
-                  decoration:
-                      InputDecoration(labelText: S.of(context).unitLabel),
+                  decoration: InputDecoration(
+                    labelText: S.of(context).unitLabel,
+                  ),
                 ),
               ],
             ),
@@ -232,10 +233,7 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text(S.of(context).logEntry),
-          content: TextInputWidget(
-            value: null,
-            onChanged: (_) {},
-          ),
+          content: TextInputWidget(value: null, onChanged: (_) {}),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
@@ -269,9 +267,7 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
     final state = ref.watch(customTrackerNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).customTrackersLabel),
-      ),
+      appBar: AppBar(title: Text(S.of(context).customTrackersLabel)),
       body: _buildBody(context, state),
       floatingActionButton: FloatingActionButton(
         onPressed: _showCreateTrackerDialog,
@@ -304,9 +300,10 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
               Text(
                 S.of(context).createTrackerHint,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface
-                          .withValues(alpha: 0.7),
-                    ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -338,41 +335,43 @@ class _CustomTrackerScreenState extends ConsumerState<CustomTrackerScreen> {
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const SizedBox(width: 12),
-                       Expanded(
-                         child: Text(
-                           tracker.name,
-                           style:
-                               Theme.of(context).textTheme.titleMedium,
-                         ),
-                       ),
-                       IconButton(
-                         icon: const Icon(Icons.delete_outline),
-                         tooltip: S.of(context).deleteTracker,
-                         onPressed: () {
-                           showDialog(
-                             context: context,
-                             builder: (ctx) => AlertDialog(
-                               title: Text(S.of(context).deleteTracker),
-                               content: Text(S.of(context).deleteDialogContent),
-                               actions: [
-                                 TextButton(
-                                   onPressed: () => Navigator.pop(ctx),
-                                   child: Text(S.of(context).dialogCancelLabel),
-                                 ),
-                                 TextButton(
-                                   onPressed: () {
-                                     Navigator.pop(ctx);
-                                     ref
-                                         .read(customTrackerNotifierProvider.notifier)
-                                         .deleteTracker(tracker.id);
-                                   },
-                                   child: Text(S.of(context).dialogDeleteLabel),
-                                 ),
-                               ],
-                             ),
-                           );
-                         },
-                       ),
+                      Expanded(
+                        child: Text(
+                          tracker.name,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline),
+                        tooltip: S.of(context).deleteTracker,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: Text(S.of(context).deleteTracker),
+                              content: Text(S.of(context).deleteDialogContent),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(ctx),
+                                  child: Text(S.of(context).dialogCancelLabel),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(ctx);
+                                    ref
+                                        .read(
+                                          customTrackerNotifierProvider
+                                              .notifier,
+                                        )
+                                        .deleteTracker(tracker.id);
+                                  },
+                                  child: Text(S.of(context).dialogDeleteLabel),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                   if (trackerEntries.isNotEmpty)

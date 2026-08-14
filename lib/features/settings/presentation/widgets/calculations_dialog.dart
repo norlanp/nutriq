@@ -44,7 +44,9 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
     final userCarbsPct = await settingsNotifier.getUserCarbGoalPct();
     final userProteinPct = await settingsNotifier.getUserProteinGoalPct();
     final userFatPct = await settingsNotifier.getUserFatGoalPct();
-    final tdeeMethod = await ref.read(addConfigUsecaseProvider).getConfigTDEEMethod();
+    final tdeeMethod = await ref
+        .read(addConfigUsecaseProvider)
+        .getConfigTDEEMethod();
 
     setState(() {
       _kcalAdjustmentSelection = kcalAdjustment;
@@ -86,29 +88,31 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
       content: Wrap(
         children: [
           DropdownButtonFormField<TDEEMethodEntity>(
-              isExpanded: true,
-              decoration: InputDecoration(
-                filled: false,
-                labelText: S.of(context).calculationsTDEELabel,
-              ),
-              value: _tdeeMethodSelection,
-              items: TDEEMethodEntity.values.map((method) {
-                return DropdownMenuItem(
-                    value: method,
-                    child: Text(
-                      method == TDEEMethodEntity.iom2005
-                          ? '${method.getName(context)} ${S.of(context).calculationsRecommendedLabel}'
-                          : method.getName(context),
-                      overflow: TextOverflow.ellipsis,
-                    ));
-              }).toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    _tdeeMethodSelection = value;
-                  });
-                }
-              }),
+            isExpanded: true,
+            decoration: InputDecoration(
+              filled: false,
+              labelText: S.of(context).calculationsTDEELabel,
+            ),
+            initialValue: _tdeeMethodSelection,
+            items: TDEEMethodEntity.values.map((method) {
+              return DropdownMenuItem(
+                value: method,
+                child: Text(
+                  method == TDEEMethodEntity.iom2005
+                      ? '${method.getName(context)} ${S.of(context).calculationsRecommendedLabel}'
+                      : method.getName(context),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  _tdeeMethodSelection = value;
+                });
+              }
+            },
+          ),
           const SizedBox(height: 64),
           Container(
             alignment: Alignment.centerLeft,
@@ -151,9 +155,11 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
                 double delta = value - _carbsPctSelection;
                 _carbsPctSelection = value;
 
-                double proteinRatio = _proteinPctSelection /
+                double proteinRatio =
+                    _proteinPctSelection /
                     (_proteinPctSelection + _fatPctSelection);
-                double fatRatio = _fatPctSelection /
+                double fatRatio =
+                    _fatPctSelection /
                     (_proteinPctSelection + _fatPctSelection);
 
                 _proteinPctSelection -= delta * proteinRatio;
@@ -181,7 +187,8 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
                 double delta = value - _proteinPctSelection;
                 _proteinPctSelection = value;
 
-                double carbsRatio = _carbsPctSelection /
+                double carbsRatio =
+                    _carbsPctSelection /
                     (_carbsPctSelection + _fatPctSelection);
                 double fatRatio =
                     _fatPctSelection / (_carbsPctSelection + _fatPctSelection);
@@ -211,9 +218,11 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
                 double delta = value - _fatPctSelection;
                 _fatPctSelection = value;
 
-                double carbsRatio = _carbsPctSelection /
+                double carbsRatio =
+                    _carbsPctSelection /
                     (_carbsPctSelection + _proteinPctSelection);
-                double proteinRatio = _proteinPctSelection /
+                double proteinRatio =
+                    _proteinPctSelection /
                     (_carbsPctSelection + _proteinPctSelection);
 
                 _carbsPctSelection -= delta * carbsRatio;
@@ -236,15 +245,17 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(S.of(context).dialogCancelLabel)),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(S.of(context).dialogCancelLabel),
+        ),
         TextButton(
-            onPressed: () {
-              _saveCalculationSettings();
-            },
-            child: Text(S.of(context).dialogOKLabel))
+          onPressed: () {
+            _saveCalculationSettings();
+          },
+          child: Text(S.of(context).dialogOKLabel),
+        ),
       ],
     );
   }
@@ -260,10 +271,7 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label),
-            Text('${value.round()}%'),
-          ],
+          children: [Text(label), Text('${value.round()}%')],
         ),
         SizedBox(
           width: 280,
@@ -320,18 +328,25 @@ class _CalculationsDialogState extends ConsumerState<CalculationsDialog> {
       }
 
       assert(
-          _carbsPctSelection + _proteinPctSelection + _fatPctSelection == 100,
-          'Macros must total 100%');
+        _carbsPctSelection + _proteinPctSelection + _fatPctSelection == 100,
+        'Macros must total 100%',
+      );
     });
   }
 
   void _saveCalculationSettings() async {
     final settingsNotifier = ref.read(settingsNotifierProvider.notifier);
-    await settingsNotifier
-        .setKcalAdjustment(_kcalAdjustmentSelection.toInt().toDouble());
+    await settingsNotifier.setKcalAdjustment(
+      _kcalAdjustmentSelection.toInt().toDouble(),
+    );
     await settingsNotifier.setMacroGoals(
-        _carbsPctSelection, _proteinPctSelection, _fatPctSelection);
-    await ref.read(addConfigUsecaseProvider).setConfigTDEEMethod(_tdeeMethodSelection);
+      _carbsPctSelection,
+      _proteinPctSelection,
+      _fatPctSelection,
+    );
+    await ref
+        .read(addConfigUsecaseProvider)
+        .setConfigTDEEMethod(_tdeeMethodSelection);
 
     await settingsNotifier.updateTrackedDay(DateTime.now());
     ref.read(profileNotifierProvider.notifier).loadProfile();

@@ -15,7 +15,8 @@ class RecipeBuilderScreen extends ConsumerStatefulWidget {
   const RecipeBuilderScreen({super.key});
 
   @override
-  ConsumerState<RecipeBuilderScreen> createState() => _RecipeBuilderScreenState();
+  ConsumerState<RecipeBuilderScreen> createState() =>
+      _RecipeBuilderScreenState();
 }
 
 class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
@@ -63,8 +64,10 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               children: [
-                Text(S.of(context).ingredientsLabel,
-                    style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  S.of(context).ingredientsLabel,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.link),
@@ -82,8 +85,7 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
             child: ReorderableListView.builder(
               buildDefaultDragHandles: false,
               itemCount: _ingredients.length,
-              onReorder: (oldIndex, newIndex) {
-                if (oldIndex < newIndex) newIndex--;
+              onReorderItem: (oldIndex, newIndex) {
                 final item = _ingredients.removeAt(oldIndex);
                 _ingredients.insert(newIndex, item);
               },
@@ -130,7 +132,9 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
   }
 
   double get _totalKcal => _ingredients.fold(
-      0, (sum, e) => sum + e.amount * (e.meal.nutriments.energyPerUnit ?? 0));
+    0,
+    (sum, e) => sum + e.amount * (e.meal.nutriments.energyPerUnit ?? 0),
+  );
 
   void _addIngredient() async {
     final result = await context.push<MealEntity>(
@@ -139,12 +143,14 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
     );
     if (result is MealEntity) {
       setState(() {
-        _ingredients.add(_IngredientEntry(
-          id: IdGenerator.getUniqueID(),
-          meal: result,
-          amount: 100,
-          unit: result.mealUnit ?? 'g',
-        ));
+        _ingredients.add(
+          _IngredientEntry(
+            id: IdGenerator.getUniqueID(),
+            meal: result,
+            amount: 100,
+            unit: result.mealUnit ?? 'g',
+          ),
+        );
       });
     }
   }
@@ -159,13 +165,15 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
     final recipeId = IdGenerator.getUniqueID();
     final now = DateTime.now();
     final items = _ingredients
-        .map((e) => RecipeItemEntity(
-              id: IdGenerator.getUniqueID(),
-              recipeId: recipeId,
-              meal: e.meal,
-              amount: e.amount,
-              unit: e.unit,
-            ))
+        .map(
+          (e) => RecipeItemEntity(
+            id: IdGenerator.getUniqueID(),
+            recipeId: recipeId,
+            meal: e.meal,
+            amount: e.amount,
+            unit: e.unit,
+          ),
+        )
         .toList();
 
     final recipe = RecipeEntity(

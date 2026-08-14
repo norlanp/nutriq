@@ -29,10 +29,11 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
     final notifier = ref.read(voiceLoggingNotifierProvider.notifier);
 
     ref.listen<VoiceLoggingState>(voiceLoggingNotifierProvider, (prev, next) {
-      if (next.status == VoiceLoggingStatus.error && next.errorMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.errorMessage!)),
-        );
+      if (next.status == VoiceLoggingStatus.error &&
+          next.errorMessage != null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.errorMessage!)));
       }
       if (next.status == VoiceLoggingStatus.confirmed) {
         Navigator.of(context).pop(next.selectedEntries);
@@ -40,27 +41,64 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.voiceLoggingTitle),
-      ),
+      appBar: AppBar(title: Text(l10n.voiceLoggingTitle)),
       body: _buildBody(context, l10n, state, notifier),
     );
   }
 
-  Widget _buildBody(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
+  Widget _buildBody(
+    BuildContext context,
+    S l10n,
+    VoiceLoggingState state,
+    VoiceLoggingNotifier notifier,
+  ) {
     return switch (state.status) {
-      VoiceLoggingStatus.initializing => const Center(child: CircularProgressIndicator()),
-      VoiceLoggingStatus.ready => _buildReadyView(context, l10n, state, notifier),
-      VoiceLoggingStatus.listening => _buildListeningView(context, l10n, state, notifier),
+      VoiceLoggingStatus.initializing => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      VoiceLoggingStatus.ready => _buildReadyView(
+        context,
+        l10n,
+        state,
+        notifier,
+      ),
+      VoiceLoggingStatus.listening => _buildListeningView(
+        context,
+        l10n,
+        state,
+        notifier,
+      ),
       VoiceLoggingStatus.parsing => _buildParsingView(context, l10n),
-      VoiceLoggingStatus.parsed => _buildParsedView(context, l10n, state, notifier),
-      VoiceLoggingStatus.confirmed => const Center(child: CircularProgressIndicator()),
-      VoiceLoggingStatus.error => _buildErrorView(context, l10n, state, notifier),
-      _ => _buildReadyView(context, l10n, const VoiceLoggingState(status: VoiceLoggingStatus.ready), notifier),
+      VoiceLoggingStatus.parsed => _buildParsedView(
+        context,
+        l10n,
+        state,
+        notifier,
+      ),
+      VoiceLoggingStatus.confirmed => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      VoiceLoggingStatus.error => _buildErrorView(
+        context,
+        l10n,
+        state,
+        notifier,
+      ),
+      _ => _buildReadyView(
+        context,
+        l10n,
+        const VoiceLoggingState(status: VoiceLoggingStatus.ready),
+        notifier,
+      ),
     };
   }
 
-  Widget _buildReadyView(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
+  Widget _buildReadyView(
+    BuildContext context,
+    S l10n,
+    VoiceLoggingState state,
+    VoiceLoggingNotifier notifier,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -109,7 +147,12 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
     );
   }
 
-  Widget _buildListeningView(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
+  Widget _buildListeningView(
+    BuildContext context,
+    S l10n,
+    VoiceLoggingState state,
+    VoiceLoggingNotifier notifier,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -175,7 +218,12 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
     );
   }
 
-  Widget _buildParsedView(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
+  Widget _buildParsedView(
+    BuildContext context,
+    S l10n,
+    VoiceLoggingState state,
+    VoiceLoggingNotifier notifier,
+  ) {
     final allSelected = state.entries.every(
       (e) => state.selectedEntries.containsKey(e),
     );
@@ -209,8 +257,8 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
                   child: Text(
                     state.transcription,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontStyle: FontStyle.italic,
-                        ),
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
               ],
@@ -253,7 +301,9 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton(
-                  onPressed: allSelected ? () => notifier.confirmEntries() : null,
+                  onPressed: allSelected
+                      ? () => notifier.confirmEntries()
+                      : null,
                   child: Text(l10n.voiceLoggingConfirmButton),
                 ),
               ),
@@ -264,7 +314,12 @@ class _VoiceLoggingScreenState extends ConsumerState<VoiceLoggingScreen> {
     );
   }
 
-  Widget _buildErrorView(BuildContext context, S l10n, VoiceLoggingState state, VoiceLoggingNotifier notifier) {
+  Widget _buildErrorView(
+    BuildContext context,
+    S l10n,
+    VoiceLoggingState state,
+    VoiceLoggingNotifier notifier,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -337,32 +392,39 @@ class _FoodEntryCard extends StatelessWidget {
                 child: Text(
                   l10n.voiceLoggingNoMatches,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 ),
               )
             else
-              ...candidates.take(3).map(
-                    (candidate) => RadioListTile<MealEntity>(
-                      value: candidate,
-                      groupValue: selectedCandidate,
-                      onChanged: (value) {
-                        if (value != null) onCandidateSelected(value);
-                      },
-                      title: Text(
-                        candidate.name ?? '',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      subtitle: candidate.brands != null
-                          ? Text(
-                              candidate.brands!,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            )
-                          : null,
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                    ),
-                  ),
+              RadioGroup<MealEntity>(
+                groupValue: selectedCandidate,
+                onChanged: (value) {
+                  if (value != null) onCandidateSelected(value);
+                },
+                child: Column(
+                  children: candidates
+                      .take(3)
+                      .map(
+                        (candidate) => RadioListTile<MealEntity>(
+                          value: candidate,
+                          title: Text(
+                            candidate.name ?? '',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          subtitle: candidate.brands != null
+                              ? Text(
+                                  candidate.brands!,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                )
+                              : null,
+                          contentPadding: EdgeInsets.zero,
+                          dense: true,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
           ],
         ),
       ),

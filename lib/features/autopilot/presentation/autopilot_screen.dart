@@ -28,9 +28,7 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
     final state = ref.watch(autopilotNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.autopilotLabel),
-      ),
+      appBar: AppBar(title: Text(l10n.autopilotLabel)),
       body: _buildBody(context, l10n, state),
     );
   }
@@ -64,11 +62,9 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
           ),
           value: state.isEnabled,
           onChanged: (value) {
-            ref.read(autopilotNotifierProvider.notifier).toggleAutopilot(
-                  0,
-                  value,
-                  state.baselineCalories,
-                );
+            ref
+                .read(autopilotNotifierProvider.notifier)
+                .toggleAutopilot(0, value, state.baselineCalories);
           },
         ),
         const Divider(),
@@ -84,12 +80,12 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
           trailing: Text(
             '${state.adjustedCalories} kcal',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: state.adjustmentDelta != 0
-                      ? (state.adjustmentDelta > 0
-                          ? context.nutriqColors.success
-                          : context.nutriqColors.warning)
-                      : null,
-                ),
+              color: state.adjustmentDelta != 0
+                  ? (state.adjustmentDelta > 0
+                        ? context.nutriqColors.success
+                        : context.nutriqColors.warning)
+                  : null,
+            ),
           ),
         ),
         if (state.adjustmentDelta != 0)
@@ -98,10 +94,10 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
             child: Text(
               '${state.adjustmentDelta > 0 ? '+' : ''}${state.adjustmentDelta} kcal',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: state.adjustmentDelta > 0
-                        ? context.nutriqColors.success
-                        : context.nutriqColors.warning,
-                  ),
+                color: state.adjustmentDelta > 0
+                    ? context.nutriqColors.success
+                    : context.nutriqColors.warning,
+              ),
             ),
           ),
         const Divider(),
@@ -120,16 +116,24 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
-        ...ExerciseCalorieModeEntity.values.map(
-          (mode) => RadioListTile<ExerciseCalorieModeEntity>(
-            title: Text(mode.getName(context)),
-            value: mode,
-            groupValue: state.exerciseCalorieMode,
-            onChanged: (value) {
-              if (value != null) {
-                ref.read(autopilotNotifierProvider.notifier).toggleExerciseCredit(value);
-              }
-            },
+        RadioGroup<ExerciseCalorieModeEntity>(
+          groupValue: state.exerciseCalorieMode,
+          onChanged: (value) {
+            if (value != null) {
+              ref
+                  .read(autopilotNotifierProvider.notifier)
+                  .toggleExerciseCredit(value);
+            }
+          },
+          child: Column(
+            children: ExerciseCalorieModeEntity.values
+                .map(
+                  (mode) => RadioListTile<ExerciseCalorieModeEntity>(
+                    title: Text(mode.getName(context)),
+                    value: mode,
+                  ),
+                )
+                .toList(),
           ),
         ),
         if (state.exerciseCalorieMode == ExerciseCalorieModeEntity.custom)
@@ -145,7 +149,9 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
                     divisions: 20,
                     label: '${(state.exerciseCreditPercent * 100).round()}%',
                     onChanged: (value) {
-                      ref.read(autopilotNotifierProvider.notifier).setExerciseCreditPercent(value);
+                      ref
+                          .read(autopilotNotifierProvider.notifier)
+                          .setExerciseCreditPercent(value);
                     },
                   ),
                 ),
@@ -163,10 +169,9 @@ class _AutopilotScreenState extends ConsumerState<AutopilotScreen> {
         FilledButton.icon(
           onPressed: state.isEnabled
               ? () {
-                  ref.read(autopilotNotifierProvider.notifier).recalculateBudget(
-                        0,
-                        state.baselineCalories,
-                      );
+                  ref
+                      .read(autopilotNotifierProvider.notifier)
+                      .recalculateBudget(0, state.baselineCalories);
                 }
               : null,
           icon: const Icon(Icons.refresh),
