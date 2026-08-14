@@ -110,6 +110,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "aiScannerCaptureButton": MessageLookupByLibrary.simpleMessage(
       "Take Photo",
     ),
+    "aiScannerClassificationFailed": MessageLookupByLibrary.simpleMessage(
+      "We couldn't identify this food. Try again or search manually.",
+    ),
     "aiScannerConfidence": m1,
     "aiScannerExample": MessageLookupByLibrary.simpleMessage(
       "Identify food with AI",

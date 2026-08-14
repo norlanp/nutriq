@@ -4688,6 +4688,16 @@ class S {
     );
   }
 
+  /// `We couldn't identify this food. Try again or search manually.`
+  String get aiScannerClassificationFailed {
+    return Intl.message(
+      'We couldn\'t identify this food. Try again or search manually.',
+      name: 'aiScannerClassificationFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Meal Planning`
   String get mealPlanLabel {
     return Intl.message(

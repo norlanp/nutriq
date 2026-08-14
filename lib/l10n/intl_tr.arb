@@ -534,6 +534,7 @@
   "aiScannerSearchManually": "Manuel ara",
   "aiScannerResultsTitle": "Sınıflandırma Sonuçları",
   "aiScannerConfidence": "%{pct} güven",
+  "aiScannerClassificationFailed": "Bu gıdayı tanımlayamadık. Tekrar deneyin veya manuel arayın.",
   "mealPlanLabel": "Öğün Planlama",
   "mealPlanSubtitle": "Haftalık öğün planlayın",
   "shoppingListLabel": "Alışveriş Listesi",

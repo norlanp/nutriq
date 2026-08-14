@@ -21,7 +21,8 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
     final notifier = ref.read(aiScannerNotifierProvider.notifier);
 
     ref.listen<AiScannerState>(aiScannerNotifierProvider, (prev, next) {
-      if (next.status == AiScannerStatus.resultSelected && next.selectedCandidate != null) {
+      if (next.status == AiScannerStatus.resultSelected &&
+          next.selectedCandidate != null) {
         Navigator.of(context).pop(next.selectedCandidate);
       }
       if (next.status == AiScannerStatus.manualSearch) {
@@ -30,14 +31,17 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.aiScannerTitle),
-      ),
+      appBar: AppBar(title: Text(l10n.aiScannerTitle)),
       body: _buildBody(context, l10n, state, notifier),
     );
   }
 
-  Widget _buildBody(BuildContext context, S l10n, AiScannerState state, AiScannerNotifier notifier) {
+  Widget _buildBody(
+    BuildContext context,
+    S l10n,
+    AiScannerState state,
+    AiScannerNotifier notifier,
+  ) {
     if (state.status == AiScannerStatus.capturing || state.isLoading) {
       return _buildCapturingView(context);
     }
@@ -50,7 +54,11 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
     return _buildInitialView(context, l10n, notifier);
   }
 
-  Widget _buildInitialView(BuildContext context, S l10n, AiScannerNotifier notifier) {
+  Widget _buildInitialView(
+    BuildContext context,
+    S l10n,
+    AiScannerNotifier notifier,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +110,12 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
     );
   }
 
-  Widget _buildClassifiedView(BuildContext context, S l10n, AiScannerState state, AiScannerNotifier notifier) {
+  Widget _buildClassifiedView(
+    BuildContext context,
+    S l10n,
+    AiScannerState state,
+    AiScannerNotifier notifier,
+  ) {
     return Column(
       children: [
         Padding(
@@ -117,16 +130,19 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
             itemCount: state.results.length,
             itemBuilder: (context, index) {
               final candidate = state.results[index];
-              final confidencePct = (candidate.confidence * 100).toStringAsFixed(0);
+              final confidencePct = (candidate.confidence * 100)
+                  .toStringAsFixed(0);
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                    child: Text(
-                     '$confidencePct%',
-                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                           color: Theme.of(context).colorScheme.onPrimaryContainer,
-                         ),
-                   ),
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer,
+                  child: Text(
+                    '$confidencePct%',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
                 ),
                 title: Text(candidate.name),
                 subtitle: Text(l10n.aiScannerConfidence(confidencePct)),
@@ -155,7 +171,12 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
     );
   }
 
-  Widget _buildErrorView(BuildContext context, S l10n, AiScannerState state, AiScannerNotifier notifier) {
+  Widget _buildErrorView(
+    BuildContext context,
+    S l10n,
+    AiScannerState state,
+    AiScannerNotifier notifier,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -167,7 +188,7 @@ class _AiScannerScreenState extends ConsumerState<AiScannerScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            state.errorMessage ?? '',
+            l10n.aiScannerClassificationFailed,
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.center,
           ),

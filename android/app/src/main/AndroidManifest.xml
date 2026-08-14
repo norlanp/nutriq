@@ -2,6 +2,7 @@
     package="com.nutriq.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Provide required visibility configuration for API level 30 and above -->
     <queries>

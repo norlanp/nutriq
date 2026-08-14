@@ -526,6 +526,7 @@
   "aiScannerSearchManually": "Manuell suchen",
   "aiScannerResultsTitle": "Klassifizierungsergebnisse",
   "aiScannerConfidence": "{pct}% Konfidenz",
+  "aiScannerClassificationFailed": "Wir konnten dieses Lebensmittel nicht erkennen. Versuchen Sie es erneut oder suchen Sie manuell.",
   "mealPlanLabel": "Mahlzeitenplanung",
   "mealPlanSubtitle": "Mahlzeiten für die Woche planen",
   "shoppingListLabel": "Einkaufsliste",

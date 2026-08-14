@@ -32,17 +32,25 @@ final autopilotServiceProvider = Provider<AutopilotServiceImpl>((ref) {
   return AutopilotServiceImpl();
 });
 
-final foodClassifierServiceProvider = Provider((ref) => FoodClassifierService());
+final foodClassifierServiceProvider = Provider((ref) {
+  final service = FoodClassifierService();
+  ref.onDispose(service.dispose);
+  return service;
+});
 
 final foodGradeCalculatorProvider = Provider((ref) => FoodGradeCalculator());
 
-final allergenFilterServiceProvider = Provider((ref) => AllergenFilterService());
+final allergenFilterServiceProvider = Provider(
+  (ref) => AllergenFilterService(),
+);
 
 final foodGradeFilterProvider = Provider((ref) => FoodGradeFilter());
 
 final menuScannerServiceProvider = Provider((ref) => MenuScannerService());
 
-final menuItemParserServiceProvider = Provider((ref) => MenuItemParserService());
+final menuItemParserServiceProvider = Provider(
+  (ref) => MenuItemParserService(),
+);
 
 final voiceLoggingServiceProvider = Provider((ref) => VoiceLoggingService());
 

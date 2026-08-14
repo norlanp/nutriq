@@ -55,8 +55,8 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera permission is required for barcode scanning.</string>
+	<string>Camera permission is required to scan barcodes and identify food.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>Used for exporting data.</string>
+    <string>Photo library access is required to identify food in selected images.</string>
 </dict>
 </plist>

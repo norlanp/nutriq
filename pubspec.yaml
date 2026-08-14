@@ -54,6 +54,7 @@ dependencies:
 
   tflite_flutter: ^0.12.1
   image_picker: ^1.1.2
+  image: 4.6.0
 
 
   flutter_riverpod: ^2.6.1
