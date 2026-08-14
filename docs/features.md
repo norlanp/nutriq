@@ -58,7 +58,7 @@
 | **Food Diary (B/L/D/S)** | **Yes** | Yes |
 | **Barcode Scanner** | **Yes** | Yes |
 | **Food Database** | 3 sources + custom foods | 14M+ items |
-| **AI Food Recognition** | **Yes** (on-device, free) | Premium, cloud |
+| **AI Food Recognition** | Food V1, on-device | Premium, cloud |
 | **Custom Food Creation** | **Yes** | Yes |
 | **Macro Tracking** | **Yes** (+ weekly summary) | Yes |
 | **Micronutrient Tracking** | **Yes** (with % targets) | Premium |
@@ -75,7 +75,7 @@
 | **Photo Progress** | **Yes** (before/after + timeline) | Premium |
 | **Meal Planning** | **Yes** (7-day + shopping list) | Premium |
 | **Health Kit / Health Connect** | **Yes** (bidirectional sync) | 35+ devices |
-| **Data Export / Import** | **Yes** (JSON/CSV + encrypted backup) | Premium |
+| **Data Export / Import** | **Yes** (JSON/ZIP + local encrypted backup) | Premium |
 | **Food Timestamps** | **Yes** (meal timing patterns) | Yes |
 | **Onboarding Flow** | **Yes** (profile + goal setup) | Yes |
 | **Food Grade** | **Yes** (Nutri-Score style) | -- |
@@ -89,7 +89,7 @@
 | **Custom Trackers** | **Yes** (user-defined metrics) | -- |
 | **Autopilot** | **Yes** (AI suggestions from history) | -- |
 | **Internationalization** | 3 languages (EN/DE/TR) | 20+ |
-| **Web Support** | -- | Mobile only | Web + Mobile |
+| **Web Support** | -- | Mobile only |
 | **Ad-Free** | **Yes** (always) | Yes | No (freemium) |
 | **No Subscription** | **Yes** (all features free) | Yes | Premium required |
 | **Open Source** | **Yes** (GPL-3.0) | Yes (GPL-3.0) | No |
@@ -138,6 +138,13 @@
 - **Shimmer loading** states + **error with retry** on search
 - **Recent / frequent foods** shown by default
 - **Barcode scan** auto-fills food entry from OFF
+
+### AI Food Scanner
+
+- **Google Food V1**: on-device TensorFlow Lite classifier covering 2,023 food dishes plus a background class; Apache-2.0 licensed.
+- **Input contract**: decode and apply EXIF orientation, resize to 224 x 224 RGB with cubic interpolation, then pass `float32` values scaled from 0 to 1 in `[1, 224, 224, 3]` layout.
+- **Output contract**: one `float32` probability vector shaped `[1, 2024]`, mapped by `assets/models/food_v1_labelmap.csv`. No score clamping or softmax is applied because Food V1 emits probabilities.
+- **Limitations**: predictions require a well-cropped dish and must not be used to determine edibility, ingredients, allergens, or nutrition.
 
 ### Diary & Tracking
 
@@ -319,18 +326,18 @@
   |  SQLite) |     +----------+     +-----------+
   +----------+            |
                           v
-                   +-----------+     +-----------+
-                   | Encrypted  |---->| Cloud     |
-                   | AES Backup |    | (Optional)|
-                   +-----------+     +-----------+
+                    +-------------------+
+                    | Local encrypted   |
+                    | backup file        |
+                    +-------------------+
 
   No telemetry. No analytics. No cloud required.
 ```
 
 - **All data on-device** in Drift/SQLite
 - **JSON/CSV export/import** 
-- **AES-encrypted backup** for cloud storage
-- **Optional**: iCloud / Google Drive backup
+- **Local AES-encrypted backup** creation and restoration
+- **Cloud backup**: not available; iCloud and Google Drive options are disabled
 - **No telemetry. No analytics. No account required.**
 
 ### Health Monitoring
@@ -373,9 +380,9 @@
 | | Detail |
 |:---|:---|
 | **Framework** | Flutter / Dart |
-| **State Management** | flutter_bloc + flutter_riverpod (migrating) |
+| **State Management** | flutter_riverpod |
 | **Local DB** | Drift (SQLite) |
-| **Schema Version** | 22 (23 tables) |
+| **Schema Version** | 23 (24 tables) |
 | **DI** | Riverpod |
 | **i18n** | flutter_intl (EN / DE / TR) |
 | **Platforms** | iOS, Android |
@@ -383,8 +390,6 @@
 | **AI Model** | TensorFlow Lite (on-device) |
 | **Health APIs** | HealthKit, Health Connect |
 | **License** | GPL-3.0 |
-| **Use Cases** | 75 |
-| **Feature Modules** | 38 |
 
 ---
 

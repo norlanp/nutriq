@@ -101,8 +101,8 @@
 ### FR-18: Data Export / Import
 - FR-18.1: Export user data as JSON or CSV
 - FR-18.2: Import user data from JSON or CSV
-- FR-18.3: AES-encrypted backup creation
-- FR-18.4: Optional cloud backup (iCloud / Google Drive)
+- FR-18.3: Create and restore AES-encrypted local backups
+- FR-18.4: Cloud backup is not currently available
 
 ### FR-19: Onboarding
 - FR-19.1: Introduction screens (4 pages + overview)
@@ -172,7 +172,7 @@
 - NFR-1.2: No mandatory cloud account or sync
 - NFR-1.3: No telemetry, analytics, or tracking
 
-> **Note**: Firebase Analytics/Crashlytics and Sentry are available but gated behind explicit user consent. They are disabled by default; NFR-1.3 remains the default behavior.
+> **Note**: Sentry reporting is gated behind explicit user consent and is disabled by default; NFR-1.3 remains the default behavior.
 - NFR-1.4: No data shared with third parties
 
 ### NFR-2: Performance

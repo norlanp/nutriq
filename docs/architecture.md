@@ -20,7 +20,7 @@ The core of the application, containing purely business logic and rules. It is i
 ### 3. Data Layer
 The implementation of data retrieval and persistence.
 - **Repositories**: Implement the interfaces defined in the Domain layer. They decide whether to fetch data from a local source or a remote API.
-- **Data Sources**: Low-level implementations for network calls (`http`) or local database operations (`drift`/SQLite).
+- **Data Sources**: Low-level implementations for network calls (`dio`) or local database operations (`drift`/SQLite).
 - **DTOs/DBOs (Data Transfer/Database Objects)**: Specialized objects used for serialization/deserialization. These are converted to Entities before entering the Domain layer.
 
 ## Data Flow
@@ -31,31 +31,18 @@ The implementation of data retrieval and persistence.
 - **Dependency Injection**: `flutter_riverpod` for decoupling components and improving testability.
 - **Local Persistence**: `drift` (SQLite) for type-safe relational storage.
 - **Localization**: `flutter_intl` for multi-language support (EN/DE/TR).
-- **Networking**: `http` for remote data interaction.
+- **Networking**: `dio` for remote data interaction.
 
-> **Note**: Firebase Analytics, Firebase Crashlytics, and Sentry are available in the codebase but gated behind explicit user consent. They are disabled by default and only activate if the user opts in. This preserves the privacy-first principle (see NFR-1.3).
+> **Note**: Sentry reporting is disabled by default. It initializes only for release builds after the user opts in to anonymous data sharing.
 
 ## Project Structure
 - `lib/core/`: Shared logic, utilities, styles, and common domain/data components.
 - `lib/features/`: Feature-specific modules, each containing its own presentation, domain, and data layers.
 - `test/`: Unit and widget tests to ensure reliability.
 
-## Component Inventory
+## Supported Platforms
 
-| Layer | Component | Count |
-|:---|:---|:---|
-| **Data** | Drift tables | 23 |
-| **Data** | DAOs | 42 |
-| **Data** | Data sources | 21 |
-| **Data** | Repository implementations | 21 |
-| **Domain** | Entities | 35 |
-| **Domain** | Repository interfaces | 20 |
-| **Domain** | Use cases | 75 |
-| **Presentation** | Feature modules | 38 |
-| **Presentation** | Notifiers | 39 |
-| **Infrastructure** | DB schema version | 23 |
-| **Infrastructure** | Languages (i18n) | 3 |
-| **Infrastructure** | Platforms | 2 (iOS, Android) |
+Nutriq has Android and iOS platform projects. Web, desktop, and cloud synchronization are not currently supported.
 
 ## Feature Modules
 
@@ -72,7 +59,7 @@ lib/features/
 ├── calorie_cycling/       Calorie cycling (zigzag diet)
 ├── custom_trackers/       User-defined metric trackers
 ├── daily_notes/           Daily journal/notes
-├── data_sync/             Export/import, cloud backup
+├── data_sync/             Export/import and local encrypted backup UI
 ├── diary/                 4-slot food diary + calendar
 ├── edit_meal/             Edit existing food entries
 ├── fasting_tracker/       Intermittent fasting timer + history
@@ -113,7 +100,7 @@ lib/features/
 | `notification_settings` | Reminder configuration |
 | `water_entries` | Water intake records |
 | `fasts` | Fasting session records |
-| `ai_model_metadata` | On-device ML model info |
+| `ai_model_metadata_entries` | On-device ML model info |
 | `meal_plans` | Meal plan entries |
 | `photo_progress_entries` | Progress photo records |
 | `body_measurements` | Body metric entries |

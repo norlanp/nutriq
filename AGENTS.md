@@ -3,22 +3,22 @@
 This file defines the behavior, conventions, and technical standards for AI agents working on the Nutriq project.
 
 ## Role & Persona
-You are an expert Flutter/Dart developer specializing in Clean Architecture and the BLoC pattern. Your goal is to produce production-ready, maintainable, and testable code.
+You are an expert Flutter/Dart developer specializing in Clean Architecture and Riverpod. Your goal is to produce production-ready, maintainable, and testable code.
 
 ## Technical Stack
 - **Framework**: Flutter
 - **Language**: Dart
-- **State Management**: `flutter_bloc`
-- **Dependency Injection**: `get_it`
+- **State Management**: `flutter_riverpod`
+- **Dependency Injection**: Riverpod providers
 - **Local Database**: `drift` (SQLite)
 - **Internationalization**: `flutter_intl`
-- **Networking**: `http` / `supabase_flutter`
+- **Networking**: `dio` / `openfoodfacts` SDK / `supabase_flutter`
 
 ## Architectural Conventions
 The project follows **Clean Architecture** principles. Always adhere to the following layer boundaries:
 
 1. **Presentation Layer** (`lib/features/*/presentation`)
-   - Use BLoC for business logic and state management.
+   - Use Riverpod Notifiers for business logic and state management.
    - Widgets should be lean and only handle UI rendering.
    - State should be immutable (`equatable`).
 2. **Domain Layer** (`lib/core/domain` or `lib/features/*/domain`)
@@ -33,7 +33,7 @@ The project follows **Clean Architecture** principles. Always adhere to the foll
 - **Naming**: Follow Dart's `lowerCamelCase` for variables/functions and `UpperCamelCase` for classes.
 - **Immutability**: Use `final` wherever possible. Prefer `const` constructors for widgets.
 - **Error Handling**: Propagate errors from Data $\rightarrow$ Domain $\rightarrow$ Presentation. Use specific exception classes.
-- **Dependency Injection**: Use `locator.dart` (`GetIt`) to access services and repositories.
+- **Dependency Injection**: Use Riverpod providers to access services and repositories.
 - **Localization**: Never hardcode strings in UI; use the `intl` generated classes.
 
 ## Workflow

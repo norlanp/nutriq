@@ -34,7 +34,7 @@ Nutriq is a privacy-first, open-source nutrition tracker with all features free 
 ### Food & Nutrition
 - **Food Diary** — 4-slot diary (Breakfast/Lunch/Dinner/Snacks) with drag-and-drop
 - **Barcode Scanner** — Instant nutrition lookup from Open Food Facts
-- **AI Food Recognition** — On-device TensorFlow Lite classifier (no cloud)
+- **AI Food Recognition** — On-device TensorFlow Lite classifier (requires a compatible bundled model)
 - **Custom Food Creation** — Manual entry for any food not in the database
 - **3 Food Databases** — Open Food Facts, USDA FDC, USDA FDC-SR
 - **Macro + Micro Tracking** — Full macronutrients and micronutrients with daily % targets
@@ -56,9 +56,9 @@ Nutriq is a privacy-first, open-source nutrition tracker with all features free 
 
 ### Platform & Data
 - **Health Integrations** — Apple HealthKit (iOS), Google Health Connect (Android)
-- **Data Export/Import** — JSON/CSV + AES-encrypted backup
+- **Data Export/Import** — JSON/ZIP export and import; encrypted local backups are available from the app
 - **Reminders** — Configurable meal time and daily summary notifications
-- **Multi-Platform** — iOS, Android, and Web
+- **Mobile Platforms** — iOS and Android
 - **3 Languages** — English, German, Turkish
 - **Privacy-First** — All data stored locally in SQLite, no cloud required, no telemetry
 

@@ -12,7 +12,7 @@ For setup first you need the following things:
 
 ```flutter pub get```
 
-3.⁠ ⁠Run Build Runner to generate Files
+3.⁠ ⁠Run Build Runner to generate files
 
 ```flutter pub run build_runner build```
 
@@ -22,22 +22,12 @@ For setup first you need the following things:
 
 ## Running the Application
 
-The application can be run on multiple platforms. Here are the commands for each:
-
-### Web (Chrome)
-```bash
-flutter run -d chrome
-```
+Nutriq currently supports Android and iOS.
 
 ### iOS
 ```bash
 open -a Simulator
 flutter run
-```
-
-### macOS
-```bash
-flutter run -d macos
 ```
 
 ### Android
