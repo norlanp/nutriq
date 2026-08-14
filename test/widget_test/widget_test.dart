@@ -2,6 +2,8 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nutriq/core/styles/nutriq_colors.dart';
+import 'package:nutriq/core/styles/nutriq_spacing.dart';
 import 'package:nutriq/features/home/presentation/widgets/dashboard_widget.dart';
 import 'package:nutriq/generated/l10n.dart';
 
@@ -10,6 +12,9 @@ void main() {
       (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MaterialApp(
+      theme: ThemeData(
+        extensions: const [lightNutriqColors, NutriqSpacing.standard],
+      ),
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -21,7 +26,7 @@ void main() {
         totalKcalSupplied: 1500,
         totalKcalBurned: 500,
         totalKcalDaily: 2000,
-        totalKcalLeft: 1000,
+        totalKcalLeft: 800,
         totalCarbsIntake: 200,
         totalNetCarbsIntake: 150,
         totalFatsIntake: 50,
@@ -41,6 +46,6 @@ void main() {
     // Verify that the kcal left label is displayed as AnimatedFlipCounter
     final kcalLeftFlipCounter = tester
         .firstWidget<AnimatedFlipCounter>(find.byType(AnimatedFlipCounter));
-    expect(kcalLeftFlipCounter.value, 1000);
+    expect(kcalLeftFlipCounter.value, 800);
   });
 }
