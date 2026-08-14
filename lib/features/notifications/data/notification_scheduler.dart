@@ -2,8 +2,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nutriq/core/domain/entity/intake_type_entity.dart';
 import 'package:nutriq/core/domain/entity/notification_settings_entity.dart';
-import 'package:nutriq/core/utils/platform_info_io.dart'
-    as platform_info;
+import 'package:nutriq/core/utils/platform_info_io.dart' as platform_info;
 import 'package:nutriq/features/notifications/data/notification_init.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -14,6 +13,10 @@ const _channelDescription = 'Reminders for meals and daily nutrition summary';
 const _fastingChannelId = 'fasting_reminders';
 const _fastingChannelName = 'Fasting Reminders';
 const _fastingChannelDescription = 'Notifications for fasting start and end';
+
+const _medicationChannelId = 'medication_reminders';
+const _medicationChannelName = 'Medication Reminders';
+const _medicationChannelDescription = 'Reminders to take medication';
 
 const _dailySummaryNotificationId = 10;
 
@@ -45,26 +48,44 @@ class NotificationScheduler {
     if (platform_info.isPlatformAndroid) {
       await _plugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(const AndroidNotificationChannel(
-            _channelId,
-            _channelName,
-            description: _channelDescription,
-          ));
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.createNotificationChannel(
+            const AndroidNotificationChannel(
+              _channelId,
+              _channelName,
+              description: _channelDescription,
+            ),
+          );
       await _plugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(const AndroidNotificationChannel(
-            _fastingChannelId,
-            _fastingChannelName,
-            description: _fastingChannelDescription,
-          ));
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.createNotificationChannel(
+            const AndroidNotificationChannel(
+              _medicationChannelId,
+              _medicationChannelName,
+              description: _medicationChannelDescription,
+            ),
+          );
+      await _plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.createNotificationChannel(
+            const AndroidNotificationChannel(
+              _fastingChannelId,
+              _fastingChannelName,
+              description: _fastingChannelDescription,
+            ),
+          );
     }
 
     if (platform_info.isPlatformIOS) {
       await _plugin
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin
+          >()
           ?.requestPermissions(alert: true, badge: true, sound: true);
     }
   }
@@ -109,6 +130,44 @@ class NotificationScheduler {
   Future<void> cancelMealReminder(IntakeTypeEntity mealType) async {
     if (kIsWeb) return;
     await _plugin.cancel(_mealNotificationIds[mealType]!);
+  }
+
+  Future<void> scheduleMedicationReminder({
+    required int notificationId,
+    required String medicationName,
+    required int hour,
+  }) async {
+    if (kIsWeb) return;
+
+    final androidDetails = AndroidNotificationDetails(
+      _medicationChannelId,
+      _medicationChannelName,
+      channelDescription: _medicationChannelDescription,
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+    const iosDetails = DarwinNotificationDetails();
+    final platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    await _plugin.zonedSchedule(
+      notificationId,
+      'Medication Reminder',
+      'Time to take $medicationName.',
+      _scheduleNextInstance(hour, 0),
+      platformDetails,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
+  }
+
+  Future<void> cancelMedicationReminder(int notificationId) async {
+    if (kIsWeb) return;
+    await _plugin.cancel(notificationId);
   }
 
   Future<void> scheduleDailySummary(int minutesSinceMidnight) async {
@@ -220,7 +279,8 @@ class NotificationScheduler {
   }
 
   Future<void> scheduleAllFromSettings(
-      NotificationSettingsEntity settings) async {
+    NotificationSettingsEntity settings,
+  ) async {
     await cancelAll();
 
     for (final entry in settings.mealReminderMinutes.entries) {
