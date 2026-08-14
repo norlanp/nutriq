@@ -36,6 +36,8 @@ class MealItemCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mealQuantity = double.tryParse(mealEntity.mealQuantity ?? '');
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -85,12 +87,12 @@ class MealItemCard extends ConsumerWidget {
                 style: Theme.of(context).textTheme.titleLarge,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis),
-            subtitle: mealEntity.mealQuantity != null
+            subtitle: mealQuantity != null
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       MealValueUnitText(
-                          value: double.parse(mealEntity.mealQuantity ?? "0"),
+                          value: mealQuantity,
                           meal: mealEntity,
                           usesImperialUnits: usesImperialUnits),
                        if (_matchingAllergens(ref).isNotEmpty) ...[

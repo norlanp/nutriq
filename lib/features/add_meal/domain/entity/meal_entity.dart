@@ -40,20 +40,25 @@ abstract class MealEntity with _$MealEntity {
   bool get isSolid => solidUnits.contains(mealUnit);
 
   factory MealEntity.empty() => MealEntity(
-        code: IdGenerator.getUniqueID(),
-        name: null,
-        url: null,
-        mealQuantity: null,
-        mealUnit: 'gml',
-        servingQuantity: null,
-        servingUnit: 'gml',
-        servingSize: '',
-        nutriments: MealNutrimentsEntity.empty(),
-        source: MealSourceEntity.custom,
-      );
+    code: IdGenerator.getUniqueID(),
+    name: null,
+    url: null,
+    mealQuantity: null,
+    mealUnit: 'gml',
+    servingQuantity: null,
+    servingUnit: 'gml',
+    servingSize: '',
+    nutriments: MealNutrimentsEntity.empty(),
+    source: MealSourceEntity.custom,
+  );
 
   factory MealEntity.fromFDCFood(FDCFoodDTO fdcFood) {
     final fdcId = fdcFood.fdcId?.toInt().toString();
+    final servingSize = fdcFood.servingSize;
+    final servingUnit = fdcFood.servingSizeUnit;
+    final servingLabel = servingSize != null && servingUnit != null
+        ? '$servingSize $servingUnit'
+        : null;
 
     return MealEntity(
       code: fdcId,
@@ -61,10 +66,10 @@ abstract class MealEntity with _$MealEntity {
       brands: fdcFood.brandName,
       url: FDCConst.getFoodDetailUrlString(fdcId),
       mealQuantity: fdcFood.packageWeight,
-      mealUnit: fdcFood.servingSizeUnit,
-      servingQuantity: fdcFood.servingSize,
-      servingUnit: fdcFood.servingSizeUnit,
-      servingSize: fdcFood.servingSizeUnit,
+      mealUnit: servingUnit,
+      servingQuantity: servingSize,
+      servingUnit: servingUnit,
+      servingSize: servingLabel,
       nutriments: MealNutrimentsEntity.fromFDCNutriments(fdcFood.foodNutrients),
       source: MealSourceEntity.fdc,
     );
