@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:nutriq/core/data/data_source/meal_plan_data_source.dart';
 import 'package:nutriq/core/data/mapper/mappers.dart';
 import 'package:nutriq/core/domain/entity/meal_plan_entity.dart';
@@ -43,9 +41,11 @@ class MealPlanRepository implements domain.MealPlanRepository {
     DateTime endDate,
   ) async {
     final recipeItems = await _mealPlanDataSource.getRecipeItemsForDateRange(
-        startDate, endDate);
+      startDate,
+      endDate,
+    );
 
-    final ingredientMap = LinkedHashMap<String, domain.ShoppingListItem>();
+    final ingredientMap = <String, domain.ShoppingListItem>{};
 
     for (final item in recipeItems) {
       final name = item.meal.name ?? 'Unknown';
