@@ -4,7 +4,4 @@
 
 ## Product correctness
 
-
-- Research alternative broad-coverage, mobile-ready food-classification models to Food V1.
-
 ## Quality and documentation
