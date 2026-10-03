@@ -85,3 +85,7 @@ android/key.properties
 # Firebase config
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+
+# Local scratch
+/tmp/
+/var/
