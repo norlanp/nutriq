@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nutriq/features/add_meal/data/data_sources/fdc_data_source.dart';
 import 'package:nutriq/features/add_meal/data/data_sources/off_data_source.dart';
+import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_const.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_food_dto.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_word_response_dto.dart';
 import 'package:nutriq/features/add_meal/data/repository/products_repository.dart';
@@ -24,7 +25,12 @@ void main() {
   });
 
   test('maps FDC search results to FDC meals', () async {
-    when(() => fdcDataSource.fetchSearchWordResults('apple')).thenAnswer(
+    when(
+      () => fdcDataSource.fetchSearchWordResults(
+        'apple',
+        dataTypes: FDCConst.genericDataTypes,
+      ),
+    ).thenAnswer(
       (_) async => FDCWordResponseDTO(
         totalHits: 1,
         currentPage: 1,
@@ -74,7 +80,10 @@ void main() {
 
   test('propagates FDC retrieval failures', () async {
     when(
-      () => fdcDataSource.fetchSearchWordResults('apple'),
+      () => fdcDataSource.fetchSearchWordResults(
+        'apple',
+        dataTypes: FDCConst.genericDataTypes,
+      ),
     ).thenThrow(Exception('FDC unavailable'));
 
     expect(

@@ -48,10 +48,10 @@ void main() {
     final firstResult = Completer<List<MealEntity>>();
     final secondResult = Completer<List<MealEntity>>();
     when(
-      () => searchProductsUseCase.searchOFFProductsByString('first'),
+      () => searchProductsUseCase.searchBrandedFoods('first'),
     ).thenAnswer((_) => firstResult.future);
     when(
-      () => searchProductsUseCase.searchOFFProductsByString('second'),
+      () => searchProductsUseCase.searchBrandedFoods('second'),
     ).thenAnswer((_) => secondResult.future);
 
     final notifier = container.read(productsNotifierProvider.notifier);
@@ -92,7 +92,7 @@ void main() {
 
   test('shows a failed state when product retrieval fails', () async {
     when(
-      () => searchProductsUseCase.searchOFFProductsByString('apple'),
+      () => searchProductsUseCase.searchBrandedFoods('apple'),
     ).thenAnswer((_) async => throw Exception('Search failed'));
 
     final notifier = container.read(productsNotifierProvider.notifier);
@@ -114,7 +114,7 @@ void main() {
 
   test('retries a failed product search with the same query', () async {
     when(
-      () => searchProductsUseCase.searchOFFProductsByString('apple'),
+      () => searchProductsUseCase.searchBrandedFoods('apple'),
     ).thenAnswer((_) async => throw Exception('Search failed'));
 
     final notifier = container.read(productsNotifierProvider.notifier);
@@ -122,7 +122,7 @@ void main() {
     await notifier.searchProducts('apple');
 
     verify(
-      () => searchProductsUseCase.searchOFFProductsByString('apple'),
+      () => searchProductsUseCase.searchBrandedFoods('apple'),
     ).called(2);
   });
 
@@ -142,7 +142,7 @@ void main() {
 
   test('preserves imperial units when refreshing a product search', () async {
     when(
-      () => searchProductsUseCase.searchOFFProductsByString('apple'),
+      () => searchProductsUseCase.searchBrandedFoods('apple'),
     ).thenAnswer((_) async => [_meal('apple')]);
     when(() => getConfigUsecase.getConfig()).thenAnswer(
       (_) async => config.copyWith(usesImperialUnits: true),

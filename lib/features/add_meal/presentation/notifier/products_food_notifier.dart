@@ -24,7 +24,7 @@ class ProductsNotifier extends Notifier<FoodSearchState> {
     try {
       final result = await ref
           .read(searchProductsUseCaseProvider)
-          .searchOFFProductsByString(searchString);
+          .searchBrandedFoods(searchString);
       if (requestId != _searchRequestId) return;
       final config = await ref.read(getConfigUsecaseProvider).getConfig();
       if (requestId != _searchRequestId) return;
@@ -52,7 +52,7 @@ class ProductsNotifier extends Notifier<FoodSearchState> {
     try {
       final result = await ref
           .read(searchProductsUseCaseProvider)
-          .searchOFFProductsByString(_searchString);
+          .searchBrandedFoods(_searchString);
       if (requestId != _searchRequestId) return;
       final config = await ref.read(getConfigUsecaseProvider).getConfig();
       if (requestId != _searchRequestId) return;

@@ -1,5 +1,6 @@
 import 'package:nutriq/features/add_meal/data/data_sources/fdc_data_source.dart';
 import 'package:nutriq/features/add_meal/data/data_sources/off_data_source.dart';
+import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_const.dart';
 import 'package:nutriq/features/add_meal/domain/entity/meal_entity.dart';
 
 class ProductsRepository {
@@ -12,9 +13,14 @@ class ProductsRepository {
     return _offDataSource.searchProducts(searchString);
   }
 
-  Future<List<MealEntity>> getFDCFoodsByString(String searchString) async {
-    final fdcWordResponse =
-        await _fdcDataSource.fetchSearchWordResults(searchString);
+  Future<List<MealEntity>> getFDCFoodsByString(
+    String searchString, {
+    List<FdcDataType> dataTypes = FDCConst.genericDataTypes,
+  }) async {
+    final fdcWordResponse = await _fdcDataSource.fetchSearchWordResults(
+      searchString,
+      dataTypes: dataTypes,
+    );
     final products = fdcWordResponse.foods
         .map((food) => MealEntity.fromFDCFood(food))
         .toList();

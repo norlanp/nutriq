@@ -34,6 +34,7 @@ import 'package:nutriq/core/data/drift/dao/photo_progress_dao.dart';
 import 'package:nutriq/core/data/drift/dao/recipe_dao.dart';
 import 'package:nutriq/core/data/drift/dao/symptom_dao.dart';
 import 'package:nutriq/core/data/drift/dao/water_dao.dart';
+import 'package:nutriq/core/network/dio_provider.dart';
 import 'package:nutriq/core/network/network_providers.dart';
 import 'package:nutriq/core/providers/database_provider.dart';
 import 'package:nutriq/features/add_meal/data/data_sources/fdc_data_source.dart';
@@ -89,5 +90,6 @@ final bloodGlucoseDataSourceProvider = Provider((ref) => BloodGlucoseDataSource(
 
 // --- Feature data source providers ---
 
-final offDataSourceProvider = Provider((ref) => OFFDataSource());
+final offDataSourceProvider =
+    Provider((ref) => OFFDataSource(ref.watch(dioProvider)));
 final fdcDataSourceProvider = Provider((ref) => FDCDataSource(ref.watch(fdcApiClientProvider)));

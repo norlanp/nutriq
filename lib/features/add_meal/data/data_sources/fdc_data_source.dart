@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nutriq/core/network/fdc_api_client.dart';
+import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_const.dart';
 import 'package:nutriq/features/add_meal/data/dto/fdc/fdc_word_response_dto.dart';
 import 'package:nutriq/core/utils/app_reporter.dart';
 
@@ -9,10 +10,16 @@ class FDCDataSource {
 
   FDCDataSource(this._apiClient);
 
-  Future<FDCWordResponseDTO> fetchSearchWordResults(String searchString) async {
+  Future<FDCWordResponseDTO> fetchSearchWordResults(
+    String searchString, {
+    List<FdcDataType> dataTypes = FDCConst.genericDataTypes,
+  }) async {
     try {
       log.fine('Fetching FDC results for: $searchString');
-      final result = await _apiClient.searchFoods(searchString);
+      final result = await _apiClient.searchFoods(
+        searchString,
+        dataTypes: dataTypes,
+      );
       log.fine('Successful response from FDC');
       return result;
     } catch (exception, stacktrace) {

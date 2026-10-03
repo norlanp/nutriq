@@ -8,8 +8,15 @@ class FDCApiClient {
 
   FDCApiClient(this._dio);
 
-  Future<FDCWordResponseDTO> searchFoods(String searchString) async {
-    final uri = FDCConst.getFDCWordSearchUrl(searchString, Env.fdcApiKey);
+  Future<FDCWordResponseDTO> searchFoods(
+    String searchString, {
+    List<FdcDataType> dataTypes = FDCConst.genericDataTypes,
+  }) async {
+    final uri = FDCConst.getFDCWordSearchUrl(
+      searchString,
+      Env.fdcApiKey,
+      dataTypes: dataTypes,
+    );
     final response = await _dio.getUri(uri);
 
     if (response.statusCode == 200) {

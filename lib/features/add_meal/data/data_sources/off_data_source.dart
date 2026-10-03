@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:dio/dio.dart';
 import 'package:logging/logging.dart';
 import 'package:openfoodfacts/openfoodfacts.dart' as off;
 
@@ -11,11 +12,30 @@ import 'package:nutriq/features/add_meal/domain/entity/meal_nutriments_entity.da
 import 'package:nutriq/features/scanner/data/product_not_found_exception.dart';
 
 class OFFDataSource {
+  final Dio _dio;
   final log = Logger('OFFDataSource');
 
-  OFFDataSource() {
+  OFFDataSource(this._dio) {
     _configureSdk();
   }
+
+  // The SDK search hits the legacy /cgi/search.pl endpoint, which is often
+  // unavailable. Full-text search is served by the search-a-licious API.
+  static const _searchHost = 'search.openfoodfacts.org';
+  static const _searchPath = '/search';
+  static const _searchPageSize = '20';
+  static const _searchResponseFields = [
+    'code',
+    'product_name',
+    'brands',
+    'quantity',
+    'packaging_quantity',
+    'serving_quantity',
+    'serving_size',
+    'image_front_small_url',
+    'image_front_url',
+    'nutriments',
+  ];
 
   void _configureSdk() {
     off.OpenFoodAPIConfiguration.userAgent = off.UserAgent(
@@ -25,34 +45,34 @@ class OFFDataSource {
   }
 
   Future<List<MealEntity>> searchProducts(String searchString) async {
+    final language = _currentLanguage();
     try {
       log.fine('Fetching OFF results for: $searchString');
 
-      final language = _toOFFLanguage(
-        SupportedLanguage.fromCode(
-          ui.PlatformDispatcher.instance.locale.toString(),
-        ),
+      final response = await _dio.getUri(
+        Uri.https(_searchHost, _searchPath, {
+          'q': searchString,
+          'page_size': _searchPageSize,
+          'langs': language.name,
+          'boost_phrase': 'true',
+          'fields': _searchResponseFields.join(','),
+        }),
       );
 
-      final configuration = off.ProductSearchQueryConfiguration(
-        parametersList: [off.SearchTerms(terms: [searchString])],
-        language: language,
-        fields: _searchFields,
-        version: const off.ProductQueryVersion(2),
-      );
+      final data = response.data;
+      if (data is! Map<String, dynamic>) return [];
 
-      final result = await off.OpenFoodAPIClient.searchProducts(
-        null,
-        configuration,
-      );
+      final hits = data['hits'];
+      if (hits is! List) return [];
 
-      if (result.products == null) return [];
-
-      return result.products!
-          .map((product) => _mapProduct(product))
+      return hits
+          .whereType<Map<String, dynamic>>()
+          .map(_toProduct)
+          .whereType<off.Product>()
+          .map(_mapProduct)
           .toList();
     } catch (exception, stacktrace) {
-      log.severe('Exception while getting OFF word search $exception');
+      log.severe('Exception while getting OFF search $exception');
       AppReporter.captureException(exception, stackTrace: stacktrace);
       rethrow;
     }
@@ -62,16 +82,12 @@ class OFFDataSource {
     try {
       log.fine('Fetching OFF barcode result for: $barcode');
 
-      final language = _toOFFLanguage(
-        SupportedLanguage.fromCode(
-          ui.PlatformDispatcher.instance.locale.toString(),
-        ),
-      );
+      final language = _toOFFLanguage(_currentLanguage());
 
       final configuration = off.ProductQueryConfiguration(
         barcode,
         language: language,
-        fields: _searchFields,
+        fields: _barcodeFields,
         version: const off.ProductQueryVersion(2),
       );
 
@@ -89,6 +105,24 @@ class OFFDataSource {
       log.severe('Exception while getting OFF barcode search $exception');
       AppReporter.captureException(exception, stackTrace: stacktrace);
       rethrow;
+    }
+  }
+
+  /// search-a-licious returns `brands` as a list, while the OFF SDK expects a
+  /// comma-separated string. Normalize before handing the hit to the SDK so
+  /// its product mapper can be reused. Malformed hits are skipped, not fatal.
+  off.Product? _toProduct(Map<String, dynamic> hit) {
+    final normalized = Map<String, dynamic>.from(hit);
+    final brands = normalized['brands'];
+    if (brands is List) {
+      normalized['brands'] = brands.join(', ');
+    }
+
+    try {
+      return off.Product.fromJson(normalized);
+    } catch (exception, stacktrace) {
+      log.warning('Skipping malformed OFF search hit', exception, stacktrace);
+      return null;
     }
   }
 
@@ -144,13 +178,12 @@ class OFFDataSource {
     );
   }
 
-  String? _getLocaleName(off.Product product) {
-    final language = _toOFFLanguage(
-      SupportedLanguage.fromCode(
+  SupportedLanguage _currentLanguage() => SupportedLanguage.fromCode(
         ui.PlatformDispatcher.instance.locale.toString(),
-      ),
-    );
-    return product.getBestProductName(language);
+      );
+
+  String? _getLocaleName(off.Product product) {
+    return product.getBestProductName(_toOFFLanguage(_currentLanguage()));
   }
 
   static String? _tryGetUnit(String? quantityString) {
@@ -168,7 +201,7 @@ class OFFDataSource {
     }
   }
 
-  static const _searchFields = <off.ProductField>[
+  static const _barcodeFields = <off.ProductField>[
     off.ProductField.BARCODE,
     off.ProductField.BRANDS,
     off.ProductField.NAME_IN_LANGUAGES,

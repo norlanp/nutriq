@@ -11,17 +11,18 @@ class FDCConst {
   static const _fdcQueryTag = "query";
   static const _fdcPageSizeTag = "pageSize";
   static const _fdcDataTypeTag = "dataType";
-
-  static const _fdcDataTypeFoundationValue = "Foundation";
-  static const _fdcDataTypeSRLegacyValue = "SR Legacy";
   static const _fdcSortOrderTag = "sortOrder";
   static const _fdcSortOrderAscValue = "asc";
   static const _fdcApiKeyTag = "api_key";
 
-  static const _dataTypeParams = [
-    _fdcDataTypeFoundationValue,
-    _fdcDataTypeSRLegacyValue
+  /// Generic, non-branded foods (commodity and legacy reference entries).
+  static const genericDataTypes = [
+    FdcDataType.foundation,
+    FdcDataType.srLegacy,
   ];
+
+  /// Manufacturer and restaurant products, keyed by brand or GTIN/UPC.
+  static const brandedDataTypes = [FdcDataType.branded];
 
   static String getFoodDetailUrlString(String? code) {
     if (code == null) {
@@ -34,13 +35,15 @@ class FDCConst {
     }
   }
 
-  static String _getDataTypeParams() => _dataTypeParams.join(",");
-
-  static Uri getFDCWordSearchUrl(String searchString, String apiKey) {
+  static Uri getFDCWordSearchUrl(
+    String searchString,
+    String apiKey, {
+    List<FdcDataType> dataTypes = genericDataTypes,
+  }) {
     final queryParameters = {
       _fdcQueryTag: searchString,
       _fdcPageSizeTag: _pageSize,
-      _fdcDataTypeTag: _getDataTypeParams(),
+      _fdcDataTypeTag: dataTypes.map((type) => type.value).join(","),
       _fdcSortOrderTag: _fdcSortOrderAscValue,
       _fdcApiKeyTag: apiKey
     };
@@ -56,6 +59,9 @@ class FDCConst {
   static const fdcTotalFatId = 1004;
   static const fdcTotalProteinsId = 1003;
   static const fdcTotalSugarId = 1063;
+
+  /// Branded entries report total sugars under the newer nutrient id.
+  static const fdcTotalSugarAltId = 2000;
   static const fdcTotalSaturatedFatId = 1258;
   static const fdcTotalDietaryFiberId = 1079;
 
@@ -68,5 +74,15 @@ class FDCConst {
   static const fdcVitaminDId = 1114;
   static const fdcCalciumId = 1087;
   static const fdcIronId = 1089;
+}
 
+/// USDA FoodData Central record categories used for search.
+enum FdcDataType {
+  foundation('Foundation'),
+  srLegacy('SR Legacy'),
+  branded('Branded');
+
+  const FdcDataType(this.value);
+
+  final String value;
 }
