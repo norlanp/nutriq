@@ -84,4 +84,27 @@ void main() {
     expect(meal.code, isNull);
     expect(meal.nutriments.energyKcal100, 90);
   });
+
+  test('reads branded total sugars from the alternative nutrient id', () {
+    final meal = MealEntity.fromFDCFood(
+      FDCFoodDTO(
+        fdcId: 123,
+        gtinUpc: null,
+        description: 'Sauce',
+        brandOwner: null,
+        brandName: 'Chick-fil-A',
+        packageWeight: null,
+        servingSize: null,
+        servingSizeUnit: null,
+        foodNutrients: [
+          FDCFoodNutrimentDTO(
+            nutrientId: FDCConst.fdcTotalSugarAltId,
+            amount: 22.6,
+          ),
+        ],
+      ),
+    );
+
+    expect(meal.nutriments.sugars100, 22.6);
+  });
 }

@@ -4,8 +4,10 @@ part 'fdc_food_nutriment_dto.g.dart';
 
 @JsonSerializable()
 class FDCFoodNutrimentDTO {
-  @JsonKey(name: 'nutrient_id')
   final int? nutrientId;
+
+  /// FDC search results expose the amount under the `value` key.
+  @JsonKey(name: 'value')
   final double? amount;
 
   FDCFoodNutrimentDTO({required this.nutrientId, required this.amount});

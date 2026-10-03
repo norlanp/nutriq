@@ -113,7 +113,9 @@ abstract class MealNutrimentsEntity with _$MealNutrimentsEntity {
 
     final sugarTotal = fdcNutriment
         .firstWhereOrNull(
-          (nutriment) => nutriment.nutrientId == FDCConst.fdcTotalSugarId,
+          (nutriment) =>
+              nutriment.nutrientId == FDCConst.fdcTotalSugarId ||
+              nutriment.nutrientId == FDCConst.fdcTotalSugarAltId,
         )
         ?.amount;
 
